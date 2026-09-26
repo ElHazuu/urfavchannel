@@ -84,7 +84,8 @@
     #driveScene { display: none; position: absolute; inset: 0; overflow: hidden; pointer-events: none; background: linear-gradient(#100725 0%, #421259 38%, #da3e8e 55%, #180d35 56%, #070717 100%); }
     #intro.drive #driveScene { display: block; }
     #intro.drive #catButton, #intro.drive #littleRunners { visibility: hidden; }
-    #driveScene .stars { position: absolute; inset: 0 0 45%; opacity: .7; background-image: radial-gradient(#fff 1px, transparent 2px), radial-gradient(#9defff 1px, transparent 2px); background-size: 100px 85px, 145px 125px; background-position: 12px 8px, 60px 43px; animation: starShimmer 3s ease-in-out infinite alternate; }
+    #driveScene .stars { position: absolute; inset: 0 0 45%; opacity: .7; background-image: radial-gradient(#fff 1px, transparent 2px), radial-gradient(#9defff 1px, transparent 2px); background-size: 100px 85px, 145px 125px; background-position: 12px 8px, 60px 43px; }
+    #driveScene .stars { animation: starShimmer 3s ease-in-out infinite alternate; }
     @keyframes starShimmer { to { opacity: 1; filter: drop-shadow(0 0 4px #bdf6ff); } }
     #driveScene .shootingStar { position: absolute; top: 12%; left: 15%; width: 110px; height: 2px; border-radius: 50%; background: linear-gradient(90deg, transparent, #fff, #8cecff); box-shadow: 0 0 12px #9af6ff; transform: rotate(-18deg); animation: shootingStar 7s ease-in infinite; }
     #driveScene .shootingStar.second { top: 26%; left: 62%; animation-delay: 3.5s; animation-duration: 9s; }
@@ -110,11 +111,16 @@
     #intro.drive:not(.playing) #driveScene .mountains.back { animation-play-state: paused; }
     #intro.drive #introText { background: #ffb8e8; color: #310a41; box-shadow: 0 0 20px #ff46d4; }
     #intro.drive #musicButton { background: #90edfa; color: #1b1742; border-color: #8af7ff; box-shadow: 0 0 20px #32e8ff88; }
+    /* Keep the driving controls above the scenery and away from the car. */
     #intro.drive #introText,
     #intro.drive #musicButton,
     #intro.drive #songButton {
-      position: absolute; z-index: 4; top: max(20px, env(safe-area-inset-top));
-      margin: 0; font-size: 14px; white-space: nowrap;
+      position: absolute;
+      z-index: 4;
+      top: max(20px, env(safe-area-inset-top));
+      margin: 0;
+      font-size: 14px;
+      white-space: nowrap;
     }
     #intro.drive #introText { right: 410px; }
     #intro.drive #musicButton { right: 210px; }
@@ -122,7 +128,12 @@
     @media (max-width: 650px) {
       #intro.drive #introText,
       #intro.drive #musicButton,
-      #intro.drive #songButton { left: auto; right: 12px; padding: 8px 12px; font-size: 12px; }
+      #intro.drive #songButton {
+        left: auto;
+        right: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
+      }
       #intro.drive #introText { top: max(12px, env(safe-area-inset-top)); }
       #intro.drive #musicButton { top: max(53px, calc(env(safe-area-inset-top) + 41px)); }
       #intro.drive #songButton { top: max(94px, calc(env(safe-area-inset-top) + 82px)); }
@@ -142,9 +153,10 @@
     .blackKittenSpeed { left: 49%; bottom: 22%; animation-duration: .55s; }
     @keyframes runningDust { from { transform: translate(12px, 4px) scale(.6); opacity: .7; } to { transform: translate(-22px, -12px) scale(1.2); opacity: 0; } }
 
-    /* Main website */
+    /* Main home: editorial typography and quiet movement */
     #mainWebsite { min-height: 100vh; opacity: 0; transform: translateY(20px); transition: opacity 1.5s ease, transform 1.5s ease; background: #140e1d; color: #fbf3f8; font-family: "DM Sans", Arial, sans-serif; }
     #mainWebsite.show { opacity: 1; transform: none; }
+
     .menuZone { position: fixed; inset: 0 0 auto; z-index: 40; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
     .menuHandle { pointer-events: auto; display: flex; align-items: center; gap: 25px; padding: 12px 18px; border: 1px solid #f0bdd16b; border-top: 0; border-radius: 0 0 20px 20px; background: #201520ee; color: #fff3f8; font-size: 11px; font-weight: 700; letter-spacing: .16em; cursor: pointer; box-shadow: 0 8px 26px #08050b88; backdrop-filter: blur(18px); }
     .menuHandle span { color: #f4aeca; letter-spacing: .06em; }
@@ -160,6 +172,7 @@
     .menuLinks a span:last-child { margin-left: auto; color: #e6a3bf; }
     #backToIntro { width: 100%; padding: 14px 16px; border: 1px solid #f0bdd169; border-radius: 13px; background: #f4d5e6; color: #55243f; font-size: 13px; font-weight: 700; cursor: pointer; }
     #backToIntro:hover { background: #ffebf3; }
+
     .notificationBell { position: fixed; z-index: 45; top: 13px; right: 18px; width: 44px; height: 44px; border: 1px solid #f0bdd17d; border-radius: 50%; background: #251727ed; color: #fff0f6; font-size: 20px; cursor: pointer; box-shadow: 0 6px 22px #0006; }
     .notificationBell.new { animation: bellRing 2.6s ease-in-out infinite; box-shadow: 0 0 23px #ff8ac780; }
     .notificationBell.new::after { content: ""; position: absolute; top: 3px; right: 3px; width: 10px; height: 10px; border-radius: 50%; background: #ff5c9f; box-shadow: 0 0 8px #ff5c9f; }
@@ -172,12 +185,34 @@
     .heroLine { position: absolute; top: 12%; left: max(8vw, 25px); right: max(8vw, 25px); display: flex; align-items: center; gap: 17px; color: #e5bad0; font-size: 10px; font-weight: 700; letter-spacing: .23em; }
     .heroLine::after { content: ""; height: 1px; flex: 1; background: linear-gradient(90deg, #e8b5cd66, transparent); }
     .welcomeGlow { position: absolute; width: 330px; height: 330px; right: 8%; top: 24%; border-radius: 50%; background: #f9a5d32e; filter: blur(85px); pointer-events: none; }
-    .welcomeOrbit { position: absolute; right: 8%; top: 52%; width: min(31vw, 420px); aspect-ratio: 1; transform: translateY(-50%); border: 1px solid #ffc3e759; border-radius: 50%; box-shadow: 0 0 65px #ff9ed72a, inset 0 0 70px #ff8ac32b; pointer-events: none; animation: orbitFloat 5s ease-in-out infinite alternate; }
+    .welcomeOrbit { position: absolute; right: 8%; top: 52%; width: min(31vw, 420px); aspect-ratio: 1; transform: translateY(-50%); border: 1px solid #ffc3e759; border-radius: 50%; background: transparent; padding: 0; z-index: 2; box-shadow: 0 0 65px #ff9ed72a, inset 0 0 70px #ff8ac32b; cursor: pointer; animation: orbitFloat 5s ease-in-out infinite alternate; }
+    .welcomeOrbit:hover { box-shadow: 0 0 85px #ff9ed777, inset 0 0 80px #ff8ac355; }
+    .welcomeOrbit:focus-visible { outline: 3px solid #fff; outline-offset: 7px; }
+    .welcomeOrbit::after { content: "TAP THE HEART ♡"; position: absolute; left: 0; right: 0; bottom: 15%; color: #ffe2f1; font: 700 11px Arial, sans-serif; letter-spacing: .19em; }
     .welcomeOrbit::before { content: "♡"; position: absolute; inset: 0; display: grid; place-items: center; color: #ffd2e8; font-size: clamp(120px, 17vw, 240px); font-family: "Cormorant Garamond", Georgia, serif; text-shadow: 0 0 45px #ff7cbd99; }
     .orbitStar { position: absolute; inset: 0; animation: starOrbit 9s linear infinite; }
     .orbitStar::before { content: "✦"; position: absolute; left: 50%; top: -21px; transform: translateX(-50%); color: #ffe1f1; font-size: 35px; text-shadow: 0 0 16px #ff7cbd; }
     @keyframes starOrbit { to { transform: rotate(360deg); } }
     @keyframes orbitFloat { to { transform: translateY(calc(-50% - 15px)) rotate(4deg); } }
+    .kissScene[hidden] { display: none; }
+    .kissScene { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 20px; background: #100918dc; backdrop-filter: blur(12px); }
+    .kissCard { position: relative; width: min(570px, 100%); padding: 38px 24px 26px; overflow: hidden; border: 1px solid #ffd3e5a8; border-radius: 30px; background: radial-gradient(circle at 50% 34%, #fcbad27a, transparent 52%), linear-gradient(145deg, #3e2649, #201328); color: #fff3f9; text-align: center; box-shadow: 0 30px 100px #000a, 0 0 55px #ff95c760; animation: kissOpen .45s ease-out both; }
+    .kissCard::before { content: "♡  ✦  ♡  ✦  ♡"; position: absolute; top: 18px; left: 0; right: 0; color: #ffe0ed; letter-spacing: 1.1em; opacity: .75; }
+    .kissPictureWrap { position: relative; display: grid; place-items: center; height: min(52vh, 390px); margin: 12px 0; }
+    .kissPictureWrap::before { content: ""; position: absolute; width: min(70vw, 340px); aspect-ratio: 1; border-radius: 50%; background: #ffb6d868; filter: blur(55px); }
+    #kissPicture { position: relative; max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 16px 20px #14081c90); }
+    .kissCard h2 { margin: 0 0 5px; font: 500 clamp(36px, 7vw, 55px) "Cormorant Garamond", Georgia, serif; }
+    .kissCard p { margin: 0 0 21px; color: #f5dce9; }
+    .kissActions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .kissActions button { padding: 11px 18px; border: 1px solid #ffe0ec9e; border-radius: 999px; background: #ff9dc9; color: #301327; font-weight: 700; cursor: pointer; }
+    .kissActions button:last-child { background: transparent; color: #fff1f7; }
+    .kissActions button:hover { transform: translateY(-2px); }
+    .kissHeart { position: absolute; bottom: 26%; color: #ffe0ec; font-size: 25px; pointer-events: none; animation: kissFloat 3s ease-in-out infinite; }
+    .kissHeart:nth-of-type(2) { left: 12%; animation-delay: -.9s; }
+    .kissHeart:nth-of-type(3) { right: 13%; animation-delay: -1.8s; }
+    .kissHeart:nth-of-type(4) { right: 24%; animation-delay: -2.5s; }
+    @keyframes kissOpen { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
+    @keyframes kissFloat { 0%, 100% { transform: translateY(8px) rotate(-12deg); opacity: .35; } 50% { transform: translateY(-55px) rotate(12deg); opacity: 1; } }
     .eyebrow { position: relative; z-index: 1; margin: 0 0 18px; color: #edb6d0; font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
     .welcomeSection h1 { position: relative; z-index: 1; max-width: 870px; margin: 0 0 24px; font: 500 clamp(70px, 10vw, 148px)/.88 "Cormorant Garamond", Georgia, serif; letter-spacing: -.045em; text-shadow: 0 8px 35px #0006; }
     .welcomeSection h1 span { color: #f6b8d3; font-style: italic; }
@@ -211,6 +246,7 @@
     .sectionHeading { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 30px; margin-bottom: 40px; padding-bottom: 27px; border-bottom: 1px solid #f6c6dd3d; }
     .sectionHeading .eyebrow { margin-bottom: 10px; }
     .sectionHeading h2 { margin: 0; font: 500 clamp(58px, 8vw, 110px)/.95 "Cormorant Garamond", Georgia, serif; letter-spacing: -.04em; }
+    .sectionHeading p:last-child { max-width: 260px; margin: 0; color: #dbc4d3; font-size: 14px; line-height: 1.7; }
     .videoGrid { display: flex; flex-direction: column; align-items: center; gap: 25px; }
     .videoCard { overflow: hidden; border: 1px solid #f2c4da42; border-radius: 23px; background: #251a2b; box-shadow: 0 18px 45px #0003; transition: transform .3s, box-shadow .3s; }
     .videoCard.featured { width: min(850px, 100%); }
@@ -244,7 +280,7 @@
     #mainWebsite .videoPreview, #mainWebsite .storyCard { background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--theme-accent) 38%, var(--theme-surface)), var(--theme-surface) 75%); border-color: var(--theme-line); }
     #mainWebsite .storyCard { color: #fff4fa; }
     #mainWebsite .notificationHint, #mainWebsite footer { color: var(--theme-muted); }
-    #mainWebsite #backToIntro { background: var(--theme-accent); color: #1b1020; border-color: transparent; }
+    #mainWebsite .backToIntro, #mainWebsite #backToIntro { background: var(--theme-accent); color: #1b1020; border-color: transparent; }
     .themeTools { position: fixed; z-index: 46; top: 13px; left: 18px; font-family: "DM Sans", Arial, sans-serif; }
     .themeButton { width: 44px; height: 44px; border: 1px solid var(--theme-line); border-radius: 50%; background: var(--theme-surface); color: var(--theme-text); font-size: 21px; cursor: pointer; box-shadow: 0 6px 22px #0004; }
     .themePanel { position: absolute; top: 52px; left: 0; width: min(275px, calc(100vw - 36px)); padding: 17px; border: 1px solid var(--theme-line); border-radius: 18px; box-shadow: 0 18px 45px #0006; }
@@ -260,7 +296,9 @@
     @media (max-width: 700px) {
       .welcomeSection { padding-top: 140px; }
       .welcomeSection h1 { font-size: clamp(67px, 16vw, 110px); }
-      .welcomeOrbit { right: -24%; width: 80vw; opacity: .27; }
+      .welcomeOrbit { right: -8%; top: 71%; width: 48vw; min-width: 175px; opacity: .85; }
+      .welcomeOrbit::before { font-size: clamp(80px, 18vw, 140px); }
+      .welcomeOrbit::after { font-size: 8px; }
       .sectionHeading { grid-template-columns: 1fr; gap: 13px; }
       .storyGallery { grid-template-columns: 1fr; max-width: 400px; }
       .storyCard, .storyCard img { min-height: 300px; height: 300px; }
@@ -270,6 +308,7 @@
       #mainWebsite .welcomeOrbit, #mainWebsite .orbitStar, #mainWebsite .notificationBell.new, #mainWebsite .galleryChase, #mainWebsite .galleryChase img, #mainWebsite .chicken, #mainWebsite .chicken .wing { animation: none; }
       #mainWebsite .galleryChase { left: 20px; }
       #mainWebsite .videoCard { transition: none; }
+      .kissCard, .kissHeart { animation: none; }
     }
   </style>
 </head>
@@ -320,7 +359,7 @@
     <button class="notificationBell" id="notificationBell" type="button" aria-label="See new video">🔔</button>
     <span class="notificationHint" id="notificationHint" hidden>New video is waiting ♡</span>
     <section class="welcomeSection" id="home">
-      <div class="welcomeGlow"></div><div class="welcomeOrbit" aria-hidden="true"><span class="orbitStar"></span></div>
+      <div class="welcomeGlow"></div><button class="welcomeOrbit" id="heartMomentButton" type="button" aria-label="See our cats' little moment"><span class="orbitStar" aria-hidden="true"></span></button>
       <div class="heroLine">A PLACE FOR OUR STORY</div>
       <p class="eyebrow">✦ A little world for us ✦</p>
       <h1>Welcome to<br><span>Our World.</span></h1>
@@ -378,6 +417,15 @@
       </div>
     </section>
     <footer>Aku Sayang Kamu Cantik ♡</footer>
+    <div class="kissScene" id="kissScene" role="dialog" aria-modal="true" aria-label="Our secret moment" hidden>
+      <div class="kissCard">
+        <span class="kissHeart" style="left:23%">♡</span><span class="kissHeart">♥</span><span class="kissHeart">♡</span><span class="kissHeart">✦</span>
+        <div class="kissPictureWrap"><img id="kissPicture" src="kiss.png" alt="Our cats sharing a sweet moment"></div>
+        <h2>Our secret moment ♡</h2>
+        <p>This is us</p>
+        <div class="kissActions"><button id="kissReplay" type="button">↻ Watch again</button><button id="kissClose" type="button">Close ♡</button></div>
+      </div>
+    </div>
   </main>
 
   <audio id="introMusic" src="Ariana Grande - everytime (Official Instrumental).mp3" loop preload="auto"></audio>
@@ -401,12 +449,36 @@
     const colorPicker = document.getElementById("colorPicker");
     const runnerPicture = document.querySelector("#littleRunners img");
     const galleryRunnerPicture = document.getElementById("galleryRunnerPicture");
+    const heartMomentButton = document.getElementById("heartMomentButton");
+    const kissScene = document.getElementById("kissScene");
+    const kissPicture = document.getElementById("kissPicture");
+    const kissReplay = document.getElementById("kissReplay");
+    const kissClose = document.getElementById("kissClose");
     const carPicture = document.querySelector("#driveScene .car");
     const idleFrames = ["Tail.png", "Tail 2.png", "Tail 3.png"];
     const danceFrames = ["Dance 1.png", "Dance 2.png", "Dance 3.png", "Dance 4.png"];
     const runningFrames = ["Baby.png", "Baby 2.png", "Baby 3.png", "Baby 4.png", "Baby 5.png", "Baby 6.png"];
     const carFrames = ["Car.png", "Car2.png", "Car3.png", "Car4.png"];
-    [...idleFrames, ...danceFrames, ...runningFrames, ...carFrames, "Walking Away.png"].forEach(filename => { const image = new Image(); image.src = filename; });
+    const kissFrames = ["kiss.png", "kiss2.png", "kiss3.png", "kiss4.png", "kiss5.png", "kiss6.png"];
+    [...idleFrames, ...danceFrames, ...runningFrames, ...carFrames, ...kissFrames, "Walking Away.png"].forEach(filename => { const image = new Image(); image.src = filename; });
+    let kissTimer;
+    function playKiss() {
+      clearInterval(kissTimer);
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { kissPicture.src = kissFrames[5]; return; }
+      let frame = 0;
+      kissPicture.src = kissFrames[frame];
+      kissTimer = setInterval(() => {
+        frame++;
+        kissPicture.src = kissFrames[frame];
+        if (frame === kissFrames.length - 1) { clearInterval(kissTimer); heartSound(); }
+      }, 340);
+    }
+    function closeKiss() { clearInterval(kissTimer); kissScene.hidden = true; heartMomentButton.focus(); }
+    heartMomentButton.addEventListener("click", () => { kissScene.hidden = false; playKiss(); kissClose.focus(); });
+    kissReplay.addEventListener("click", playKiss);
+    kissClose.addEventListener("click", closeKiss);
+    kissScene.addEventListener("click", event => { if (event.target === kissScene) closeKiss(); });
+    document.addEventListener("keydown", event => { if (event.key === "Escape" && !kissScene.hidden) closeKiss(); });
 
     let screen = "intro";
     let mode = "cute";
@@ -450,6 +522,7 @@
     colorPicker.addEventListener("input", () => setColor(colorPicker.value));
     document.querySelectorAll("[data-color]").forEach(button => button.addEventListener("click", () => setColor(button.dataset.color)));
 
+    // Adding or changing a video link brings back the bell for returning visitors.
     const latestVideo = [...document.querySelectorAll("#videos .videoEmbed")].map(video => video.getAttribute("src")).join("|");
     let seenVideo = "";
     try { seenVideo = localStorage.getItem("ourLoveSeenVideo") || ""; } catch (error) {}
@@ -497,7 +570,8 @@
     }, 240);
 
     function startDance() {
-      if (mode === "drive" || danceTimer) return;
+      if (mode === "drive") return;
+      if (danceTimer) return;
       danceFrame = 0;
       catPicture.src = danceFrames[0];
       catPicture.alt = "Two cats dancing";

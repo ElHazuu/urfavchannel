@@ -447,5 +447,137 @@
       }, 4850);
     });
   </script>
+  <style>
+  /* Extra glow that responds to the song */
+  #intro {
+    --beat-glow: 18px;
+    --beat-lift: 0px;
+    --beat-zoom: 1;
+    --beat-light: 0.25;
+  }
+
+  #intro::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 55%, #ff79bc 0%, transparent 42%),
+      radial-gradient(circle at 25% 30%, #9c78ff 0%, transparent 30%),
+      radial-gradient(circle at 80% 35%, #ffb2d7 0%, transparent 30%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s linear;
+  }
+
+  #intro:has(#catButton.dancing)::after {
+    opacity: var(--beat-light);
+  }
+
+  #catButton,
+  #introText,
+  #musicButton {
+    z-index: 1;
+  }
+
+  #catButton.dancing {
+    transform: translateY(var(--beat-lift)) scale(var(--beat-zoom));
+    filter: drop-shadow(0 0 var(--beat-glow) #ff80c4);
+    transition: transform 0.08s linear, filter 0.08s linear;
+  }
+</style>
+
+<script>
+  // Read the song's bass levels and turn them into light and movement.
+  (function () {
+    const music = document.getElementById("introMusic");
+    const button = document.getElementById("musicButton");
+    const introScreen = document.getElementById("intro");
+
+    let beatAudioContext;
+    let analyser;
+    let frequencies;
+    let animationFrame;
+    let average = 0;
+    let pulse = 0;
+
+    button.addEventListener("click", function () {
+      if (!beatAudioContext) {
+        beatAudioContext =
+          new (window.AudioContext || window.webkitAudioContext)();
+
+        const source = beatAudioContext.createMediaElementSource(music);
+        analyser = beatAudioContext.createAnalyser();
+        analyser.fftSize = 2048;
+        frequencies = new Uint8Array(analyser.frequencyBinCount);
+
+        source.connect(analyser);
+        analyser.connect(beatAudioContext.destination);
+      }
+
+      beatAudioContext.resume();
+    });
+
+    function animateToMusic() {
+      if (music.paused || !analyser) return;
+
+      analyser.getByteFrequencyData(frequencies);
+
+      const hzPerBin = beatAudioContext.sampleRate / analyser.fftSize;
+      const first = Math.floor(60 / hzPerBin);
+      const last = Math.min(
+        frequencies.length - 1,
+        Math.ceil(220 / hzPerBin)
+      );
+
+      let total = 0;
+      for (let i = first; i <= last; i++) {
+        total += frequencies[i];
+      }
+
+      const bass = total / (last - first + 1);
+      average = average === 0 ? bass : average * 0.94 + bass * 0.06;
+
+      const hit = Math.min(
+        1,
+        Math.max(0, (bass - average * 0.85) / (average * 0.55 + 12))
+      );
+
+      pulse = Math.max(hit, pulse * 0.84);
+
+      introScreen.style.setProperty(
+        "--beat-lift",
+        `${-12 * pulse}px`
+      );
+      introScreen.style.setProperty(
+        "--beat-zoom",
+        `${1 + 0.045 * pulse}`
+      );
+      introScreen.style.setProperty(
+        "--beat-glow",
+        `${18 + 32 * pulse}px`
+      );
+      introScreen.style.setProperty(
+        "--beat-light",
+        `${0.25 + 0.5 * pulse}`
+      );
+
+      animationFrame = requestAnimationFrame(animateToMusic);
+    }
+
+    music.addEventListener("play", function () {
+      cancelAnimationFrame(animationFrame);
+      average = 0;
+      animateToMusic();
+    });
+
+    music.addEventListener("pause", function () {
+      cancelAnimationFrame(animationFrame);
+      pulse = 0;
+      introScreen.style.setProperty("--beat-lift", "0px");
+      introScreen.style.setProperty("--beat-zoom", "1");
+      introScreen.style.setProperty("--beat-light", "0");
+    });
+  })();
+</script>
 </body>
 </html>

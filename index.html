@@ -295,10 +295,242 @@
     <button id="musicButton" type="button">♫ Play music ♡</button>
   </div>
 
-  <main id="mainWebsite">
-    <h1>Welcome ❤️</h1>
-    <p>A little place made just for you.</p>
-  </main>
+ <main id="mainWebsite">
+  <nav class="siteMenu">
+    <a class="siteLogo" href="#home">♡ Our Place</a>
+    <div class="menuLinks">
+      <a href="#home">Home</a>
+      <a href="#videos">Videos</a>
+      <a href="#updates">Updates</a>
+    </div>
+  </nav>
+
+  <section class="welcomeSection" id="home">
+    <div class="welcomeGlow"></div>
+    <p class="eyebrow">✦ A little world for us ✦</p>
+    <h1>Welcome to<br><span>Our Place ♡</span></h1>
+    <p>A cozy place to share videos, little moments, and everything new.</p>
+    <a class="exploreButton" href="#videos">Explore our place ↓</a>
+  </section>
+
+  <section class="contentSection" id="videos">
+    <div class="sectionHeading">
+      <p class="eyebrow">♡ Watch together</p>
+      <h2>Our videos</h2>
+      <p>Our favorite moments, all in one place.</p>
+    </div>
+
+    <div class="videoGrid">
+      <div class="videoCard">
+        <div class="videoPreview">▶</div>
+        <div class="cardText">
+          <span>VIDEO 01</span>
+          <h3>Our first video</h3>
+          <p>Your YouTube video will go here.</p>
+        </div>
+      </div>
+
+      <div class="videoCard">
+        <div class="videoPreview">▶</div>
+        <div class="cardText">
+          <span>VIDEO 02</span>
+          <h3>Another little moment</h3>
+          <p>Your next YouTube video will go here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contentSection updatesSection" id="updates">
+    <div class="sectionHeading">
+      <p class="eyebrow">✦ What’s new</p>
+      <h2>Updates</h2>
+      <p>Little things we add along the way.</p>
+    </div>
+
+    <div class="updateCard">
+      <span class="updateIcon">♡</span>
+      <div>
+        <h3>Our place is open!</h3>
+        <p>This is where new pictures, videos, and surprises will appear.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>Made with love ♡</footer>
+</main>
+
+<style>
+  html { scroll-behavior: smooth; }
+
+  #mainWebsite {
+    display: block;
+    padding: 0;
+    text-align: left;
+    background: #140e1d;
+    color: #fff4fa;
+  }
+
+  .siteMenu {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 18px max(6vw, 22px);
+    background: rgba(30, 17, 40, 0.88);
+    border-bottom: 1px solid rgba(255, 190, 221, 0.2);
+    backdrop-filter: blur(14px);
+  }
+
+  .siteMenu a {
+    color: #ffe9f4;
+    text-decoration: none;
+  }
+
+  .siteLogo {
+    font-size: 21px;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  .menuLinks { display: flex; gap: 25px; }
+  .menuLinks a { opacity: 0.75; transition: opacity 0.2s, color 0.2s; }
+  .menuLinks a:hover { opacity: 1; color: #ff9fcc; }
+
+  .welcomeSection {
+    position: relative;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+    padding: 90px max(8vw, 25px);
+    background:
+      radial-gradient(circle at 75% 45%, #7d3f7655, transparent 34%),
+      radial-gradient(circle at 20% 75%, #e78caf33, transparent 35%),
+      #1b1126;
+  }
+
+  .welcomeGlow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    right: 12%;
+    top: 25%;
+    border-radius: 50%;
+    background: #f9a5d344;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+
+  #mainWebsite .eyebrow {
+    color: #ffabd1;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .welcomeSection h1 {
+    position: relative;
+    font-size: clamp(48px, 8vw, 100px);
+    line-height: 1.05;
+    margin: 12px 0 20px;
+  }
+
+  .welcomeSection h1 span { color: #ffaad1; }
+
+  .welcomeSection > p:not(.eyebrow) {
+    max-width: 520px;
+    line-height: 1.7;
+  }
+
+  .exploreButton {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 14px 24px;
+    border-radius: 999px;
+    background: #ffd3e7;
+    color: #542240;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 8px 30px #ff9bc044;
+    transition: transform 0.2s;
+  }
+
+  .exploreButton:hover { transform: translateY(-3px); }
+
+  .contentSection {
+    padding: 90px max(8vw, 25px);
+    scroll-margin-top: 70px;
+  }
+
+  .sectionHeading { margin-bottom: 34px; }
+  .sectionHeading h2 {
+    font-size: clamp(36px, 5vw, 60px);
+    margin: 8px 0;
+  }
+
+  .videoGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .videoCard, .updateCard {
+    overflow: hidden;
+    border: 1px solid #ffc6e133;
+    border-radius: 22px;
+    background: #2a1a34;
+    box-shadow: 0 12px 35px #0003;
+  }
+
+  .videoPreview {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    background:
+      radial-gradient(circle at center, #ffb4d57a, transparent 38%),
+      linear-gradient(135deg, #51315f, #a05c87);
+    color: white;
+    font-size: 50px;
+  }
+
+  .cardText { padding: 22px; }
+  .cardText span { color: #ffafd3; font-size: 12px; letter-spacing: 2px; }
+  .cardText h3, .updateCard h3 { margin: 9px 0; }
+  #mainWebsite p { line-height: 1.6; }
+
+  .updatesSection { background: #1d1328; }
+
+  .updateCard {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 750px;
+    padding: 28px;
+  }
+
+  .updateIcon { color: #ffabd1; font-size: 30px; }
+
+  #mainWebsite footer {
+    padding: 30px;
+    text-align: center;
+    color: #ffc2de;
+    border-top: 1px solid #ffc6e122;
+  }
+
+  @media (max-width: 650px) {
+    .siteMenu { flex-wrap: wrap; justify-content: center; }
+    .menuLinks { gap: 18px; }
+    .videoGrid { grid-template-columns: 1fr; }
+    .welcomeSection { min-height: 70vh; }
+  }
+</style>
 
   <audio
     id="introMusic"

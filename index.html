@@ -4,815 +4,2001 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Our Sayang ♡</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin: 0; background: #140e1d; color: #fff4fa; font-family: Arial, sans-serif; overflow-x: hidden; }
-    button, a { -webkit-tap-highlight-color: transparent; }
-    button { font: inherit; }
 
-    /* Cat screen */
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: #140e1d;
+      color: #fff4fa;
+      font-family: "DM Sans", Arial, sans-serif;
+    }
+
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; cursor: pointer; }
+    [hidden] { display: none !important; }
+
+    /* CAT INTRO */
+
     #intro {
-      position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column;
-      justify-content: center; align-items: center; overflow: hidden;
-      background: radial-gradient(ellipse at 50% 70%, #ffb0d133, transparent 42%),
-                  radial-gradient(circle at 18% 22%, #aa7dd724, transparent 32%),
-                  radial-gradient(circle at 82% 28%, #ff9bbe1f, transparent 30%),
-                  linear-gradient(160deg, #120d1b, #251629 65%, #120d1b);
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 75%, #ff9dcb44, transparent 40%),
+        radial-gradient(circle at 15% 25%, #bd8ce92c, transparent 35%),
+        linear-gradient(145deg, #120c1b, #2b1833 65%, #100b19);
       transition: opacity 1s ease;
     }
+
     #intro::before {
-      content: "♡  ✦  ♡  ✦  ♡"; position: absolute; top: 10%; left: 50%;
-      transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 0 18px 12px;
-      border-bottom: 1px solid #ffcae28c; color: #ffd1e7; font-size: clamp(19px, 2.5vw, 28px);
-      letter-spacing: .25em; white-space: nowrap; opacity: .8; pointer-events: none;
+      content: "♡  ✦  ♡  ✦  ♡";
+      position: absolute;
+      top: 9%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0 20px 13px;
+      border-bottom: 1px solid #ffd4e881;
+      color: #ffd8eb;
+      font-size: 24px;
+      letter-spacing: .22em;
+      white-space: nowrap;
       animation: ornamentFloat 4s ease-in-out infinite alternate;
     }
-    @keyframes ornamentFloat { to { transform: translate(-50%, -8px); } }
-    #intro.dancing {
-      background: radial-gradient(ellipse at 50% 80%, #ff97d052, transparent 42%),
-                  radial-gradient(circle at 25% 30%, #a070ff38, transparent 35%),
-                  radial-gradient(circle at 78% 35%, #ff79b633, transparent 35%), #100917;
-    }
-    #intro.dancing::after {
-      content: ""; position: absolute; inset: 0; pointer-events: none;
-      background: radial-gradient(circle at 50% 55%, #ff79bc, transparent 42%),
-                  radial-gradient(circle at 25% 30%, #9c78ff, transparent 30%);
-      opacity: var(--beat-light, .1); transition: opacity .1s;
-    }
-    #catButton {
-      position: relative; z-index: 1; width: min(600px, 85vw); padding: 0;
-      border: 0; background: none; cursor: pointer;
-    }
-    #catPicture {
-      display: block; width: 100%; max-height: 60vh; object-fit: contain;
-      animation: float 2.4s ease-in-out infinite; transition: opacity .25s ease;
-    }
-    @keyframes float { 50% { transform: translateY(-9px); } }
-    #intro.dancing #catButton { transform: translateY(var(--beat-lift, 0px)) scale(var(--beat-zoom, 1)); filter: drop-shadow(0 0 var(--beat-glow, 18px) #ff80c4); }
-    #catButton.walking { animation: walkAway 2.4s ease-in forwards; }
-    #catButton.walking #catPicture { animation: footsteps .32s ease-in-out infinite alternate; }
-    @keyframes footsteps { from { transform: rotate(-2deg); } to { transform: rotate(2deg) translateY(-7px); } }
-    @keyframes walkAway { 75% { opacity: 1; } to { transform: translateY(-100px) scale(.12); opacity: 0; } }
-    .musicNote { position: absolute; font-size: 35px; opacity: 0; pointer-events: none; }
-    .musicNote.left { left: 8%; top: 25%; } .musicNote.right { right: 8%; top: 35%; animation-delay: .8s !important; }
-    #intro.dancing .musicNote { animation: noteRise 1.6s ease-out infinite; }
-    @keyframes noteRise { 0% { opacity: 0; transform: translateY(20px); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(-85px); } }
-    .heart { position: absolute; z-index: 5; left: 50%; top: 38%; opacity: 0; pointer-events: none; font-size: 38px; }
-    #intro.loving .heart { animation: rise 1.6s ease-out forwards; }
-    .heart.one { --side: -90px; } .heart.two { --side: 10px; animation-delay: .18s !important; } .heart.three { --side: 100px; animation-delay: .35s !important; }
-    @keyframes rise { 0% { opacity: 0; transform: translate(-50%, 10px) scale(.4); } 25% { opacity: 1; } 100% { opacity: 0; transform: translate(calc(-50% + var(--side)), -160px) scale(1.3); } }
-    .wind { position: absolute; left: -180px; width: 120px; height: 3px; border-radius: 100%; background: #ffffff80; opacity: 0; pointer-events: none; }
-    .wind.one { top: 38%; } .wind.two { top: 55%; width: 85px; } .wind.three { top: 68%; width: 150px; }
-    #intro.breezy .wind { animation: windBlow 1.15s linear infinite; }
-    #intro.breezy .wind.two { animation-delay: .3s; } #intro.breezy .wind.three { animation-delay: .65s; }
-    @keyframes windBlow { 20%, 80% { opacity: .5; } 100% { left: 110%; opacity: 0; } }
-    #introText, #musicButton {
-      position: relative; z-index: 2; border-radius: 999px; font-weight: bold; cursor: pointer;
-      transition: transform .2s, box-shadow .2s, opacity .4s;
-    }
-    #introText { margin-top: 12px; padding: 12px 24px; border: 1px solid #ffc7df; background: #ffdeed; color: #6b3150; letter-spacing: 1px; box-shadow: 0 5px 20px #ff9bc066; }
-    #musicButton { margin-top: 20px; padding: 13px 26px; border: 1px solid #ffb9d2; background: #ffcfdf; color: #6b2445; box-shadow: 0 0 20px #ff9ec440; }
-    #introText:hover, #musicButton:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 26px #ff9bc099; }
-    #songButton { position: relative; z-index: 2; margin-top: 12px; padding: 10px 20px; border: 1px solid #ffb9d2; border-radius: 999px; background: #ffffff16; color: #ffe4f2; font-weight: bold; box-shadow: 0 0 15px #ff70c133; }
-    #songButton:hover { background: #ffffff30; }
 
-    /* Synthwave driving mode */
-    #driveScene { display: none; position: absolute; inset: 0; overflow: hidden; pointer-events: none; background: linear-gradient(#100725 0%, #421259 38%, #da3e8e 55%, #180d35 56%, #070717 100%); }
-    #intro.drive #driveScene { display: block; }
-    #intro.drive #catButton, #intro.drive #littleRunners { visibility: hidden; }
-    #driveScene .stars { position: absolute; inset: 0 0 45%; opacity: .7; background-image: radial-gradient(#fff 1px, transparent 2px), radial-gradient(#9defff 1px, transparent 2px); background-size: 100px 85px, 145px 125px; background-position: 12px 8px, 60px 43px; }
-    #driveScene .stars { animation: starShimmer 3s ease-in-out infinite alternate; }
-    @keyframes starShimmer { to { opacity: 1; filter: drop-shadow(0 0 4px #bdf6ff); } }
-    #driveScene .shootingStar { position: absolute; top: 12%; left: 15%; width: 110px; height: 2px; border-radius: 50%; background: linear-gradient(90deg, transparent, #fff, #8cecff); box-shadow: 0 0 12px #9af6ff; transform: rotate(-18deg); animation: shootingStar 7s ease-in infinite; }
-    #driveScene .shootingStar.second { top: 26%; left: 62%; animation-delay: 3.5s; animation-duration: 9s; }
-    @keyframes shootingStar { 0%, 82% { opacity: 0; transform: translate(0, 0) rotate(-18deg); } 84% { opacity: 1; } 90%, 100% { opacity: 0; transform: translate(130px, 35px) rotate(-18deg); } }
-    #driveScene .sun { position: absolute; left: 50%; top: 18%; width: clamp(190px, 28vw, 360px); aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%; background: repeating-linear-gradient(to bottom, transparent 0 11%, #481058 11% 13%), linear-gradient(#ffe8a7, #ff658b 70%, #d033bd); box-shadow: 0 0 45px 15px #ff62a488, 0 0 100px #f334a766; filter: drop-shadow(0 0 var(--beat-glow, 18px) #ff79bc); }
-    #driveScene .mountains { position: absolute; inset: 40% 0 36%; background: #1b0d3a; clip-path: polygon(0 70%, 9% 35%, 18% 75%, 30% 20%, 40% 70%, 51% 32%, 62% 76%, 73% 25%, 86% 72%, 94% 37%, 100% 65%, 100% 100%, 0 100%); filter: drop-shadow(0 -4px 8px #ea55db); }
-    #driveScene .mountains.back { inset: 36% -10% 39%; opacity: .5; background: #63307f; transform: scaleX(1.15); animation: mountainDrift 12s ease-in-out infinite alternate; }
-    @keyframes mountainDrift { to { transform: translateX(-3%) scaleX(1.15); } }
-    #driveScene .horizon { position: absolute; left: 0; right: 0; top: 55%; height: 3px; background: #ff70de; box-shadow: 0 0 15px #ff3fcb; }
-    #driveScene .road { position: absolute; left: -8%; right: -8%; top: 55%; bottom: -10%; background: linear-gradient(90deg, #ff39cb 0 1%, #140d2f 1% 49.5%, #ff43d9 49.5% 50.5%, #140d2f 50.5% 99%, #ff39cb 99%); clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%); box-shadow: 0 0 30px #ff46de; }
-    #driveScene .road::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0 43px, #27eafa 44px 47px, transparent 48px 84px); background-size: 100% 84px; opacity: .7; animation: roadMove .55s linear infinite; }
-    #driveScene .road::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #ff59dc80, transparent 8% 92%, #ff59dc80); filter: blur(14px); animation: roadGlow 1s ease-in-out infinite alternate; }
-    @keyframes roadGlow { to { opacity: .35; } }
-    @keyframes roadMove { to { background-position-y: -84px; } }
-    #driveScene .car { position: absolute; z-index: 1; left: 50%; bottom: 5%; width: min(650px, 82vw); height: auto; transform: translateX(-50%); filter: drop-shadow(0 15px 25px #08051e) drop-shadow(0 0 13px #fb4de8); animation: carBob .55s ease-in-out infinite alternate; }
-    #driveScene .carGlow { position: absolute; z-index: 1; left: 50%; bottom: 5%; width: min(500px, 65vw); height: 38px; transform: translateX(-50%); border-radius: 50%; background: #f143dc; filter: blur(28px); opacity: .55; animation: carGlow 1s ease-in-out infinite alternate; }
-    @keyframes carGlow { to { opacity: .85; transform: translateX(-50%) scale(1.18); } }
-    @keyframes carBob { from { transform: translate(-50%, 0); } to { transform: translate(-50%, -6px); } }
-    #intro.drive:not(.playing) #driveScene .road::before,
-    #intro.drive:not(.playing) #driveScene .road::after,
-    #intro.drive:not(.playing) #driveScene .car,
-    #intro.drive:not(.playing) #driveScene .carGlow,
-    #intro.drive:not(.playing) #driveScene .mountains.back { animation-play-state: paused; }
-    #intro.drive #introText { background: #ffb8e8; color: #310a41; box-shadow: 0 0 20px #ff46d4; }
-    #intro.drive #musicButton { background: #90edfa; color: #1b1742; border-color: #8af7ff; box-shadow: 0 0 20px #32e8ff88; }
-    /* Keep the driving controls above the scenery and away from the car. */
-    #intro.drive #introText,
-    #intro.drive #musicButton,
-    #intro.drive #songButton {
+    @keyframes ornamentFloat {
+      to { transform: translate(-50%, -8px); }
+    }
+
+    .introCenter {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: min(720px, 94vw);
+    }
+
+    #catButton {
+      width: min(590px, 84vw);
+      padding: 0;
+      border: 0;
+      background: none;
+    }
+
+    #catPicture {
+      display: block;
+      width: 100%;
+      max-height: 58vh;
+      object-fit: contain;
+      animation: catFloat 2.4s ease-in-out infinite;
+      filter: drop-shadow(0 15px 20px #0006);
+    }
+
+    @keyframes catFloat {
+      50% { transform: translateY(-10px); }
+    }
+
+    #intro.dancing #catButton {
+      transform: translateY(var(--beat-lift, 0px)) scale(var(--beat-zoom, 1));
+      filter: drop-shadow(0 0 var(--beat-glow, 14px) #ff85ca);
+    }
+
+    #catButton.walking {
+      animation: walkAway 2.4s ease-in forwards;
+    }
+
+    #catButton.walking #catPicture {
+      animation: footsteps .28s ease-in-out infinite alternate;
+    }
+
+    @keyframes footsteps {
+      from { transform: rotate(-2deg); }
+      to { transform: rotate(2deg) translateY(-7px); }
+    }
+
+    @keyframes walkAway {
+      75% { opacity: 1; }
+      to { transform: translateY(-110px) scale(.12); opacity: 0; }
+    }
+
+    .introControls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .cuteButton {
+      position: relative;
+      z-index: 5;
+      padding: 12px 19px;
+      border: 1px solid #ffcfdf;
+      border-radius: 999px;
+      background: #ffdfeb;
+      color: #69304d;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 7px 24px #ff8fc45c;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .cuteButton:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px #ff8fc48c;
+    }
+
+    #songButton {
+      background: #3c2449;
+      color: #fff2fa;
+    }
+
+    .introHeart {
       position: absolute;
       z-index: 4;
-      top: max(20px, env(safe-area-inset-top));
-      margin: 0;
-      font-size: 14px;
-      white-space: nowrap;
+      left: 50%;
+      top: 39%;
+      color: #ffbadb;
+      font-size: 34px;
+      opacity: 0;
+      pointer-events: none;
     }
-    #intro.drive #introText { right: 410px; }
-    #intro.drive #musicButton { right: 210px; }
-    #intro.drive #songButton { right: 18px; }
-    @media (max-width: 650px) {
-      #intro.drive #introText,
-      #intro.drive #musicButton,
-      #intro.drive #songButton {
-        left: auto;
-        right: 12px;
-        padding: 8px 12px;
-        font-size: 12px;
+
+    #intro.loving .introHeart {
+      animation: introHeartRise 1.8s ease-out forwards;
+    }
+
+    .introHeart.one { --side: -90px; }
+    .introHeart.two { --side: 10px; animation-delay: .15s !important; }
+    .introHeart.three { --side: 100px; animation-delay: .3s !important; }
+
+    @keyframes introHeartRise {
+      0% { opacity: 0; transform: translate(-50%, 10px) scale(.4); }
+      25% { opacity: 1; }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--side)), -170px) scale(1.3);
       }
-      #intro.drive #introText { top: max(12px, env(safe-area-inset-top)); }
-      #intro.drive #musicButton { top: max(53px, calc(env(safe-area-inset-top) + 41px)); }
-      #intro.drive #songButton { top: max(94px, calc(env(safe-area-inset-top) + 82px)); }
     }
-    .tinyClickWave { position: fixed; z-index: 1000; width: 32px; height: 32px; border: 1.5px solid #ffc4e0e6; border-radius: 50%; box-shadow: 0 0 9px #ff9bcc80; pointer-events: none; animation: tinyWave .55s ease-out forwards; }
-    @keyframes tinyWave { from { transform: translate(-50%, -50%) scale(.2); opacity: .9; } to { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } }
 
-    /* Running kittens and pixie */
-    #littleRunners { position: absolute; left: -220px; bottom: 4%; width: clamp(150px, 24vw, 220px); z-index: 2; pointer-events: none; animation: runAcross 18s linear infinite; }
-    #littleRunners img { display: block; width: 100%; height: auto; filter: drop-shadow(0 0 8px #ffc3e159); animation: kittenHop .54s ease-in-out infinite; }
-    @keyframes runAcross { 0%, 8% { transform: translateX(0); } 77%, 100% { transform: translateX(calc(100vw + 440px)); } }
-    @keyframes kittenHop { 50% { transform: translateY(-7px) rotate(-2deg); } }
-    #littleRunners::before { content: "✦"; position: absolute; right: -32px; top: 25%; color: #fff6b5; font-size: 24px; text-shadow: 0 0 8px #fff, 0 0 18px #ffe58c, 0 0 35px #ffc6f1; animation: pixieFlutter 1.4s ease-in-out infinite alternate; }
-    @keyframes pixieFlutter { from { transform: translateY(12px) rotate(-15deg) scale(.8); opacity: .7; } to { transform: translate(14px, -22px) rotate(20deg) scale(1.2); } }
-    #littleRunners::after, .blackKittenSpeed { position: absolute; color: #ffd4e8; font-size: 19px; text-shadow: 0 0 10px #ffadd2; animation: runningDust .7s ease-out infinite; }
-    #littleRunners::after { content: "·  ✧  ·"; left: -24px; bottom: 14%; }
-    .blackKittenSpeed { left: 49%; bottom: 22%; animation-duration: .55s; }
-    @keyframes runningDust { from { transform: translate(12px, 4px) scale(.6); opacity: .7; } to { transform: translate(-22px, -12px) scale(1.2); opacity: 0; } }
-
-    /* Main home */
-    #mainWebsite { min-height: 100vh; opacity: 0; transform: translateY(20px); transition: opacity 1.5s ease, transform 1.5s ease; background: #140e1d; color: #fbf3f8; font-family: "DM Sans", Arial, sans-serif; }
-    #mainWebsite.show { opacity: 1; transform: none; }
-
-    .menuZone { position: fixed; inset: 0 0 auto; z-index: 40; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
-    .menuHandle { pointer-events: auto; display: flex; align-items: center; gap: 25px; padding: 12px 18px; border: 1px solid #f0bdd16b; border-top: 0; border-radius: 0 0 20px 20px; background: #201520ee; color: #fff3f8; font-size: 11px; font-weight: 700; letter-spacing: .16em; cursor: pointer; box-shadow: 0 8px 26px #08050b88; backdrop-filter: blur(18px); }
-    .menuHandle span { color: #f4aeca; letter-spacing: .06em; }
-    .siteMenu { width: min(400px, calc(100vw - 28px)); padding: 16px; border: 1px solid #f0bdd169; border-radius: 0 0 24px 24px; background: #231827f5; box-shadow: 0 24px 60px #05030999; backdrop-filter: blur(20px); opacity: 0; visibility: hidden; transform: translateY(-12px) scale(.97); transform-origin: top; transition: opacity .3s, transform .3s, visibility .3s; }
-    .menuZone:hover .siteMenu, .menuZone:focus-within .siteMenu, .menuZone.open .siteMenu { pointer-events: auto; opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
-    .menuPanelHead { display: flex; justify-content: space-between; align-items: center; padding: 10px 8px 16px; border-bottom: 1px solid #ffe1ee2b; }
-    .menuPanelHead strong { font: 600 34px/1 "Cormorant Garamond", Georgia, serif; }
-    .menuPanelHead small { color: #eaaac6; font-size: 10px; font-weight: 700; letter-spacing: .18em; }
-    .menuLinks { display: grid; gap: 6px; margin: 12px 0; }
-    .menuLinks a { display: flex; align-items: center; gap: 17px; padding: 14px 15px; border-radius: 13px; color: #fff4f8; font-size: 17px; text-decoration: none; transition: background .2s, transform .2s; }
-    .menuLinks a:hover, .menuLinks a:focus-visible { background: #f4aac025; transform: translateX(3px); }
-    .menuLinks small { color: #e6a3bf; font-size: 10px; letter-spacing: .12em; }
-    .menuLinks a span:last-child { margin-left: auto; color: #e6a3bf; }
-    #backToIntro { width: 100%; padding: 14px 16px; border: 1px solid #f0bdd169; border-radius: 13px; background: #f4d5e6; color: #55243f; font-size: 13px; font-weight: 700; cursor: pointer; }
-    #backToIntro:hover { background: #ffebf3; }
-
-    .notificationBell { position: fixed; z-index: 45; top: 13px; right: 18px; width: 44px; height: 44px; border: 1px solid #f0bdd17d; border-radius: 50%; background: #251727ed; color: #fff0f6; font-size: 20px; cursor: pointer; box-shadow: 0 6px 22px #0006; }
-    .notificationBell.new { animation: bellRing 2.6s ease-in-out infinite; box-shadow: 0 0 23px #ff8ac780; }
-    .notificationBell.new::after { content: ""; position: absolute; top: 3px; right: 3px; width: 10px; height: 10px; border-radius: 50%; background: #ff5c9f; box-shadow: 0 0 8px #ff5c9f; }
-    @keyframes bellRing { 0%, 70%, 100% { transform: rotate(0); } 75% { transform: rotate(-12deg); } 80% { transform: rotate(12deg); } 85% { transform: rotate(-8deg); } 90% { transform: rotate(8deg); } }
-    .notificationHint { position: fixed; z-index: 44; top: 67px; right: 18px; padding: 10px 14px; border: 1px solid #ffc6e188; border-radius: 12px; background: #321b3cf0; color: #fff0f8; font-size: 12px; box-shadow: 0 8px 22px #0005; }
-    .notificationHint[hidden] { display: none; }
-
-    .welcomeSection { position: relative; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; overflow: hidden; padding: 130px max(8vw, 25px) 105px; background: radial-gradient(circle at 79% 52%, #7d4a7455, transparent 26%), radial-gradient(circle at 14% 87%, #a6407844, transparent 34%), linear-gradient(145deg, #150e1d, #25152a 62%, #110d18); }
-    .welcomeSection::before { content: ""; position: absolute; inset: 0; opacity: .37; pointer-events: none; background-image: radial-gradient(#ffd7ee 1px, transparent 2px), radial-gradient(#ba9eff 1px, transparent 2px); background-size: 120px 130px, 190px 170px; background-position: 20px 38px, 85px 75px; }
-    .heroLine { position: absolute; top: 12%; left: max(8vw, 25px); right: max(8vw, 25px); display: flex; align-items: center; gap: 17px; color: #e5bad0; font-size: 10px; font-weight: 700; letter-spacing: .23em; }
-    .heroLine::after { content: ""; height: 1px; flex: 1; background: linear-gradient(90deg, #e8b5cd66, transparent); }
-    .welcomeGlow { position: absolute; width: 330px; height: 330px; right: 8%; top: 24%; border-radius: 50%; background: #f9a5d32e; filter: blur(85px); pointer-events: none; }
-    .welcomeOrbit { position: absolute; right: 8%; top: 52%; width: min(31vw, 420px); aspect-ratio: 1; transform: translateY(-50%); border: 1px solid #ffc3e759; border-radius: 50%; background: transparent; padding: 0; z-index: 2; box-shadow: 0 0 65px #ff9ed72a, inset 0 0 70px #ff8ac32b; cursor: pointer; animation: orbitFloat 5s ease-in-out infinite alternate; }
-    .welcomeOrbit:hover { box-shadow: 0 0 85px #ff9ed777, inset 0 0 80px #ff8ac355; }
-    .welcomeOrbit:focus-visible { outline: 3px solid #fff; outline-offset: 7px; }
-    .welcomeOrbit::after { content: "TAP THE HEART ♡"; position: absolute; left: 0; right: 0; bottom: 15%; color: #ffe2f1; font: 700 11px Arial, sans-serif; letter-spacing: .19em; }
-    .welcomeOrbit::before { content: "♡"; position: absolute; inset: 0; display: grid; place-items: center; color: #ffd2e8; font-size: clamp(120px, 17vw, 240px); font-family: "Cormorant Garamond", Georgia, serif; text-shadow: 0 0 45px #ff7cbd99; }
-    .orbitStar { position: absolute; inset: 0; animation: starOrbit 9s linear infinite; }
-    .orbitStar::before { content: "✦"; position: absolute; left: 50%; top: -21px; transform: translateX(-50%); color: #ffe1f1; font-size: 35px; text-shadow: 0 0 16px #ff7cbd; }
-    @keyframes starOrbit { to { transform: rotate(360deg); } }
-    @keyframes orbitFloat { to { transform: translateY(calc(-50% - 15px)) rotate(4deg); } }
-    .kissScene[hidden] { display: none; }
-    .kissScene { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 20px; background: #100918dc; backdrop-filter: blur(12px); }
-    .kissCard { position: relative; width: min(570px, 100%); padding: 38px 24px 26px; overflow: hidden; border: 1px solid #ffd3e5a8; border-radius: 30px; background: radial-gradient(circle at 50% 34%, #fcbad27a, transparent 52%), linear-gradient(145deg, #3e2649, #201328); color: #fff3f9; text-align: center; box-shadow: 0 30px 100px #000a, 0 0 55px #ff95c760; animation: kissOpen .45s ease-out both; }
-    .kissCard::before { content: "♡  ✦  ♡  ✦  ♡"; position: absolute; top: 18px; left: 0; right: 0; color: #ffe0ed; letter-spacing: 1.1em; opacity: .75; }
-    .kissPictureWrap { position: relative; display: grid; place-items: center; height: min(52vh, 390px); margin: 12px 0; }
-    .kissPictureWrap::before { content: ""; position: absolute; width: min(70vw, 340px); aspect-ratio: 1; border-radius: 50%; background: #ffb6d868; filter: blur(55px); }
-    #kissPicture { position: relative; max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 16px 20px #14081c90); }
-    .kissCard h2 { margin: 0 0 5px; font: 500 clamp(36px, 7vw, 55px) "Cormorant Garamond", Georgia, serif; }
-    .kissCard p { margin: 0 0 21px; color: #f5dce9; }
-    .kissActions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-    .kissActions button { padding: 11px 18px; border: 1px solid #ffe0ec9e; border-radius: 999px; background: #ff9dc9; color: #301327; font-weight: 700; cursor: pointer; }
-    .kissActions button:last-child { background: transparent; color: #fff1f7; }
-    .kissActions button:hover { transform: translateY(-2px); }
-    .kissHeart { position: absolute; bottom: 26%; color: #ffe0ec; font-size: 25px; pointer-events: none; animation: kissFloat 3s ease-in-out infinite; }
-    .kissHeart:nth-of-type(2) { left: 12%; animation-delay: -.9s; }
-    .kissHeart:nth-of-type(3) { right: 13%; animation-delay: -1.8s; }
-    .kissHeart:nth-of-type(4) { right: 24%; animation-delay: -2.5s; }
-    @keyframes kissOpen { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
-    @keyframes kissFloat { 0%, 100% { transform: translateY(8px) rotate(-12deg); opacity: .35; } 50% { transform: translateY(-55px) rotate(12deg); opacity: 1; } }
-    .eyebrow { position: relative; z-index: 1; margin: 0 0 18px; color: #edb6d0; font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
-    .welcomeSection h1 { position: relative; z-index: 1; max-width: 870px; margin: 0 0 24px; font: 500 clamp(70px, 10vw, 148px)/.88 "Cormorant Garamond", Georgia, serif; letter-spacing: -.045em; text-shadow: 0 8px 35px #0006; }
-    .welcomeSection h1 span { color: #f6b8d3; font-style: italic; }
-    .heroSubtitle { position: relative; z-index: 1; max-width: 410px; color: #eddae6; font-size: clamp(15px, 1.5vw, 18px); line-height: 1.8; }
-    .scrollNote { position: absolute; bottom: 7%; left: max(8vw, 25px); color: #e5bad0; font-size: 10px; font-weight: 700; letter-spacing: .2em; text-decoration: none; }
-
-    .storySection { padding: 105px max(8vw, 25px) 120px; scroll-margin-top: 70px; background: radial-gradient(circle at 15% 10%, #a24c7840, transparent 35%), #211426; }
-    .storyHeading { max-width: 900px; margin: 0 auto 35px; text-align: center; }
-    .storyHeading h2 { margin: 8px 0 10px; font: 500 clamp(55px, 7vw, 96px)/.95 "Cormorant Garamond", Georgia, serif; }
-    .storyHeading p:last-child { color: #ebccdd; font-size: 14px; line-height: 1.6; }
-    .storyGallery { max-width: 1100px; margin: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-    .storyCard { position: relative; display: block; width: 100%; min-height: 350px; padding: 0; overflow: hidden; border: 1px solid #ffcade66; border-radius: 24px; background: radial-gradient(circle at 50% 28%, #a3679555, #38243d 70%); color: #fff4fa; cursor: pointer; box-shadow: 0 20px 42px #0004; transition: transform .3s, box-shadow .3s; }
-    .storyCard:hover, .storyCard:focus-visible { transform: translateY(-5px); box-shadow: 0 26px 50px #0006; }
-    .storyCard:focus-visible { outline: 2px solid #ffd4e6; outline-offset: 4px; }
-    .storyCard img { display: block; width: 100%; height: 350px; padding: 15px; object-fit: contain; transition: transform .45s; }
-    .storyCard:hover img:not(.angryGirl), .storyCard.show-note img:not(.angryGirl) { transform: scale(1.06); }
-    .storyNote { position: absolute; inset: auto 0 0; padding: 60px 22px 24px; background: linear-gradient(transparent, #1b0e24f2 55%); text-align: left; opacity: 0; transform: translateY(12px); transition: opacity .3s, transform .3s; }
-    .storyCard:hover .storyNote, .storyCard:focus-visible .storyNote, .storyCard.show-note .storyNote { opacity: 1; transform: translateY(0); }
-    .storyNote strong { display: block; margin-bottom: 5px; font: 600 29px "Cormorant Garamond", Georgia, serif; }
-    .storyNote span { display: block; font-size: 13px; line-height: 1.5; }
-    .galleryChaseLane { position: relative; height: 132px; margin: 38px calc(-1 * max(8vw, 25px)) -80px; overflow: hidden; pointer-events: none; }
-    .galleryChase { position: absolute; left: 0; bottom: 5px; display: flex; align-items: end; gap: 13px; width: 300px; visibility: hidden; }
-    .galleryChaseLane.active .galleryChase { visibility: visible; animation: galleryRun 12s linear infinite; }
-    .galleryChase > img { display: block; width: 205px; height: 115px; object-fit: contain; filter: drop-shadow(0 5px 8px #0006); animation: galleryCatHop .55s ease-in-out infinite alternate; }
-    .galleryChase::before { content: "✧ · ✧"; position: absolute; left: 5px; bottom: 13px; color: #ffe6c1; font-size: 19px; text-shadow: 0 0 9px #ffb5d9; animation: runningDust .65s ease-out infinite; }
-    .chickenWrap { position: relative; display: block; width: 78px; height: 88px; flex: none; animation: chickenHop .35s ease-in-out infinite alternate; }
-    .chicken { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 5px #0005) drop-shadow(0 0 8px #ffdb9680); }
-    .chickenPanic { position: absolute; top: -13px; right: -3px; color: #ffe9a0; font-size: 22px; font-weight: 900; text-shadow: 0 0 9px #ffb477; animation: panicPop .5s ease-in-out infinite alternate; }
-    @keyframes panicPop { to { transform: translateY(-7px) rotate(12deg) scale(1.3); opacity: .45; } }
-    @keyframes galleryRun { from { left: 0; } to { left: calc(100% + 30px); } }
-    @keyframes galleryCatHop { to { transform: translateY(-7px) rotate(-2deg); } }
-    @keyframes chickenHop { to { transform: translateY(-10px) rotate(3deg); } }
-    .storyCard .angryGirl { position: absolute; z-index: 2; left: 50%; bottom: 0; width: 85%; height: 82%; padding: 0; object-fit: contain; object-position: bottom; pointer-events: none; opacity: 0; transform: translate(-50%, 110%); transition: transform .75s cubic-bezier(.2,1.2,.35,1), opacity .3s; filter: drop-shadow(0 8px 15px #0009); }
-    .storyCard.girl-visible .angryGirl { opacity: 1; transform: translate(-50%, 0); }
-    .loveEffect { position: fixed; z-index: 10000; inset: 0; overflow: hidden; pointer-events: none; }
-    .loveEffect[hidden] { display: none; }
-    .loveHeart { position: absolute; top: -12vh; color: #ff9ccd; text-shadow: 0 0 15px #ff72b7; animation: heartFall var(--fall-time) linear forwards; }
-    @keyframes heartFall { to { transform: translate(var(--drift), 115vh) rotate(var(--spin)); opacity: 0; } }
-    .loveMessage { position: absolute; top: 45%; left: 50%; width: min(92vw, 950px); margin: 0; text-align: center; color: #fff2fb; font: 700 clamp(52px, 10vw, 135px)/1 "Cormorant Garamond", Georgia, serif; text-shadow: 0 0 20px #ff6daf, 0 8px 35px #7b1b61; opacity: 0; transform: translate(-50%, -40%) scale(.65); transition: opacity .35s, transform .5s; }
-    .loveMessage.visible { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    .loveMessage.second { font-size: clamp(42px, 7vw, 96px); }
-    .contentSection { padding: 110px max(8vw, 25px) 130px; scroll-margin-top: 70px; background: radial-gradient(circle at 80% 5%, #70355c3b, transparent 32%), #17101e; }
-    .sectionHeading { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 30px; margin-bottom: 40px; padding-bottom: 27px; border-bottom: 1px solid #f6c6dd3d; }
-    .sectionHeading .eyebrow { margin-bottom: 10px; }
-    .sectionHeading h2 { margin: 0; font: 500 clamp(58px, 8vw, 110px)/.95 "Cormorant Garamond", Georgia, serif; letter-spacing: -.04em; }
-    .sectionHeading p:last-child { max-width: 260px; margin: 0; color: #dbc4d3; font-size: 14px; line-height: 1.7; }
-    .videoGrid { display: flex; flex-direction: column; align-items: center; gap: 25px; }
-    .videoCard { overflow: hidden; border: 1px solid #f2c4da42; border-radius: 23px; background: #251a2b; box-shadow: 0 18px 45px #0003; transition: transform .3s, box-shadow .3s; }
-    .videoCard.featured { width: min(850px, 100%); }
-    .videoCard.comingSoon { width: min(570px, 100%); text-align: center; }
-    .comingSoon .videoPreview { aspect-ratio: 16 / 5; font-size: 60px; }
-    .comingSoon .cardText { padding: 18px 25px 22px; }
-    .videoCard:hover { transform: translateY(-6px); box-shadow: 0 24px 55px #0006; }
-    .videoPreview { display: grid; place-items: center; aspect-ratio: 16 / 9; background: radial-gradient(circle at 50% 50%, #f9b2d245, transparent 34%), linear-gradient(135deg, #34203d, #77526d); color: #ffe1ef; font: 400 86px "Cormorant Garamond", Georgia, serif; }
-    .videoEmbed { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; }
-    .cardText { padding: 22px 25px 28px; }
-    .cardText span { color: #e9aac7; font-size: 10px; font-weight: 700; letter-spacing: .19em; }
-    .cardText h3 { margin: 10px 0 5px; font: 500 36px/1.1 "Cormorant Garamond", Georgia, serif; }
-    .cardText p { margin: 0; color: #d8c1d1; font-size: 13px; line-height: 1.6; }
-    footer { padding: 30px; border-top: 1px solid #ffc6e122; color: #d9afc6; font-size: 11px; letter-spacing: .16em; text-align: center; text-transform: uppercase; }
-
-    /* Main page color controls */
-    #mainWebsite { --theme-bg: #140e1d; --theme-surface: #251a2b; --theme-text: #fbf3f8; --theme-muted: #dbc4d3; --theme-line: #f6c6dd3d; --theme-accent: #d987b6; background: var(--theme-bg); color: var(--theme-text); }
-    #mainWebsite[data-theme="light"] { --theme-bg: #fff9f8; --theme-surface: #fff; --theme-text: #342638; --theme-muted: #6a5967; --theme-line: #896d803d; }
-    #mainWebsite .welcomeSection { background: radial-gradient(circle at 80% 48%, color-mix(in srgb, var(--theme-accent) 27%, transparent), transparent 35%), linear-gradient(145deg, var(--theme-bg), color-mix(in srgb, var(--theme-accent) 12%, var(--theme-bg))); }
-    #mainWebsite .storySection { background: radial-gradient(circle at 18% 10%, color-mix(in srgb, var(--theme-accent) 24%, transparent), transparent 37%), var(--theme-bg); }
-    #mainWebsite .contentSection { background: radial-gradient(circle at 82% 8%, color-mix(in srgb, var(--theme-accent) 19%, transparent), transparent 34%), var(--theme-bg); }
-    #mainWebsite .heroLine, #mainWebsite .eyebrow, #mainWebsite .scrollNote, #mainWebsite .heroSubtitle, #mainWebsite .storyHeading p:last-child, #mainWebsite .cardText p, #mainWebsite .menuLinks small, #mainWebsite .menuLinks a span:last-child { color: var(--theme-muted); }
-    #mainWebsite .welcomeOrbit { border-color: color-mix(in srgb, var(--theme-accent) 55%, transparent); box-shadow: 0 0 65px color-mix(in srgb, var(--theme-accent) 18%, transparent), inset 0 0 70px color-mix(in srgb, var(--theme-accent) 18%, transparent); }
-    #mainWebsite .welcomeOrbit::before, #mainWebsite .orbitStar::before, #mainWebsite .welcomeSection h1 span { color: var(--theme-accent); }
-    #mainWebsite .menuHandle, #mainWebsite .siteMenu, #mainWebsite .notificationBell, #mainWebsite .notificationHint, #mainWebsite .themePanel { background: var(--theme-surface); color: var(--theme-text); border-color: var(--theme-line); }
-    #mainWebsite .menuLinks a { color: var(--theme-text); }
-    #mainWebsite .menuLinks a:hover, #mainWebsite .menuLinks a:focus-visible { background: color-mix(in srgb, var(--theme-accent) 22%, transparent); }
-    #mainWebsite .menuHandle span, #mainWebsite .menuPanelHead small, #mainWebsite .cardText span { color: var(--theme-muted); }
-    #mainWebsite .menuPanelHead, #mainWebsite .sectionHeading, #mainWebsite footer { border-color: var(--theme-line); }
-    #mainWebsite .videoCard { background: var(--theme-surface); color: var(--theme-text); border-color: var(--theme-line); }
-    #mainWebsite .videoPreview, #mainWebsite .storyCard { background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--theme-accent) 38%, var(--theme-surface)), var(--theme-surface) 75%); border-color: var(--theme-line); }
-    #mainWebsite .storyCard { color: #fff4fa; }
-    #mainWebsite .notificationHint, #mainWebsite footer { color: var(--theme-muted); }
-    #mainWebsite .backToIntro, #mainWebsite #backToIntro { background: var(--theme-accent); color: #1b1020; border-color: transparent; }
-    .themeTools { position: fixed; z-index: 46; top: 13px; left: 18px; font-family: "DM Sans", Arial, sans-serif; }
-    .themeButton { width: 44px; height: 44px; border: 1px solid var(--theme-line); border-radius: 50%; background: var(--theme-surface); color: var(--theme-text); font-size: 21px; cursor: pointer; box-shadow: 0 6px 22px #0004; }
-    .themePanel { position: absolute; top: 52px; left: 0; width: min(275px, calc(100vw - 36px)); padding: 17px; border: 1px solid var(--theme-line); border-radius: 18px; box-shadow: 0 18px 45px #0006; }
-    .themePanel[hidden] { display: none; }
-    .themePanel p { margin: 0 0 14px; font-size: 13px; font-weight: 700; }
-    .themeMode { width: 100%; padding: 10px; border: 1px solid var(--theme-line); border-radius: 10px; background: color-mix(in srgb, var(--theme-accent) 22%, var(--theme-surface)); color: var(--theme-text); cursor: pointer; }
-    .themePanel label { display: block; margin: 15px 0 6px; font-size: 12px; color: var(--theme-muted); }
-    .colorPicker { display: block; width: 100%; height: 38px; padding: 2px; border: 1px solid var(--theme-line); border-radius: 9px; background: var(--theme-surface); cursor: pointer; }
-    .swatches { display: flex; gap: 9px; margin-top: 13px; }
-    .swatches button { width: 29px; height: 29px; padding: 0; border: 2px solid #fff; border-radius: 50%; background: var(--swatch); cursor: pointer; box-shadow: 0 0 0 1px #756773; }
-    .swatches button:hover, .swatches button:focus-visible { transform: scale(1.15); }
-
-    @media (max-width: 700px) {
-      .welcomeSection { padding-top: 140px; }
-      .welcomeSection h1 { font-size: clamp(67px, 16vw, 110px); }
-      .welcomeOrbit { right: -8%; top: 71%; width: 48vw; min-width: 175px; opacity: .85; }
-      .welcomeOrbit::before { font-size: clamp(80px, 18vw, 140px); }
-      .welcomeOrbit::after { font-size: 8px; }
-      .sectionHeading { grid-template-columns: 1fr; gap: 13px; }
-      .storyGallery { grid-template-columns: 1fr; max-width: 400px; }
-      .storyCard, .storyCard img { min-height: 300px; height: 300px; }
-      .menuPanelHead { padding-right: 48px; }
+    .wind {
+      position: absolute;
+      left: -180px;
+      width: 120px;
+      height: 3px;
+      border-radius: 50%;
+      background: #ffffff8c;
+      opacity: 0;
+      pointer-events: none;
     }
+
+    .wind.one { top: 38%; }
+    .wind.two { top: 57%; width: 85px; animation-delay: .3s !important; }
+    .wind.three { top: 68%; width: 145px; animation-delay: .6s !important; }
+
+    #intro.breezy .wind {
+      animation: windBlow 1.2s linear infinite;
+    }
+
+    @keyframes windBlow {
+      20%, 80% { opacity: .5; }
+      100% { left: 110%; opacity: 0; }
+    }
+
+    #littleRunners {
+      position: absolute;
+      z-index: 2;
+      left: -230px;
+      bottom: 2%;
+      width: clamp(150px, 23vw, 220px);
+      pointer-events: none;
+      animation: runAcross 18s linear infinite;
+    }
+
+    #littleRunners img {
+      width: 100%;
+      animation: kittenHop .55s ease-in-out infinite alternate;
+      filter: drop-shadow(0 5px 8px #0007);
+    }
+
+    #littleRunners::after {
+      content: "✦";
+      position: absolute;
+      top: 20%;
+      right: -24px;
+      color: #fff6ad;
+      font-size: 24px;
+      text-shadow: 0 0 9px white, 0 0 22px #ffe298;
+      animation: pixieFloat 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes kittenHop {
+      to { transform: translateY(-8px) rotate(-2deg); }
+    }
+
+    @keyframes pixieFloat {
+      to { transform: translate(10px, -20px) rotate(20deg); }
+    }
+
+    @keyframes runAcross {
+      0%, 8% { transform: translateX(0); }
+      78%, 100% { transform: translateX(calc(100vw + 460px)); }
+    }
+
+    /* SYNTHWAVE MUSIC MODE */
+
+    #driveScene {
+      position: absolute;
+      inset: 0;
+      display: none;
+      overflow: hidden;
+      pointer-events: none;
+      background: linear-gradient(
+        #100725 0%,
+        #411356 38%,
+        #d63b89 55%,
+        #170d32 56%,
+        #070716 100%
+      );
+    }
+
+    #intro.drive #driveScene { display: block; }
+    #intro.drive #catButton,
+    #intro.drive #littleRunners { visibility: hidden; }
+
+    .driveStars {
+      position: absolute;
+      inset: 0 0 45%;
+      background-image:
+        radial-gradient(white 1px, transparent 2px),
+        radial-gradient(#9defff 1px, transparent 2px);
+      background-size: 100px 85px, 145px 125px;
+      background-position: 12px 8px, 60px 43px;
+    }
+
+    .driveSun {
+      position: absolute;
+      top: 18%;
+      left: 50%;
+      width: clamp(190px, 28vw, 360px);
+      aspect-ratio: 1;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background:
+        repeating-linear-gradient(to bottom,
+          transparent 0 11%,
+          #481058 11% 13%),
+        linear-gradient(#ffe8a7, #ff658b 70%, #d033bd);
+      box-shadow: 0 0 60px #ff62a488;
+    }
+
+    .driveMountains {
+      position: absolute;
+      inset: 40% 0 36%;
+      background: #1b0d3a;
+      clip-path: polygon(
+        0 70%, 9% 35%, 18% 75%, 30% 20%,
+        40% 70%, 51% 32%, 62% 76%, 73% 25%,
+        86% 72%, 94% 37%, 100% 65%, 100% 100%, 0 100%
+      );
+    }
+
+    .driveRoad {
+      position: absolute;
+      top: 55%;
+      bottom: -10%;
+      left: -8%;
+      right: -8%;
+      overflow: hidden;
+      background: linear-gradient(
+        90deg,
+        #ff39cb 0 1%,
+        #140d2f 1% 49.5%,
+        #ff43d9 49.5% 50.5%,
+        #140d2f 50.5% 99%,
+        #ff39cb 99%
+      );
+      clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+    }
+
+    .driveRoad::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0 43px,
+        #27eafa 44px 47px,
+        transparent 48px 84px
+      );
+      background-size: 100% 84px;
+      animation: roadMove .55s linear infinite;
+    }
+
+    @keyframes roadMove {
+      to { background-position-y: -84px; }
+    }
+
+    #carPicture {
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      bottom: 5%;
+      width: min(650px, 82vw);
+      transform: translateX(-50%);
+      filter: drop-shadow(0 15px 25px #08051e)
+              drop-shadow(0 0 13px #fb4de8);
+      animation: carBob .55s ease-in-out infinite alternate;
+    }
+
+    @keyframes carBob {
+      to { transform: translate(-50%, -6px); }
+    }
+
+    #intro.drive:not(.playing) .driveRoad::before,
+    #intro.drive:not(.playing) #carPicture {
+      animation-play-state: paused;
+    }
+
+    #intro.drive .introControls {
+      position: fixed;
+      z-index: 8;
+      top: 15px;
+      right: 15px;
+      width: auto;
+      margin: 0;
+    }
+
+    #intro.drive .cuteButton {
+      padding: 9px 13px;
+      font-size: 12px;
+    }
+
+    /* MAIN HOME */
+
+    #mainWebsite {
+      --page-bg: #140e1d;
+      --surface: #251a2b;
+      --page-text: #fbf3f8;
+      --muted: #dbc4d3;
+      --accent: #d987b6;
+      display: none;
+      min-height: 100vh;
+      background: var(--page-bg);
+      color: var(--page-text);
+    }
+
+    #mainWebsite.show {
+      display: block;
+      animation: pageReveal 1s ease both;
+    }
+
+    @keyframes pageReveal {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #mainWebsite[data-theme="light"] {
+      --page-bg: #fff9f8;
+      --surface: #fff;
+      --page-text: #342638;
+      --muted: #6a5967;
+    }
+
+    .menuZone {
+      position: fixed;
+      z-index: 45;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(400px, calc(100vw - 28px));
+    }
+
+    .menuHandle {
+      display: block;
+      margin: auto;
+      padding: 12px 20px;
+      border: 1px solid #f0bdd17d;
+      border-top: 0;
+      border-radius: 0 0 18px 18px;
+      background: #241827ed;
+      color: #fff0f7;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      backdrop-filter: blur(16px);
+    }
+
+    .siteMenu {
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(-10px);
+      padding: 18px;
+      border: 1px solid #f0bdd17d;
+      border-radius: 0 0 22px 22px;
+      background: #241827f5;
+      box-shadow: 0 25px 60px #0008;
+      transition: opacity .25s, transform .25s, visibility .25s;
+    }
+
+    .menuZone:hover .siteMenu,
+    .menuZone:focus-within .siteMenu,
+    .menuZone.open .siteMenu {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .siteMenu h2 {
+      margin: 3px 0 14px;
+      font: 600 34px "Cormorant Garamond", Georgia, serif;
+    }
+
+    .siteMenu a,
+    .siteMenu button {
+      display: block;
+      width: 100%;
+      padding: 13px 14px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: #fff0f7;
+      text-align: left;
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    .siteMenu a:hover,
+    .siteMenu button:hover { background: #ffb9d22b; }
+
+    .notificationBell {
+      position: fixed;
+      z-index: 50;
+      top: 13px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      border: 1px solid #f0bdd17d;
+      border-radius: 50%;
+      background: #251727ed;
+      color: white;
+      font-size: 20px;
+    }
+
+    .notificationBell.new {
+      animation: bellRing 2.5s ease-in-out infinite;
+      box-shadow: 0 0 23px #ff8ac780;
+    }
+
+    .notificationBell.new::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ff5c9f;
+    }
+
+    @keyframes bellRing {
+      0%, 70%, 100% { transform: rotate(0); }
+      76% { transform: rotate(-12deg); }
+      83% { transform: rotate(12deg); }
+      90% { transform: rotate(-7deg); }
+    }
+
+    .floatingTools {
+      position: fixed;
+      z-index: 50;
+      top: 13px;
+      left: 16px;
+      display: flex;
+      gap: 9px;
+    }
+
+    .roundTool {
+      width: 44px;
+      height: 44px;
+      border: 1px solid #f0bdd17d;
+      border-radius: 50%;
+      background: #251727ed;
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 6px 22px #0006;
+    }
+
+    .toolPanel {
+      position: fixed;
+      z-index: 51;
+      top: 68px;
+      left: 16px;
+      width: min(365px, calc(100vw - 32px));
+      max-height: calc(100vh - 82px);
+      overflow-y: auto;
+      padding: 19px;
+      border: 1px solid #ffd1e3a3;
+      border-radius: 22px;
+      background: #271a2cf5;
+      color: #fff4f9;
+      box-shadow: 0 22px 60px #0009;
+      backdrop-filter: blur(20px);
+    }
+
+    .toolPanel h2 {
+      margin: 0 0 4px;
+      font: 600 32px "Cormorant Garamond", Georgia, serif;
+    }
+
+    .toolPanel p {
+      margin: 0 0 17px;
+      color: #e9cedd;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .themeChoices,
+    .wallpaperChoices {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .themeChoice,
+    .wallpaperChoice {
+      min-height: 57px;
+      padding: 10px;
+      border: 1px solid #ffffff4d;
+      border-radius: 13px;
+      background: #ffffff13;
+      color: white;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .themeChoice[aria-pressed="true"],
+    .wallpaperChoice[aria-pressed="true"] {
+      border-color: #ffd9e9;
+      background: #ffbad141;
+      box-shadow: 0 0 14px #ff97c148;
+    }
+
+    .wallpaperPreview {
+      position: relative;
+      height: 150px;
+      overflow: hidden;
+      margin: 0 0 14px;
+      border: 1px solid #ffffff7a;
+      border-radius: 17px;
+      background: #155b80;
+    }
+
+    .wallpaperPreview::after {
+      content: "Welcome to Our World";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font: 600 27px "Cormorant Garamond", Georgia, serif;
+      text-align: center;
+      text-shadow: 0 2px 8px #000a;
+    }
+
+    .wallpaperPreview[data-wallpaper="underwater"] {
+      background:
+        repeating-linear-gradient(
+          106deg,
+          transparent 0 14%,
+          #d6fcff2e 17% 19%,
+          transparent 23% 33%
+        ),
+        linear-gradient(#176686, #123e68, #0e2a4f);
+      animation: waterPreview 7s ease-in-out infinite alternate;
+    }
+
+    @keyframes waterPreview {
+      to { background-position: 25px 0, 0 0; }
+    }
+
+    .wallpaperPreview[data-wallpaper="rose"] {
+      background: radial-gradient(circle at 70% 40%, #ffb3d6, transparent 35%),
+                  linear-gradient(145deg, #2c163c, #a55382);
+    }
+
+    .wallpaperPreview[data-wallpaper="storybook"] {
+      background: radial-gradient(circle at 76% 30%, #ffe3df, transparent 20%),
+                  linear-gradient(#2e214e, #935c8a);
+    }
+
+    .wallpaperPreview[data-wallpaper="minecraft"] {
+      background: linear-gradient(#6194ab 0 60%, #e7a5af 60% 72%, #54765c 72%);
+    }
+
+    .wallpaperPreview[data-wallpaper="synthwave"] {
+      background: radial-gradient(circle at 70% 45%, #ffa0b4 0 12%, transparent 13%),
+                  linear-gradient(#191435, #7c4084 65%, #281842);
+    }
+
+    .wallpaperChoice small {
+      display: block;
+      margin-top: 4px;
+      color: #efd6e1;
+      font-size: 10px;
+    }
+
+    /* WALLPAPER TEMPLATES */
+
+    .welcomeSection {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100svh;
+      overflow: hidden;
+      padding: 130px max(8vw, 25px) 105px;
+      background: #145576;
+      isolation: isolate;
+    }
+
+    .welcomeSection::before,
+    .welcomeSection::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .welcomeSection[data-wallpaper="underwater"] {
+      background:
+        radial-gradient(ellipse at 52% 0%, #8bd5ed66, transparent 48%),
+        linear-gradient(#176686 0%, #145376 40%, #123e68 75%, #0e2a4f 100%);
+    }
+
+    .welcomeSection[data-wallpaper="underwater"]::before {
+      background: repeating-linear-gradient(
+        106deg,
+        transparent 0 14%,
+        #d6fcff30 17% 19%,
+        transparent 23% 33%
+      );
+      transform-origin: top;
+      animation: underwaterLight 9s ease-in-out infinite alternate;
+    }
+
+    .welcomeSection[data-wallpaper="underwater"]::after {
+      opacity: .3;
+      background: repeating-radial-gradient(
+        ellipse at 50% 0%,
+        transparent 0 25px,
+        #bff8ff4d 29px 33px,
+        transparent 37px 65px
+      );
+      background-size: 130% 70%;
+      animation: underwaterRipple 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes underwaterLight {
+      to { transform: skewX(8deg) translateX(5%); opacity: .35; }
+    }
+
+    @keyframes underwaterRipple {
+      to { background-position: 8% 20%; opacity: .16; }
+    }
+
+    .welcomeSection[data-wallpaper="rose"] {
+      background:
+        radial-gradient(circle at 78% 43%, #f6a4d888, transparent 29%),
+        radial-gradient(circle at 10% 80%, #c06baa77, transparent 35%),
+        linear-gradient(145deg, #1a1025, #654060);
+    }
+
+    .welcomeSection[data-wallpaper="rose"]::before,
+    .welcomeSection[data-wallpaper="storybook"]::before {
+      background-image: radial-gradient(#fff0fa 1px, transparent 2px);
+      background-size: 95px 105px;
+      animation: twinkle 5s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      to { opacity: .35; }
+    }
+
+    .welcomeSection[data-wallpaper="storybook"] {
+      background:
+        radial-gradient(circle at 77% 32%, #f9aac866, transparent 25%),
+        linear-gradient(170deg, #241a45, #714474 55%, #b47b98 82%, #30213e);
+    }
+
+    .welcomeSection[data-wallpaper="minecraft"] {
+      background:
+        radial-gradient(circle at 78% 29%, #ffecbd80, transparent 22%),
+        linear-gradient(#4d81a0, #e8a5b2 68%, #524b6b);
+    }
+
+    .welcomeSection[data-wallpaper="minecraft"]::after {
+      top: auto;
+      height: 29%;
+      background: linear-gradient(#537a5b 0 18%, #344959 18%);
+      clip-path: polygon(
+        0 52%, 8% 52%, 8% 42%, 18% 42%, 18% 60%,
+        29% 60%, 29% 33%, 41% 33%, 41% 50%,
+        52% 50%, 52% 39%, 63% 39%, 63% 57%,
+        73% 57%, 73% 30%, 86% 30%, 86% 49%,
+        100% 49%, 100% 100%, 0 100%
+      );
+    }
+
+    .welcomeSection[data-wallpaper="synthwave"] {
+      background:
+        radial-gradient(circle at 78% 41%, #ff8eae 0 9%, transparent 10%),
+        linear-gradient(#181537, #693c83 55%, #ea6fa2 71%, #1c1742 72%);
+    }
+
+    .welcomeSection[data-wallpaper="synthwave"]::after {
+      top: 72%;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          transparent 0 11%,
+          #ff8fdf55 11.2% 11.4%,
+          transparent 11.6% 22%
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent 0 22px,
+          #ff8fdf66 23px 25px
+        );
+      transform: perspective(260px) rotateX(42deg) scale(1.3);
+      transform-origin: top;
+    }
+
+    .heroLine {
+      position: absolute;
+      top: 12%;
+      left: max(8vw, 25px);
+      right: max(8vw, 25px);
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      color: #fff1f8;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .23em;
+    }
+
+    .heroLine::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, #ffe9f590, transparent);
+    }
+
+    .welcomeSection h1,
+    .welcomeSection .eyebrow,
+    .welcomeSection .heroSubtitle,
+    .welcomeSection .scrollNote {
+      position: relative;
+      z-index: 2;
+      color: white;
+      text-shadow: 0 3px 16px #10253e9c;
+    }
+
+    .eyebrow {
+      margin: 0 0 15px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .welcomeSection h1 {
+      max-width: 850px;
+      margin: 0 0 23px;
+      font: 500 clamp(68px, 10vw, 145px)/.88 "Cormorant Garamond", Georgia, serif;
+      letter-spacing: -.045em;
+    }
+
+    .welcomeSection h1 span {
+      color: #ffd0e5;
+      font-style: italic;
+    }
+
+    .heroSubtitle {
+      max-width: 440px;
+      font-size: clamp(15px, 1.5vw, 18px);
+      line-height: 1.75;
+    }
+
+    .scrollNote {
+      position: absolute !important;
+      bottom: 7%;
+      left: max(8vw, 25px);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .17em;
+      text-decoration: none;
+    }
+
+    .welcomeOrbit {
+      position: absolute;
+      z-index: 3;
+      top: 52%;
+      right: 8%;
+      width: min(31vw, 420px);
+      aspect-ratio: 1;
+      transform: translateY(-50%);
+      border: 1px solid #ffc3e799;
+      border-radius: 50%;
+      background: transparent;
+      color: #ffd2e8;
+      box-shadow: 0 0 65px #ff9ed755, inset 0 0 70px #ff8ac32b;
+      animation: orbitFloat 5s ease-in-out infinite alternate;
+    }
+
+    .welcomeOrbit::before {
+      content: "♡";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font: 400 clamp(120px, 17vw, 240px) "Cormorant Garamond", Georgia, serif;
+      text-shadow: 0 0 40px #ff83bf;
+    }
+
+    .welcomeOrbit::after {
+      content: "TAP THE HEART ♡";
+      position: absolute;
+      bottom: 15%;
+      left: 0;
+      right: 0;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .15em;
+    }
+
+    .orbitStar {
+      position: absolute;
+      inset: 0;
+      animation: starOrbit 9s linear infinite;
+    }
+
+    .orbitStar::before {
+      content: "✦";
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff0f8;
+      font-size: 34px;
+      text-shadow: 0 0 14px #ff83bf;
+    }
+
+    @keyframes starOrbit {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes orbitFloat {
+      to { transform: translateY(calc(-50% - 14px)) rotate(4deg); }
+    }
+
+    /* GALLERY AND VIDEOS */
+
+    .storySection,
+    .contentSection {
+      padding: 105px max(8vw, 25px) 120px;
+      background: var(--page-bg);
+      scroll-margin-top: 70px;
+    }
+
+    .storySection {
+      background:
+        radial-gradient(circle at 16% 10%,
+          color-mix(in srgb, var(--accent) 26%, transparent),
+          transparent 38%),
+        var(--page-bg);
+    }
+
+    .sectionHeading {
+      max-width: 1050px;
+      margin: 0 auto 35px;
+      text-align: center;
+    }
+
+    .sectionHeading h2 {
+      margin: 0 0 10px;
+      font: 500 clamp(55px, 7vw, 92px)/.95 "Cormorant Garamond", Georgia, serif;
+    }
+
+    .sectionHeading p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .storyGallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 19px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .storyCard {
+      position: relative;
+      min-height: 350px;
+      overflow: hidden;
+      padding: 0;
+      border: 1px solid #ffc9de6e;
+      border-radius: 23px;
+      background: radial-gradient(circle at 50% 25%, #a3679555, #38243d);
+      color: white;
+      box-shadow: 0 20px 42px #0004;
+      transition: transform .3s;
+    }
+
+    .storyCard:hover { transform: translateY(-5px); }
+
+    .storyCard > img:first-child {
+      display: block;
+      width: 100%;
+      height: 350px;
+      padding: 15px;
+      object-fit: contain;
+    }
+
+    .storyNote {
+      position: absolute;
+      inset: auto 0 0;
+      padding: 50px 20px 22px;
+      background: linear-gradient(transparent, #1b0e24ef 55%);
+      color: white;
+      text-align: left;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .25s, transform .25s;
+    }
+
+    .storyCard:hover .storyNote,
+    .storyCard:focus-visible .storyNote,
+    .storyCard.show-note .storyNote {
+      opacity: 1;
+      transform: none;
+    }
+
+    .storyNote strong {
+      display: block;
+      font: 600 29px "Cormorant Garamond", Georgia, serif;
+    }
+
+    .storyNote span { font-size: 13px; }
+
+    #angryGirl {
+      position: absolute;
+      z-index: 3;
+      left: 50%;
+      bottom: 0;
+      width: 85%;
+      height: 82%;
+      object-fit: contain;
+      object-position: bottom;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 110%);
+      transition: transform .75s cubic-bezier(.2,1.2,.35,1), opacity .3s;
+    }
+
+    #codCard.girl-visible #angryGirl {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .galleryChaseLane {
+      position: relative;
+      height: 130px;
+      overflow: hidden;
+      margin: 38px calc(-1 * max(8vw, 25px)) -80px;
+      pointer-events: none;
+    }
+
+    .galleryChase {
+      position: absolute;
+      left: -290px;
+      bottom: 4px;
+      display: flex;
+      align-items: end;
+      gap: 10px;
+      visibility: hidden;
+      width: 290px;
+    }
+
+    .galleryChaseLane.active .galleryChase {
+      visibility: visible;
+      animation: galleryRun 12s linear infinite;
+    }
+
+    .galleryChase img:first-child {
+      width: 200px;
+      height: 110px;
+      object-fit: contain;
+      animation: kittenHop .55s ease-in-out infinite alternate;
+    }
+
+    #chickenPicture {
+      width: 75px;
+      height: 85px;
+      object-fit: contain;
+      animation: chickenHop .35s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 8px #ffe3a6);
+    }
+
+    @keyframes chickenHop {
+      to { transform: translateY(-9px) rotate(3deg); }
+    }
+
+    @keyframes galleryRun {
+      to { left: calc(100% + 30px); }
+    }
+
+    .videoGrid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 23px;
+    }
+
+    .videoCard {
+      overflow: hidden;
+      width: min(850px, 100%);
+      border: 1px solid #f2c4da65;
+      border-radius: 23px;
+      background: var(--surface);
+      box-shadow: 0 18px 45px #0003;
+    }
+
+    .videoCard iframe {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+    }
+
+    .videoCard.comingSoon {
+      width: min(570px, 100%);
+      text-align: center;
+    }
+
+    .videoPreview {
+      display: grid;
+      place-items: center;
+      height: 130px;
+      background: linear-gradient(135deg, #34203d, #77526d);
+      color: #ffe1ef;
+      font: 70px "Cormorant Garamond", Georgia, serif;
+    }
+
+    .cardText { padding: 22px 25px 26px; }
+
+    .cardText h3 {
+      margin: 0 0 5px;
+      font: 500 36px "Cormorant Garamond", Georgia, serif;
+    }
+
+    .cardText p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer {
+      padding: 30px;
+      border-top: 1px solid #ffc6e133;
+      color: var(--muted);
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    /* KISS MOMENT */
+
+    .kissScene {
+      position: fixed;
+      z-index: 90;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: #100918df;
+      backdrop-filter: blur(12px);
+    }
+
+    .kissCard {
+      position: relative;
+      width: min(570px, 100%);
+      overflow: hidden;
+      padding: 40px 23px 27px;
+      border: 1px solid #ffd3e5a8;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 50% 34%, #fcbad27a, transparent 52%),
+        linear-gradient(145deg, #3e2649, #201328);
+      text-align: center;
+      box-shadow: 0 30px 100px #000a, 0 0 55px #ff95c760;
+      animation: cardOpen .4s ease-out both;
+    }
+
+    @keyframes cardOpen {
+      from { opacity: 0; transform: scale(.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    #kissPicture {
+      display: block;
+      max-width: 100%;
+      height: min(51vh, 390px);
+      margin: 5px auto 10px;
+      object-fit: contain;
+      filter: drop-shadow(0 16px 20px #14081c90);
+    }
+
+    .kissCard h2 {
+      margin: 0 0 5px;
+      font: 500 53px "Cormorant Garamond", Georgia, serif;
+    }
+
+    .kissCard p { color: #f5dce9; }
+
+    .kissCard button {
+      padding: 11px 17px;
+      border: 1px solid #ffe0ec9e;
+      border-radius: 999px;
+      background: #ff9dc9;
+      color: #301327;
+      font-weight: 700;
+    }
+
+    /* LOVE EFFECT */
+
+    .loveEffect {
+      position: fixed;
+      z-index: 110;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .loveHeart {
+      position: absolute;
+      top: -12vh;
+      color: #ff9ccd;
+      text-shadow: 0 0 15px #ff72b7;
+      animation: heartFall var(--fall-time) linear forwards;
+    }
+
+    @keyframes heartFall {
+      to {
+        transform: translate(var(--drift), 115vh) rotate(var(--spin));
+        opacity: 0;
+      }
+    }
+
+    .loveMessage {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      width: min(92vw, 950px);
+      margin: 0;
+      color: #fff2fb;
+      text-align: center;
+      font: 700 clamp(52px, 10vw, 135px)/1 "Cormorant Garamond", Georgia, serif;
+      text-shadow: 0 0 20px #ff6daf, 0 8px 35px #7b1b61;
+      opacity: 0;
+      transform: translate(-50%, -40%) scale(.65);
+      transition: opacity .35s, transform .5s;
+    }
+
+    .loveMessage.visible {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .loveMessage.second {
+      font-size: clamp(42px, 7vw, 96px);
+    }
+
+    .tinyClickWave {
+      position: fixed;
+      z-index: 200;
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid #ffc4e0;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: tinyWave .55s ease-out forwards;
+    }
+
+    @keyframes tinyWave {
+      from { transform: translate(-50%, -50%) scale(.2); opacity: .9; }
+      to { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+    }
+
+    @media (max-width: 800px) {
+      .welcomeSection {
+        justify-content: flex-start;
+        padding-top: 150px;
+      }
+
+      .welcomeOrbit {
+        top: auto;
+        right: 7%;
+        bottom: 12%;
+        width: min(40vw, 240px);
+        transform: none;
+      }
+
+      .welcomeOrbit::before {
+        font-size: clamp(100px, 22vw, 170px);
+      }
+
+      .welcomeOrbit::after {
+        font-size: 8px;
+      }
+
+      .storyGallery { grid-template-columns: 1fr; }
+
+      .storyCard { min-height: 300px; }
+
+      .storyCard > img:first-child { height: 300px; }
+    }
+
+    @media (max-width: 520px) {
+      #intro.drive .introControls {
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .welcomeSection h1 {
+        font-size: clamp(62px, 17vw, 95px);
+      }
+
+      .welcomeOrbit {
+        bottom: 9%;
+        width: 170px;
+      }
+
+      .welcomeOrbit::before { font-size: 120px; }
+
+      .scrollNote { bottom: 5%; }
+
+      .floatingTools { top: 63px; }
+
+      .toolPanel { top: 116px; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      #mainWebsite .welcomeOrbit, #mainWebsite .orbitStar, #mainWebsite .notificationBell.new, #mainWebsite .galleryChase, #mainWebsite .galleryChase > img, #mainWebsite .chickenWrap, #mainWebsite .chickenPanic { animation: none; }
-      #mainWebsite .galleryChase { left: 20px; }
-      #mainWebsite .videoCard { transition: none; }
-      .kissCard, .kissHeart { animation: none; }
-      .storyCard .angryGirl, .loveMessage { transition: none; }
-      .loveHeart { animation-duration: .01ms; }
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
+
 <body>
   <div id="intro">
-    <button id="catButton" type="button" aria-label="Enter the website">
-      <img id="catPicture" src="Tail.png" alt="Two cats standing together">
-      <span class="musicNote left">♫</span><span class="musicNote right">♪</span>
-    </button>
-    <span class="heart one">💗</span><span class="heart two">💕</span><span class="heart three">💗</span>
-    <span class="wind one"></span><span class="wind two"></span><span class="wind three"></span>
-    <button id="introText" type="button">♡ Come with us ♡</button>
-    <button id="musicButton" type="button">♫ Play music ♡</button>
-    <button id="songButton" type="button">♪ Switch to Drive By</button>
-    <div id="littleRunners" aria-hidden="true"><img src="Baby.png" alt=""><span class="blackKittenSpeed">✧ · ·</span></div>
-    <div id="driveScene" aria-hidden="true"><div class="stars"></div><div class="shootingStar"></div><div class="shootingStar second"></div><div class="sun"></div><div class="mountains back"></div><div class="mountains"></div><div class="horizon"></div><div class="road"></div><div class="carGlow"></div><img class="car" src="Car.png" alt=""></div>
-  </div>
+    <div class="wind one"></div>
+    <div class="wind two"></div>
+    <div class="wind three"></div>
 
-  <main id="mainWebsite">
-    <div class="themeTools">
-      <button class="themeButton" id="themeButton" type="button" aria-label="Choose page colors" aria-expanded="false" aria-controls="themePanel">🎨</button>
-      <div class="themePanel" id="themePanel" hidden>
-        <p>Make this page yours ♡</p>
-        <button class="themeMode" id="themeMode" type="button">☀ Switch to light mode</button>
-        <label for="colorPicker">Choose any color</label>
-        <input class="colorPicker" id="colorPicker" type="color" value="#d987b6">
-        <div class="swatches" aria-label="Suggested colors">
-          <button type="button" data-color="#d987b6" style="--swatch:#d987b6" aria-label="Pink"></button>
-          <button type="button" data-color="#a78be2" style="--swatch:#a78be2" aria-label="Purple"></button>
-          <button type="button" data-color="#62b8c8" style="--swatch:#62b8c8" aria-label="Blue"></button>
-          <button type="button" data-color="#e7ac62" style="--swatch:#e7ac62" aria-label="Gold"></button>
-          <button type="button" data-color="#87ba86" style="--swatch:#87ba86" aria-label="Green"></button>
-        </div>
+    <span class="introHeart one">♡</span>
+    <span class="introHeart two">♥</span>
+    <span class="introHeart three">♡</span>
+
+    <div id="driveScene">
+      <div class="driveStars"></div>
+      <div class="driveSun"></div>
+      <div class="driveMountains"></div>
+      <div class="driveRoad"></div>
+      <img id="carPicture" src="Car.png" alt="Our cats driving">
+    </div>
+
+    <div id="littleRunners">
+      <img id="introBabyPicture" src="Baby.png" alt="">
+    </div>
+
+    <div class="introCenter">
+      <button id="catButton" type="button" aria-label="Come with us">
+        <img id="catPicture" src="Tail.png" alt="Our cats together">
+      </button>
+
+      <div class="introControls">
+        <button id="introText" class="cuteButton" type="button">Come With Us ♡</button>
+        <button id="musicButton" class="cuteButton" type="button">♫ Play music</button>
+        <button id="songButton" class="cuteButton" type="button">Switch to Drive By</button>
       </div>
     </div>
+
+    <audio id="everytimeAudio" src="Ariana Grande - everytime (Official Instrumental).mp3" loop preload="metadata"></audio>
+    <audio id="driveAudio" src="Eric Bellinger - Drive By (Audio).mp3" loop preload="metadata"></audio>
+  </div>
+
+  <main id="mainWebsite" data-theme="dark">
     <div class="menuZone" id="menuZone">
-      <button class="menuHandle" id="menuHandle" type="button" aria-expanded="false" aria-controls="siteMenu">✦ OUR SAYANG <span>MENU ↓</span></button>
-      <nav class="siteMenu" id="siteMenu" aria-label="Main menu">
-        <div class="menuPanelHead"><strong>Our Sayang ♡</strong><small>THE MENU</small></div>
-        <div class="menuLinks">
-          <a href="#home"><small>01</small>Home<span>↗</span></a>
-          <a href="#videos"><small>02</small>Videos<span>↗</span></a>
-          <a href="#story"><small>03</small>Our Story<span>↗</span></a>
-        </div>
-        <button id="backToIntro" type="button">↶ Back to our cats</button>
+      <button class="menuHandle" id="menuHandle" type="button">
+        ✦ MENU <span>⌄</span>
+      </button>
+
+      <nav class="siteMenu" aria-label="Main menu">
+        <h2>Our Sayang ♡</h2>
+        <a href="#home">01 &nbsp; Our Sayang</a>
+        <a href="#gallery">02 &nbsp; Our Story</a>
+        <a href="#videos">03 &nbsp; Videos</a>
+        <button id="backToIntro" type="button">↶ &nbsp; Back to our cats</button>
       </nav>
     </div>
-    <button class="notificationBell" id="notificationBell" type="button" aria-label="See new video">🔔</button>
-    <span class="notificationHint" id="notificationHint" hidden>New video is waiting ♡</span>
-    <section class="welcomeSection" id="home">
-      <div class="welcomeGlow"></div><button class="welcomeOrbit" id="heartMomentButton" type="button" aria-label="See our cats' little moment"><span class="orbitStar" aria-hidden="true"></span></button>
-      <div class="heroLine">A PLACE FOR OUR STORY</div>
-      <p class="eyebrow">✦ A little world for us ✦</p>
+
+    <div class="floatingTools">
+      <button id="themeButton" class="roundTool" type="button"
+              aria-label="Choose colors" aria-expanded="false">🎨</button>
+      <button id="wallpaperButton" class="roundTool" type="button"
+              aria-label="Choose wallpaper" aria-expanded="false">🖼️</button>
+    </div>
+
+    <section id="themePanel" class="toolPanel" aria-label="Color settings" hidden>
+      <h2>Choose your colors</h2>
+      <p>Change the colors of our home.</p>
+
+      <div class="themeChoices">
+        <button class="themeChoice" data-theme-choice="dark" type="button">🌙 Dark mode</button>
+        <button class="themeChoice" data-theme-choice="light" type="button">☀️ Light mode</button>
+        <button class="themeChoice" data-accent="#d987b6" type="button">🌸 Rose pink</button>
+        <button class="themeChoice" data-accent="#a48bea" type="button">💜 Lavender</button>
+        <button class="themeChoice" data-accent="#6bc4dc" type="button">🩵 Ocean blue</button>
+        <button class="themeChoice" data-accent="#eda578" type="button">🍑 Peach</button>
+      </div>
+    </section>
+
+    <section id="wallpaperPanel" class="toolPanel" aria-label="Wallpaper settings" hidden>
+      <h2>Our wallpapers ✨</h2>
+      <p>Choose the scene behind “Welcome to Our World.”</p>
+
+      <div id="wallpaperPreview" class="wallpaperPreview"
+           data-wallpaper="underwater"></div>
+
+      <div class="wallpaperChoices">
+        <button class="wallpaperChoice" data-wallpaper-choice="underwater" type="button">
+          🌊 Underwater
+          <small>Moving water and light</small>
+        </button>
+
+        <button class="wallpaperChoice" data-wallpaper-choice="rose" type="button">
+          🌸 Rose glow
+          <small>Soft romantic colors</small>
+        </button>
+
+        <button class="wallpaperChoice" data-wallpaper-choice="storybook" type="button">
+          ✨ Storybook sky
+          <small>A dreamy evening</small>
+        </button>
+
+        <button class="wallpaperChoice" data-wallpaper-choice="minecraft" type="button">
+          🌿 Blocky sunset
+          <small>A little Minecraft feeling</small>
+        </button>
+
+        <button class="wallpaperChoice" data-wallpaper-choice="synthwave" type="button">
+          🌆 Synthwave
+          <small>Neon sunset colors</small>
+        </button>
+      </div>
+    </section>
+
+    <button id="notificationBell" class="notificationBell new"
+            type="button" aria-label="Video notification">🔔</button>
+
+    <section id="home" class="welcomeSection" data-wallpaper="underwater">
+      <div class="heroLine">A LITTLE PLACE JUST FOR US</div>
+
+      <p class="eyebrow">Welcome to Our World</p>
+
       <h1>Welcome to<br><span>Our World.</span></h1>
-      <p class="heroSubtitle">A place for you to watch my videos and, whenever you visit, remember that I love you more.</p>
-      <a class="scrollNote" href="#videos">SCROLL TO SEE MY LATEST VIDEOS ↓</a>
+
+      <p class="heroSubtitle">
+        A place for you to watch my video and hopefully always visit
+        the website to know that I love you more.
+      </p>
+
+      <button id="heartButton" class="welcomeOrbit"
+              type="button" aria-label="See our secret moment">
+        <span class="orbitStar"></span>
+      </button>
+
+      <a class="scrollNote" href="#gallery">SCROLL TO SEE MY LATEST VIDEOS ↓</a>
     </section>
-    <section class="contentSection" id="videos">
+
+    <section id="gallery" class="storySection">
       <div class="sectionHeading">
-        <div><p class="eyebrow">01 / Videos</p><h2>Videos</h2></div>
+        <p class="eyebrow">A PLACE FOR OUR STORY</p>
+        <h2>Our Story</h2>
+        <p>Tap a picture for a little surprise ♡</p>
       </div>
-      <div class="videoGrid">
-        <div class="videoCard featured"><iframe class="videoEmbed" src="https://www.youtube-nocookie.com/embed/NKo4wzEY5I8" title="Our first video" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><div class="cardText"><span>VIDEO 01</span><h3>Our first video</h3><p>Press play to watch it here ♡</p></div></div>
-        <div class="videoCard comingSoon"><div class="videoPreview">✦</div><div class="cardText"><span>COMING SOON</span></div></div>
-      </div>
-    </section>
-    <section class="storySection" id="story">
-      <div class="storyHeading">
-        <p class="eyebrow">✦ A LITTLE GALLERY ✦</p>
-        <h2>A Place for Our Story</h2>
-        <p>Hover over a picture, or tap it, to read a little note ♡</p>
-      </div>
+
       <div class="storyGallery">
-        <button class="storyCard" id="ourWorldCard" type="button" aria-label="Our World. Play cat and chicken chase" aria-pressed="false">
-          <img src="OurWorld.png" onerror="this.onerror=null;this.src='Our World.jpg'" alt="Our World" loading="lazy">
-          <span class="storyNote"><strong>Our World ♡</strong><span>Our first time playing Minecraft together</span></span>
+        <button id="worldCard" class="storyCard" type="button">
+          <img src="OurWorld.png" alt="Our first Minecraft moment"
+               onerror="this.onerror=null;this.src='Our World.jpg'">
+          <div class="storyNote">
+            <strong>Our World</strong>
+            <span>Our first time playing Minecraft together</span>
+          </div>
         </button>
-        <button class="storyCard" id="mySayangCard" type="button" aria-label="My Sayang. Play love surprise" aria-pressed="false">
-          <img src="My Sayang.png" alt="My Sayang" loading="lazy">
-          <span class="storyNote"><strong>My Sayang ♡</strong><span>Most beautiful girl in this world</span></span>
+
+        <button id="sayangCard" class="storyCard" type="button">
+          <img src="My Sayang.png" alt="My Sayang">
+          <div class="storyNote">
+            <strong>My Sayang</strong>
+            <span>Most beautiful girl in this world</span>
+          </div>
         </button>
-        <button class="storyCard" id="codCard" type="button" aria-label="COD. Show angry girl" aria-pressed="false">
-          <img src="COD.jpg" alt="COD" loading="lazy">
-          <img class="angryGirl" src="Angry Girl.png" alt="" aria-hidden="true" loading="lazy">
-          <span class="storyNote"><strong>Playing together ♡</strong><span>First time playing COD with my girl</span></span>
+
+        <button id="codCard" class="storyCard" type="button">
+          <img src="COD.jpg" alt="Our first COD game">
+          <img id="angryGirl" src="Angry Girl.png" alt="">
+          <div class="storyNote">
+            <strong>COD</strong>
+            <span>First time playing COD with my girl</span>
+          </div>
         </button>
       </div>
-      <div class="galleryChaseLane" id="galleryChaseLane" aria-hidden="true">
+
+      <div id="galleryChaseLane" class="galleryChaseLane">
         <div class="galleryChase">
-          <img id="galleryRunnerPicture" src="Baby.png" alt="">
-          <span class="chickenWrap"><img class="chicken" id="chickenPicture" src="Chicken.png" alt=""><span class="chickenPanic">!</span></span>
+          <img id="galleryBabyPicture" src="Baby.png" alt="">
+          <img id="chickenPicture" src="Chicken.png" alt="">
         </div>
       </div>
     </section>
-    <footer>Aku Sayang Kamu Cantik ♡</footer>
-    <div class="kissScene" id="kissScene" role="dialog" aria-modal="true" aria-label="Our secret moment" hidden>
-      <div class="kissCard">
-        <span class="kissHeart" style="left:23%">♡</span><span class="kissHeart">♥</span><span class="kissHeart">♡</span><span class="kissHeart">✦</span>
-        <div class="kissPictureWrap"><img id="kissPicture" src="Kiss.png" alt="Our cats sharing a sweet moment"></div>
-        <h2>Our secret moment ♡</h2>
-        <p>This is us</p>
-        <div class="kissActions"><button id="kissReplay" type="button">↻ Watch again</button><button id="kissClose" type="button">Close ♡</button></div>
+
+    <section id="videos" class="contentSection">
+      <div class="sectionHeading">
+        <p class="eyebrow">01 / VIDEOS</p>
+        <h2>Videos</h2>
       </div>
-    </div>
+
+      <div class="videoGrid">
+        <article class="videoCard">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/NKo4wzEY5I8"
+            title="Our video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy"></iframe>
+
+          <div class="cardText">
+            <h3>Our first video ♡</h3>
+            <p>A little video made for you.</p>
+          </div>
+        </article>
+
+        <article class="videoCard comingSoon">
+          <div class="videoPreview">♡</div>
+          <div class="cardText">
+            <h3>Coming soon</h3>
+            <p>There will be more for you to watch here.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer>Aku Sayang Kamu Cantik ♡</footer>
   </main>
-  <div class="loveEffect" id="loveEffect" aria-live="polite" hidden>
-    <p class="loveMessage" id="loveMessage"></p>
+
+  <div id="kissScene" class="kissScene" hidden>
+    <div class="kissCard">
+      <img id="kissPicture" src="kiss.png" alt="Our cats sharing a moment">
+      <h2>This is us</h2>
+      <p>Our secret moment ♡</p>
+      <button id="closeKiss" type="button">Close ♡</button>
+    </div>
   </div>
 
-  <audio id="introMusic" src="Ariana Grande - everytime (Official Instrumental).mp3" loop preload="auto"></audio>
+  <div id="loveEffect" class="loveEffect" hidden>
+    <div id="loveMessage" class="loveMessage"></div>
+  </div>
+
   <script>
     const intro = document.getElementById("intro");
+    const introText = document.getElementById("introText");
     const catButton = document.getElementById("catButton");
     const catPicture = document.getElementById("catPicture");
-    const introText = document.getElementById("introText");
-    const mainWebsite = document.getElementById("mainWebsite");
     const musicButton = document.getElementById("musicButton");
-    const introMusic = document.getElementById("introMusic");
-    const backButton = document.getElementById("backToIntro");
     const songButton = document.getElementById("songButton");
-    const menuZone = document.getElementById("menuZone");
-    const menuHandle = document.getElementById("menuHandle");
-    const notificationBell = document.getElementById("notificationBell");
-    const notificationHint = document.getElementById("notificationHint");
-    const themeButton = document.getElementById("themeButton");
-    const themePanel = document.getElementById("themePanel");
-    const themeMode = document.getElementById("themeMode");
-    const colorPicker = document.getElementById("colorPicker");
-    const runnerPicture = document.querySelector("#littleRunners img");
-    const galleryRunnerPicture = document.getElementById("galleryRunnerPicture");
+    const mainWebsite = document.getElementById("mainWebsite");
+
+    const everytimeAudio = document.getElementById("everytimeAudio");
+    const driveAudio = document.getElementById("driveAudio");
+
+    const introBabyPicture = document.getElementById("introBabyPicture");
+    const galleryBabyPicture = document.getElementById("galleryBabyPicture");
     const chickenPicture = document.getElementById("chickenPicture");
-    const galleryChaseLane = document.getElementById("galleryChaseLane");
-    const ourWorldCard = document.getElementById("ourWorldCard");
-    const mySayangCard = document.getElementById("mySayangCard");
-    const codCard = document.getElementById("codCard");
-    const loveEffect = document.getElementById("loveEffect");
-    const loveMessage = document.getElementById("loveMessage");
-    const heartMomentButton = document.getElementById("heartMomentButton");
-    const kissScene = document.getElementById("kissScene");
-    const kissPicture = document.getElementById("kissPicture");
-    const kissReplay = document.getElementById("kissReplay");
-    const kissClose = document.getElementById("kissClose");
-    const carPicture = document.querySelector("#driveScene .car");
-    const idleFrames = ["Tail.png", "Tail 2.png", "Tail 3.png"];
-    const danceFrames = ["Dance 1.png", "Dance 2.png", "Dance 3.png", "Dance 4.png"];
-    const runningFrames = ["Baby.png", "Baby 2.png", "Baby 3.png", "Baby 4.png", "Baby 5.png", "Baby 6.png"];
-    const chickenFrames = ["Chicken.png", "Chicken2.png", "Chicken3.png", "Chicken4.png", "Chicken5.png", "Chicken6.png"];
+    const carPicture = document.getElementById("carPicture");
+
+    const tailFrames = ["Tail.png", "Tail 2.png", "Tail 3.png"];
+    const danceFrames = [
+      "Dance 1.png",
+      "Dance 2.png",
+      "Dance 3.png",
+      "Dance 4.png"
+    ];
     const carFrames = ["Car.png", "Car2.png", "Car3.png", "Car4.png"];
-    const kissFrames = ["Kiss.png", "Kiss2.png", "Kiss3.png", "Kiss4.png", "Kiss5.png", "Kiss6.png"];
-    [...idleFrames, ...danceFrames, ...runningFrames, ...chickenFrames, ...carFrames, ...kissFrames, "Walking Away.png"].forEach(filename => { const image = new Image(); image.src = filename; });
+    const babyFrames = [
+      "Baby.png",
+      "Baby 2.png",
+      "Baby 3.png",
+      "Baby 4.png",
+      "Baby 5.png",
+      "Baby 6.png"
+    ];
+    const chickenFrames = [
+      "Chicken.png",
+      "Chicken2.png",
+      "Chicken3.png",
+      "Chicken4.png",
+      "Chicken5.png",
+      "Chicken6.png"
+    ];
+    const kissFrames = [
+      "kiss.png",
+      "kiss2.png",
+      "kiss3.png",
+      "kiss4.png",
+      "kiss5.png",
+      "kiss6.png"
+    ];
+
+    let song = "everytime";
+    let playing = false;
+    let entering = false;
+    let chaseActive = false;
     let kissTimer;
-    function playKiss() {
-      clearInterval(kissTimer);
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { kissPicture.src = kissFrames[5]; return; }
-      let frame = 0;
-      kissPicture.src = kissFrames[frame];
-      kissTimer = setInterval(() => {
-        frame++;
-        kissPicture.src = kissFrames[frame];
-        if (frame === kissFrames.length - 1) { clearInterval(kissTimer); heartSound(); }
-      }, 340);
-    }
-    function closeKiss() { clearInterval(kissTimer); kissScene.hidden = true; heartMomentButton.focus(); }
-    heartMomentButton.addEventListener("click", () => { kissScene.hidden = false; playKiss(); kissClose.focus(); });
-    kissReplay.addEventListener("click", playKiss);
-    kissClose.addEventListener("click", closeKiss);
-    kissScene.addEventListener("click", event => { if (event.target === kissScene) closeKiss(); });
-    document.addEventListener("keydown", event => { if (event.key === "Escape" && !kissScene.hidden) closeKiss(); });
-
-    let screen = "intro";
-    let mode = "cute";
-    let transitionId = 0;
-    let idleFrame = 0, danceFrame = 0, runFrame = 0;
-    let carFrame = 0;
-    let danceTimer = null;
-    let soundContext = null;
-    let beatContext = null, analyser = null, frequencies = null, beatFrame = null, average = 0, pulse = 0;
-    let galleryRunFrame = 0;
-
-    function setTheme(theme) {
-      const chosen = theme === "light" ? "light" : "dark";
-      mainWebsite.dataset.theme = chosen;
-      themeMode.textContent = chosen === "light" ? "☾ Switch to dark mode" : "☀ Switch to light mode";
-      try { localStorage.setItem("ourSayangTheme", chosen); } catch (error) {}
-    }
-    function setColor(color) {
-      if (!/^#[0-9a-fA-F]{6}$/.test(color)) return;
-      mainWebsite.style.setProperty("--theme-accent", color);
-      colorPicker.value = color;
-      try { localStorage.setItem("ourSayangColor", color); } catch (error) {}
-    }
-    let savedTheme = "dark", savedColor = "#d987b6";
-    try {
-      savedTheme = localStorage.getItem("ourSayangTheme") || savedTheme;
-      savedColor = localStorage.getItem("ourSayangColor") || savedColor;
-    } catch (error) {}
-    setTheme(savedTheme);
-    setColor(savedColor);
-    themeButton.addEventListener("click", () => {
-      themePanel.hidden = !themePanel.hidden;
-      themeButton.setAttribute("aria-expanded", String(!themePanel.hidden));
-    });
-    document.addEventListener("click", event => {
-      if (event.target.closest(".themeTools")) return;
-      themePanel.hidden = true;
-      themeButton.setAttribute("aria-expanded", "false");
-    });
-    themeMode.addEventListener("click", () => setTheme(mainWebsite.dataset.theme === "light" ? "dark" : "light"));
-    colorPicker.addEventListener("input", () => setColor(colorPicker.value));
-    document.querySelectorAll("[data-color]").forEach(button => button.addEventListener("click", () => setColor(button.dataset.color)));
-
-    // Adding or changing a video link brings back the bell for returning visitors.
-    const latestVideo = [...document.querySelectorAll("#videos .videoEmbed")].map(video => video.getAttribute("src")).join("|");
-    let seenVideo = "";
-    try { seenVideo = localStorage.getItem("ourLoveSeenVideo") || ""; } catch (error) {}
-    if (latestVideo && latestVideo !== seenVideo) {
-      notificationBell.classList.add("new");
-      notificationHint.hidden = false;
-    }
-    notificationBell.addEventListener("click", () => {
-      notificationBell.classList.remove("new");
-      notificationHint.hidden = true;
-      try { localStorage.setItem("ourLoveSeenVideo", latestVideo); } catch (error) {}
-      document.getElementById("videos").scrollIntoView({ behavior: "smooth" });
-    });
-    menuHandle.addEventListener("click", () => {
-      const open = menuZone.classList.toggle("open");
-      menuHandle.setAttribute("aria-expanded", String(open));
-    });
-    document.querySelectorAll("#siteMenu a").forEach(link => link.addEventListener("click", () => {
-      menuZone.classList.remove("open");
-      menuHandle.setAttribute("aria-expanded", "false");
-    }));
     let loveTimers = [];
-    let heartShower;
-    function loveLater(callback, delay) { loveTimers.push(setTimeout(callback, delay)); }
-    function makeFallingHeart() {
-      const heart = document.createElement("span");
-      heart.className = "loveHeart";
-      heart.textContent = Math.random() > .35 ? "♥" : "♡";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.fontSize = 18 + Math.random() * 34 + "px";
-      heart.style.setProperty("--fall-time", 3.5 + Math.random() * 2.5 + "s");
-      heart.style.setProperty("--drift", (Math.random() - .5) * 170 + "px");
-      heart.style.setProperty("--spin", (Math.random() - .5) * 140 + "deg");
-      loveEffect.appendChild(heart);
-      heart.addEventListener("animationend", () => heart.remove(), { once: true });
+
+    const frame = {
+      tail: 0,
+      dance: 0,
+      car: 0,
+      baby: 0,
+      chicken: 0,
+      kiss: 0
+    };
+
+    function activeAudio() {
+      return song === "everytime" ? everytimeAudio : driveAudio;
     }
-    function showLoveMessage(message, second = false) {
-      loveMessage.classList.remove("visible");
-      loveMessage.textContent = message;
-      loveMessage.classList.toggle("second", second);
-      requestAnimationFrame(() => requestAnimationFrame(() => loveMessage.classList.add("visible")));
+
+    function stopAllAudio() {
+      everytimeAudio.pause();
+      driveAudio.pause();
     }
-    function playSayangLove() {
-      loveTimers.forEach(clearTimeout);
-      loveTimers = [];
-      clearInterval(heartShower);
-      loveEffect.querySelectorAll(".loveHeart").forEach(heart => heart.remove());
-      loveEffect.hidden = false;
-      for (let i = 0; i < 12; i++) loveLater(makeFallingHeart, i * 80);
-      heartShower = setInterval(makeFallingHeart, 220);
-      showLoveMessage("MUUUAAH");
-      loveLater(() => loveMessage.classList.remove("visible"), 1500);
-      loveLater(() => showLoveMessage("I love you more than life", true), 2050);
-      loveLater(() => loveMessage.classList.remove("visible"), 4550);
-      loveLater(() => clearInterval(heartShower), 5600);
-      loveLater(() => { loveEffect.hidden = true; loveEffect.querySelectorAll(".loveHeart").forEach(heart => heart.remove()); }, 11500);
+
+    function updateMusicButton() {
+      musicButton.textContent = playing ? "❚❚ Pause music" : "♫ Play music";
+      songButton.textContent =
+        song === "everytime" ? "Switch to Drive By" : "Switch to Everytime";
     }
-    document.querySelectorAll(".storyCard").forEach(card => card.addEventListener("click", () => {
-      const showing = card.classList.toggle("show-note");
-      card.setAttribute("aria-pressed", String(showing));
-      if (card === ourWorldCard) {
-        galleryChaseLane.classList.toggle("active", showing);
-        galleryRunnerPicture.src = runningFrames[0];
-        chickenPicture.src = chickenFrames[0];
-        galleryRunFrame = 0;
-        chickenFrame = 0;
+
+    function updateSongScene() {
+      intro.classList.toggle("drive", song === "drive");
+      intro.classList.toggle("dancing", playing && song === "everytime");
+      intro.classList.toggle("playing", playing);
+
+      if (!playing && song === "everytime") {
+        catPicture.src = tailFrames[frame.tail];
       }
-      if (card === codCard) card.classList.toggle("girl-visible", showing);
-      if (card === mySayangCard) playSayangLove();
-    }));
+    }
 
-    setInterval(() => {
-      if (screen !== "intro" || !introMusic.paused) return;
-      idleFrame = (idleFrame + 1) % idleFrames.length;
-      catPicture.src = idleFrames[idleFrame];
-    }, 450);
-    setInterval(() => {
-      runFrame = (runFrame + 1) % runningFrames.length;
-      runnerPicture.src = runningFrames[runFrame];
-    }, 180);
-    let chickenFrame = 0;
-    setInterval(() => {
-      if (screen !== "website" || !galleryChaseLane.classList.contains("active")) return;
-      galleryRunFrame = (galleryRunFrame + 1) % runningFrames.length;
-      galleryRunnerPicture.src = runningFrames[galleryRunFrame];
-      chickenFrame = (chickenFrame + 1) % chickenFrames.length;
-      chickenPicture.src = chickenFrames[chickenFrame];
-    }, 180);
-    setInterval(() => {
-      if (screen !== "intro" || mode !== "drive" || introMusic.paused) return;
-      carFrame = (carFrame + 1) % carFrames.length;
-      carPicture.src = carFrames[carFrame];
-    }, 240);
-
-    function startDance() {
-      if (mode === "drive") return;
-      if (danceTimer) return;
-      danceFrame = 0;
-      catPicture.src = danceFrames[0];
-      catPicture.alt = "Two cats dancing";
-      intro.classList.add("dancing");
-      danceTimer = setInterval(() => {
-        danceFrame = (danceFrame + 1) % danceFrames.length;
-        catPicture.src = danceFrames[danceFrame];
-      }, 220);
-    }
-    function stopDance() {
-      clearInterval(danceTimer);
-      danceTimer = null;
-      intro.classList.remove("dancing");
-      intro.style.setProperty("--beat-light", "0");
-      catPicture.src = idleFrames[idleFrame];
-      catPicture.alt = "Two cats standing together";
-    }
-    function prepareBeat() {
-      if (beatContext) return;
-      beatContext = new (window.AudioContext || window.webkitAudioContext)();
-      const source = beatContext.createMediaElementSource(introMusic);
-      analyser = beatContext.createAnalyser();
-      analyser.fftSize = 2048;
-      frequencies = new Uint8Array(analyser.frequencyBinCount);
-      source.connect(analyser);
-      analyser.connect(beatContext.destination);
-    }
-    function animateBeat() {
-      if (introMusic.paused || !analyser) return;
-      analyser.getByteFrequencyData(frequencies);
-      const hzPerBin = beatContext.sampleRate / analyser.fftSize;
-      const first = Math.floor(60 / hzPerBin), last = Math.min(frequencies.length - 1, Math.ceil(220 / hzPerBin));
-      let total = 0;
-      for (let i = first; i <= last; i++) total += frequencies[i];
-      const bass = total / (last - first + 1);
-      average = average === 0 ? bass : average * .94 + bass * .06;
-      const hit = Math.min(1, Math.max(0, (bass - average * .85) / (average * .55 + 12)));
-      pulse = Math.max(hit, pulse * .84);
-      intro.style.setProperty("--beat-lift", `${-12 * pulse}px`);
-      intro.style.setProperty("--beat-zoom", `${1 + .045 * pulse}`);
-      intro.style.setProperty("--beat-glow", `${18 + 32 * pulse}px`);
-      intro.style.setProperty("--beat-light", `${.25 + .5 * pulse}`);
-      beatFrame = requestAnimationFrame(animateBeat);
-    }
-    introMusic.addEventListener("play", () => { cancelAnimationFrame(beatFrame); average = 0; animateBeat(); });
-    introMusic.addEventListener("pause", () => { cancelAnimationFrame(beatFrame); pulse = 0; intro.classList.remove("playing"); });
     musicButton.addEventListener("click", async () => {
-      if (screen !== "intro") return;
-      if (introMusic.paused) {
-        try {
-          prepareBeat();
-          await beatContext.resume();
-          await introMusic.play();
-          musicButton.textContent = "♫ Pause music ♡";
-          intro.classList.add("playing");
-          startDance();
-        } catch (error) { musicButton.textContent = "Could not play music"; }
+      if (playing) {
+        stopAllAudio();
+        playing = false;
       } else {
-        introMusic.pause();
-        musicButton.textContent = "♫ Play music ♡";
-        stopDance();
+        stopAllAudio();
+
+        try {
+          await activeAudio().play();
+          playing = true;
+        } catch (error) {
+          playing = false;
+          alert("The song could not play. Check that the MP3 filename matches exactly.");
+        }
       }
-    });
-    songButton.addEventListener("click", async () => {
-      if (screen !== "intro") return;
-      introMusic.pause();
-      stopDance();
-      mode = mode === "cute" ? "drive" : "cute";
-      intro.classList.toggle("drive", mode === "drive");
-      if (mode === "drive") { carFrame = 0; carPicture.src = carFrames[0]; }
-      songButton.textContent = mode === "drive" ? "♪ Switch to Everytime" : "♪ Switch to Drive By";
-      introMusic.src = mode === "drive" ? "Eric Bellinger - Drive By (Audio).mp3" : "Ariana Grande - everytime (Official Instrumental).mp3";
-      introMusic.load();
-      try {
-        prepareBeat();
-        await beatContext.resume();
-        await introMusic.play();
-        musicButton.textContent = "♫ Pause music ♡";
-        intro.classList.add("playing");
-        startDance();
-      } catch (error) { musicButton.textContent = "Could not play music"; }
+
+      updateSongScene();
+      updateMusicButton();
     });
 
-    function note(frequency, when, duration, volume) {
-      if (!soundContext) return;
-      const oscillator = soundContext.createOscillator(), gain = soundContext.createGain();
-      oscillator.type = "sine"; oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(.001, when);
-      gain.gain.linearRampToValueAtTime(volume, when + .03);
-      gain.gain.exponentialRampToValueAtTime(.001, when + duration);
-      oscillator.connect(gain); gain.connect(soundContext.destination);
-      oscillator.start(when); oscillator.stop(when + duration);
-    }
-    function heartSound() { if (!soundContext) return; const now = soundContext.currentTime; note(660, now, .25, .09); note(880, now + .12, .4, .07); }
-    function footstep() { if (soundContext) note(110, soundContext.currentTime, .09, .045); }
-    function windSound() {
-      if (!soundContext) return;
-      const length = Math.floor(soundContext.sampleRate * 1.5);
-      const buffer = soundContext.createBuffer(1, length, soundContext.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < length; i++) data[i] = Math.random() * 2 - 1;
-      const source = soundContext.createBufferSource(), filter = soundContext.createBiquadFilter(), gain = soundContext.createGain();
-      source.buffer = buffer; filter.type = "lowpass"; filter.frequency.value = 500;
-      const now = soundContext.currentTime;
-      gain.gain.setValueAtTime(.001, now);
-      gain.gain.linearRampToValueAtTime(.035, now + .4);
-      gain.gain.linearRampToValueAtTime(.001, now + 1.5);
-      source.connect(filter); filter.connect(gain); gain.connect(soundContext.destination); source.start(now);
-    }
-    function later(ms, id, action) { setTimeout(() => { if (transitionId === id && screen === "entering") action(); }, ms); }
+    songButton.addEventListener("click", async () => {
+      const wasPlaying = playing;
+      stopAllAudio();
+
+      song = song === "everytime" ? "drive" : "everytime";
+      playing = false;
+
+      if (wasPlaying) {
+        try {
+          await activeAudio().play();
+          playing = true;
+        } catch (error) {
+          alert("The song could not play. Check that the MP3 filename matches exactly.");
+        }
+      }
+
+      updateSongScene();
+      updateMusicButton();
+    });
+
     function enterWebsite() {
-      if (screen !== "intro") return;
-      screen = "entering";
-      const id = ++transitionId;
-      introMusic.pause(); introMusic.currentTime = 0;
-      stopDance();
-      intro.classList.remove("drive", "playing");
-      musicButton.style.opacity = "0"; musicButton.disabled = true;
-      songButton.style.opacity = "0"; songButton.disabled = true;
-      introText.style.opacity = "0"; introText.disabled = true;
-      try { soundContext = soundContext || new (window.AudioContext || window.webkitAudioContext)(); soundContext.resume(); heartSound(); } catch (error) { soundContext = null; }
-      intro.classList.add("loving");
-      later(1100, id, () => {
-        catPicture.style.opacity = "0";
-        later(250, id, () => {
-          catPicture.src = "Walking Away.png";
-          catPicture.alt = "Two cats walking away together";
-          catPicture.style.opacity = "1";
-          intro.classList.add("breezy"); catButton.classList.add("walking");
-          windSound(); footstep();
-          [350, 700, 1050, 1400].forEach(delay => later(delay, id, footstep));
-        });
-      });
-      later(3850, id, () => { intro.style.opacity = "0"; mainWebsite.classList.add("show"); });
-      later(4850, id, () => { intro.style.display = "none"; screen = "website"; });
+      if (entering) return;
+      entering = true;
+
+      stopAllAudio();
+      playing = false;
+      updateMusicButton();
+
+      intro.classList.remove("drive", "dancing", "playing");
+      intro.classList.add("loving", "breezy");
+
+      catPicture.src = "Walking Away.png";
+      catButton.classList.add("walking");
+      introText.disabled = true;
+
+      setTimeout(() => {
+        mainWebsite.classList.add("show");
+        intro.style.opacity = "0";
+      }, 1600);
+
+      setTimeout(() => {
+        intro.hidden = true;
+        intro.style.opacity = "";
+      }, 2600);
     }
+
     catButton.addEventListener("click", enterWebsite);
     introText.addEventListener("click", enterWebsite);
-    backButton.addEventListener("click", () => {
-      ++transitionId;
-      screen = "intro";
-      introMusic.pause(); introMusic.currentTime = 0;
-      stopDance();
-      musicButton.textContent = "♫ Play music ♡";
-      musicButton.style.opacity = "1"; musicButton.disabled = false;
-      songButton.style.opacity = "1"; songButton.disabled = false;
-      intro.classList.toggle("drive", mode === "drive");
-      introText.style.opacity = "1"; introText.disabled = false;
-      intro.classList.remove("loving", "breezy");
-      catButton.classList.remove("walking");
-      catPicture.style.opacity = "1";
+
+    document.getElementById("backToIntro").addEventListener("click", () => {
       mainWebsite.classList.remove("show");
+      intro.hidden = false;
+      intro.classList.remove("loving", "breezy", "drive", "dancing", "playing");
+      catButton.classList.remove("walking");
+      catPicture.src = "Tail.png";
+      introText.disabled = false;
+      entering = false;
+      song = "everytime";
+      playing = false;
+      updateMusicButton();
       window.scrollTo(0, 0);
-      intro.style.display = "flex";
-      requestAnimationFrame(() => { intro.style.opacity = "1"; });
+      document.getElementById("menuZone").classList.remove("open");
     });
-    document.addEventListener("click", event => {
-      if (screen === "website" && mainWebsite.contains(event.target)) {
-        try {
-          soundContext = soundContext || new (window.AudioContext || window.webkitAudioContext)();
-          soundContext.resume();
-          const oscillator = soundContext.createOscillator();
-          const gain = soundContext.createGain();
-          oscillator.type = "sine";
-          oscillator.frequency.setValueAtTime(630, soundContext.currentTime);
-          oscillator.frequency.exponentialRampToValueAtTime(820, soundContext.currentTime + .09);
-          gain.gain.setValueAtTime(.022, soundContext.currentTime);
-          gain.gain.exponentialRampToValueAtTime(.001, soundContext.currentTime + .14);
-          oscillator.connect(gain);
-          gain.connect(soundContext.destination);
-          oscillator.start();
-          oscillator.stop(soundContext.currentTime + .14);
-        } catch (error) {}
+
+    /* Intro and gallery animation frames */
+    setInterval(() => {
+      frame.tail = (frame.tail + 1) % tailFrames.length;
+      frame.dance = (frame.dance + 1) % danceFrames.length;
+      frame.car = (frame.car + 1) % carFrames.length;
+      frame.baby = (frame.baby + 1) % babyFrames.length;
+      frame.chicken = (frame.chicken + 1) % chickenFrames.length;
+
+      if (!entering) {
+        if (song === "drive") {
+          carPicture.src = carFrames[frame.car];
+        } else if (playing) {
+          catPicture.src = danceFrames[frame.dance];
+        } else {
+          catPicture.src = tailFrames[frame.tail];
+        }
       }
-      if (!event.target.closest("button")) return;
+
+      introBabyPicture.src = babyFrames[frame.baby];
+
+      if (chaseActive) {
+        galleryBabyPicture.src = babyFrames[frame.baby];
+        chickenPicture.src = chickenFrames[frame.chicken];
+      }
+    }, 250);
+
+    /* A small beat effect while Everytime plays */
+    setInterval(() => {
+      if (playing && song === "everytime") {
+        intro.style.setProperty(
+          "--beat-lift",
+          Math.random() > .5 ? "-7px" : "0px"
+        );
+        intro.style.setProperty(
+          "--beat-zoom",
+          Math.random() > .5 ? "1.035" : "1"
+        );
+        intro.style.setProperty(
+          "--beat-glow",
+          Math.random() > .5 ? "26px" : "13px"
+        );
+      }
+    }, 300);
+
+    /* Slide-down menu */
+    const menuZone = document.getElementById("menuZone");
+
+    document.getElementById("menuHandle").addEventListener("click", () => {
+      menuZone.classList.toggle("open");
+    });
+
+    menuZone.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => menuZone.classList.remove("open"));
+    });
+
+    /* Wallpaper menu and color menu */
+    const themeButton = document.getElementById("themeButton");
+    const wallpaperButton = document.getElementById("wallpaperButton");
+    const themePanel = document.getElementById("themePanel");
+    const wallpaperPanel = document.getElementById("wallpaperPanel");
+    const wallpaperPreview = document.getElementById("wallpaperPreview");
+    const welcomeSection = document.querySelector(".welcomeSection");
+
+    function closePanels() {
+      themePanel.hidden = true;
+      wallpaperPanel.hidden = true;
+      themeButton.setAttribute("aria-expanded", "false");
+      wallpaperButton.setAttribute("aria-expanded", "false");
+    }
+
+    themeButton.addEventListener("click", () => {
+      const shouldOpen = themePanel.hidden;
+      closePanels();
+      themePanel.hidden = !shouldOpen;
+      themeButton.setAttribute("aria-expanded", String(shouldOpen));
+    });
+
+    wallpaperButton.addEventListener("click", () => {
+      const shouldOpen = wallpaperPanel.hidden;
+      closePanels();
+      wallpaperPanel.hidden = !shouldOpen;
+      wallpaperButton.setAttribute("aria-expanded", String(shouldOpen));
+    });
+
+    document.addEventListener("click", event => {
+      if (!event.target.closest(".floatingTools, .toolPanel")) {
+        closePanels();
+      }
+    });
+
+    const wallpaperNames = [
+      "underwater",
+      "rose",
+      "storybook",
+      "minecraft",
+      "synthwave"
+    ];
+
+    function setWallpaper(name) {
+      if (!wallpaperNames.includes(name)) name = "underwater";
+
+      welcomeSection.dataset.wallpaper = name;
+      wallpaperPreview.dataset.wallpaper = name;
+      localStorage.setItem("ourWallpaper", name);
+
+      document.querySelectorAll("[data-wallpaper-choice]").forEach(button => {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.wallpaperChoice === name)
+        );
+      });
+    }
+
+    document.querySelectorAll("[data-wallpaper-choice]").forEach(button => {
+      button.addEventListener("click", () => {
+        setWallpaper(button.dataset.wallpaperChoice);
+      });
+    });
+
+    function setTheme(name) {
+      mainWebsite.dataset.theme = name;
+      localStorage.setItem("ourTheme", name);
+
+      document.querySelectorAll("[data-theme-choice]").forEach(button => {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.themeChoice === name)
+        );
+      });
+    }
+
+    document.querySelectorAll("[data-theme-choice]").forEach(button => {
+      button.addEventListener("click", () => {
+        setTheme(button.dataset.themeChoice);
+      });
+    });
+
+    document.querySelectorAll("[data-accent]").forEach(button => {
+      button.addEventListener("click", () => {
+        const color = button.dataset.accent;
+        mainWebsite.style.setProperty("--accent", color);
+        localStorage.setItem("ourAccent", color);
+
+        document.querySelectorAll("[data-accent]").forEach(choice => {
+          choice.setAttribute(
+            "aria-pressed",
+            String(choice === button)
+          );
+        });
+      });
+    });
+
+    setWallpaper(localStorage.getItem("ourWallpaper") || "underwater");
+    setTheme(localStorage.getItem("ourTheme") || "dark");
+
+    const savedAccent = localStorage.getItem("ourAccent");
+    if (savedAccent) {
+      mainWebsite.style.setProperty("--accent", savedAccent);
+
+      document.querySelectorAll("[data-accent]").forEach(button => {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.accent === savedAccent)
+        );
+      });
+    }
+
+    /* Kiss animation when the big heart is clicked */
+    const kissScene = document.getElementById("kissScene");
+    const kissPicture = document.getElementById("kissPicture");
+
+    function openKiss() {
+      frame.kiss = 0;
+      kissPicture.src = kissFrames[0];
+      kissScene.hidden = false;
+      clearInterval(kissTimer);
+
+      kissTimer = setInterval(() => {
+        frame.kiss = (frame.kiss + 1) % kissFrames.length;
+        kissPicture.src = kissFrames[frame.kiss];
+      }, 230);
+    }
+
+    function closeKiss() {
+      kissScene.hidden = true;
+      clearInterval(kissTimer);
+    }
+
+    document.getElementById("heartButton").addEventListener("click", openKiss);
+    document.getElementById("closeKiss").addEventListener("click", closeKiss);
+
+    kissScene.addEventListener("click", event => {
+      if (event.target === kissScene) closeKiss();
+    });
+
+    /* Gallery surprises */
+    const worldCard = document.getElementById("worldCard");
+    const sayangCard = document.getElementById("sayangCard");
+    const codCard = document.getElementById("codCard");
+    const chaseLane = document.getElementById("galleryChaseLane");
+
+    worldCard.addEventListener("click", () => {
+      chaseActive = !chaseActive;
+      chaseLane.classList.toggle("active", chaseActive);
+      worldCard.classList.toggle("show-note", chaseActive);
+
+      if (chaseActive) {
+        galleryBabyPicture.src = babyFrames[0];
+        chickenPicture.src = chickenFrames[0];
+      }
+    });
+
+    codCard.addEventListener("click", () => {
+      codCard.classList.toggle("girl-visible");
+      codCard.classList.toggle("show-note");
+    });
+
+    const loveEffect = document.getElementById("loveEffect");
+    const loveMessage = document.getElementById("loveMessage");
+
+    function addFallingHeart() {
+      const heart = document.createElement("span");
+      heart.className = "loveHeart";
+      heart.textContent = Math.random() > .5 ? "♥" : "♡";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = 18 + Math.random() * 28 + "px";
+      heart.style.setProperty("--fall-time", 3 + Math.random() * 2 + "s");
+      heart.style.setProperty("--drift", -90 + Math.random() * 180 + "px");
+      heart.style.setProperty("--spin", Math.random() * 360 + "deg");
+
+      loveEffect.appendChild(heart);
+      heart.addEventListener("animationend", () => heart.remove());
+    }
+
+    function showLoveText(text, second = false) {
+      loveMessage.className = "loveMessage" + (second ? " second" : "");
+      loveMessage.textContent = text;
+
+      requestAnimationFrame(() => {
+        loveMessage.classList.add("visible");
+      });
+    }
+
+    sayangCard.addEventListener("click", () => {
+      loveTimers.forEach(clearTimeout);
+      loveTimers = [];
+      loveEffect.innerHTML = '<div id="loveMessage" class="loveMessage"></div>';
+
+      const message = document.getElementById("loveMessage");
+      loveEffect.hidden = false;
+      sayangCard.classList.add("show-note");
+
+      for (let i = 0; i < 25; i++) {
+        loveTimers.push(setTimeout(addFallingHeart, i * 95));
+      }
+
+      message.textContent = "MUUUAAH";
+      requestAnimationFrame(() => message.classList.add("visible"));
+
+      loveTimers.push(setTimeout(() => {
+        message.classList.remove("visible");
+      }, 1500));
+
+      loveTimers.push(setTimeout(() => {
+        message.className = "loveMessage second";
+        message.textContent = "I love you more than life";
+        requestAnimationFrame(() => message.classList.add("visible"));
+      }, 2100));
+
+      loveTimers.push(setTimeout(() => {
+        message.classList.remove("visible");
+      }, 4400));
+
+      loveTimers.push(setTimeout(() => {
+        loveEffect.hidden = true;
+        loveEffect.innerHTML = '<div id="loveMessage" class="loveMessage"></div>';
+      }, 6600));
+    });
+
+    /* Notification opens the video section */
+    const notificationBell = document.getElementById("notificationBell");
+
+    notificationBell.addEventListener("click", () => {
+      notificationBell.classList.remove("new");
+      document.getElementById("videos").scrollIntoView({
+        behavior: "smooth"
+      });
+    });
+
+    /* Tiny click wave */
+    document.addEventListener("click", event => {
       const wave = document.createElement("span");
       wave.className = "tinyClickWave";
-      wave.style.left = event.clientX + "px"; wave.style.top = event.clientY + "px";
+      wave.style.left = event.clientX + "px";
+      wave.style.top = event.clientY + "px";
       document.body.appendChild(wave);
-      setTimeout(() => wave.remove(), 600);
-    }, true);
+      wave.addEventListener("animationend", () => wave.remove());
+    });
+
+    updateMusicButton();
   </script>
 </body>
 </html>

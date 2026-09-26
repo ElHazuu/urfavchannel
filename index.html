@@ -787,5 +787,79 @@
     filter: drop-shadow(0 0 8px rgba(255, 195, 225, 0.35));
   }
 </style>
+  <style>
+  /* One matching heart-and-star ornament */
+  #intro::before,
+  #intro:has(#catButton.dancing)::before {
+    content: "♡  ✦  ♡  ✦  ♡";
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    padding: 0 18px 12px;
+    border-bottom: 1px solid rgba(255, 202, 226, 0.55);
+    color: #ffd1e7;
+    font-size: clamp(19px, 2.5vw, 28px);
+    letter-spacing: 0.25em;
+    white-space: nowrap;
+    text-align: center;
+    opacity: 0.75;
+    pointer-events: none;
+    z-index: 2;
+    animation: ornamentFloat 4s ease-in-out infinite alternate;
+  }
+
+  @keyframes ornamentFloat {
+    from { transform: translate(-50%, 0); }
+    to { transform: translate(-50%, -8px); }
+  }
+
+  /* Hearts appear in front of the cats when clicked */
+  #intro .heart {
+    top: 38%;
+    z-index: 5;
+  }
+
+  /* Tiny wave at the point of a button click */
+  .tinyClickWave {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid rgba(255, 196, 224, 0.9);
+    border-radius: 50%;
+    box-shadow: 0 0 9px rgba(255, 155, 204, 0.5);
+    pointer-events: none;
+    z-index: 10000;
+    animation: tinyWave 0.55s ease-out forwards;
+  }
+
+  @keyframes tinyWave {
+    from {
+      transform: translate(-50%, -50%) scale(0.2);
+      opacity: 0.9;
+    }
+    to {
+      transform: translate(-50%, -50%) scale(1.5);
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("click", function (event) {
+    if (!event.target.closest("button")) return;
+
+    const wave = document.createElement("span");
+    wave.className = "tinyClickWave";
+    wave.style.left = event.clientX + "px";
+    wave.style.top = event.clientY + "px";
+    document.body.appendChild(wave);
+
+    setTimeout(function () {
+      wave.remove();
+    }, 600);
+  }, true);
+</script>
 </body>
 </html>

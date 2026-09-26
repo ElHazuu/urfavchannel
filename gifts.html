@@ -45,6 +45,12 @@
     .letter .symbol { font-size: 48px; color: #cb668b; }
     .letter h2 { margin: 12px 0; font: 600 42px "Cormorant Garamond", Georgia, serif; }
     .letter p { line-height: 1.7; white-space: pre-line; }
+    .playlistReveal[hidden] { display: none; }
+    .playlistReveal { margin: 18px auto 8px; }
+    .playlistReveal img { display: block; width: min(220px, 65vw); height: auto; margin: auto; padding: 9px; border-radius: 15px; background: white; box-shadow: 0 10px 30px #59233d35; }
+    .playlistReveal small { display: block; margin: 12px 0; color: #7d4b64; }
+    .playlistReveal a { display: inline-block; padding: 12px 22px; border-radius: 100px; background: #914969; color: white; font-size: 14px; font-weight: 600; text-decoration: none; }
+    .playlistReveal a:hover, .playlistReveal a:focus-visible { background: #71364f; }
     .close { margin-top: 15px; padding: 11px 23px; border: 0; border-radius: 100px; background: #914969; color: white; font: inherit; cursor: pointer; }
     @keyframes float { 50% { transform: translateY(-10px) rotate(4deg); } }
     @keyframes flapOpen { 0%, 13% { transform: rotateX(0); } 45%, 100% { transform: rotateX(180deg); } }
@@ -63,7 +69,7 @@
 
     <div class="grid">
       <div class="gift" id="gift0"><button type="button" data-gift="0"><span class="icon" aria-hidden="true">💌</span><h2>A little note</h2><p>Tap to open the letter</p></button></div>
-      <div class="gift" id="gift1"><button type="button" data-gift="1"><span class="icon" aria-hidden="true">💝</span><h2>Our memories</h2><p>Tap to unwrap</p></button></div>
+      <div class="gift" id="gift1"><button type="button" data-gift="1"><span class="icon" aria-hidden="true">🎵</span><h2>Secret Playlist</h2><p>Tap to hear the songs I chose for you</p></button></div>
       <div class="gift final locked" id="gift2"><button type="button" data-gift="2"><span class="icon" aria-hidden="true" id="finalIcon">🔒</span><h2>One more surprise</h2><p id="finalLabel">Open the other two gifts first</p></button></div>
     </div>
     <p class="hint" id="hint" role="status" aria-live="polite"></p>
@@ -78,6 +84,11 @@
       <div class="symbol" aria-hidden="true">♡</div>
       <h2 id="letterTitle"></h2>
       <p id="letterText"></p>
+      <div class="playlistReveal" id="playlistReveal" hidden>
+        <img id="playlistQR" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYgAAAGIAQAAAABzOEqLAAACo0lEQVR42u1bsY5cQQizo/z/LzsFhuGUJimWbbzSrd47LY0RGJsZCv/5+YVEJCIRiUhEIn4DAOtZICAAFEDUF0VA84uge5APqLLCAp4AJVKVIYjzi6B7E0HSaSEoFfyVIdRb/SJYndSHPxQEiJqnqgkFq6/kQ25JlMwp1aaoYHWbD/cncTqVWIUCSNg1EnQ/nw++EqEoynMV2O8MVicR1F//ePgL9F+wOtcfMnNTnSWnQ6tMgu5Fffhrq7/HJFpyMXrwpl9xzVicSasGX9cLnY6g+/kIStKoQKlVh0BQ9BAcfX5YH8uh6pJwUcC10aZJ0D3Kh7aF6Ay0x8jwxyWfP8jftFU14qc1GQfdz+vBqgI2aWsamJ8qW+Hzo3yM7mu3fbUpsZWJCyToHugPQj/8q9bn7lkvaUH3hj/e0slqg3pe+2iPoHsTUXPVKg3biapNFLg0Y9D9fAQlqWG3HnTh0KupSUjQPeGPZSiavddkpbFNgu7FvEtApADWwtx7817c2i9R5t2bCEkA1MmoeXcNvFUjHrSC7kEESwwWe1e9OA/FH4JM68HqoF+1vqhFLdrS0gxa46gE3QM+r/2fU7GV4Cxr+RZUQfdAf7DPXaH3H2zDvVVh+OO4X/GHUFe7J+0kRg/e7QeJpvOedKtoREgieyUSrK78kupRq0xGFJI1DSv6465fzbES7z+s1fV8xab7oHujP6A6tat1cNfHGWbAClZH8+57YZ8YXVvbOeUQ/+qmXy2+GBliAqeF+hybC7oH/NGaD9hXonztoLdS0R93fL570iuFughS3iKyPz+/jzPuurV48UgvcnP+6jwfmkNY7VxxnWqI/jiLkJfnwtvboo2T8rLiX33hfhTn/kf7VzX8Eoi/+5X7UcEqEYlIRCIS8Q+fPz8HkhxB8r93AAAAAElFTkSuQmCC" alt="QR code for the Secret Playlist on Spotify">
+        <small>Scan this QR code, or tap below if you're on your phone ♡</small>
+        <a href="https://open.spotify.com/playlist/6ptQECZkUfTkpPQjyqExgx?si=eb345ed0eb5c4c20&amp;pt=2def2a6dd4ef0799a69675db654b6d4f" target="_blank" rel="noopener noreferrer">Open in Spotify ♫</a>
+      </div>
       <button class="close" type="button" id="close">Close gift</button>
     </div>
   </div>
@@ -85,13 +96,14 @@
   <script>
     const gifts = [
       { title: "For you, baby", text: "Hey baby,\n\nI'm sorry for being rude and acting stupid sometimes. I want you to know that you are my life and my future. I don't want to be with anyone else. I want to spend my life with you until we're both old, taking care of each other.\n\nI love playing Minecraft with you. I used to dream of playing it with the person I love most in the world, and that person is you. I'm so happy it's you, because you're the best girlfriend, the most perfect, and the SEXIEST. Hehe.\n\nI love you. ♡" },
-      { title: "Our memories", text: "My favorite memories are the ones we make together. Add your favorite moment here. ♡" }
+      { title: "A playlist for you ♡", text: "Every song here is a little reminder of you. I hope you hear how much I love you." },
     ];
 
     const overlay = document.getElementById("overlay");
     const title = document.getElementById("letterTitle");
     const text = document.getElementById("letterText");
     const close = document.getElementById("close");
+    const playlistReveal = document.getElementById("playlistReveal");
     let lastButton;
     let openingTimer;
     const opened = [false, false];
@@ -116,23 +128,21 @@
           if (opened.every(Boolean)) {
             window.location.href = "./";
           } else {
-            hint.textContent = "First open the letter and Our memories ♡";
+            hint.textContent = "First open the letter and Secret Playlist ♡";
           }
           return;
         }
-
         const number = Number(button.dataset.gift);
         opened[number] = true;
         updateGifts();
         hint.textContent = opened.every(Boolean)
           ? "Your final surprise is ready ♡"
           : "";
-
         lastButton = button;
         const gift = gifts[number];
         title.textContent = gift.title;
         text.textContent = gift.text;
-
+        playlistReveal.hidden = number !== 1;
         if (button.dataset.gift === "0" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           overlay.classList.add("envelope-mode");
           overlay.classList.add("open");
@@ -153,14 +163,9 @@
       overlay.classList.remove("envelope-mode");
       if (lastButton) lastButton.focus();
     }
-
     close.addEventListener("click", closeGift);
-    overlay.addEventListener("click", event => {
-      if (event.target === overlay) closeGift();
-    });
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") closeGift();
-    });
+    overlay.addEventListener("click", event => { if (event.target === overlay) closeGift(); });
+    document.addEventListener("keydown", event => { if (event.key === "Escape") closeGift(); });
   </script>
 </body>
 </html>

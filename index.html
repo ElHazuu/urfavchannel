@@ -287,10 +287,40 @@
 #intro.drive:not(.playing) #driveScene .mountains.back {
   animation-play-state: paused;
 }
+    #songTitle {
+  position: absolute;
+  z-index: 3;
+  top: 18%;
+  left: 5%;
+  margin: 0;
+  color: #ffe2f0;
+  font-size: clamp(42px, 7vw, 100px);
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-shadow: 0 0 15px #ff7dbe, 0 0 40px #ff4fa488;
+  pointer-events: none;
+}
+
+#intro.drive #songTitle {
+  color: #bdfaff;
+  text-shadow: 0 0 15px #42e8ff, 0 0 40px #e647ef;
+}
+
+@media (max-width: 650px) {
+  #songTitle {
+    top: 17%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(34px, 10vw, 60px);
+    white-space: nowrap;
+  }
+}
      </style>
 </head>
 <body>
   <div id="intro">
+    <h1 id="songTitle">Everytime</h1>
     <button id="catButton" type="button" aria-label="Enter the website">
       <img id="catPicture" src="Tail.png" alt="Two cats standing together">
       <span class="musicNote left">♫</span><span class="musicNote right">♪</span>
@@ -341,6 +371,7 @@
     const introMusic = document.getElementById("introMusic");
     const backButton = document.getElementById("backToIntro");
     const songButton = document.getElementById("songButton");
+    const songTitle = document.getElementById("songTitle");
     const runnerPicture = document.querySelector("#littleRunners img");
     const carPicture = document.querySelector("#driveScene .car");
     const idleFrames = ["Tail.png", "Tail 2.png", "Tail 3.png"];
@@ -445,6 +476,7 @@
       stopDance();
       mode = mode === "cute" ? "drive" : "cute";
       intro.classList.toggle("drive", mode === "drive");
+      songTitle.textContent = mode === "drive" ? "Drive By" : "Everytime";
       if (mode === "drive") { carFrame = 0; carPicture.src = carFrames[0]; }
       songButton.textContent = mode === "drive" ? "♪ Switch to everytime" : "♪ Switch to Drive By";
       introMusic.src = mode === "drive" ? "Eric Bellinger - Drive By (Audio).mp3" : "Ariana Grande - everytime (Official Instrumental).mp3";

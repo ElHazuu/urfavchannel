@@ -2537,5 +2537,291 @@
     updateWallpaperColor();
   })();
 </script>
+  <style>
+  /* New light/dark switch */
+  #appearanceSwitchRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0 18px;
+  }
+
+  #appearanceSwitchRow label {
+    color: #fff4f9;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  #appearanceSwitch {
+    position: relative;
+    flex: none;
+    width: 58px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid #ffffff80;
+    border-radius: 999px;
+    background: #806478;
+    transition: background .2s;
+  }
+
+  #appearanceSwitch::after {
+    content: "☾";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    color: #39283b;
+    font-size: 16px;
+    transition: transform .2s;
+  }
+
+  #appearanceSwitch[aria-checked="true"] {
+    background: #eab77e;
+  }
+
+  #appearanceSwitch[aria-checked="true"]::after {
+    content: "☀";
+    transform: translateX(26px);
+  }
+
+  #customColorArea {
+    padding-top: 14px;
+    border-top: 1px solid #ffffff38;
+  }
+
+  #customColorArea label {
+    display: block;
+    margin-bottom: 10px;
+    color: #fff4f9;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  #customColorPicker {
+    width: 100%;
+    height: 48px;
+    padding: 4px;
+    border: 1px solid #ffffff80;
+    border-radius: 12px;
+    background: #ffffff18;
+    cursor: pointer;
+  }
+
+  #mainWebsite:not(:has(.welcomeSection[data-wallpaper="original"]))
+  #customColorArea {
+    display: none;
+  }
+
+  /* Each alternative wallpaper owns its colors. */
+  #mainWebsite:has(.welcomeSection[data-wallpaper="underwater"]) {
+    --scene-accent: #7cdef1;
+    --scene-surface: #113e5e;
+    --scene-preview: #176889;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="rose"]) {
+    --scene-accent: #ffc2e0;
+    --scene-surface: #492840;
+    --scene-preview: #8f4a79;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="storybook"]) {
+    --scene-accent: #f8c8dc;
+    --scene-surface: #3d305a;
+    --scene-preview: #8b5d91;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="minecraft"]) {
+    --scene-accent: #ffe2a9;
+    --scene-surface: #34495b;
+    --scene-preview: #698b80;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="synthwave"]) {
+    --scene-accent: #ff8bdf;
+    --scene-surface: #292044;
+    --scene-preview: #884087;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"]) {
+    --scene-accent: var(--accent);
+    --scene-surface: var(--surface);
+    --scene-preview: color-mix(
+      in srgb, var(--accent) 34%, var(--surface)
+    );
+  }
+
+  /* No custom-color overlay on the other wallpapers. */
+  #mainWebsite:not(:has(.welcomeSection[data-wallpaper="original"]))::after {
+    background: none !important;
+    mix-blend-mode: normal !important;
+  }
+
+  /* Keep the underwater light rays, without a custom-color tint. */
+  #mainWebsite:has(.welcomeSection[data-wallpaper="underwater"])::after {
+    background: repeating-linear-gradient(
+      106deg,
+      transparent 0 14%,
+      #d6fcff30 17% 19%,
+      transparent 23% 33%
+    ) !important;
+    animation: underwaterLight 9s ease-in-out infinite alternate;
+  }
+
+  /* Match the cards, menu and controls to the selected wallpaper. */
+  #mainWebsite .videoCard {
+    background: var(--scene-surface, var(--surface));
+    border-color: var(--scene-accent, var(--accent));
+  }
+
+  #mainWebsite .videoPreview {
+    background: linear-gradient(
+      135deg,
+      var(--scene-surface, var(--surface)),
+      var(--scene-preview, var(--accent))
+    );
+    color: #fff4fb;
+  }
+
+  #mainWebsite .storyCard {
+    border-color: var(--scene-accent, var(--accent));
+    background: var(--scene-surface, var(--surface));
+  }
+
+  #mainWebsite .menuHandle,
+  #mainWebsite .siteMenu,
+  #mainWebsite .roundTool,
+  #mainWebsite .toolPanel,
+  #mainWebsite .notificationBell {
+    border-color: var(--scene-accent, var(--accent));
+  }
+
+  #mainWebsite .menuHandle span,
+  #mainWebsite .siteMenu h2 {
+    color: var(--scene-accent, var(--accent));
+  }
+
+  #mainWebsite:not(:has(.welcomeSection[data-wallpaper="original"]))
+  .sectionHeading {
+    color: white;
+  }
+
+  #mainWebsite:not(:has(.welcomeSection[data-wallpaper="original"]))
+  .sectionHeading p {
+    color: #f5eaf2;
+  }
+
+  /* Light mode changes the cards while retaining each wallpaper's palette. */
+  #mainWebsite[data-theme="light"]
+  .videoCard,
+  #mainWebsite[data-theme="light"]
+  .storyCard {
+    background: color-mix(
+      in srgb, var(--scene-accent, var(--accent)) 12%, white
+    );
+    color: #342638;
+  }
+
+  #mainWebsite[data-theme="light"] .videoCard .cardText p {
+    color: #675765;
+  }
+</style>
+
+<script>
+  (() => {
+    const website = document.getElementById("mainWebsite");
+    const welcome = document.querySelector(".welcomeSection");
+    const panel = document.getElementById("themePanel");
+    const oldChoices = panel?.querySelector(".themeChoices");
+
+    if (!website || !welcome || !panel || !oldChoices) return;
+
+    // Remove the old dark/light buttons and preset color buttons.
+    // Replacing the element also removes their old click handlers.
+    const controls = document.createElement("div");
+    controls.id = "newAppearanceControls";
+    controls.innerHTML = `
+      <div id="appearanceSwitchRow">
+        <label for="appearanceSwitch">Light mode</label>
+        <button
+          id="appearanceSwitch"
+          type="button"
+          role="switch"
+          aria-label="Light mode"
+          aria-checked="false"
+        ></button>
+      </div>
+
+      <div id="customColorArea">
+        <label for="customColorPicker">Choose any color</label>
+        <input
+          id="customColorPicker"
+          type="color"
+          value="#d987b6"
+        >
+      </div>
+    `;
+
+    oldChoices.replaceWith(controls);
+
+    // Remove the custom picker added by the previous snippet, if present.
+    panel.querySelectorAll("#customColorArea").forEach(area => {
+      if (!controls.contains(area)) area.remove();
+    });
+
+    const lightSwitch = controls.querySelector("#appearanceSwitch");
+    const picker = controls.querySelector("#customColorPicker");
+    const validColor = value => /^#[0-9a-f]{6}$/i.test(value || "");
+
+    function setLightMode(enabled) {
+      website.dataset.theme = enabled ? "light" : "dark";
+      lightSwitch.setAttribute("aria-checked", String(enabled));
+      localStorage.setItem("ourTheme", enabled ? "light" : "dark");
+    }
+
+    lightSwitch.addEventListener("click", () => {
+      setLightMode(website.dataset.theme !== "light");
+    });
+
+    setLightMode(website.dataset.theme === "light");
+
+    const savedColor = localStorage.getItem("ourCustomColor");
+    picker.value = validColor(savedColor) ? savedColor : "#d987b6";
+
+    function applyOriginalColor() {
+      if (welcome.dataset.wallpaper !== "original") return;
+
+      website.style.setProperty("--accent", picker.value);
+      localStorage.setItem("ourAccent", picker.value);
+    }
+
+    picker.addEventListener("input", () => {
+      localStorage.setItem("ourCustomColor", picker.value);
+      applyOriginalColor();
+    });
+
+    function syncWallpaper() {
+      if (welcome.dataset.wallpaper === "original") {
+        applyOriginalColor();
+      } else {
+        // The other wallpapers use their own fixed CSS colors.
+        website.style.removeProperty("--accent");
+      }
+    }
+
+    new MutationObserver(syncWallpaper).observe(welcome, {
+      attributes: true,
+      attributeFilter: ["data-wallpaper"]
+    });
+
+    syncWallpaper();
+  })();
+</script>
 </body>
 </html>

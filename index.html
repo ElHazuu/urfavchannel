@@ -4,208 +4,497 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Our Love ♡</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+
   <style>
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body { margin: 0; background: #140e1d; color: #fff4fa; font-family: Arial, sans-serif; overflow-x: hidden; }
+    body {
+      margin: 0;
+      background: #140e1d;
+      color: #fff4fa;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
     button, a { -webkit-tap-highlight-color: transparent; }
     button { font: inherit; }
 
+    /* CAT INTRO */
     #intro {
-      position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column;
-      justify-content: center; align-items: center; overflow: hidden;
-      background: radial-gradient(ellipse at 50% 70%, #ffb0d133, transparent 42%),
-                  radial-gradient(circle at 18% 22%, #aa7dd724, transparent 32%),
-                  radial-gradient(circle at 82% 28%, #ff9bbe1f, transparent 30%),
-                  linear-gradient(160deg, #120d1b, #251629 65%, #120d1b);
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 70%, #ffb0d133, transparent 42%),
+        radial-gradient(circle at 18% 22%, #aa7dd724, transparent 32%),
+        radial-gradient(circle at 82% 28%, #ff9bbe1f, transparent 30%),
+        linear-gradient(160deg, #120d1b, #251629 65%, #120d1b);
       transition: opacity 1s ease;
     }
+
     #intro::before {
-      content: "♡  ✦  ♡  ✦  ♡"; position: absolute; top: 10%; left: 50%;
-      transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 0 18px 12px;
-      border-bottom: 1px solid #ffcae28c; color: #ffd1e7; font-size: clamp(19px, 2.5vw, 28px);
-      letter-spacing: .25em; white-space: nowrap; opacity: .8; pointer-events: none;
+      content: "♡  ✦  ♡  ✦  ♡";
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: calc(100vw - 32px);
+      padding: 0 18px 12px;
+      border-bottom: 1px solid #ffcae28c;
+      color: #ffd1e7;
+      font-size: clamp(19px, 2.5vw, 28px);
+      letter-spacing: .25em;
+      white-space: nowrap;
+      opacity: .8;
+      pointer-events: none;
       animation: ornamentFloat 4s ease-in-out infinite alternate;
     }
-    @keyframes ornamentFloat { to { transform: translate(-50%, -8px); } }
+    @keyframes ornamentFloat {
+      to { transform: translate(-50%, -8px); }
+    }
 
     #intro.dancing {
-      background: radial-gradient(ellipse at 50% 80%, #ff97d052, transparent 42%),
-                  radial-gradient(circle at 25% 30%, #a070ff38, transparent 35%),
-                  radial-gradient(circle at 78% 35%, #ff79b633, transparent 35%), #100917;
+      background:
+        radial-gradient(ellipse at 50% 80%, #ff97d052, transparent 42%),
+        radial-gradient(circle at 25% 30%, #a070ff38, transparent 35%),
+        radial-gradient(circle at 78% 35%, #ff79b633, transparent 35%),
+        #100917;
     }
     #intro.dancing::after {
-      content: ""; position: absolute; inset: 0; pointer-events: none;
-      background: radial-gradient(circle at 50% 55%, #ff79bc, transparent 42%),
-                  radial-gradient(circle at 25% 30%, #9c78ff, transparent 30%);
-      opacity: var(--beat-light, .1); transition: opacity .1s;
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 55%, #ff79bc, transparent 42%),
+        radial-gradient(circle at 25% 30%, #9c78ff, transparent 30%);
+      opacity: var(--beat-light, .1);
+      transition: opacity .1s;
     }
 
     #catButton {
-      position: relative; z-index: 1; width: min(600px, 85vw); padding: 0;
-      border: 0; background: none; cursor: pointer;
+      position: relative;
+      z-index: 1;
+      width: min(600px, 85vw);
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
     }
     #catPicture {
-      display: block; width: 100%; max-height: 60vh; object-fit: contain;
-      animation: float 2.4s ease-in-out infinite; transition: opacity .25s ease;
+      display: block;
+      width: 100%;
+      max-height: 60vh;
+      object-fit: contain;
+      animation: float 2.4s ease-in-out infinite;
+      transition: opacity .25s ease;
     }
-    @keyframes float { 50% { transform: translateY(-9px); } }
+    @keyframes float {
+      50% { transform: translateY(-9px); }
+    }
     #intro.dancing #catButton {
-      transform: translateY(var(--beat-lift, 0px)) scale(var(--beat-zoom, 1));
-      filter: drop-shadow(0 0 var(--beat-glow, 18px) #ff80c4);
+      transform: translateY(var(--beat-lift, 0px))
+        scale(var(--beat-zoom, 1));
+      filter: drop-shadow(
+        0 0 var(--beat-glow, 18px) #ff80c4
+      );
     }
-    #catButton.walking { animation: walkAway 2.4s ease-in forwards; }
-    #catButton.walking #catPicture { animation: footsteps .32s ease-in-out infinite alternate; }
+    #catButton.walking {
+      animation: walkAway 2.4s ease-in forwards;
+    }
+    #catButton.walking #catPicture {
+      animation: footsteps .32s ease-in-out infinite alternate;
+    }
     @keyframes footsteps {
       from { transform: rotate(-2deg); }
       to { transform: rotate(2deg) translateY(-7px); }
     }
     @keyframes walkAway {
       75% { opacity: 1; }
-      to { transform: translateY(-100px) scale(.12); opacity: 0; }
+      to {
+        transform: translateY(-100px) scale(.12);
+        opacity: 0;
+      }
     }
 
-    .musicNote { position: absolute; font-size: 35px; opacity: 0; pointer-events: none; }
+    .musicNote {
+      position: absolute;
+      font-size: 35px;
+      opacity: 0;
+      pointer-events: none;
+    }
     .musicNote.left { left: 8%; top: 25%; }
-    .musicNote.right { right: 8%; top: 35%; animation-delay: .8s !important; }
-    #intro.dancing .musicNote { animation: noteRise 1.6s ease-out infinite; }
+    .musicNote.right {
+      right: 8%;
+      top: 35%;
+      animation-delay: .8s !important;
+    }
+    #intro.dancing .musicNote {
+      animation: noteRise 1.6s ease-out infinite;
+    }
     @keyframes noteRise {
-      0% { opacity: 0; transform: translateY(20px); }
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
       25% { opacity: 1; }
-      100% { opacity: 0; transform: translateY(-85px); }
+      100% {
+        opacity: 0;
+        transform: translateY(-85px);
+      }
     }
 
-    .heart { position: absolute; z-index: 5; left: 50%; top: 38%; opacity: 0; pointer-events: none; font-size: 38px; }
-    #intro.loving .heart { animation: rise 1.6s ease-out forwards; }
+    .heart {
+      position: absolute;
+      z-index: 5;
+      left: 50%;
+      top: 38%;
+      opacity: 0;
+      pointer-events: none;
+      font-size: 38px;
+    }
+    #intro.loving .heart {
+      animation: rise 1.6s ease-out forwards;
+    }
     .heart.one { --side: -90px; }
-    .heart.two { --side: 10px; animation-delay: .18s !important; }
-    .heart.three { --side: 100px; animation-delay: .35s !important; }
+    .heart.two {
+      --side: 10px;
+      animation-delay: .18s !important;
+    }
+    .heart.three {
+      --side: 100px;
+      animation-delay: .35s !important;
+    }
     @keyframes rise {
-      0% { opacity: 0; transform: translate(-50%, 10px) scale(.4); }
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 10px) scale(.4);
+      }
       25% { opacity: 1; }
-      100% { opacity: 0; transform: translate(calc(-50% + var(--side)), -160px) scale(1.3); }
+      100% {
+        opacity: 0;
+        transform: translate(
+          calc(-50% + var(--side)),
+          -160px
+        ) scale(1.3);
+      }
     }
 
-    .wind { position: absolute; left: -180px; width: 120px; height: 3px; border-radius: 100%; background: #ffffff80; opacity: 0; pointer-events: none; }
+    .wind {
+      position: absolute;
+      left: -180px;
+      width: 120px;
+      height: 3px;
+      border-radius: 100%;
+      background: #ffffff80;
+      opacity: 0;
+      pointer-events: none;
+    }
     .wind.one { top: 38%; }
     .wind.two { top: 55%; width: 85px; }
     .wind.three { top: 68%; width: 150px; }
-    #intro.breezy .wind { animation: windBlow 1.15s linear infinite; }
-    #intro.breezy .wind.two { animation-delay: .3s; }
-    #intro.breezy .wind.three { animation-delay: .65s; }
+    #intro.breezy .wind {
+      animation: windBlow 1.15s linear infinite;
+    }
+    #intro.breezy .wind.two {
+      animation-delay: .3s;
+    }
+    #intro.breezy .wind.three {
+      animation-delay: .65s;
+    }
     @keyframes windBlow {
       20%, 80% { opacity: .5; }
       100% { left: 110%; opacity: 0; }
     }
 
     #introText, #musicButton {
-      position: relative; z-index: 2; border-radius: 999px; font-weight: bold; cursor: pointer;
-      transition: transform .2s, box-shadow .2s, opacity .4s;
+      position: relative;
+      z-index: 2;
+      border-radius: 999px;
+      font-weight: bold;
+      cursor: pointer;
+      transition:
+        transform .2s,
+        box-shadow .2s,
+        opacity .4s;
     }
     #introText {
-      margin-top: 12px; padding: 12px 24px; border: 1px solid #ffc7df;
-      background: #ffdeed; color: #6b3150; letter-spacing: 1px;
+      margin-top: 12px;
+      padding: 12px 24px;
+      border: 1px solid #ffc7df;
+      background: #ffdeed;
+      color: #6b3150;
+      letter-spacing: 1px;
       box-shadow: 0 5px 20px #ff9bc066;
     }
     #musicButton {
-      margin-top: 20px; padding: 13px 26px; border: 1px solid #ffb9d2;
-      background: #ffcfdf; color: #6b2445; box-shadow: 0 0 20px #ff9ec440;
+      margin-top: 20px;
+      padding: 13px 26px;
+      border: 1px solid #ffb9d2;
+      background: #ffcfdf;
+      color: #6b2445;
+      box-shadow: 0 0 20px #ff9ec440;
     }
     #introText:hover, #musicButton:hover {
       transform: translateY(-3px) scale(1.04);
       box-shadow: 0 8px 26px #ff9bc099;
     }
     #songButton {
-      position: relative; z-index: 2; margin-top: 12px; padding: 10px 20px;
-      border: 1px solid #ffb9d2; border-radius: 999px; background: #ffffff16;
-      color: #ffe4f2; font-weight: bold; box-shadow: 0 0 15px #ff70c133;
+      position: relative;
+      z-index: 2;
+      margin-top: 12px;
+      padding: 10px 20px;
+      border: 1px solid #ffb9d2;
+      border-radius: 999px;
+      background: #ffffff16;
+      color: #ffe4f2;
+      font-weight: bold;
+      box-shadow: 0 0 15px #ff70c133;
       cursor: pointer;
     }
-    #songButton:hover { background: #ffffff30; }
+    #songButton:hover {
+      background: #ffffff30;
+    }
 
     /* DRIVE BY */
     #driveScene {
-      display: none; position: absolute; inset: 0; overflow: hidden; pointer-events: none;
-      background: linear-gradient(#100725 0%, #421259 38%, #da3e8e 55%, #180d35 56%, #070717 100%);
+      display: none;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background: linear-gradient(
+        #100725 0%,
+        #421259 38%,
+        #da3e8e 55%,
+        #180d35 56%,
+        #070717 100%
+      );
     }
-    #intro.drive #driveScene { display: block; }
-    #intro.drive #catButton, #intro.drive #littleRunners { visibility: hidden; }
+    #intro.drive #driveScene {
+      display: block;
+    }
+    #intro.drive #catButton,
+    #intro.drive #littleRunners {
+      visibility: hidden;
+    }
+
     #driveScene .stars {
-      position: absolute; inset: 0 0 45%; opacity: .7;
-      background-image: radial-gradient(#fff 1px, transparent 2px), radial-gradient(#9defff 1px, transparent 2px);
+      position: absolute;
+      inset: 0 0 45%;
+      opacity: .7;
+      background-image:
+        radial-gradient(#fff 1px, transparent 2px),
+        radial-gradient(#9defff 1px, transparent 2px);
       background-size: 100px 85px, 145px 125px;
       background-position: 12px 8px, 60px 43px;
       animation: starShimmer 3s ease-in-out infinite alternate;
     }
-    @keyframes starShimmer { to { opacity: 1; filter: drop-shadow(0 0 4px #bdf6ff); } }
+    @keyframes starShimmer {
+      to {
+        opacity: 1;
+        filter: drop-shadow(0 0 4px #bdf6ff);
+      }
+    }
     #driveScene .shootingStar {
-      position: absolute; top: 12%; left: 15%; width: 110px; height: 2px;
-      border-radius: 50%; background: linear-gradient(90deg, transparent, #fff, #8cecff);
-      box-shadow: 0 0 12px #9af6ff; transform: rotate(-18deg);
+      position: absolute;
+      top: 12%;
+      left: 15%;
+      width: 110px;
+      height: 2px;
+      border-radius: 50%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #fff,
+        #8cecff
+      );
+      box-shadow: 0 0 12px #9af6ff;
+      transform: rotate(-18deg);
       animation: shootingStar 7s ease-in infinite;
     }
     #driveScene .shootingStar.second {
-      top: 26%; left: 62%; animation-delay: 3.5s; animation-duration: 9s;
+      top: 26%;
+      left: 62%;
+      animation-delay: 3.5s;
+      animation-duration: 9s;
     }
     @keyframes shootingStar {
-      0%, 82% { opacity: 0; transform: translate(0, 0) rotate(-18deg); }
+      0%, 82% {
+        opacity: 0;
+        transform: translate(0, 0) rotate(-18deg);
+      }
       84% { opacity: 1; }
-      90%, 100% { opacity: 0; transform: translate(130px, 35px) rotate(-18deg); }
+      90%, 100% {
+        opacity: 0;
+        transform: translate(130px, 35px) rotate(-18deg);
+      }
     }
+
     #driveScene .sun {
-      position: absolute; left: 50%; top: 18%; width: clamp(190px, 28vw, 360px);
-      aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%;
-      background: repeating-linear-gradient(to bottom, transparent 0 11%, #481058 11% 13%),
-                  linear-gradient(#ffe8a7, #ff658b 70%, #d033bd);
-      box-shadow: 0 0 45px 15px #ff62a488, 0 0 100px #f334a766;
-      filter: drop-shadow(0 0 var(--beat-glow, 18px) #ff79bc);
+      position: absolute;
+      left: 50%;
+      top: 18%;
+      width: clamp(190px, 28vw, 360px);
+      aspect-ratio: 1;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0 11%,
+          #481058 11% 13%
+        ),
+        linear-gradient(
+          #ffe8a7,
+          #ff658b 70%,
+          #d033bd
+        );
+      box-shadow:
+        0 0 45px 15px #ff62a488,
+        0 0 100px #f334a766;
+      filter: drop-shadow(
+        0 0 var(--beat-glow, 18px) #ff79bc
+      );
     }
     #driveScene .mountains {
-      position: absolute; inset: 40% 0 36%; background: #1b0d3a;
-      clip-path: polygon(0 70%, 9% 35%, 18% 75%, 30% 20%, 40% 70%, 51% 32%, 62% 76%, 73% 25%, 86% 72%, 94% 37%, 100% 65%, 100% 100%, 0 100%);
+      position: absolute;
+      inset: 40% 0 36%;
+      background: #1b0d3a;
+      clip-path: polygon(
+        0 70%,
+        9% 35%,
+        18% 75%,
+        30% 20%,
+        40% 70%,
+        51% 32%,
+        62% 76%,
+        73% 25%,
+        86% 72%,
+        94% 37%,
+        100% 65%,
+        100% 100%,
+        0 100%
+      );
       filter: drop-shadow(0 -4px 8px #ea55db);
     }
     #driveScene .mountains.back {
-      inset: 36% -10% 39%; opacity: .5; background: #63307f;
-      transform: scaleX(1.15); animation: mountainDrift 12s ease-in-out infinite alternate;
+      inset: 36% -10% 39%;
+      opacity: .5;
+      background: #63307f;
+      transform: scaleX(1.15);
+      animation: mountainDrift 12s ease-in-out infinite alternate;
     }
-    @keyframes mountainDrift { to { transform: translateX(-3%) scaleX(1.15); } }
+    @keyframes mountainDrift {
+      to {
+        transform: translateX(-3%) scaleX(1.15);
+      }
+    }
     #driveScene .horizon {
-      position: absolute; left: 0; right: 0; top: 55%; height: 3px;
-      background: #ff70de; box-shadow: 0 0 15px #ff3fcb;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 55%;
+      height: 3px;
+      background: #ff70de;
+      box-shadow: 0 0 15px #ff3fcb;
     }
     #driveScene .road {
-      position: absolute; left: -8%; right: -8%; top: 55%; bottom: -10%;
-      background: linear-gradient(90deg, #ff39cb 0 1%, #140d2f 1% 49.5%, #ff43d9 49.5% 50.5%, #140d2f 50.5% 99%, #ff39cb 99%);
-      clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+      position: absolute;
+      left: -8%;
+      right: -8%;
+      top: 55%;
+      bottom: -10%;
+      background: linear-gradient(
+        90deg,
+        #ff39cb 0 1%,
+        #140d2f 1% 49.5%,
+        #ff43d9 49.5% 50.5%,
+        #140d2f 50.5% 99%,
+        #ff39cb 99%
+      );
+      clip-path: polygon(
+        45% 0,
+        55% 0,
+        100% 100%,
+        0 100%
+      );
       box-shadow: 0 0 30px #ff46de;
     }
     #driveScene .road::before {
-      content: ""; position: absolute; inset: 0;
-      background: repeating-linear-gradient(to bottom, transparent 0 43px, #27eafa 44px 47px, transparent 48px 84px);
-      background-size: 100% 84px; opacity: .7;
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0 43px,
+        #27eafa 44px 47px,
+        transparent 48px 84px
+      );
+      background-size: 100% 84px;
+      opacity: .7;
       animation: roadMove .55s linear infinite;
     }
     #driveScene .road::after {
-      content: ""; position: absolute; inset: 0;
-      background: linear-gradient(90deg, #ff59dc80, transparent 8% 92%, #ff59dc80);
-      filter: blur(14px); animation: roadGlow 1s ease-in-out infinite alternate;
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        #ff59dc80,
+        transparent 8% 92%,
+        #ff59dc80
+      );
+      filter: blur(14px);
+      animation: roadGlow 1s ease-in-out infinite alternate;
     }
-    @keyframes roadGlow { to { opacity: .35; } }
-    @keyframes roadMove { to { background-position-y: -84px; } }
+    @keyframes roadGlow {
+      to { opacity: .35; }
+    }
+    @keyframes roadMove {
+      to { background-position-y: -84px; }
+    }
     #driveScene .car {
-      position: absolute; z-index: 1; left: 50%; bottom: 5%; width: min(650px, 82vw);
-      height: auto; transform: translateX(-50%);
-      filter: drop-shadow(0 15px 25px #08051e) drop-shadow(0 0 13px #fb4de8);
+      position: absolute;
+      z-index: 1;
+      left: 50%;
+      bottom: 5%;
+      width: min(650px, 82vw);
+      height: auto;
+      transform: translateX(-50%);
+      filter:
+        drop-shadow(0 15px 25px #08051e)
+        drop-shadow(0 0 13px #fb4de8);
       animation: carBob .55s ease-in-out infinite alternate;
     }
     #driveScene .carGlow {
-      position: absolute; z-index: 1; left: 50%; bottom: 5%; width: min(500px, 65vw);
-      height: 38px; transform: translateX(-50%); border-radius: 50%;
-      background: #f143dc; filter: blur(28px); opacity: .55;
+      position: absolute;
+      z-index: 1;
+      left: 50%;
+      bottom: 5%;
+      width: min(500px, 65vw);
+      height: 38px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: #f143dc;
+      filter: blur(28px);
+      opacity: .55;
       animation: carGlow 1s ease-in-out infinite alternate;
     }
-    @keyframes carGlow { to { opacity: .85; transform: translateX(-50%) scale(1.18); } }
+    @keyframes carGlow {
+      to {
+        opacity: .85;
+        transform: translateX(-50%) scale(1.18);
+      }
+    }
     @keyframes carBob {
       from { transform: translate(-50%, 0); }
       to { transform: translate(-50%, -6px); }
@@ -218,18 +507,25 @@
       animation-play-state: paused;
     }
     #intro.drive #introText {
-      background: #ffb8e8; color: #310a41; box-shadow: 0 0 20px #ff46d4;
+      background: #ffb8e8;
+      color: #310a41;
+      box-shadow: 0 0 20px #ff46d4;
     }
     #intro.drive #musicButton {
-      background: #90edfa; color: #1b1742; border-color: #8af7ff;
+      background: #90edfa;
+      color: #1b1742;
+      border-color: #8af7ff;
       box-shadow: 0 0 20px #32e8ff88;
     }
     #intro.drive #introText,
     #intro.drive #musicButton,
     #intro.drive #songButton {
-      position: absolute; z-index: 4;
+      position: absolute;
+      z-index: 4;
       top: max(20px, env(safe-area-inset-top));
-      margin: 0; font-size: 14px; white-space: nowrap;
+      margin: 0;
+      font-size: 14px;
+      white-space: nowrap;
     }
     #intro.drive #introText { right: 410px; }
     #intro.drive #musicButton { right: 210px; }
@@ -239,100 +535,199 @@
       #intro.drive #introText,
       #intro.drive #musicButton,
       #intro.drive #songButton {
-        left: auto; right: 12px; padding: 8px 12px; font-size: 12px;
+        left: auto;
+        right: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
       }
-      #intro.drive #introText { top: max(12px, env(safe-area-inset-top)); }
-      #intro.drive #musicButton { top: max(53px, calc(env(safe-area-inset-top) + 41px)); }
-      #intro.drive #songButton { top: max(94px, calc(env(safe-area-inset-top) + 82px)); }
+      #intro.drive #introText {
+        top: max(12px, env(safe-area-inset-top));
+      }
+      #intro.drive #musicButton {
+        top: max(
+          53px,
+          calc(env(safe-area-inset-top) + 41px)
+        );
+      }
+      #intro.drive #songButton {
+        top: max(
+          94px,
+          calc(env(safe-area-inset-top) + 82px)
+        );
+      }
     }
 
     .tinyClickWave {
-      position: fixed; z-index: 1000; width: 32px; height: 32px;
-      border: 1.5px solid #ffc4e0e6; border-radius: 50%;
-      box-shadow: 0 0 9px #ff9bcc80; pointer-events: none;
+      position: fixed;
+      z-index: 1000;
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid #ffc4e0e6;
+      border-radius: 50%;
+      box-shadow: 0 0 9px #ff9bcc80;
+      pointer-events: none;
       animation: tinyWave .55s ease-out forwards;
     }
     @keyframes tinyWave {
-      from { transform: translate(-50%, -50%) scale(.2); opacity: .9; }
-      to { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+      from {
+        transform: translate(-50%, -50%) scale(.2);
+        opacity: .9;
+      }
+      to {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+      }
     }
 
-    /* BABY CATS */
+    /* RUNNING BABY CATS */
     #littleRunners {
-      position: absolute; left: -220px; bottom: 4%;
-      width: clamp(150px, 24vw, 220px); z-index: 2; pointer-events: none;
+      position: absolute;
+      left: -220px;
+      bottom: 4%;
+      width: clamp(150px, 24vw, 220px);
+      z-index: 2;
+      pointer-events: none;
       animation: runAcross 18s linear infinite;
     }
     #littleRunners img {
-      display: block; width: 100%; height: auto;
+      display: block;
+      width: 100%;
+      height: auto;
       filter: drop-shadow(0 0 8px #ffc3e159);
       animation: kittenHop .54s ease-in-out infinite;
     }
     @keyframes runAcross {
       0%, 8% { transform: translateX(0); }
-      77%, 100% { transform: translateX(calc(100vw + 440px)); }
+      77%, 100% {
+        transform: translateX(calc(100vw + 440px));
+      }
     }
     @keyframes kittenHop {
-      50% { transform: translateY(-7px) rotate(-2deg); }
+      50% {
+        transform: translateY(-7px) rotate(-2deg);
+      }
     }
     #littleRunners::before {
-      content: "✦"; position: absolute; right: -32px; top: 25%;
-      color: #fff6b5; font-size: 24px;
-      text-shadow: 0 0 8px #fff, 0 0 18px #ffe58c, 0 0 35px #ffc6f1;
+      content: "✦";
+      position: absolute;
+      right: -32px;
+      top: 25%;
+      color: #fff6b5;
+      font-size: 24px;
+      text-shadow:
+        0 0 8px #fff,
+        0 0 18px #ffe58c,
+        0 0 35px #ffc6f1;
       animation: pixieFlutter 1.4s ease-in-out infinite alternate;
     }
     @keyframes pixieFlutter {
-      from { transform: translateY(12px) rotate(-15deg) scale(.8); opacity: .7; }
-      to { transform: translate(14px, -22px) rotate(20deg) scale(1.2); }
+      from {
+        transform: translateY(12px)
+          rotate(-15deg) scale(.8);
+        opacity: .7;
+      }
+      to {
+        transform: translate(14px, -22px)
+          rotate(20deg) scale(1.2);
+      }
     }
-    #littleRunners::after, .blackKittenSpeed {
-      position: absolute; color: #ffd4e8; font-size: 19px;
+    #littleRunners::after,
+    .blackKittenSpeed {
+      position: absolute;
+      color: #ffd4e8;
+      font-size: 19px;
       text-shadow: 0 0 10px #ffadd2;
       animation: runningDust .7s ease-out infinite;
     }
     #littleRunners::after {
-      content: "·  ✧  ·"; left: -24px; bottom: 14%;
+      content: "·  ✧  ·";
+      left: -24px;
+      bottom: 14%;
     }
     .blackKittenSpeed {
-      left: 49%; bottom: 22%; animation-duration: .55s;
+      left: 49%;
+      bottom: 22%;
+      animation-duration: .55s;
     }
     @keyframes runningDust {
-      from { transform: translate(12px, 4px) scale(.6); opacity: .7; }
-      to { transform: translate(-22px, -12px) scale(1.2); opacity: 0; }
+      from {
+        transform: translate(12px, 4px) scale(.6);
+        opacity: .7;
+      }
+      to {
+        transform: translate(-22px, -12px) scale(1.2);
+        opacity: 0;
+      }
     }
 
-    /* ANIMATED HEART ENVELOPE */
+    /* HEART ENVELOPE AND CODE */
     #letterScene {
-      position: absolute; inset: 0; z-index: 12;
-      display: grid; place-items: center; padding: 25px;
-      background: radial-gradient(circle, #492842f5, #130b1bef 75%);
-      opacity: 0; visibility: hidden; pointer-events: none;
+      position: absolute;
+      inset: 0;
+      z-index: 12;
+      display: grid;
+      place-items: center;
+      padding: 25px;
+      background:
+        radial-gradient(circle, #492842f5, #130b1bef 75%);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
       transition: opacity .5s, visibility .5s;
     }
     #letterScene.show {
-      opacity: 1; visibility: visible; pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
     }
     .envelopeWrap {
-      position: relative; width: min(390px, 88vw); height: 360px;
-      display: grid; place-items: end center;
+      position: relative;
+      width: min(390px, 88vw);
+      height: 360px;
+      display: grid;
+      place-items: end center;
     }
     .envelope {
-      position: absolute; bottom: 22px; width: 100%; height: 210px;
-      border-radius: 8px 8px 18px 18px; background: #e785ac;
-      box-shadow: 0 25px 65px #0009, 0 0 45px #ff93c980;
+      position: absolute;
+      bottom: 22px;
+      width: 100%;
+      height: 210px;
+      border-radius: 8px 8px 18px 18px;
+      background: #e785ac;
+      box-shadow:
+        0 25px 65px #0009,
+        0 0 45px #ff93c980;
     }
     .envelope::before {
-      content: ""; position: absolute; inset: 0; z-index: 3;
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
       background: #ffa9ca;
-      clip-path: polygon(0 0, 50% 59%, 100% 0);
-      transform-origin: top; transition: transform .8s ease;
+      clip-path: polygon(
+        0 0,
+        50% 59%,
+        100% 0
+      );
+      transform-origin: top;
+      transition: transform .8s ease;
     }
     .envelope::after {
-      content: "♡"; position: absolute; z-index: 5;
-      left: 50%; top: 50%; transform: translate(-50%, -20%);
-      width: 58px; height: 58px; display: grid; place-items: center;
-      border-radius: 50%; background: #fff0f7; color: #b8356d;
-      font-size: 38px; box-shadow: 0 0 18px #fff3;
+      content: "♡";
+      position: absolute;
+      z-index: 5;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -20%);
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #fff0f7;
+      color: #b8356d;
+      font-size: 38px;
+      box-shadow: 0 0 18px #fff3;
       transition: opacity .4s;
     }
     #letterScene.open .envelope::before {
@@ -342,47 +737,108 @@
       opacity: 0;
     }
     .letterPaper {
-      position: absolute; z-index: 2; left: 8%; right: 8%; bottom: 45px;
-      min-height: 245px; padding: 25px 24px; border-radius: 10px;
-      background: #fff3f7; color: #5c2b48; text-align: center;
+      position: absolute;
+      z-index: 2;
+      left: 8%;
+      right: 8%;
+      bottom: 45px;
+      min-height: 245px;
+      padding: 25px 24px;
+      border-radius: 10px;
+      background: #fff3f7;
+      color: #5c2b48;
+      text-align: center;
       box-shadow: 0 7px 25px #0005;
-      transform: translateY(95px) scale(.88); opacity: 0;
+      transform: translateY(95px) scale(.88);
+      opacity: 0;
       transition: transform 1s .65s, opacity .8s .65s;
     }
     #letterScene.open .letterPaper {
       transform: translateY(-72px) scale(1);
-      opacity: 1; z-index: 4;
+      opacity: 1;
+      z-index: 4;
     }
     .letterPaper h2 {
-      margin: 0 0 10px; font-size: 26px;
+      margin: 0 0 10px;
+      font-size: 26px;
     }
     .letterPaper p { line-height: 1.5; }
-    .letterCode {
-      margin: 15px 0; padding: 9px 12px; border-radius: 12px;
-      background: #ffd8e9; color: #a42d63;
-      font-size: clamp(16px, 5vw, 23px);
-      font-weight: 900; letter-spacing: .06em;
-      overflow-wrap: anywhere;
+
+    #letterForm {
+      display: grid;
+      gap: 10px;
+    }
+    #letterForm label {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    #codeInput {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d590af;
+      border-radius: 12px;
+      background: white;
+      color: #5c2b48;
+      font: inherit;
+      text-align: center;
+      outline: none;
+    }
+    #codeInput:focus {
+      border-color: #b73d75;
+      box-shadow: 0 0 0 3px #e985b466;
+    }
+    #codeError {
+      margin: 0;
+      color: #a82454;
+      font-size: 13px;
+      font-weight: bold;
+    }
+    #codeError[hidden] { display: none; }
+    .letterPaper.shake {
+      animation: letterShake .35s ease;
+    }
+    @keyframes letterShake {
+      20%, 60% { margin-left: -7px; }
+      40%, 80% { margin-left: 7px; }
     }
     .letterContinue {
-      padding: 10px 20px; border: 0; border-radius: 999px;
-      background: #b73d75; color: white; font-weight: bold; cursor: pointer;
+      padding: 10px 20px;
+      border: 0;
+      border-radius: 999px;
+      background: #b73d75;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
     }
-    .letterContinue:hover { background: #912554; }
+    .letterContinue:hover {
+      background: #912554;
+    }
     .letterSpark {
-      position: absolute; color: #ffe7f2; font-size: 28px;
+      position: absolute;
+      color: #ffe7f2;
+      font-size: 28px;
       text-shadow: 0 0 15px #ff8bc6;
       animation: letterSparkle 2s ease-in-out infinite alternate;
     }
-    .letterSpark.one { top: 15%; left: 13%; }
+    .letterSpark.one {
+      top: 15%;
+      left: 13%;
+    }
     .letterSpark.two {
-      top: 28%; right: 10%; animation-delay: .6s;
+      top: 28%;
+      right: 10%;
+      animation-delay: .6s;
     }
     .letterSpark.three {
-      bottom: 18%; right: 14%; animation-delay: 1.2s;
+      bottom: 18%;
+      right: 14%;
+      animation-delay: 1.2s;
     }
     @keyframes letterSparkle {
-      to { transform: translateY(-13px) scale(1.25); opacity: .4; }
+      to {
+        transform: translateY(-13px) scale(1.25);
+        opacity: .4;
+      }
     }
     @media (max-width: 420px) {
       .letterPaper { padding: 20px 16px; }
@@ -391,77 +847,168 @@
 
     /* MAIN HOME */
     #mainWebsite {
-      min-height: 100vh; opacity: 0; transform: translateY(20px);
+      min-height: 100vh;
+      opacity: 0;
+      transform: translateY(20px);
       transition: opacity 1.5s ease, transform 1.5s ease;
+      background: #140e1d;
+      color: #fbf3f8;
+      font-family: "DM Sans", Arial, sans-serif;
     }
     #mainWebsite.show {
-      opacity: 1; transform: translateY(0);
+      opacity: 1;
+      transform: translateY(0);
     }
+
+    /* SLIDING MENU */
     .menuZone {
-      position: fixed; inset: 0 0 auto; z-index: 40;
-      display: flex; flex-direction: column; align-items: center;
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       pointer-events: none;
     }
     .menuHandle {
-      pointer-events: auto; padding: 10px 23px;
-      border: 1px solid #ffc6e180;
-      border-radius: 0 0 18px 18px;
-      background: #26152fe8; color: #ffe9f4;
-      font-weight: bold; cursor: pointer;
-      box-shadow: 0 7px 24px #0005;
-      backdrop-filter: blur(14px);
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      padding: 12px 18px;
+      border: 1px solid #f0bdd16b;
+      border-top: 0;
+      border-radius: 0 0 20px 20px;
+      background: #201520ee;
+      color: #fff3f8;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      cursor: pointer;
+      box-shadow: 0 8px 26px #08050b88;
+      backdrop-filter: blur(18px);
+    }
+    .menuHandle span {
+      color: #f4aeca;
+      letter-spacing: .06em;
     }
     .siteMenu {
-      width: min(850px, 96vw);
-      display: flex; justify-content: space-between;
-      align-items: center; flex-wrap: wrap; gap: 16px;
-      padding: 18px 24px;
-      border: 1px solid #ffbedd55;
-      border-radius: 0 0 22px 22px;
-      background: #1e1128f2;
-      box-shadow: 0 18px 42px #0008;
-      backdrop-filter: blur(18px);
-      opacity: 0; visibility: hidden;
-      transform: translateY(-14px);
-      transition: opacity .3s, transform .3s, visibility .3s;
+      width: min(400px, calc(100vw - 28px));
+      padding: 16px;
+      border: 1px solid #f0bdd169;
+      border-radius: 0 0 24px 24px;
+      background: #231827f5;
+      box-shadow: 0 24px 60px #05030999;
+      backdrop-filter: blur(20px);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-12px) scale(.97);
+      transform-origin: top;
+      transition:
+        opacity .3s,
+        transform .3s,
+        visibility .3s;
     }
     .menuZone:hover .siteMenu,
     .menuZone:focus-within .siteMenu,
     .menuZone.open .siteMenu {
-      pointer-events: auto; opacity: 1;
-      visibility: visible; transform: translateY(0);
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
     }
-    .siteMenu a { color: #ffe9f4; text-decoration: none; }
-    .siteLogo {
-      font-size: 21px; font-weight: bold; white-space: nowrap;
+    .menuPanelHead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 8px 16px;
+      border-bottom: 1px solid #ffe1ee2b;
     }
-    .menuLinks { display: flex; gap: 25px; }
-    .menuLinks a { opacity: .75; }
-    .menuLinks a:hover { opacity: 1; color: #ff9fcc; }
+    .menuPanelHead strong {
+      font: 600 34px/1
+        "Cormorant Garamond", Georgia, serif;
+    }
+    .menuPanelHead small {
+      color: #eaaac6;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .18em;
+    }
+    .menuLinks {
+      display: grid;
+      gap: 6px;
+      margin: 12px 0;
+    }
+    .menuLinks a {
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      padding: 14px 15px;
+      border-radius: 13px;
+      color: #fff4f8;
+      font-size: 17px;
+      text-decoration: none;
+      transition: background .2s, transform .2s;
+    }
+    .menuLinks a:hover,
+    .menuLinks a:focus-visible {
+      background: #f4aac025;
+      transform: translateX(3px);
+    }
+    .menuLinks small {
+      color: #e6a3bf;
+      font-size: 10px;
+      letter-spacing: .12em;
+    }
+    .menuLinks a span:last-child {
+      margin-left: auto;
+      color: #e6a3bf;
+    }
     #backToIntro {
-      padding: 10px 16px; border: 1px solid #ffb9d2;
-      border-radius: 999px; background: #ffcfdf;
-      color: #6b2445; font-weight: bold; cursor: pointer;
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #f0bdd169;
+      border-radius: 13px;
+      background: #f4d5e6;
+      color: #55243f;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
     }
-    #backToIntro:hover { background: #ffe5ef; }
+    #backToIntro:hover {
+      background: #ffebf3;
+    }
 
+    /* NEW VIDEO BELL */
     .notificationBell {
-      position: fixed; z-index: 45; top: 14px; right: 18px;
-      width: 48px; height: 48px;
-      border: 1px solid #ffb9d2; border-radius: 50%;
-      background: #321b3ce8; color: #ffe7f2;
-      font-size: 23px; cursor: pointer;
-      box-shadow: 0 6px 22px #0005;
+      position: fixed;
+      z-index: 45;
+      top: 13px;
+      right: 18px;
+      width: 44px;
+      height: 44px;
+      border: 1px solid #f0bdd17d;
+      border-radius: 50%;
+      background: #251727ed;
+      color: #fff0f6;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 6px 22px #0006;
     }
     .notificationBell.new {
       animation: bellRing 2.6s ease-in-out infinite;
-      box-shadow: 0 0 24px #ff8ac7;
+      box-shadow: 0 0 23px #ff8ac780;
     }
     .notificationBell.new::after {
-      content: ""; position: absolute;
-      top: 4px; right: 4px; width: 11px; height: 11px;
-      border-radius: 50%; background: #ff4b99;
-      box-shadow: 0 0 8px #ff4b99;
+      content: "";
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ff5c9f;
+      box-shadow: 0 0 8px #ff5c9f;
     }
     @keyframes bellRing {
       0%, 70%, 100% { transform: rotate(0); }
@@ -471,139 +1018,337 @@
       90% { transform: rotate(8deg); }
     }
     .notificationHint {
-      position: fixed; z-index: 44; top: 70px; right: 18px;
-      padding: 9px 14px; border: 1px solid #ffc6e188;
-      border-radius: 12px; background: #321b3cf0;
-      color: #fff0f8; font-size: 13px;
+      position: fixed;
+      z-index: 44;
+      top: 67px;
+      right: 18px;
+      padding: 10px 14px;
+      border: 1px solid #ffc6e188;
+      border-radius: 12px;
+      background: #321b3cf0;
+      color: #fff0f8;
+      font-size: 12px;
       box-shadow: 0 8px 22px #0005;
     }
     .notificationHint[hidden] { display: none; }
 
+    /* WELCOME TO OUR WORLD */
     .welcomeSection {
-      position: relative; min-height: 100vh;
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: flex-start;
-      overflow: hidden; padding: 90px max(8vw, 25px);
-      background: radial-gradient(circle at 76% 45%, #b465a54d, transparent 28%),
-                  radial-gradient(circle at 18% 75%, #e78caf33, transparent 35%),
-                  linear-gradient(140deg, #190e27, #301632 60%, #160c24);
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden;
+      padding: 130px max(8vw, 25px) 105px;
+      background:
+        radial-gradient(
+          circle at 79% 52%,
+          #7d4a7455,
+          transparent 26%
+        ),
+        radial-gradient(
+          circle at 14% 87%,
+          #a6407844,
+          transparent 34%
+        ),
+        linear-gradient(
+          145deg,
+          #150e1d,
+          #25152a 62%,
+          #110d18
+        );
     }
     .welcomeSection::before {
-      content: ""; position: absolute; inset: 0;
-      opacity: .55; pointer-events: none;
-      background-image: radial-gradient(#ffd7ee 1px, transparent 2px),
-                        radial-gradient(#ba9eff 1px, transparent 2px);
-      background-size: 110px 120px, 170px 145px;
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .37;
+      pointer-events: none;
+      background-image:
+        radial-gradient(#ffd7ee 1px, transparent 2px),
+        radial-gradient(#ba9eff 1px, transparent 2px);
+      background-size: 120px 130px, 190px 170px;
       background-position: 20px 38px, 85px 75px;
     }
+    .heroLine {
+      position: absolute;
+      top: 12%;
+      left: max(8vw, 25px);
+      right: max(8vw, 25px);
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      color: #e5bad0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .23em;
+    }
+    .heroLine::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background:
+        linear-gradient(
+          90deg,
+          #e8b5cd66,
+          transparent
+        );
+    }
     .welcomeGlow {
-      position: absolute; width: 300px; height: 300px;
-      right: 12%; top: 25%; border-radius: 50%;
-      background: #f9a5d344; filter: blur(80px);
+      position: absolute;
+      width: 330px;
+      height: 330px;
+      right: 8%;
+      top: 24%;
+      border-radius: 50%;
+      background: #f9a5d32e;
+      filter: blur(85px);
       pointer-events: none;
     }
     .welcomeOrbit {
-      position: absolute; right: 9%; top: 50%;
-      width: min(35vw, 430px); aspect-ratio: 1;
+      position: absolute;
+      right: 8%;
+      top: 52%;
+      width: min(31vw, 420px);
+      aspect-ratio: 1;
       transform: translateY(-50%);
-      border: 1px solid #ffc3e777; border-radius: 50%;
-      box-shadow: 0 0 50px #ff9ed74d, inset 0 0 60px #ff8ac336;
+      border: 1px solid #ffc3e759;
+      border-radius: 50%;
+      box-shadow:
+        0 0 65px #ff9ed72a,
+        inset 0 0 70px #ff8ac32b;
       pointer-events: none;
-      animation: orbitFloat 5s ease-in-out infinite alternate;
+      animation: orbitFloat
+        5s ease-in-out infinite alternate;
     }
     .welcomeOrbit::before {
-      content: "♡"; position: absolute; inset: 0;
-      display: grid; place-items: center;
+      content: "♡";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
       color: #ffd2e8;
-      font-size: clamp(120px, 18vw, 260px);
-      text-shadow: 0 0 35px #ff7cbd;
+      font-size: clamp(120px, 17vw, 240px);
+      font-family:
+        "Cormorant Garamond", Georgia, serif;
+      text-shadow: 0 0 45px #ff7cbd99;
     }
     .welcomeOrbit::after {
-      content: "✦"; position: absolute;
-      top: 10%; right: 6%; color: #ffe1f1;
-      font-size: 38px; text-shadow: 0 0 16px #ff7cbd;
+      content: "✦";
+      position: absolute;
+      top: 8%;
+      right: 7%;
+      color: #ffe1f1;
+      font-size: 35px;
+      text-shadow: 0 0 16px #ff7cbd;
     }
     @keyframes orbitFloat {
-      to { transform: translateY(calc(-50% - 18px)) rotate(5deg); }
+      to {
+        transform:
+          translateY(calc(-50% - 15px))
+          rotate(4deg);
+      }
     }
     .eyebrow {
-      color: #ffabd1; font-size: 13px;
-      font-weight: bold; letter-spacing: 3px;
+      position: relative;
+      z-index: 1;
+      margin: 0 0 18px;
+      color: #edb6d0;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .22em;
       text-transform: uppercase;
     }
     .welcomeSection h1 {
-      position: relative; z-index: 1; max-width: 780px;
-      font-size: clamp(48px, 8vw, 100px);
-      line-height: 1.05; margin: 12px 0 20px;
-      text-shadow: 0 8px 30px #0006;
+      position: relative;
+      z-index: 1;
+      max-width: 870px;
+      margin: 0 0 24px;
+      font: 500 clamp(70px, 10vw, 148px)/.88
+        "Cormorant Garamond", Georgia, serif;
+      letter-spacing: -.045em;
+      text-shadow: 0 8px 35px #0006;
     }
-    .welcomeSection h1 span { color: #ffaad1; }
-    .welcomeSection > p:not(.eyebrow) {
-      position: relative; max-width: 520px;
-      line-height: 1.7; opacity: .85;
+    .welcomeSection h1 span {
+      color: #f6b8d3;
+      font-style: italic;
+    }
+    .heroSubtitle {
+      position: relative;
+      z-index: 1;
+      max-width: 410px;
+      color: #eddae6;
+      font-size: clamp(15px, 1.5vw, 18px);
+      line-height: 1.8;
+    }
+    .scrollNote {
+      position: absolute;
+      bottom: 7%;
+      left: max(8vw, 25px);
+      color: #e5bad0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
     }
 
+    /* OUR MOMENTS */
     .contentSection {
-      padding: 90px max(8vw, 25px);
-      scroll-margin-top: 80px;
+      padding: 110px max(8vw, 25px) 130px;
+      scroll-margin-top: 70px;
+      background:
+        radial-gradient(
+          circle at 80% 5%,
+          #70355c3b,
+          transparent 32%
+        ),
+        #17101e;
     }
-    .sectionHeading { margin-bottom: 34px; }
+    .sectionHeading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 30px;
+      margin-bottom: 40px;
+      padding-bottom: 27px;
+      border-bottom: 1px solid #f6c6dd3d;
+    }
+    .sectionHeading .eyebrow {
+      margin-bottom: 10px;
+    }
     .sectionHeading h2 {
-      font-size: clamp(36px, 5vw, 60px);
-      margin: 8px 0;
+      margin: 0;
+      font: 500 clamp(58px, 8vw, 110px)/.95
+        "Cormorant Garamond", Georgia, serif;
+      letter-spacing: -.04em;
     }
-    .sectionHeading p { line-height: 1.6; opacity: .8; }
+    .sectionHeading p:last-child {
+      max-width: 260px;
+      margin: 0;
+      color: #dbc4d3;
+      font-size: 14px;
+      line-height: 1.7;
+    }
     .videoGrid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 24px;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 22px;
     }
     .videoCard {
-      overflow: hidden; border: 1px solid #ffc6e133;
-      border-radius: 22px; background: #2a1a34;
-      box-shadow: 0 12px 35px #0003;
+      overflow: hidden;
+      border: 1px solid #f2c4da42;
+      border-radius: 23px;
+      background: #251a2b;
+      box-shadow: 0 18px 45px #0003;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .videoCard:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 55px #0006;
     }
     .videoPreview {
-      display: grid; place-items: center;
+      display: grid;
+      place-items: center;
       aspect-ratio: 16 / 9;
-      background: radial-gradient(circle at center, #ffb4d57a, transparent 38%),
-                  linear-gradient(135deg, #51315f, #a05c87);
-      color: white; font-size: 50px;
+      background:
+        radial-gradient(
+          circle at 50% 50%,
+          #f9b2d245,
+          transparent 34%
+        ),
+        linear-gradient(
+          135deg,
+          #34203d,
+          #77526d
+        );
+      color: #ffe1ef;
+      font: 400 86px
+        "Cormorant Garamond", Georgia, serif;
     }
     .videoEmbed {
-      display: block; width: 100%;
-      aspect-ratio: 16 / 9; border: 0;
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
     }
-    .cardText { padding: 22px; }
+    .cardText {
+      padding: 22px 25px 28px;
+    }
     .cardText span {
-      color: #ffafd3; font-size: 12px;
-      letter-spacing: 2px;
+      color: #e9aac7;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .19em;
     }
-    .cardText h3 { margin: 9px 0; }
-    .cardText p { line-height: 1.6; opacity: .8; }
+    .cardText h3 {
+      margin: 10px 0 5px;
+      font: 500 36px/1.1
+        "Cormorant Garamond", Georgia, serif;
+    }
+    .cardText p {
+      margin: 0;
+      color: #d8c1d1;
+      font-size: 13px;
+      line-height: 1.6;
+    }
     footer {
-      padding: 30px; text-align: center;
-      color: #ffc2de; border-top: 1px solid #ffc6e122;
+      padding: 30px;
+      border-top: 1px solid #ffc6e122;
+      color: #d9afc6;
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-align: center;
+      text-transform: uppercase;
     }
-    @media (max-width: 650px) {
-      .siteMenu {
-        justify-content: center;
-        padding: 18px 60px 18px 18px;
+
+    @media (max-width: 700px) {
+      .welcomeSection {
+        padding-top: 140px;
       }
-      .menuLinks { gap: 18px; }
-      .videoGrid { grid-template-columns: 1fr; }
-      .welcomeSection { min-height: 100vh; }
+      .welcomeSection h1 {
+        font-size: clamp(67px, 16vw, 110px);
+      }
       .welcomeOrbit {
-        right: -20%; width: 75vw; opacity: .33;
+        right: -24%;
+        width: 80vw;
+        opacity: .27;
+      }
+      .sectionHeading {
+        grid-template-columns: 1fr;
+        gap: 13px;
+      }
+      .videoGrid {
+        grid-template-columns: 1fr;
+      }
+      .menuPanelHead {
+        padding-right: 48px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #mainWebsite .welcomeOrbit,
+      #mainWebsite .notificationBell.new {
+        animation: none;
+      }
+      #mainWebsite .videoCard {
+        transition: none;
       }
     }
   </style>
 </head>
 
 <body>
+  <!-- CATS -->
   <div id="intro">
-    <button id="catButton" type="button" aria-label="Enter the website">
-      <img id="catPicture" src="Tail.png" alt="Two cats standing together">
+    <button
+      id="catButton"
+      type="button"
+      aria-label="Enter the website">
+      <img
+        id="catPicture"
+        src="Tail.png"
+        alt="Two cats standing together">
       <span class="musicNote left">♫</span>
       <span class="musicNote right">♪</span>
     </button>
@@ -616,9 +1361,15 @@
     <span class="wind two"></span>
     <span class="wind three"></span>
 
-    <button id="introText" type="button">♡ Come with us ♡</button>
-    <button id="musicButton" type="button">♫ Play music ♡</button>
-    <button id="songButton" type="button">♪ Switch to Drive By</button>
+    <button id="introText" type="button">
+      ♡ Come with us ♡
+    </button>
+    <button id="musicButton" type="button">
+      ♫ Play music ♡
+    </button>
+    <button id="songButton" type="button">
+      ♪ Switch to Drive By
+    </button>
 
     <div id="littleRunners" aria-hidden="true">
       <img src="Baby.png" alt="">
@@ -638,12 +1389,14 @@
       <img class="car" src="Car.png" alt="">
     </div>
 
+    <!-- LETTER AND CODE ENTRY -->
     <div
       id="letterScene"
       role="dialog"
       aria-modal="true"
       aria-label="A secret letter"
       aria-hidden="true">
+
       <span class="letterSpark one">✦</span>
       <span class="letterSpark two">♡</span>
       <span class="letterSpark three">✧</span>
@@ -653,19 +1406,40 @@
 
         <div class="letterPaper">
           <h2>A letter for you ♡</h2>
-          <p>Here is the little code to our world:</p>
-          <div class="letterCode" id="letterCode">AkuSayangKamu</div>
-          <button
-            class="letterContinue"
-            id="letterContinue"
-            type="button">
-            Continue ♡
-          </button>
+          <p>
+            Only you know the words that open our world.
+          </p>
+
+          <form id="letterForm">
+            <label for="codeInput">
+              Enter our secret code
+            </label>
+            <input
+              id="codeInput"
+              type="text"
+              placeholder="Type the code here"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              required>
+
+            <p id="codeError" role="alert" hidden>
+              Not quite. Try again ♡
+            </p>
+
+            <button
+              class="letterContinue"
+              id="letterContinue"
+              type="submit">
+              Open our world ♡
+            </button>
+          </form>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- MAIN HOME -->
   <main id="mainWebsite">
     <div class="menuZone" id="menuZone">
       <button
@@ -674,15 +1448,30 @@
         type="button"
         aria-expanded="false"
         aria-controls="siteMenu">
-        ⌄ Menu
+        ✦ OUR LOVE <span>MENU ↓</span>
       </button>
 
-      <nav class="siteMenu" id="siteMenu" aria-label="Main menu">
-        <a class="siteLogo" href="#home">♡ Our Love</a>
+      <nav
+        class="siteMenu"
+        id="siteMenu"
+        aria-label="Main menu">
+
+        <div class="menuPanelHead">
+          <strong>Our Love ♡</strong>
+          <small>THE MENU</small>
+        </div>
 
         <div class="menuLinks">
-          <a href="#home">Home</a>
-          <a href="#videos">Videos</a>
+          <a href="#home">
+            <small>01</small>
+            Home
+            <span>↗</span>
+          </a>
+          <a href="#videos">
+            <small>02</small>
+            Our Moments
+            <span>↗</span>
+          </a>
         </div>
 
         <button id="backToIntro" type="button">
@@ -699,23 +1488,55 @@
       🔔
     </button>
 
-    <span class="notificationHint" id="notificationHint" hidden>
+    <span
+      class="notificationHint"
+      id="notificationHint"
+      hidden>
       New video is waiting ♡
     </span>
 
     <section class="welcomeSection" id="home">
       <div class="welcomeGlow"></div>
-      <div class="welcomeOrbit" aria-hidden="true"></div>
-      <p class="eyebrow">✦ A little world for us ✦</p>
-      <h1>Welcome To<br><span>Our World ♡</span></h1>
-      <p>Our little world, filled with moments we love.</p>
+      <div
+        class="welcomeOrbit"
+        aria-hidden="true"></div>
+
+      <div class="heroLine">
+        A PLACE FOR OUR STORY
+      </div>
+
+      <p class="eyebrow">
+        ✦ A little world for us ✦
+      </p>
+
+      <h1>
+        Welcome to<br>
+        <span>Our World.</span>
+      </h1>
+
+      <p class="heroSubtitle">
+        A place for our favorite moments,
+        little surprises, and everything
+        still ahead of us.
+      </p>
+
+      <div class="scrollNote">
+        SCROLL TO SEE OUR MOMENTS ↓
+      </div>
     </section>
 
     <section class="contentSection" id="videos">
       <div class="sectionHeading">
-        <p class="eyebrow">♡ Watch together</p>
-        <h2>Our Moments</h2>
-        <p>Every little memory has a place here.</p>
+        <div>
+          <p class="eyebrow">
+            01 / THE COLLECTION
+          </p>
+          <h2>Our Moments</h2>
+        </div>
+
+        <p>
+          Little memories, kept together in one place.
+        </p>
       </div>
 
       <div class="videoGrid">
@@ -738,11 +1559,11 @@
         </div>
 
         <div class="videoCard">
-          <div class="videoPreview">▶</div>
+          <div class="videoPreview">✦</div>
           <div class="cardText">
-            <span>VIDEO 02</span>
-            <h3>Another little moment</h3>
-            <p>Your next YouTube video will go here.</p>
+            <span>COMING SOON</span>
+            <h3>More memories ahead</h3>
+            <p>Our story keeps growing ♡</p>
           </div>
         </div>
       </div>
@@ -759,23 +1580,44 @@
   </audio>
 
   <script>
-    const intro = document.getElementById("intro");
-    const catButton = document.getElementById("catButton");
-    const catPicture = document.getElementById("catPicture");
-    const introText = document.getElementById("introText");
-    const mainWebsite = document.getElementById("mainWebsite");
-    const musicButton = document.getElementById("musicButton");
-    const introMusic = document.getElementById("introMusic");
-    const backButton = document.getElementById("backToIntro");
-    const songButton = document.getElementById("songButton");
-    const menuZone = document.getElementById("menuZone");
-    const menuHandle = document.getElementById("menuHandle");
-    const notificationBell = document.getElementById("notificationBell");
-    const notificationHint = document.getElementById("notificationHint");
-    const letterScene = document.getElementById("letterScene");
-    const letterContinue = document.getElementById("letterContinue");
-    const runnerPicture = document.querySelector("#littleRunners img");
-    const carPicture = document.querySelector("#driveScene .car");
+    const intro =
+      document.getElementById("intro");
+    const catButton =
+      document.getElementById("catButton");
+    const catPicture =
+      document.getElementById("catPicture");
+    const introText =
+      document.getElementById("introText");
+    const mainWebsite =
+      document.getElementById("mainWebsite");
+    const musicButton =
+      document.getElementById("musicButton");
+    const introMusic =
+      document.getElementById("introMusic");
+    const backButton =
+      document.getElementById("backToIntro");
+    const songButton =
+      document.getElementById("songButton");
+    const menuZone =
+      document.getElementById("menuZone");
+    const menuHandle =
+      document.getElementById("menuHandle");
+    const notificationBell =
+      document.getElementById("notificationBell");
+    const notificationHint =
+      document.getElementById("notificationHint");
+    const letterScene =
+      document.getElementById("letterScene");
+    const letterForm =
+      document.getElementById("letterForm");
+    const codeInput =
+      document.getElementById("codeInput");
+    const codeError =
+      document.getElementById("codeError");
+    const runnerPicture =
+      document.querySelector("#littleRunners img");
+    const carPicture =
+      document.querySelector("#driveScene .car");
 
     const idleFrames = [
       "Tail.png",
@@ -833,15 +1675,22 @@
     let average = 0;
     let pulse = 0;
 
-    /* VIDEO BELL */
+    /* NEW VIDEO BELL */
     const latestVideo = [
-      ...document.querySelectorAll("#videos .videoEmbed")
-    ].map(video => video.getAttribute("src")).join("|");
+      ...document.querySelectorAll(
+        "#videos .videoEmbed"
+      )
+    ].map(video =>
+      video.getAttribute("src")
+    ).join("|");
 
     let seenVideo = "";
 
     try {
-      seenVideo = localStorage.getItem("ourLoveSeenVideo") || "";
+      seenVideo =
+        localStorage.getItem(
+          "ourLoveSeenVideo"
+        ) || "";
     } catch (error) {}
 
     if (latestVideo && latestVideo !== seenVideo) {
@@ -849,48 +1698,87 @@
       notificationHint.hidden = false;
     }
 
-    notificationBell.addEventListener("click", () => {
-      notificationBell.classList.remove("new");
-      notificationHint.hidden = true;
+    notificationBell.addEventListener(
+      "click",
+      () => {
+        notificationBell.classList.remove("new");
+        notificationHint.hidden = true;
 
-      try {
-        localStorage.setItem("ourLoveSeenVideo", latestVideo);
-      } catch (error) {}
+        try {
+          localStorage.setItem(
+            "ourLoveSeenVideo",
+            latestVideo
+          );
+        } catch (error) {}
 
-      document.getElementById("videos").scrollIntoView({
-        behavior: "smooth"
+        document
+          .getElementById("videos")
+          .scrollIntoView({
+            behavior: "smooth"
+          });
+      }
+    );
+
+    /* SLIDING MENU */
+    menuHandle.addEventListener(
+      "click",
+      () => {
+        const open =
+          menuZone.classList.toggle("open");
+
+        menuHandle.setAttribute(
+          "aria-expanded",
+          String(open)
+        );
+      }
+    );
+
+    document
+      .querySelectorAll("#siteMenu a")
+      .forEach(link => {
+        link.addEventListener(
+          "click",
+          () => {
+            menuZone.classList.remove("open");
+            menuHandle.setAttribute(
+              "aria-expanded",
+              "false"
+            );
+          }
+        );
       });
-    });
 
-    /* MENU */
-    menuHandle.addEventListener("click", () => {
-      const open = menuZone.classList.toggle("open");
-      menuHandle.setAttribute("aria-expanded", String(open));
-    });
-
-    document.querySelectorAll("#siteMenu a").forEach(link => {
-      link.addEventListener("click", () => {
-        menuZone.classList.remove("open");
-        menuHandle.setAttribute("aria-expanded", "false");
-      });
-    });
-
-    /* CAT FRAMES */
+    /* CAT ANIMATION FRAMES */
     setInterval(() => {
-      if (screen !== "intro" || !introMusic.paused) return;
-      idleFrame = (idleFrame + 1) % idleFrames.length;
-      catPicture.src = idleFrames[idleFrame];
+      if (
+        screen !== "intro" ||
+        !introMusic.paused
+      ) return;
+
+      idleFrame =
+        (idleFrame + 1) % idleFrames.length;
+      catPicture.src =
+        idleFrames[idleFrame];
     }, 450);
 
     setInterval(() => {
-      runFrame = (runFrame + 1) % runningFrames.length;
-      runnerPicture.src = runningFrames[runFrame];
+      runFrame =
+        (runFrame + 1) % runningFrames.length;
+      runnerPicture.src =
+        runningFrames[runFrame];
     }, 180);
 
     setInterval(() => {
-      if (screen !== "intro" || mode !== "drive" || introMusic.paused) return;
-      carFrame = (carFrame + 1) % carFrames.length;
-      carPicture.src = carFrames[carFrame];
+      if (
+        screen !== "intro" ||
+        mode !== "drive" ||
+        introMusic.paused
+      ) return;
+
+      carFrame =
+        (carFrame + 1) % carFrames.length;
+      carPicture.src =
+        carFrames[carFrame];
     }, 240);
 
     function startDance() {
@@ -902,57 +1790,97 @@
       intro.classList.add("dancing");
 
       danceTimer = setInterval(() => {
-        danceFrame = (danceFrame + 1) % danceFrames.length;
-        catPicture.src = danceFrames[danceFrame];
+        danceFrame =
+          (danceFrame + 1) %
+          danceFrames.length;
+
+        catPicture.src =
+          danceFrames[danceFrame];
       }, 220);
     }
 
     function stopDance() {
       clearInterval(danceTimer);
       danceTimer = null;
+
       intro.classList.remove("dancing");
-      intro.style.setProperty("--beat-light", "0");
-      catPicture.src = idleFrames[idleFrame];
-      catPicture.alt = "Two cats standing together";
+      intro.style.setProperty(
+        "--beat-light",
+        "0"
+      );
+
+      catPicture.src =
+        idleFrames[idleFrame];
+      catPicture.alt =
+        "Two cats standing together";
     }
 
     function prepareBeat() {
       if (beatContext) return;
 
       beatContext = new (
-        window.AudioContext || window.webkitAudioContext
+        window.AudioContext ||
+        window.webkitAudioContext
       )();
 
-      const source = beatContext.createMediaElementSource(introMusic);
-      analyser = beatContext.createAnalyser();
+      const source =
+        beatContext.createMediaElementSource(
+          introMusic
+        );
+
+      analyser =
+        beatContext.createAnalyser();
       analyser.fftSize = 2048;
-      frequencies = new Uint8Array(analyser.frequencyBinCount);
+
+      frequencies = new Uint8Array(
+        analyser.frequencyBinCount
+      );
 
       source.connect(analyser);
-      analyser.connect(beatContext.destination);
+      analyser.connect(
+        beatContext.destination
+      );
     }
 
     function animateBeat() {
-      if (introMusic.paused || !analyser) return;
+      if (
+        introMusic.paused ||
+        !analyser
+      ) return;
 
-      analyser.getByteFrequencyData(frequencies);
+      analyser.getByteFrequencyData(
+        frequencies
+      );
 
-      const hzPerBin = beatContext.sampleRate / analyser.fftSize;
-      const first = Math.floor(60 / hzPerBin);
+      const hzPerBin =
+        beatContext.sampleRate /
+        analyser.fftSize;
+
+      const first =
+        Math.floor(60 / hzPerBin);
+
       const last = Math.min(
         frequencies.length - 1,
         Math.ceil(220 / hzPerBin)
       );
 
       let total = 0;
-      for (let i = first; i <= last; i++) {
+
+      for (
+        let i = first;
+        i <= last;
+        i++
+      ) {
         total += frequencies[i];
       }
 
-      const bass = total / (last - first + 1);
+      const bass =
+        total / (last - first + 1);
+
       average = average === 0
         ? bass
-        : average * .94 + bass * .06;
+        : average * .94 +
+          bass * .06;
 
       const hit = Math.min(
         1,
@@ -963,163 +1891,290 @@
         )
       );
 
-      pulse = Math.max(hit, pulse * .84);
+      pulse = Math.max(
+        hit,
+        pulse * .84
+      );
 
-      intro.style.setProperty("--beat-lift", `${-12 * pulse}px`);
-      intro.style.setProperty("--beat-zoom", `${1 + .045 * pulse}`);
-      intro.style.setProperty("--beat-glow", `${18 + 32 * pulse}px`);
-      intro.style.setProperty("--beat-light", `${.25 + .5 * pulse}`);
+      intro.style.setProperty(
+        "--beat-lift",
+        `${-12 * pulse}px`
+      );
+      intro.style.setProperty(
+        "--beat-zoom",
+        `${1 + .045 * pulse}`
+      );
+      intro.style.setProperty(
+        "--beat-glow",
+        `${18 + 32 * pulse}px`
+      );
+      intro.style.setProperty(
+        "--beat-light",
+        `${.25 + .5 * pulse}`
+      );
 
-      beatFrame = requestAnimationFrame(animateBeat);
+      beatFrame =
+        requestAnimationFrame(
+          animateBeat
+        );
     }
 
-    introMusic.addEventListener("play", () => {
-      cancelAnimationFrame(beatFrame);
-      average = 0;
-      animateBeat();
-    });
+    introMusic.addEventListener(
+      "play",
+      () => {
+        cancelAnimationFrame(
+          beatFrame
+        );
+        average = 0;
+        animateBeat();
+      }
+    );
 
-    introMusic.addEventListener("pause", () => {
-      cancelAnimationFrame(beatFrame);
-      pulse = 0;
-      intro.classList.remove("playing");
-    });
+    introMusic.addEventListener(
+      "pause",
+      () => {
+        cancelAnimationFrame(
+          beatFrame
+        );
+        pulse = 0;
+        intro.classList.remove(
+          "playing"
+        );
+      }
+    );
 
-    musicButton.addEventListener("click", async () => {
-      if (screen !== "intro") return;
+    musicButton.addEventListener(
+      "click",
+      async () => {
+        if (screen !== "intro") return;
 
-      if (introMusic.paused) {
+        if (introMusic.paused) {
+          try {
+            prepareBeat();
+            await beatContext.resume();
+            await introMusic.play();
+
+            musicButton.textContent =
+              "♫ Pause music ♡";
+            intro.classList.add(
+              "playing"
+            );
+            startDance();
+          } catch (error) {
+            musicButton.textContent =
+              "Could not play music";
+          }
+        } else {
+          introMusic.pause();
+          musicButton.textContent =
+            "♫ Play music ♡";
+          stopDance();
+        }
+      }
+    );
+
+    songButton.addEventListener(
+      "click",
+      async () => {
+        if (screen !== "intro") return;
+
+        introMusic.pause();
+        stopDance();
+
+        mode = mode === "cute"
+          ? "drive"
+          : "cute";
+
+        intro.classList.toggle(
+          "drive",
+          mode === "drive"
+        );
+
+        if (mode === "drive") {
+          carFrame = 0;
+          carPicture.src =
+            carFrames[0];
+        }
+
+        songButton.textContent =
+          mode === "drive"
+            ? "♪ Switch to Everytime"
+            : "♪ Switch to Drive By";
+
+        introMusic.src =
+          mode === "drive"
+            ? "Eric Bellinger - Drive By (Audio).mp3"
+            : "Ariana Grande - everytime (Official Instrumental).mp3";
+
+        introMusic.load();
+
         try {
           prepareBeat();
           await beatContext.resume();
           await introMusic.play();
 
-          musicButton.textContent = "♫ Pause music ♡";
-          intro.classList.add("playing");
+          musicButton.textContent =
+            "♫ Pause music ♡";
+          intro.classList.add(
+            "playing"
+          );
           startDance();
         } catch (error) {
-          musicButton.textContent = "Could not play music";
+          musicButton.textContent =
+            "Could not play music";
         }
-      } else {
-        introMusic.pause();
-        musicButton.textContent = "♫ Play music ♡";
-        stopDance();
       }
-    });
+    );
 
-    songButton.addEventListener("click", async () => {
-      if (screen !== "intro") return;
-
-      introMusic.pause();
-      stopDance();
-
-      mode = mode === "cute" ? "drive" : "cute";
-      intro.classList.toggle("drive", mode === "drive");
-
-      if (mode === "drive") {
-        carFrame = 0;
-        carPicture.src = carFrames[0];
-      }
-
-      songButton.textContent = mode === "drive"
-        ? "♪ Switch to Everytime"
-        : "♪ Switch to Drive By";
-
-      introMusic.src = mode === "drive"
-        ? "Eric Bellinger - Drive By (Audio).mp3"
-        : "Ariana Grande - everytime (Official Instrumental).mp3";
-
-      introMusic.load();
-
-      try {
-        prepareBeat();
-        await beatContext.resume();
-        await introMusic.play();
-
-        musicButton.textContent = "♫ Pause music ♡";
-        intro.classList.add("playing");
-        startDance();
-      } catch (error) {
-        musicButton.textContent = "Could not play music";
-      }
-    });
-
-    /* HEART, WIND, FOOTSTEP SOUNDS */
-    function note(frequency, when, duration, volume) {
+    /* HEART AND WALKING SOUNDS */
+    function note(
+      frequency,
+      when,
+      duration,
+      volume
+    ) {
       if (!soundContext) return;
 
-      const oscillator = soundContext.createOscillator();
-      const gain = soundContext.createGain();
+      const oscillator =
+        soundContext.createOscillator();
+
+      const gain =
+        soundContext.createGain();
 
       oscillator.type = "sine";
-      oscillator.frequency.value = frequency;
+      oscillator.frequency.value =
+        frequency;
 
-      gain.gain.setValueAtTime(.001, when);
-      gain.gain.linearRampToValueAtTime(volume, when + .03);
-      gain.gain.exponentialRampToValueAtTime(.001, when + duration);
+      gain.gain.setValueAtTime(
+        .001,
+        when
+      );
+      gain.gain.linearRampToValueAtTime(
+        volume,
+        when + .03
+      );
+      gain.gain.exponentialRampToValueAtTime(
+        .001,
+        when + duration
+      );
 
       oscillator.connect(gain);
-      gain.connect(soundContext.destination);
+      gain.connect(
+        soundContext.destination
+      );
+
       oscillator.start(when);
-      oscillator.stop(when + duration);
+      oscillator.stop(
+        when + duration
+      );
     }
 
     function heartSound() {
       if (!soundContext) return;
-      const now = soundContext.currentTime;
+
+      const now =
+        soundContext.currentTime;
+
       note(660, now, .25, .09);
-      note(880, now + .12, .4, .07);
+      note(
+        880,
+        now + .12,
+        .4,
+        .07
+      );
     }
 
     function footstep() {
       if (soundContext) {
-        note(110, soundContext.currentTime, .09, .045);
+        note(
+          110,
+          soundContext.currentTime,
+          .09,
+          .045
+        );
       }
     }
 
     function windSound() {
       if (!soundContext) return;
 
-      const length = Math.floor(soundContext.sampleRate * 1.5);
-      const buffer = soundContext.createBuffer(
-        1,
-        length,
-        soundContext.sampleRate
+      const length = Math.floor(
+        soundContext.sampleRate *
+        1.5
       );
-      const data = buffer.getChannelData(0);
 
-      for (let i = 0; i < length; i++) {
-        data[i] = Math.random() * 2 - 1;
+      const buffer =
+        soundContext.createBuffer(
+          1,
+          length,
+          soundContext.sampleRate
+        );
+
+      const data =
+        buffer.getChannelData(0);
+
+      for (
+        let i = 0;
+        i < length;
+        i++
+      ) {
+        data[i] =
+          Math.random() * 2 - 1;
       }
 
-      const source = soundContext.createBufferSource();
-      const filter = soundContext.createBiquadFilter();
-      const gain = soundContext.createGain();
+      const source =
+        soundContext.createBufferSource();
+
+      const filter =
+        soundContext.createBiquadFilter();
+
+      const gain =
+        soundContext.createGain();
 
       source.buffer = buffer;
       filter.type = "lowpass";
       filter.frequency.value = 500;
 
-      const now = soundContext.currentTime;
-      gain.gain.setValueAtTime(.001, now);
-      gain.gain.linearRampToValueAtTime(.035, now + .4);
-      gain.gain.linearRampToValueAtTime(.001, now + 1.5);
+      const now =
+        soundContext.currentTime;
+
+      gain.gain.setValueAtTime(
+        .001,
+        now
+      );
+      gain.gain.linearRampToValueAtTime(
+        .035,
+        now + .4
+      );
+      gain.gain.linearRampToValueAtTime(
+        .001,
+        now + 1.5
+      );
 
       source.connect(filter);
       filter.connect(gain);
-      gain.connect(soundContext.destination);
+      gain.connect(
+        soundContext.destination
+      );
       source.start(now);
     }
 
-    function later(ms, id, action) {
+    function later(
+      ms,
+      id,
+      action
+    ) {
       setTimeout(() => {
-        if (transitionId === id && screen === "entering") {
+        if (
+          transitionId === id &&
+          screen === "entering"
+        ) {
           action();
         }
       }, ms);
     }
 
-    /* WALK INTO THE MAIN HOME */
+    /* CATS WALK INTO MAIN HOME */
     function enterWebsite() {
       if (screen !== "intro") return;
 
@@ -1129,7 +2184,10 @@
       introMusic.pause();
       introMusic.currentTime = 0;
       stopDance();
-      intro.classList.remove("drive", "playing");
+      intro.classList.remove(
+        "drive",
+        "playing"
+      );
 
       musicButton.style.opacity = "0";
       musicButton.disabled = true;
@@ -1139,9 +2197,13 @@
       introText.disabled = true;
 
       try {
-        soundContext = soundContext || new (
-          window.AudioContext || window.webkitAudioContext
-        )();
+        soundContext =
+          soundContext ||
+          new (
+            window.AudioContext ||
+            window.webkitAudioContext
+          )();
+
         soundContext.resume();
         heartSound();
       } catch (error) {
@@ -1151,120 +2213,273 @@
       intro.classList.add("loving");
 
       later(1100, id, () => {
-        catPicture.style.opacity = "0";
+        catPicture.style.opacity =
+          "0";
 
         later(250, id, () => {
-          catPicture.src = "Walking Away.png";
-          catPicture.alt = "Two cats walking away together";
-          catPicture.style.opacity = "1";
-          intro.classList.add("breezy");
-          catButton.classList.add("walking");
+          catPicture.src =
+            "Walking Away.png";
+
+          catPicture.alt =
+            "Two cats walking away together";
+
+          catPicture.style.opacity =
+            "1";
+
+          intro.classList.add(
+            "breezy"
+          );
+
+          catButton.classList.add(
+            "walking"
+          );
 
           windSound();
           footstep();
 
-          [350, 700, 1050, 1400].forEach(delay => {
-            later(delay, id, footstep);
+          [
+            350,
+            700,
+            1050,
+            1400
+          ].forEach(delay => {
+            later(
+              delay,
+              id,
+              footstep
+            );
           });
         });
       });
 
       later(3850, id, () => {
-        intro.style.opacity = "0";
-        mainWebsite.classList.add("show");
+        intro.style.opacity =
+          "0";
+
+        mainWebsite.classList.add(
+          "show"
+        );
       });
 
       later(4850, id, () => {
-        intro.style.display = "none";
+        intro.style.display =
+          "none";
+
         screen = "website";
       });
     }
 
-    /* OPEN THE HEART ENVELOPE */
+    /* OPEN ENVELOPE */
     function showLetter() {
       if (screen !== "intro") return;
 
       screen = "letter";
-      letterScene.classList.add("show");
-      letterScene.setAttribute("aria-hidden", "false");
+      letterScene.classList.add(
+        "show"
+      );
+
+      letterScene.setAttribute(
+        "aria-hidden",
+        "false"
+      );
 
       requestAnimationFrame(() => {
-        letterScene.classList.add("open");
+        letterScene.classList.add(
+          "open"
+        );
       });
+
+      codeInput.value = "";
+      codeError.hidden = true;
 
       setTimeout(() => {
         if (screen === "letter") {
-          letterContinue.focus();
+          codeInput.focus();
         }
       }, 1600);
     }
 
-    catButton.addEventListener("click", showLetter);
-    introText.addEventListener("click", showLetter);
+    catButton.addEventListener(
+      "click",
+      showLetter
+    );
 
-    letterContinue.addEventListener("click", () => {
-      if (screen !== "letter") return;
+    introText.addEventListener(
+      "click",
+      showLetter
+    );
 
-      screen = "letterClosing";
-      letterScene.classList.remove("show", "open");
-      letterScene.setAttribute("aria-hidden", "true");
+    /* CHECK TYPED CODE */
+    letterForm.addEventListener(
+      "submit",
+      event => {
+        event.preventDefault();
 
-      setTimeout(() => {
-        if (screen !== "letterClosing") return;
-        screen = "intro";
-        enterWebsite();
-      }, 500);
-    });
+        if (
+          screen !== "letter"
+        ) return;
+
+        const typedCode =
+          codeInput.value
+            .trim()
+            .toLowerCase();
+
+        if (
+          typedCode !==
+          "akusayangkamu"
+        ) {
+          codeError.hidden = false;
+
+          const paper =
+            letterForm.closest(
+              ".letterPaper"
+            );
+
+          paper.classList.remove(
+            "shake"
+          );
+
+          void paper.offsetWidth;
+
+          paper.classList.add(
+            "shake"
+          );
+
+          codeInput.focus();
+          return;
+        }
+
+        screen = "letterClosing";
+
+        letterScene.classList.remove(
+          "show",
+          "open"
+        );
+
+        letterScene.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+
+        setTimeout(() => {
+          if (
+            screen !==
+            "letterClosing"
+          ) return;
+
+          screen = "intro";
+          enterWebsite();
+        }, 500);
+      }
+    );
 
     /* BACK TO THE CATS */
-    backButton.addEventListener("click", () => {
-      ++transitionId;
-      screen = "intro";
+    backButton.addEventListener(
+      "click",
+      () => {
+        ++transitionId;
+        screen = "intro";
 
-      introMusic.pause();
-      introMusic.currentTime = 0;
-      stopDance();
+        introMusic.pause();
+        introMusic.currentTime = 0;
+        stopDance();
 
-      musicButton.textContent = "♫ Play music ♡";
-      musicButton.style.opacity = "1";
-      musicButton.disabled = false;
+        musicButton.textContent =
+          "♫ Play music ♡";
 
-      songButton.style.opacity = "1";
-      songButton.disabled = false;
+        musicButton.style.opacity =
+          "1";
 
-      intro.classList.toggle("drive", mode === "drive");
+        musicButton.disabled =
+          false;
 
-      introText.style.opacity = "1";
-      introText.disabled = false;
+        songButton.style.opacity =
+          "1";
 
-      intro.classList.remove("loving", "breezy");
-      letterScene.classList.remove("show", "open");
-      letterScene.setAttribute("aria-hidden", "true");
+        songButton.disabled =
+          false;
 
-      catButton.classList.remove("walking");
-      catPicture.style.opacity = "1";
+        intro.classList.toggle(
+          "drive",
+          mode === "drive"
+        );
 
-      mainWebsite.classList.remove("show");
-      window.scrollTo(0, 0);
-      intro.style.display = "flex";
+        introText.style.opacity =
+          "1";
 
-      requestAnimationFrame(() => {
-        intro.style.opacity = "1";
-      });
-    });
+        introText.disabled =
+          false;
+
+        intro.classList.remove(
+          "loving",
+          "breezy"
+        );
+
+        letterScene.classList.remove(
+          "show",
+          "open"
+        );
+
+        letterScene.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+
+        catButton.classList.remove(
+          "walking"
+        );
+
+        catPicture.style.opacity =
+          "1";
+
+        mainWebsite.classList.remove(
+          "show"
+        );
+
+        window.scrollTo(0, 0);
+        intro.style.display = "flex";
+
+        requestAnimationFrame(() => {
+          intro.style.opacity = "1";
+        });
+      }
+    );
 
     /* TINY CLICK WAVE */
-    document.addEventListener("click", event => {
-      if (!event.target.closest("button")) return;
+    document.addEventListener(
+      "click",
+      event => {
+        if (
+          !event.target.closest(
+            "button"
+          )
+        ) return;
 
-      const wave = document.createElement("span");
-      wave.className = "tinyClickWave";
-      wave.style.left = event.clientX + "px";
-      wave.style.top = event.clientY + "px";
+        const wave =
+          document.createElement(
+            "span"
+          );
 
-      document.body.appendChild(wave);
-      setTimeout(() => wave.remove(), 600);
-    }, true);
+        wave.className =
+          "tinyClickWave";
+
+        wave.style.left =
+          event.clientX + "px";
+
+        wave.style.top =
+          event.clientY + "px";
+
+        document.body.appendChild(
+          wave
+        );
+
+        setTimeout(
+          () => wave.remove(),
+          600
+        );
+      },
+      true
+    );
   </script>
 </body>
 </html>

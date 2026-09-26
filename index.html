@@ -30,7 +30,6 @@
     }
 
     #catButton {
-      position: relative;
       width: min(600px, 85vw);
       padding: 0;
       border: 0;
@@ -42,7 +41,7 @@
       display: block;
       width: 100%;
       height: auto;
-      max-height: 65vh;
+      max-height: 60vh;
       object-fit: contain;
       animation: float 2.4s ease-in-out infinite;
       transition: opacity 0.25s ease;
@@ -73,11 +72,35 @@
     }
 
     #introText {
-      margin-top: 15px;
+      margin-top: 8px;
       font-size: 18px;
       letter-spacing: 2px;
       opacity: 0.7;
       transition: opacity 0.4s ease;
+    }
+
+    /* CUTE MUSIC BUTTON */
+    #musicButton {
+      margin-top: 24px;
+      padding: 13px 26px;
+      border: 1px solid #ffb9d2;
+      border-radius: 999px;
+      background: #ffcfdf;
+      color: #6b2445;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 158, 196, 0.25);
+      transition: transform 0.2s ease, background 0.2s ease, opacity 0.4s ease;
+    }
+
+    #musicButton:hover {
+      transform: scale(1.06);
+      background: #ffe0eb;
+    }
+
+    #musicButton:active {
+      transform: scale(0.97);
     }
 
     .heart {
@@ -182,6 +205,7 @@
     <span class="wind three"></span>
 
     <div id="introText">click us ♡</div>
+    <button id="musicButton" type="button">♫ Play music ♡</button>
   </div>
 
   <main id="mainWebsite">
@@ -189,22 +213,45 @@
     <p>A little place made just for you.</p>
   </main>
 
+  <audio
+    id="introMusic"
+    src="Ariana Grande - everytime (Official Instrumental).mp3"
+    loop
+    preload="auto"
+  ></audio>
+
   <script>
     const intro = document.getElementById("intro");
     const catButton = document.getElementById("catButton");
     const catPicture = document.getElementById("catPicture");
     const introText = document.getElementById("introText");
     const mainWebsite = document.getElementById("mainWebsite");
+    const musicButton = document.getElementById("musicButton");
+    const introMusic = document.getElementById("introMusic");
 
     let clicked = false;
-    let audio;
+    let soundContext;
 
     const walkingPicture = new Image();
     walkingPicture.src = "Walking Away.png";
 
-    function note(frequency, start, duration, volume = 0.08) {
-      const oscillator = audio.createOscillator();
-      const gain = audio.createGain();
+    musicButton.addEventListener("click", async function () {
+      if (introMusic.paused) {
+        try {
+          await introMusic.play();
+          musicButton.textContent = "♫ Pause music ♡";
+        } catch (error) {
+          musicButton.textContent = "Could not play music";
+        }
+      } else {
+        introMusic.pause();
+        musicButton.textContent = "♫ Play music ♡";
+      }
+    });
+
+    function note(frequency, start, duration, volume) {
+      const oscillator = soundContext.createOscillator();
+      const gain = soundContext.createGain();
 
       oscillator.type = "sine";
       oscillator.frequency.value = frequency;
@@ -214,34 +261,34 @@
       gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
 
       oscillator.connect(gain);
-      gain.connect(audio.destination);
+      gain.connect(soundContext.destination);
       oscillator.start(start);
       oscillator.stop(start + duration);
     }
 
     function heartSound() {
-      const now = audio.currentTime;
+      const now = soundContext.currentTime;
       note(660, now, 0.25, 0.09);
       note(880, now + 0.12, 0.4, 0.07);
     }
 
     function footstep() {
-      note(110, audio.currentTime, 0.09, 0.045);
+      note(110, soundContext.currentTime, 0.09, 0.045);
     }
 
     function windSound() {
-      const length = Math.floor(audio.sampleRate * 1.5);
-      const buffer = audio.createBuffer(1, length, audio.sampleRate);
+      const length = Math.floor(soundContext.sampleRate * 1.5);
+      const buffer = soundContext.createBuffer(1, length, soundContext.sampleRate);
       const data = buffer.getChannelData(0);
 
       for (let i = 0; i < length; i++) {
         data[i] = Math.random() * 2 - 1;
       }
 
-      const source = audio.createBufferSource();
-      const filter = audio.createBiquadFilter();
-      const gain = audio.createGain();
-      const now = audio.currentTime;
+      const source = soundContext.createBufferSource();
+      const filter = soundContext.createBiquadFilter();
+      const gain = soundContext.createGain();
+      const now = soundContext.currentTime;
 
       source.buffer = buffer;
       filter.type = "lowpass";
@@ -253,33 +300,21 @@
 
       source.connect(filter);
       filter.connect(gain);
-      gain.connect(audio.destination);
+      gain.connect(soundContext.destination);
       source.start(now);
-    }
-
-    function playMusic() {
-      const melody = [523.25, 659.25, 783.99, 659.25,
-                      587.33, 698.46, 783.99, 523.25];
-
-      function playLoop() {
-        const start = audio.currentTime + 0.05;
-
-        melody.forEach(function (pitch, index) {
-          note(pitch, start + index * 0.48, 0.75, 0.025);
-        });
-
-        setTimeout(playLoop, melody.length * 480);
-      }
-
-      playLoop();
     }
 
     catButton.addEventListener("click", function () {
       if (clicked) return;
       clicked = true;
 
-      audio = new (window.AudioContext || window.webkitAudioContext)();
-      audio.resume();
+      introMusic.pause();
+      introMusic.currentTime = 0;
+      musicButton.style.opacity = "0";
+      musicButton.disabled = true;
+
+      soundContext = new (window.AudioContext || window.webkitAudioContext)();
+      soundContext.resume();
       heartSound();
 
       introText.style.opacity = "0";
@@ -308,7 +343,6 @@
       setTimeout(function () {
         intro.style.opacity = "0";
         mainWebsite.classList.add("show");
-        playMusic();
       }, 3850);
 
       setTimeout(function () {

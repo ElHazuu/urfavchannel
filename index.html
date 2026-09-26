@@ -674,10 +674,10 @@
       introText.style.opacity = "0";
       intro.classList.add("loving");
 
-      setTimeout(function () {
+      (function () {
         catPicture.style.opacity = "0";
 
-        setTimeout(function () {
+        (function () {
           catPicture.src = "Walking Away.png";
           catPicture.alt = "Two cats walking away together";
           catPicture.style.opacity = "1";
@@ -687,8 +687,8 @@
 
           windSound();
           footstep();
-          setTimeout(footstep, 350);
-          setTimeout(footstep, 700);
+          (footstep, 350);
+          (footstep, 700);
           setTimeout(footstep, 1050);
           setTimeout(footstep, 1400);
         }, 250);
@@ -699,9 +699,9 @@
         mainWebsite.classList.add("show");
       }, 3850);
 
-      setTimeout(function () {
-        intro.style.display = "none";
-      }, 4850);
+   setTimeout(function () {
+  if (clicked) intro.style.display = "none";
+}, 4850);
     });
   </script>
   <style>
@@ -1180,4 +1180,45 @@
   })();
 </script>
 </body>
+<style>
+  #backToIntro {
+    padding: 10px 16px;
+    border: 1px solid #ffb9d2;
+    border-radius: 999px;
+    background: #ffcfdf;
+    color: #6b2445;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  #backToIntro:hover {
+    background: #ffe5ef;
+  }
+</style>
+
+<script>
+  document.getElementById("backToIntro").addEventListener("click", function () {
+    clicked = false;
+
+    introMusic.pause();
+    introMusic.currentTime = 0;
+    musicButton.textContent = "♫ Play music ♡";
+    musicButton.style.opacity = "1";
+    musicButton.disabled = false;
+
+    intro.classList.remove("loving", "breezy");
+    catButton.classList.remove("walking", "dancing");
+    catPicture.src = "Tail.png";
+    catPicture.style.opacity = "1";
+    introText.style.opacity = "1";
+
+    mainWebsite.classList.remove("show");
+    window.scrollTo(0, 0);
+
+    intro.style.display = "flex";
+    requestAnimationFrame(function () {
+      intro.style.opacity = "1";
+    });
+  });
+</script>
 </html>

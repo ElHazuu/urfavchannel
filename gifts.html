@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Little gifts for you ♡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; color: #fff5f8; font-family: "DM Sans", sans-serif; background: radial-gradient(circle at 50% 0%, #864a70, #351d39 54%, #140d1d); text-align: center; }
+    body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .22; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 42px 42px; }
+    main { position: relative; max-width: 1000px; margin: auto; padding: 70px 20px 90px; }
+    .eyebrow { color: #ffc9dc; text-transform: uppercase; letter-spacing: .24em; font-size: 11px; }
+    h1 { margin: 12px 0; font: 600 clamp(48px, 9vw, 82px)/1 "Cormorant Garamond", Georgia, serif; }
+    .intro { color: #f3d6e0; line-height: 1.6; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 55px; }
+    .gift { position: relative; min-height: 260px; padding: 25px; border: 1px solid #ffcfdf55; border-radius: 25px; background: #ffffff12; box-shadow: 0 18px 45px #130b1e55; backdrop-filter: blur(8px); }
+    .gift button { width: 100%; height: 100%; padding: 10px; color: inherit; border: 0; background: transparent; cursor: pointer; }
+    .icon { display: block; font-size: 72px; filter: drop-shadow(0 8px 15px #12081988); animation: float 2.8s ease-in-out infinite; }
+    .gift:nth-child(2) .icon { animation-delay: .4s; }
+    .gift:nth-child(3) .icon { animation-delay: .8s; }
+    .gift h2 { margin: 17px 0 7px; font: 600 29px "Cormorant Garamond", Georgia, serif; }
+    .gift p { margin: 0; color: #f2ccdb; font-size: 13px; }
+    .gift.done { border-color: #ffc4d9; box-shadow: 0 0 25px #e985b344; }
+    .gift.final.locked { opacity: .7; }
+    .gift.final.locked .icon { filter: grayscale(.3); }
+    .hint { min-height: 20px; margin: 28px auto 0; color: #ffe2eb; font-size: 13px; }
+    .gift:hover, .gift:focus-within { transform: translateY(-5px); background: #ffffff20; }
+    .gift, .gift button { transition: .2s; }
+    .gift button:focus-visible, .close:focus-visible { outline: 2px solid #fff; outline-offset: 4px; border-radius: 12px; }
+    .overlay { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; padding: 20px; background: #120b1ddb; opacity: 0; visibility: hidden; transition: .25s; }
+    .overlay.open { opacity: 1; visibility: visible; }
+    .letter { width: min(540px, 100%); max-height: min(80vh, 700px); overflow: auto; padding: 35px 30px; border: 1px solid #ffd6e3; border-radius: 25px; background: linear-gradient(145deg, #fff6f1, #f7dce6); color: #53334b; box-shadow: 0 25px 70px #0008; transform: translateY(25px) scale(.94); transition: .5s; }
+    .overlay.open .letter { transform: translateY(0) scale(1); }
+    .overlay.envelope-mode .letter { opacity: 0; transform: translateY(75px) scale(.8); pointer-events: none; }
+    .envelope { display: none; position: absolute; width: min(310px, 76vw); height: 205px; perspective: 600px; filter: drop-shadow(0 25px 22px #10071888); }
+    .envelope-mode .envelope { display: block; animation: envelopeAway 1.6s ease-in forwards; }
+    .envelope-back { position: absolute; inset: 0; border-radius: 8px; background: #eaa0b8; }
+    .envelope-paper { position: absolute; left: 13%; right: 13%; top: 12%; height: 80%; border-radius: 5px; background: #fff9f3; color: #ba6688; font: 600 35px/90px "Cormorant Garamond", Georgia, serif; animation: paperRise 1.6s ease-in-out forwards; }
+    .envelope-front { position: absolute; inset: 0; clip-path: polygon(0 28%, 50% 75%, 100% 28%, 100% 100%, 0 100%); border-radius: 8px; background: #f5b9cb; }
+    .envelope-flap { position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 50% 58%); background: #ffc6d7; transform-origin: top; animation: flapOpen 1.6s ease-in-out forwards; }
+    .seal { position: absolute; left: 50%; top: 56%; transform: translate(-50%, -50%); font-size: 34px; color: #a8426a; animation: sealAway 1.6s ease-in forwards; }
+    .letter .symbol { font-size: 48px; color: #cb668b; }
+    .letter h2 { margin: 12px 0; font: 600 42px "Cormorant Garamond", Georgia, serif; }
+    .letter p { line-height: 1.7; white-space: pre-line; }
+    .close { margin-top: 15px; padding: 11px 23px; border: 0; border-radius: 100px; background: #914969; color: white; font: inherit; cursor: pointer; }
+    @keyframes float { 50% { transform: translateY(-10px) rotate(4deg); } }
+    @keyframes flapOpen { 0%, 13% { transform: rotateX(0); } 45%, 100% { transform: rotateX(180deg); } }
+    @keyframes paperRise { 0%, 34% { transform: translateY(0); } 75%, 100% { transform: translateY(-82px); } }
+    @keyframes sealAway { 0%, 15% { opacity: 1; } 25%, 100% { opacity: 0; } }
+    @keyframes envelopeAway { 0%, 80% { opacity: 1; } 100% { opacity: 0; } }
+    @media (max-width: 700px) { .grid { grid-template-columns: 1fr; max-width: 390px; margin: 35px auto 0; } .gift { min-height: 210px; } }
+    @media (prefers-reduced-motion: reduce) { .icon, .envelope, .envelope-paper, .envelope-flap, .seal { animation: none !important; } .overlay, .letter, .gift { transition: none; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">A place made just for you ♡</div>
+    <h1>Little gifts for you</h1>
+    <p class="intro">You found the secret door. Choose a gift and tap to open it.</p>
+
+    <div class="grid">
+      <div class="gift" id="gift0"><button type="button" data-gift="0"><span class="icon" aria-hidden="true">💌</span><h2>A little note</h2><p>Tap to open the letter</p></button></div>
+      <div class="gift" id="gift1"><button type="button" data-gift="1"><span class="icon" aria-hidden="true">💝</span><h2>Our memories</h2><p>Tap to unwrap</p></button></div>
+      <div class="gift final locked" id="gift2"><button type="button" data-gift="2"><span class="icon" aria-hidden="true" id="finalIcon">🔒</span><h2>One more surprise</h2><p id="finalLabel">Open the other two gifts first</p></button></div>
+    </div>
+    <p class="hint" id="hint" role="status" aria-live="polite"></p>
+  </main>
+
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="letterTitle">
+    <div class="envelope" aria-hidden="true">
+      <div class="envelope-back"></div><div class="envelope-paper">For you ♡</div>
+      <div class="envelope-front"></div><div class="envelope-flap"></div><div class="seal">♥</div>
+    </div>
+    <div class="letter">
+      <div class="symbol" aria-hidden="true">♡</div>
+      <h2 id="letterTitle"></h2>
+      <p id="letterText"></p>
+      <button class="close" type="button" id="close">Close gift</button>
+    </div>
+  </div>
+
+  <script>
+    const gifts = [
+      { title: "For you, baby", text: "Hey baby,\n\nI'm sorry for being rude and acting stupid sometimes. I want you to know that you are my life and my future. I don't want to be with anyone else. I want to spend my life with you until we're both old, taking care of each other.\n\nI love playing Minecraft with you. I used to dream of playing it with the person I love most in the world, and that person is you. I'm so happy it's you, because you're the best girlfriend, the most perfect, and the SEXIEST. Hehe.\n\nI love you. ♡" },
+      { title: "Our memories", text: "My favorite memories are the ones we make together. Add your favorite moment here. ♡" }
+    ];
+
+    const overlay = document.getElementById("overlay");
+    const title = document.getElementById("letterTitle");
+    const text = document.getElementById("letterText");
+    const close = document.getElementById("close");
+    let lastButton;
+    let openingTimer;
+    const opened = [false, false];
+    const hint = document.getElementById("hint");
+    const finalGift = document.getElementById("gift2");
+
+    function updateGifts() {
+      opened.forEach((wasOpened, index) => {
+        document.getElementById("gift" + index).classList.toggle("done", wasOpened);
+      });
+      const ready = opened.every(Boolean);
+      finalGift.classList.toggle("locked", !ready);
+      document.getElementById("finalIcon").textContent = ready ? "🎀" : "🔒";
+      document.getElementById("finalLabel").textContent = ready
+        ? "Tap to meet our cats"
+        : "Open the other two gifts first";
+    }
+
+    document.querySelectorAll("[data-gift]").forEach(button => {
+      button.addEventListener("click", () => {
+        if (button.dataset.gift === "2") {
+          if (opened.every(Boolean)) {
+            window.location.href = "./";
+          } else {
+            hint.textContent = "First open the letter and Our memories ♡";
+          }
+          return;
+        }
+
+        const number = Number(button.dataset.gift);
+        opened[number] = true;
+        updateGifts();
+        hint.textContent = opened.every(Boolean)
+          ? "Your final surprise is ready ♡"
+          : "";
+
+        lastButton = button;
+        const gift = gifts[number];
+        title.textContent = gift.title;
+        text.textContent = gift.text;
+
+        if (button.dataset.gift === "0" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          overlay.classList.add("envelope-mode");
+          overlay.classList.add("open");
+          openingTimer = setTimeout(() => {
+            overlay.classList.remove("envelope-mode");
+            close.focus();
+          }, 1600);
+        } else {
+          overlay.classList.add("open");
+          close.focus();
+        }
+      });
+    });
+
+    function closeGift() {
+      clearTimeout(openingTimer);
+      overlay.classList.remove("open");
+      overlay.classList.remove("envelope-mode");
+      if (lastButton) lastButton.focus();
+    }
+
+    close.addEventListener("click", closeGift);
+    overlay.addEventListener("click", event => {
+      if (event.target === overlay) closeGift();
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeGift();
+    });
+  </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Our Place</title>
 
   <style>
@@ -30,6 +30,7 @@
     }
 
     #catButton {
+      position: relative;
       width: min(600px, 85vw);
       padding: 0;
       border: 0;
@@ -50,6 +51,26 @@
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-9px); }
+    }
+
+    .musicNote {
+      position: absolute;
+      font-size: 35px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .musicNote.left { left: 8%; top: 25%; }
+    .musicNote.right { right: 8%; top: 35%; animation-delay: 0.8s !important; }
+
+    #catButton.dancing .musicNote {
+      animation: noteRise 1.6s ease-out infinite;
+    }
+
+    @keyframes noteRise {
+      0% { opacity: 0; transform: translateY(20px); }
+      25% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-85px); }
     }
 
     #catButton.walking {
@@ -79,7 +100,6 @@
       transition: opacity 0.4s ease;
     }
 
-    /* CUTE MUSIC BUTTON */
     #musicButton {
       margin-top: 24px;
       padding: 13px 26px;
@@ -97,10 +117,6 @@
     #musicButton:hover {
       transform: scale(1.06);
       background: #ffe0eb;
-    }
-
-    #musicButton:active {
-      transform: scale(0.97);
     }
 
     .heart {
@@ -121,10 +137,7 @@
     .heart:nth-of-type(3) { --side: 100px; animation-delay: 0.35s !important; }
 
     @keyframes rise {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, 10px) scale(0.4);
-      }
+      0% { opacity: 0; transform: translate(-50%, 10px) scale(0.4); }
       25% { opacity: 1; }
       100% {
         opacity: 0;
@@ -183,10 +196,7 @@
       margin: 0 0 10px;
     }
 
-    p {
-      font-size: 18px;
-      opacity: 0.75;
-    }
+    p { font-size: 18px; opacity: 0.75; }
   </style>
 </head>
 
@@ -194,6 +204,8 @@
   <div id="intro">
     <button id="catButton" aria-label="Enter the website">
       <img id="catPicture" src="Holding Hands.png" alt="Two cats holding hands">
+      <span class="musicNote left">♫</span>
+      <span class="musicNote right">♪</span>
     </button>
 
     <span class="heart">💗</span>
@@ -229,23 +241,59 @@
     const musicButton = document.getElementById("musicButton");
     const introMusic = document.getElementById("introMusic");
 
+    const danceFrames = [
+      "Dance 1.png",
+      "Dance 2.png",
+      "Dance 3.png",
+      "Dance 4.png"
+    ];
+
+    // Load the pictures before the first dance.
+    [...danceFrames, "Walking Away.png"].forEach(function (filename) {
+      const picture = new Image();
+      picture.src = filename;
+    });
+
     let clicked = false;
+    let danceTimer = null;
+    let frameNumber = 0;
     let soundContext;
 
-    const walkingPicture = new Image();
-    walkingPicture.src = "Walking Away.png";
+    function startDance() {
+      if (danceTimer) return;
+
+      frameNumber = 0;
+      catPicture.src = danceFrames[frameNumber];
+      catPicture.alt = "Two cats dancing";
+      catButton.classList.add("dancing");
+
+      danceTimer = setInterval(function () {
+        frameNumber = (frameNumber + 1) % danceFrames.length;
+        catPicture.src = danceFrames[frameNumber];
+      }, 220);
+    }
+
+    function stopDance() {
+      clearInterval(danceTimer);
+      danceTimer = null;
+      catButton.classList.remove("dancing");
+      catPicture.src = "Holding Hands.png";
+      catPicture.alt = "Two cats holding hands";
+    }
 
     musicButton.addEventListener("click", async function () {
       if (introMusic.paused) {
         try {
           await introMusic.play();
           musicButton.textContent = "♫ Pause music ♡";
+          startDance();
         } catch (error) {
           musicButton.textContent = "Could not play music";
         }
       } else {
         introMusic.pause();
         musicButton.textContent = "♫ Play music ♡";
+        stopDance();
       }
     });
 
@@ -255,7 +303,6 @@
 
       oscillator.type = "sine";
       oscillator.frequency.value = frequency;
-
       gain.gain.setValueAtTime(0, start);
       gain.gain.linearRampToValueAtTime(volume, start + 0.03);
       gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
@@ -293,7 +340,6 @@
       source.buffer = buffer;
       filter.type = "lowpass";
       filter.frequency.value = 500;
-
       gain.gain.setValueAtTime(0.001, now);
       gain.gain.linearRampToValueAtTime(0.035, now + 0.4);
       gain.gain.linearRampToValueAtTime(0.001, now + 1.5);
@@ -310,6 +356,7 @@
 
       introMusic.pause();
       introMusic.currentTime = 0;
+      stopDance();
       musicButton.style.opacity = "0";
       musicButton.disabled = true;
 
@@ -351,5 +398,4 @@
     });
   </script>
 </body>
-  <!-- redeploy -->
 </html>

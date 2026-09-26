@@ -1362,6 +1362,46 @@
     radial-gradient(circle at 78% 41%, #ff8eae 0 9%, transparent 10%),
     linear-gradient(#181537, #693c83 55%, #ea6fa2 71%, #1c1742 72%);
 }
+ /* Put Videos before Our Story */
+#mainWebsite.show {
+  display: flex;
+  flex-direction: column;
+}
+
+#home {
+  order: 1;
+}
+
+#videos {
+  order: 2;
+}
+
+#gallery {
+  order: 3;
+}
+
+#mainWebsite footer {
+  order: 4;
+}
+
+/* Stack the buttons below the cats */
+#intro .introControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+#intro .introControls .cuteButton {
+  width: max-content;
+  max-width: 90vw;
+}
+
+/* Keep the buttons neatly stacked in Drive By mode too */
+#intro.drive .introControls {
+  align-items: flex-end;
+}   
   </style>
 </head>
 

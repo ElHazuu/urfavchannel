@@ -153,7 +153,7 @@
     .blackKittenSpeed { left: 49%; bottom: 22%; animation-duration: .55s; }
     @keyframes runningDust { from { transform: translate(12px, 4px) scale(.6); opacity: .7; } to { transform: translate(-22px, -12px) scale(1.2); opacity: 0; } }
 
-    /* Main home: editorial typography and quiet movement */
+    /* Main home */
     #mainWebsite { min-height: 100vh; opacity: 0; transform: translateY(20px); transition: opacity 1.5s ease, transform 1.5s ease; background: #140e1d; color: #fbf3f8; font-family: "DM Sans", Arial, sans-serif; }
     #mainWebsite.show { opacity: 1; transform: none; }
 
@@ -234,14 +234,17 @@
     .storyNote strong { display: block; margin-bottom: 5px; font: 600 29px "Cormorant Garamond", Georgia, serif; }
     .storyNote span { display: block; font-size: 13px; line-height: 1.5; }
     .galleryChaseLane { position: relative; height: 132px; margin: 38px calc(-1 * max(8vw, 25px)) -80px; overflow: hidden; pointer-events: none; }
-    .galleryChase { position: absolute; left: -330px; bottom: 5px; display: flex; align-items: end; gap: 13px; width: 280px; animation: galleryRun 18s linear infinite; }
-    .galleryChase img { display: block; width: 205px; height: 115px; object-fit: contain; filter: drop-shadow(0 5px 8px #0006); animation: galleryCatHop .55s ease-in-out infinite alternate; }
-    .chicken { display: block; width: 68px; height: 74px; flex: none; filter: drop-shadow(0 6px 5px #0005); animation: chickenHop .5s ease-in-out infinite alternate; }
-    .chicken .wing { transform-origin: 27px 35px; animation: chickenWing .45s ease-in-out infinite alternate; }
-    @keyframes galleryRun { to { left: calc(100% + 30px); } }
+    .galleryChase { position: absolute; left: -330px; bottom: 5px; display: flex; align-items: end; gap: 13px; width: 300px; visibility: hidden; }
+    .galleryChaseLane.active .galleryChase { visibility: visible; animation: galleryRun 12s linear infinite; }
+    .galleryChase > img { display: block; width: 205px; height: 115px; object-fit: contain; filter: drop-shadow(0 5px 8px #0006); animation: galleryCatHop .55s ease-in-out infinite alternate; }
+    .galleryChase::before { content: "✧ · ✧"; position: absolute; left: 5px; bottom: 13px; color: #ffe6c1; font-size: 19px; text-shadow: 0 0 9px #ffb5d9; animation: runningDust .65s ease-out infinite; }
+    .chickenWrap { position: relative; display: block; width: 78px; height: 88px; flex: none; animation: chickenHop .35s ease-in-out infinite alternate; }
+    .chicken { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 5px #0005) drop-shadow(0 0 8px #ffdb9680); }
+    .chickenPanic { position: absolute; top: -13px; right: -3px; color: #ffe9a0; font-size: 22px; font-weight: 900; text-shadow: 0 0 9px #ffb477; animation: panicPop .5s ease-in-out infinite alternate; }
+    @keyframes panicPop { to { transform: translateY(-7px) rotate(12deg) scale(1.3); opacity: .45; } }
+    @keyframes galleryRun { from { left: -330px; } to { left: calc(100% + 30px); } }
     @keyframes galleryCatHop { to { transform: translateY(-7px) rotate(-2deg); } }
     @keyframes chickenHop { to { transform: translateY(-10px) rotate(3deg); } }
-    @keyframes chickenWing { to { transform: rotate(-20deg); } }
     .contentSection { padding: 110px max(8vw, 25px) 130px; scroll-margin-top: 70px; background: radial-gradient(circle at 80% 5%, #70355c3b, transparent 32%), #17101e; }
     .sectionHeading { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 30px; margin-bottom: 40px; padding-bottom: 27px; border-bottom: 1px solid #f6c6dd3d; }
     .sectionHeading .eyebrow { margin-bottom: 10px; }
@@ -305,7 +308,7 @@
       .menuPanelHead { padding-right: 48px; }
     }
     @media (prefers-reduced-motion: reduce) {
-      #mainWebsite .welcomeOrbit, #mainWebsite .orbitStar, #mainWebsite .notificationBell.new, #mainWebsite .galleryChase, #mainWebsite .galleryChase img, #mainWebsite .chicken, #mainWebsite .chicken .wing { animation: none; }
+      #mainWebsite .welcomeOrbit, #mainWebsite .orbitStar, #mainWebsite .notificationBell.new, #mainWebsite .galleryChase, #mainWebsite .galleryChase > img, #mainWebsite .chickenWrap, #mainWebsite .chickenPanic { animation: none; }
       #mainWebsite .galleryChase { left: 20px; }
       #mainWebsite .videoCard { transition: none; }
       .kissCard, .kissHeart { animation: none; }
@@ -382,8 +385,8 @@
         <p>Hover over a picture, or tap it, to read a little note ♡</p>
       </div>
       <div class="storyGallery">
-        <button class="storyCard" type="button" aria-label="Our World. Show note" aria-pressed="false">
-          <img src="Our World.jpg" alt="Our World" loading="lazy">
+        <button class="storyCard" id="ourWorldCard" type="button" aria-label="Our World. Play cat and chicken chase" aria-pressed="false">
+          <img src="OurWorld.png" onerror="this.onerror=null;this.src='Our World.jpg'" alt="Our World" loading="lazy">
           <span class="storyNote"><strong>Our World ♡</strong><span>Our first time playing Minecraft together</span></span>
         </button>
         <button class="storyCard" type="button" aria-label="My Sayang. Show note" aria-pressed="false">
@@ -395,24 +398,10 @@
           <span class="storyNote"><strong>Playing together ♡</strong><span>First time playing COD with my girl</span></span>
         </button>
       </div>
-      <div class="galleryChaseLane" aria-hidden="true">
+      <div class="galleryChaseLane" id="galleryChaseLane" aria-hidden="true">
         <div class="galleryChase">
           <img id="galleryRunnerPicture" src="Baby.png" alt="">
-          <svg class="chicken" viewBox="0 0 64 64" shape-rendering="crispEdges" aria-hidden="true">
-            <rect x="18" y="6" width="28" height="26" fill="#fff9ea"/>
-            <rect x="14" y="26" width="40" height="25" fill="#fff9ea"/>
-            <rect x="10" y="31" width="8" height="15" fill="#ded8cc"/>
-            <rect x="25" y="15" width="5" height="6" fill="#272431"/>
-            <rect x="39" y="15" width="5" height="6" fill="#272431"/>
-            <rect x="29" y="22" width="8" height="7" fill="#e9ae43"/>
-            <rect x="31" y="29" width="5" height="7" fill="#d64c52"/>
-            <rect x="27" y="2" width="10" height="5" fill="#d64c52"/>
-            <rect x="22" y="50" width="5" height="8" fill="#dda540"/>
-            <rect x="42" y="50" width="5" height="8" fill="#dda540"/>
-            <rect x="18" y="58" width="12" height="4" fill="#dda540"/>
-            <rect x="38" y="58" width="12" height="4" fill="#dda540"/>
-            <g class="wing"><rect x="14" y="34" width="14" height="12" fill="#e8e2d8"/></g>
-          </svg>
+          <span class="chickenWrap"><img class="chicken" id="chickenPicture" src="Chicken.png" alt=""><span class="chickenPanic">!</span></span>
         </div>
       </div>
     </section>
@@ -420,7 +409,7 @@
     <div class="kissScene" id="kissScene" role="dialog" aria-modal="true" aria-label="Our secret moment" hidden>
       <div class="kissCard">
         <span class="kissHeart" style="left:23%">♡</span><span class="kissHeart">♥</span><span class="kissHeart">♡</span><span class="kissHeart">✦</span>
-        <div class="kissPictureWrap"><img id="kissPicture" src="kiss.png" alt="Our cats sharing a sweet moment"></div>
+        <div class="kissPictureWrap"><img id="kissPicture" src="Kiss.png" alt="Our cats sharing a sweet moment"></div>
         <h2>Our secret moment ♡</h2>
         <p>This is us</p>
         <div class="kissActions"><button id="kissReplay" type="button">↻ Watch again</button><button id="kissClose" type="button">Close ♡</button></div>
@@ -449,6 +438,9 @@
     const colorPicker = document.getElementById("colorPicker");
     const runnerPicture = document.querySelector("#littleRunners img");
     const galleryRunnerPicture = document.getElementById("galleryRunnerPicture");
+    const chickenPicture = document.getElementById("chickenPicture");
+    const galleryChaseLane = document.getElementById("galleryChaseLane");
+    const ourWorldCard = document.getElementById("ourWorldCard");
     const heartMomentButton = document.getElementById("heartMomentButton");
     const kissScene = document.getElementById("kissScene");
     const kissPicture = document.getElementById("kissPicture");
@@ -458,9 +450,10 @@
     const idleFrames = ["Tail.png", "Tail 2.png", "Tail 3.png"];
     const danceFrames = ["Dance 1.png", "Dance 2.png", "Dance 3.png", "Dance 4.png"];
     const runningFrames = ["Baby.png", "Baby 2.png", "Baby 3.png", "Baby 4.png", "Baby 5.png", "Baby 6.png"];
+    const chickenFrames = ["Chicken.png", "Chicken2.png", "Chicken3.png", "Chicken4.png", "Chicken5.png", "Chicken6.png"];
     const carFrames = ["Car.png", "Car2.png", "Car3.png", "Car4.png"];
-    const kissFrames = ["kiss.png", "kiss2.png", "kiss3.png", "kiss4.png", "kiss5.png", "kiss6.png"];
-    [...idleFrames, ...danceFrames, ...runningFrames, ...carFrames, ...kissFrames, "Walking Away.png"].forEach(filename => { const image = new Image(); image.src = filename; });
+    const kissFrames = ["Kiss.png", "Kiss2.png", "Kiss3.png", "Kiss4.png", "Kiss5.png", "Kiss6.png"];
+    [...idleFrames, ...danceFrames, ...runningFrames, ...chickenFrames, ...carFrames, ...kissFrames, "Walking Away.png"].forEach(filename => { const image = new Image(); image.src = filename; });
     let kissTimer;
     function playKiss() {
       clearInterval(kissTimer);
@@ -547,6 +540,13 @@
     document.querySelectorAll(".storyCard").forEach(card => card.addEventListener("click", () => {
       const showing = card.classList.toggle("show-note");
       card.setAttribute("aria-pressed", String(showing));
+      if (card === ourWorldCard) {
+        galleryChaseLane.classList.toggle("active", showing);
+        galleryRunnerPicture.src = runningFrames[0];
+        chickenPicture.src = chickenFrames[0];
+        galleryRunFrame = 0;
+        chickenFrame = 0;
+      }
     }));
 
     setInterval(() => {
@@ -558,10 +558,13 @@
       runFrame = (runFrame + 1) % runningFrames.length;
       runnerPicture.src = runningFrames[runFrame];
     }, 180);
+    let chickenFrame = 0;
     setInterval(() => {
-      if (screen !== "website") return;
+      if (screen !== "website" || !galleryChaseLane.classList.contains("active")) return;
       galleryRunFrame = (galleryRunFrame + 1) % runningFrames.length;
       galleryRunnerPicture.src = runningFrames[galleryRunFrame];
+      chickenFrame = (chickenFrame + 1) % chickenFrames.length;
+      chickenPicture.src = chickenFrames[chickenFrame];
     }, 180);
     setInterval(() => {
       if (screen !== "intro" || mode !== "drive" || introMusic.paused) return;

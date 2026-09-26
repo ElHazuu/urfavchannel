@@ -180,6 +180,12 @@
     .updateIcon { color: #ffabd1; font-size: 30px; }
     footer { padding: 30px; text-align: center; color: #ffc2de; border-top: 1px solid #ffc6e122; }
     @media (max-width: 650px) { .siteMenu { justify-content: center; } .menuLinks { gap: 18px; } .videoGrid { grid-template-columns: 1fr; } .welcomeSection { min-height: 70vh; } }
+    .videoEmbed {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
   </style>
 </head>
 <body>
@@ -211,10 +217,33 @@
     </section>
     <section class="contentSection" id="videos">
       <div class="sectionHeading"><p class="eyebrow">♡ Watch together</p><h2>Our videos</h2><p>Our favorite moments, all in one place.</p></div>
-      <div class="videoGrid">
-        <div class="videoCard"><div class="videoPreview">▶</div><div class="cardText"><span>VIDEO 01</span><h3>Our first video</h3><p>Your YouTube video will go here.</p></div></div>
-        <div class="videoCard"><div class="videoPreview">▶</div><div class="cardText"><span>VIDEO 02</span><h3>Another little moment</h3><p>Your next YouTube video will go here.</p></div></div>
-      </div>
+<div class="videoGrid">
+  <div class="videoCard">
+    <iframe
+      class="videoEmbed"
+      src="https://www.youtube-nocookie.com/embed/NKo4wzEY5I8"
+      title="Our first video"
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <div class="cardText">
+      <span>VIDEO 01</span>
+      <h3>Our first video</h3>
+      <p>Press play to watch it here ♡</p>
+    </div>
+  </div>
+
+  <div class="videoCard">
+    <div class="videoPreview">▶</div>
+    <div class="cardText">
+      <span>VIDEO 02</span>
+      <h3>Another little moment</h3>
+      <p>Your next YouTube video will go here.</p>
+    </div>
+  </div>
+</div>
     </section>
     <section class="contentSection updatesSection" id="updates">
       <div class="sectionHeading"><p class="eyebrow">✦ What’s new</p><h2>Updates</h2><p>Little things we add along the way.</p></div>

@@ -6,9 +6,7 @@
   <title>Our Place</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -18,7 +16,6 @@
       overflow-x: hidden;
     }
 
-    /* INTRO SCREEN */
     #intro {
       position: fixed;
       inset: 0;
@@ -83,7 +80,6 @@
       transition: opacity 0.4s ease;
     }
 
-    /* HEARTS */
     .heart {
       position: absolute;
       left: 50%;
@@ -106,16 +102,13 @@
         opacity: 0;
         transform: translate(-50%, 10px) scale(0.4);
       }
-      25% {
-        opacity: 1;
-      }
+      25% { opacity: 1; }
       100% {
         opacity: 0;
         transform: translate(calc(-50% + var(--side)), -160px) scale(1.3);
       }
     }
 
-    /* WIND */
     .wind {
       position: absolute;
       left: -180px;
@@ -140,12 +133,10 @@
 
     @keyframes windBlow {
       0% { left: -180px; opacity: 0; }
-      20% { opacity: 0.5; }
-      80% { opacity: 0.5; }
+      20%, 80% { opacity: 0.5; }
       100% { left: 110%; opacity: 0; }
     }
 
-    /* MAIN WEBSITE */
     #mainWebsite {
       min-height: 100vh;
       display: flex;
@@ -177,7 +168,6 @@
 </head>
 
 <body>
-  <!-- INTRO -->
   <div id="intro">
     <button id="catButton" aria-label="Enter the website">
       <img id="catPicture" src="Holding Hands.png" alt="Two cats holding hands">
@@ -194,7 +184,6 @@
     <div id="introText">click us ♡</div>
   </div>
 
-  <!-- MAIN WEBSITE -->
   <main id="mainWebsite">
     <h1>Welcome ❤️</h1>
     <p>A little place made just for you.</p>
@@ -208,19 +197,94 @@
     const mainWebsite = document.getElementById("mainWebsite");
 
     let clicked = false;
+    let audio;
 
-    // Load the second picture in advance so the change is smooth.
     const walkingPicture = new Image();
     walkingPicture.src = "Walking Away.png";
+
+    function note(frequency, start, duration, volume = 0.08) {
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequency;
+
+      gain.gain.setValueAtTime(0, start);
+      gain.gain.linearRampToValueAtTime(volume, start + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+
+      oscillator.connect(gain);
+      gain.connect(audio.destination);
+      oscillator.start(start);
+      oscillator.stop(start + duration);
+    }
+
+    function heartSound() {
+      const now = audio.currentTime;
+      note(660, now, 0.25, 0.09);
+      note(880, now + 0.12, 0.4, 0.07);
+    }
+
+    function footstep() {
+      note(110, audio.currentTime, 0.09, 0.045);
+    }
+
+    function windSound() {
+      const length = Math.floor(audio.sampleRate * 1.5);
+      const buffer = audio.createBuffer(1, length, audio.sampleRate);
+      const data = buffer.getChannelData(0);
+
+      for (let i = 0; i < length; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+
+      const source = audio.createBufferSource();
+      const filter = audio.createBiquadFilter();
+      const gain = audio.createGain();
+      const now = audio.currentTime;
+
+      source.buffer = buffer;
+      filter.type = "lowpass";
+      filter.frequency.value = 500;
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.035, now + 0.4);
+      gain.gain.linearRampToValueAtTime(0.001, now + 1.5);
+
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(audio.destination);
+      source.start(now);
+    }
+
+    function playMusic() {
+      const melody = [523.25, 659.25, 783.99, 659.25,
+                      587.33, 698.46, 783.99, 523.25];
+
+      function playLoop() {
+        const start = audio.currentTime + 0.05;
+
+        melody.forEach(function (pitch, index) {
+          note(pitch, start + index * 0.48, 0.75, 0.025);
+        });
+
+        setTimeout(playLoop, melody.length * 480);
+      }
+
+      playLoop();
+    }
 
     catButton.addEventListener("click", function () {
       if (clicked) return;
       clicked = true;
 
+      audio = new (window.AudioContext || window.webkitAudioContext)();
+      audio.resume();
+      heartSound();
+
       introText.style.opacity = "0";
       intro.classList.add("loving");
 
-      // After the hearts appear, switch to the walking picture.
       setTimeout(function () {
         catPicture.style.opacity = "0";
 
@@ -228,260 +292,23 @@
           catPicture.src = "Walking Away.png";
           catPicture.alt = "Two cats walking away together";
           catPicture.style.opacity = "1";
+
           intro.classList.add("breezy");
           catButton.classList.add("walking");
+
+          windSound();
+          footstep();
+          setTimeout(footstep, 350);
+          setTimeout(footstep, 700);
+          setTimeout(footstep, 1050);
+          setTimeout(footstep, 1400);
         }, 250);
       }, 1100);
 
-      // Reveal the main website after they walk away.
       setTimeout(function () {
         intro.style.opacity = "0";
         mainWebsite.classList.add("show");
-      }, 3850);
-
-      setTimeout(function () {
-        intro.style.display = "none";
-      }, 4850);
-    });
-  <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our Place</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b0b0b;
-      color: white;
-      overflow-x: hidden;
-    }
-
-    /* INTRO SCREEN */
-    #intro {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: black;
-      overflow: hidden;
-      transition: opacity 1s ease;
-    }
-
-    #catButton {
-      position: relative;
-      width: min(600px, 85vw);
-      padding: 0;
-      border: 0;
-      background: none;
-      cursor: pointer;
-    }
-
-    #catPicture {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: 65vh;
-      object-fit: contain;
-      animation: float 2.4s ease-in-out infinite;
-      transition: opacity 0.25s ease;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-9px); }
-    }
-
-    #catButton.walking {
-      animation: walkAway 2.4s ease-in forwards;
-    }
-
-    #catButton.walking #catPicture {
-      animation: footsteps 0.32s ease-in-out infinite alternate;
-    }
-
-    @keyframes footsteps {
-      from { transform: rotate(-2deg) translateY(0); }
-      to { transform: rotate(2deg) translateY(-7px); }
-    }
-
-    @keyframes walkAway {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      75% { opacity: 1; }
-      100% { transform: translateY(-100px) scale(0.12); opacity: 0; }
-    }
-
-    #introText {
-      margin-top: 15px;
-      font-size: 18px;
-      letter-spacing: 2px;
-      opacity: 0.7;
-      transition: opacity 0.4s ease;
-    }
-
-    /* HEARTS */
-    .heart {
-      position: absolute;
-      left: 50%;
-      top: 43%;
-      opacity: 0;
-      pointer-events: none;
-      font-size: 38px;
-    }
-
-    #intro.loving .heart {
-      animation: rise 1.6s ease-out forwards;
-    }
-
-    .heart:nth-of-type(1) { --side: -90px; animation-delay: 0s !important; }
-    .heart:nth-of-type(2) { --side: 10px; animation-delay: 0.18s !important; }
-    .heart:nth-of-type(3) { --side: 100px; animation-delay: 0.35s !important; }
-
-    @keyframes rise {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, 10px) scale(0.4);
-      }
-      25% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        transform: translate(calc(-50% + var(--side)), -160px) scale(1.3);
-      }
-    }
-
-    /* WIND */
-    .wind {
-      position: absolute;
-      left: -180px;
-      width: 120px;
-      height: 3px;
-      border-radius: 100%;
-      background: rgba(255, 255, 255, 0.5);
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .wind.one { top: 38%; }
-    .wind.two { top: 55%; width: 85px; }
-    .wind.three { top: 68%; width: 150px; }
-
-    #intro.breezy .wind {
-      animation: windBlow 1.15s linear infinite;
-    }
-
-    #intro.breezy .wind.two { animation-delay: 0.3s; }
-    #intro.breezy .wind.three { animation-delay: 0.65s; }
-
-    @keyframes windBlow {
-      0% { left: -180px; opacity: 0; }
-      20% { opacity: 0.5; }
-      80% { opacity: 0.5; }
-      100% { left: 110%; opacity: 0; }
-    }
-
-    /* MAIN WEBSITE */
-    #mainWebsite {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 30px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 1.5s ease, transform 1.5s ease;
-    }
-
-    #mainWebsite.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    h1 {
-      font-size: clamp(40px, 8vw, 90px);
-      margin: 0 0 10px;
-    }
-
-    p {
-      font-size: 18px;
-      opacity: 0.75;
-    }
-  </style>
-</head>
-
-<body>
-  <!-- INTRO -->
-  <div id="intro">
-    <button id="catButton" aria-label="Enter the website">
-      <img id="catPicture" src="Holding Hands.png" alt="Two cats holding hands">
-    </button>
-
-    <span class="heart">💗</span>
-    <span class="heart">💕</span>
-    <span class="heart">💗</span>
-
-    <span class="wind one"></span>
-    <span class="wind two"></span>
-    <span class="wind three"></span>
-
-    <div id="introText">click us ♡</div>
-  </div>
-
-  <!-- MAIN WEBSITE -->
-  <main id="mainWebsite">
-    <h1>Welcome ❤️</h1>
-    <p>A little place made just for you.</p>
-  </main>
-
-  <script>
-    const intro = document.getElementById("intro");
-    const catButton = document.getElementById("catButton");
-    const catPicture = document.getElementById("catPicture");
-    const introText = document.getElementById("introText");
-    const mainWebsite = document.getElementById("mainWebsite");
-
-    let clicked = false;
-
-    // Load the second picture in advance so the change is smooth.
-    const walkingPicture = new Image();
-    walkingPicture.src = "Walking Away.png";
-
-    catButton.addEventListener("click", function () {
-      if (clicked) return;
-      clicked = true;
-
-      introText.style.opacity = "0";
-      intro.classList.add("loving");
-
-      // After the hearts appear, switch to the walking picture.
-      setTimeout(function () {
-        catPicture.style.opacity = "0";
-
-        setTimeout(function () {
-          catPicture.src = "Walking Away.png";
-          catPicture.alt = "Two cats walking away together";
-          catPicture.style.opacity = "1";
-          intro.classList.add("breezy");
-          catButton.classList.add("walking");
-        }, 250);
-      }, 1100);
-
-      // Reveal the main website after they walk away.
-      setTimeout(function () {
-        intro.style.opacity = "0";
-        mainWebsite.classList.add("show");
+        playMusic();
       }, 3850);
 
       setTimeout(function () {
@@ -489,7 +316,5 @@
       }, 4850);
     });
   </script>
-</body>
-</html>
 </body>
 </html>

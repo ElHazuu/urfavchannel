@@ -195,11 +195,18 @@
 }
 
 @keyframes shootingStar {
-  0%, 76% { opacity: 0; transform: translate(0, 0) rotate(-18deg); }
-  79% { opacity: 1; }
-  91%, 100% { opacity: 0; transform: translate(120vw, 28vh) rotate(-18deg); }
+  0%, 82% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(-18deg);
+  }
+  84% {
+    opacity: 1;
+  }
+  90%, 100% {
+    opacity: 0;
+    transform: translate(130px, 35px) rotate(-18deg);
+  }
 }
-
 #driveScene .mountains.back {
   inset: 36% -10% 39%;
   opacity: .5;

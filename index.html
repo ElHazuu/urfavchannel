@@ -665,16 +665,17 @@
 <script>
   (function () {
     const runningFrames = [
-  "Us 1.png",
-  "Us 2.png",
-  "Us 3.png",
-  "Us 4.png"
-];
-    
+      "Baby.png",
+      "Baby 2.png",
+      "Baby 3.png",
+      "Baby 4.png",
+      "Baby 5.png",
+      "Baby 6.png"
+    ];
 
     runningFrames.forEach(function (filename) {
-      const preload = new Image();
-      preload.src = filename;
+      const image = new Image();
+      image.src = filename;
     });
 
     const runners = document.createElement("div");

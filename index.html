@@ -31,15 +31,86 @@
       transition: opacity 1s ease;
     }
 
-    #cat {
-      width: min(420px, 80vw);
+    #cats {
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: white;
       cursor: pointer;
-      animation: float 2.2s ease-in-out infinite;
-      transition: transform 0.8s ease, opacity 0.8s ease;
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
 
-    #cat:hover {
-      transform: scale(1.06);
+    .cat {
+      position: relative;
+      width: clamp(145px, 27vw, 210px);
+      height: clamp(195px, 37vw, 280px);
+      transition: transform 0.65s ease-in-out;
+    }
+
+    /* Crops the empty transparent space around each cat. */
+    .cat img {
+      position: absolute;
+      width: 285%;
+      max-width: none;
+      left: -93%;
+      top: -48%;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .gray {
+      transform-origin: 70% 90%;
+    }
+
+    .cream {
+      transform-origin: 30% 90%;
+    }
+
+    #cats.kissing .gray {
+      transform: translateX(13%) rotate(9deg);
+    }
+
+    #cats.kissing .cream {
+      transform: translateX(-13%) rotate(-9deg);
+    }
+
+    #cats.disappear {
+      transform: scale(0.2) rotate(15deg);
+      opacity: 0;
+    }
+
+    .heart {
+      position: absolute;
+      left: 50%;
+      top: 12%;
+      font-size: 48px;
+      opacity: 0;
+      transform: translate(-50%, 15px) scale(0.5);
+      pointer-events: none;
+    }
+
+    #cats.kissing .heart {
+      animation: heartPop 1.2s 0.35s ease-out forwards;
+    }
+
+    @keyframes heartPop {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 15px) scale(0.5);
+      }
+
+      35% {
+        opacity: 1;
+        transform: translate(-50%, -15px) scale(1.2);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -75px) scale(1);
+      }
     }
 
     #introText {
@@ -48,22 +119,6 @@
       letter-spacing: 2px;
       opacity: 0.7;
       transition: opacity 0.5s ease;
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-
-    #cat.disappear {
-      animation: none;
-      transform: scale(0.2) rotate(15deg);
-      opacity: 0;
     }
 
     /* MAIN WEBSITE */
@@ -101,15 +156,19 @@
 
   <!-- INTRO -->
   <div id="intro">
-    <img
-      src="Cat Waving.png"
-      id="cat"
-      alt="Waving cat"
-    >
+    <button id="cats" aria-label="Make the cats kiss and enter the website">
+      <span class="cat gray">
+        <img src="Cat Waving(1).png" alt="">
+      </span>
 
-    <div id="introText">
-      click me ♡
-    </div>
+      <span class="cat cream">
+        <img src="Female Cat(6).png" alt="">
+      </span>
+
+      <span class="heart">💗</span>
+    </button>
+
+    <div id="introText">click us ♡</div>
   </div>
 
   <!-- MAIN WEBSITE -->
@@ -119,23 +178,29 @@
   </main>
 
   <script>
-    const cat = document.getElementById("cat");
+    const cats = document.getElementById("cats");
     const intro = document.getElementById("intro");
     const mainWebsite = document.getElementById("mainWebsite");
     const introText = document.getElementById("introText");
 
-    cat.addEventListener("click", function () {
+    cats.addEventListener("click", function () {
+      if (cats.classList.contains("kissing")) return;
+
       introText.style.opacity = "0";
-      cat.classList.add("disappear");
+      cats.classList.add("kissing");
+
+      setTimeout(function () {
+        cats.classList.add("disappear");
+      }, 1500);
 
       setTimeout(function () {
         intro.style.opacity = "0";
         mainWebsite.classList.add("show");
-      }, 650);
+      }, 2100);
 
       setTimeout(function () {
         intro.style.display = "none";
-      }, 1600);
+      }, 3100);
     });
   </script>
 

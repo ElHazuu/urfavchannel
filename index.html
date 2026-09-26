@@ -923,5 +923,29 @@
     runners.appendChild(speed);
   }
 </script>
+  <script>
+  (function () {
+    const idleFrames = ["Tail.png", "Tail 2.png", "Tail 3.png"];
+    const picture = document.getElementById("catPicture");
+    const button = document.getElementById("catButton");
+    const intro = document.getElementById("intro");
+
+    idleFrames.forEach(function (filename) {
+      const image = new Image();
+      image.src = filename;
+    });
+
+    let frame = 0;
+    picture.src = idleFrames[frame];
+
+    setInterval(function () {
+      if (button.classList.contains("dancing") ||
+          intro.classList.contains("loving")) return;
+
+      frame = (frame + 1) % idleFrames.length;
+      picture.src = idleFrames[frame];
+    }, 450);
+  })();
+</script>
 </body>
 </html>

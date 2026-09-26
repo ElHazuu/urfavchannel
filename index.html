@@ -4,483 +4,212 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Our Love ♡</title>
-
   <style>
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background: #140e1d;
-      color: #fff4fa;
-      font-family: Arial, sans-serif;
-      overflow-x: hidden;
-    }
+    body { margin: 0; background: #140e1d; color: #fff4fa; font-family: Arial, sans-serif; overflow-x: hidden; }
     button, a { -webkit-tap-highlight-color: transparent; }
     button { font: inherit; }
 
-    /* CAT INTRO */
     #intro {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      background:
-        radial-gradient(ellipse at 50% 70%, #ffb0d133, transparent 42%),
-        radial-gradient(circle at 18% 22%, #aa7dd724, transparent 32%),
-        radial-gradient(circle at 82% 28%, #ff9bbe1f, transparent 30%),
-        linear-gradient(160deg, #120d1b, #251629 65%, #120d1b);
+      position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; overflow: hidden;
+      background: radial-gradient(ellipse at 50% 70%, #ffb0d133, transparent 42%),
+                  radial-gradient(circle at 18% 22%, #aa7dd724, transparent 32%),
+                  radial-gradient(circle at 82% 28%, #ff9bbe1f, transparent 30%),
+                  linear-gradient(160deg, #120d1b, #251629 65%, #120d1b);
       transition: opacity 1s ease;
     }
-
     #intro::before {
-      content: "♡  ✦  ♡  ✦  ♡";
-      position: absolute;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: calc(100vw - 32px);
-      padding: 0 18px 12px;
-      border-bottom: 1px solid #ffcae28c;
-      color: #ffd1e7;
-      font-size: clamp(19px, 2.5vw, 28px);
-      letter-spacing: .25em;
-      white-space: nowrap;
-      opacity: .8;
-      pointer-events: none;
+      content: "♡  ✦  ♡  ✦  ♡"; position: absolute; top: 10%; left: 50%;
+      transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 0 18px 12px;
+      border-bottom: 1px solid #ffcae28c; color: #ffd1e7; font-size: clamp(19px, 2.5vw, 28px);
+      letter-spacing: .25em; white-space: nowrap; opacity: .8; pointer-events: none;
       animation: ornamentFloat 4s ease-in-out infinite alternate;
     }
-
-    @keyframes ornamentFloat {
-      to { transform: translate(-50%, -8px); }
-    }
+    @keyframes ornamentFloat { to { transform: translate(-50%, -8px); } }
 
     #intro.dancing {
-      background:
-        radial-gradient(ellipse at 50% 80%, #ff97d052, transparent 42%),
-        radial-gradient(circle at 25% 30%, #a070ff38, transparent 35%),
-        radial-gradient(circle at 78% 35%, #ff79b633, transparent 35%),
-        #100917;
+      background: radial-gradient(ellipse at 50% 80%, #ff97d052, transparent 42%),
+                  radial-gradient(circle at 25% 30%, #a070ff38, transparent 35%),
+                  radial-gradient(circle at 78% 35%, #ff79b633, transparent 35%), #100917;
     }
-
     #intro.dancing::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 50% 55%, #ff79bc, transparent 42%),
-        radial-gradient(circle at 25% 30%, #9c78ff, transparent 30%);
-      opacity: var(--beat-light, .1);
-      transition: opacity .1s;
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(circle at 50% 55%, #ff79bc, transparent 42%),
+                  radial-gradient(circle at 25% 30%, #9c78ff, transparent 30%);
+      opacity: var(--beat-light, .1); transition: opacity .1s;
     }
 
     #catButton {
-      position: relative;
-      z-index: 1;
-      width: min(600px, 85vw);
-      padding: 0;
-      border: 0;
-      background: none;
-      cursor: pointer;
+      position: relative; z-index: 1; width: min(600px, 85vw); padding: 0;
+      border: 0; background: none; cursor: pointer;
     }
-
     #catPicture {
-      display: block;
-      width: 100%;
-      max-height: 60vh;
-      object-fit: contain;
-      animation: float 2.4s ease-in-out infinite;
-      transition: opacity .25s ease;
+      display: block; width: 100%; max-height: 60vh; object-fit: contain;
+      animation: float 2.4s ease-in-out infinite; transition: opacity .25s ease;
     }
-
-    @keyframes float {
-      50% { transform: translateY(-9px); }
-    }
-
+    @keyframes float { 50% { transform: translateY(-9px); } }
     #intro.dancing #catButton {
-      transform: translateY(var(--beat-lift, 0px))
-        scale(var(--beat-zoom, 1));
+      transform: translateY(var(--beat-lift, 0px)) scale(var(--beat-zoom, 1));
       filter: drop-shadow(0 0 var(--beat-glow, 18px) #ff80c4);
     }
-
-    #catButton.walking {
-      animation: walkAway 2.4s ease-in forwards;
-    }
-
-    #catButton.walking #catPicture {
-      animation: footsteps .32s ease-in-out infinite alternate;
-    }
-
+    #catButton.walking { animation: walkAway 2.4s ease-in forwards; }
+    #catButton.walking #catPicture { animation: footsteps .32s ease-in-out infinite alternate; }
     @keyframes footsteps {
       from { transform: rotate(-2deg); }
       to { transform: rotate(2deg) translateY(-7px); }
     }
-
     @keyframes walkAway {
       75% { opacity: 1; }
-      to {
-        transform: translateY(-100px) scale(.12);
-        opacity: 0;
-      }
+      to { transform: translateY(-100px) scale(.12); opacity: 0; }
     }
 
-    .musicNote {
-      position: absolute;
-      font-size: 35px;
-      opacity: 0;
-      pointer-events: none;
-    }
+    .musicNote { position: absolute; font-size: 35px; opacity: 0; pointer-events: none; }
     .musicNote.left { left: 8%; top: 25%; }
-    .musicNote.right {
-      right: 8%;
-      top: 35%;
-      animation-delay: .8s !important;
-    }
-
-    #intro.dancing .musicNote {
-      animation: noteRise 1.6s ease-out infinite;
-    }
-
+    .musicNote.right { right: 8%; top: 35%; animation-delay: .8s !important; }
+    #intro.dancing .musicNote { animation: noteRise 1.6s ease-out infinite; }
     @keyframes noteRise {
       0% { opacity: 0; transform: translateY(20px); }
       25% { opacity: 1; }
       100% { opacity: 0; transform: translateY(-85px); }
     }
 
-    .heart {
-      position: absolute;
-      z-index: 5;
-      left: 50%;
-      top: 38%;
-      opacity: 0;
-      pointer-events: none;
-      font-size: 38px;
-    }
-    #intro.loving .heart {
-      animation: rise 1.6s ease-out forwards;
-    }
+    .heart { position: absolute; z-index: 5; left: 50%; top: 38%; opacity: 0; pointer-events: none; font-size: 38px; }
+    #intro.loving .heart { animation: rise 1.6s ease-out forwards; }
     .heart.one { --side: -90px; }
-    .heart.two {
-      --side: 10px;
-      animation-delay: .18s !important;
-    }
-    .heart.three {
-      --side: 100px;
-      animation-delay: .35s !important;
-    }
-
+    .heart.two { --side: 10px; animation-delay: .18s !important; }
+    .heart.three { --side: 100px; animation-delay: .35s !important; }
     @keyframes rise {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, 10px) scale(.4);
-      }
+      0% { opacity: 0; transform: translate(-50%, 10px) scale(.4); }
       25% { opacity: 1; }
-      100% {
-        opacity: 0;
-        transform: translate(calc(-50% + var(--side)), -160px) scale(1.3);
-      }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--side)), -160px) scale(1.3); }
     }
 
-    .wind {
-      position: absolute;
-      left: -180px;
-      width: 120px;
-      height: 3px;
-      border-radius: 100%;
-      background: #ffffff80;
-      opacity: 0;
-      pointer-events: none;
-    }
+    .wind { position: absolute; left: -180px; width: 120px; height: 3px; border-radius: 100%; background: #ffffff80; opacity: 0; pointer-events: none; }
     .wind.one { top: 38%; }
     .wind.two { top: 55%; width: 85px; }
     .wind.three { top: 68%; width: 150px; }
-
-    #intro.breezy .wind {
-      animation: windBlow 1.15s linear infinite;
-    }
+    #intro.breezy .wind { animation: windBlow 1.15s linear infinite; }
     #intro.breezy .wind.two { animation-delay: .3s; }
     #intro.breezy .wind.three { animation-delay: .65s; }
-
     @keyframes windBlow {
       20%, 80% { opacity: .5; }
       100% { left: 110%; opacity: 0; }
     }
 
     #introText, #musicButton {
-      position: relative;
-      z-index: 2;
-      border-radius: 999px;
-      font-weight: bold;
-      cursor: pointer;
+      position: relative; z-index: 2; border-radius: 999px; font-weight: bold; cursor: pointer;
       transition: transform .2s, box-shadow .2s, opacity .4s;
     }
-
     #introText {
-      margin-top: 12px;
-      padding: 12px 24px;
-      border: 1px solid #ffc7df;
-      background: #ffdeed;
-      color: #6b3150;
-      letter-spacing: 1px;
+      margin-top: 12px; padding: 12px 24px; border: 1px solid #ffc7df;
+      background: #ffdeed; color: #6b3150; letter-spacing: 1px;
       box-shadow: 0 5px 20px #ff9bc066;
     }
-
     #musicButton {
-      margin-top: 20px;
-      padding: 13px 26px;
-      border: 1px solid #ffb9d2;
-      background: #ffcfdf;
-      color: #6b2445;
-      box-shadow: 0 0 20px #ff9ec440;
+      margin-top: 20px; padding: 13px 26px; border: 1px solid #ffb9d2;
+      background: #ffcfdf; color: #6b2445; box-shadow: 0 0 20px #ff9ec440;
     }
-
     #introText:hover, #musicButton:hover {
       transform: translateY(-3px) scale(1.04);
       box-shadow: 0 8px 26px #ff9bc099;
     }
-
     #songButton {
-      position: relative;
-      z-index: 2;
-      margin-top: 12px;
-      padding: 10px 20px;
-      border: 1px solid #ffb9d2;
-      border-radius: 999px;
-      background: #ffffff16;
-      color: #ffe4f2;
-      font-weight: bold;
-      box-shadow: 0 0 15px #ff70c133;
+      position: relative; z-index: 2; margin-top: 12px; padding: 10px 20px;
+      border: 1px solid #ffb9d2; border-radius: 999px; background: #ffffff16;
+      color: #ffe4f2; font-weight: bold; box-shadow: 0 0 15px #ff70c133;
       cursor: pointer;
     }
     #songButton:hover { background: #ffffff30; }
 
-    /* DRIVE BY SCENE */
+    /* DRIVE BY */
     #driveScene {
-      display: none;
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      background: linear-gradient(
-        #100725 0%,
-        #421259 38%,
-        #da3e8e 55%,
-        #180d35 56%,
-        #070717 100%
-      );
+      display: none; position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+      background: linear-gradient(#100725 0%, #421259 38%, #da3e8e 55%, #180d35 56%, #070717 100%);
     }
-
     #intro.drive #driveScene { display: block; }
-    #intro.drive #catButton,
-    #intro.drive #littleRunners { visibility: hidden; }
-
+    #intro.drive #catButton, #intro.drive #littleRunners { visibility: hidden; }
     #driveScene .stars {
-      position: absolute;
-      inset: 0 0 45%;
-      opacity: .7;
-      background-image:
-        radial-gradient(#fff 1px, transparent 2px),
-        radial-gradient(#9defff 1px, transparent 2px);
+      position: absolute; inset: 0 0 45%; opacity: .7;
+      background-image: radial-gradient(#fff 1px, transparent 2px), radial-gradient(#9defff 1px, transparent 2px);
       background-size: 100px 85px, 145px 125px;
       background-position: 12px 8px, 60px 43px;
       animation: starShimmer 3s ease-in-out infinite alternate;
     }
-
-    @keyframes starShimmer {
-      to {
-        opacity: 1;
-        filter: drop-shadow(0 0 4px #bdf6ff);
-      }
-    }
-
+    @keyframes starShimmer { to { opacity: 1; filter: drop-shadow(0 0 4px #bdf6ff); } }
     #driveScene .shootingStar {
-      position: absolute;
-      top: 12%;
-      left: 15%;
-      width: 110px;
-      height: 2px;
-      border-radius: 50%;
-      background: linear-gradient(90deg, transparent, #fff, #8cecff);
-      box-shadow: 0 0 12px #9af6ff;
-      transform: rotate(-18deg);
+      position: absolute; top: 12%; left: 15%; width: 110px; height: 2px;
+      border-radius: 50%; background: linear-gradient(90deg, transparent, #fff, #8cecff);
+      box-shadow: 0 0 12px #9af6ff; transform: rotate(-18deg);
       animation: shootingStar 7s ease-in infinite;
     }
-
     #driveScene .shootingStar.second {
-      top: 26%;
-      left: 62%;
-      animation-delay: 3.5s;
-      animation-duration: 9s;
+      top: 26%; left: 62%; animation-delay: 3.5s; animation-duration: 9s;
     }
-
     @keyframes shootingStar {
-      0%, 82% {
-        opacity: 0;
-        transform: translate(0, 0) rotate(-18deg);
-      }
+      0%, 82% { opacity: 0; transform: translate(0, 0) rotate(-18deg); }
       84% { opacity: 1; }
-      90%, 100% {
-        opacity: 0;
-        transform: translate(130px, 35px) rotate(-18deg);
-      }
+      90%, 100% { opacity: 0; transform: translate(130px, 35px) rotate(-18deg); }
     }
-
     #driveScene .sun {
-      position: absolute;
-      left: 50%;
-      top: 18%;
-      width: clamp(190px, 28vw, 360px);
-      aspect-ratio: 1;
-      transform: translateX(-50%);
-      border-radius: 50%;
-      background:
-        repeating-linear-gradient(
-          to bottom,
-          transparent 0 11%,
-          #481058 11% 13%
-        ),
-        linear-gradient(#ffe8a7, #ff658b 70%, #d033bd);
-      box-shadow:
-        0 0 45px 15px #ff62a488,
-        0 0 100px #f334a766;
+      position: absolute; left: 50%; top: 18%; width: clamp(190px, 28vw, 360px);
+      aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%;
+      background: repeating-linear-gradient(to bottom, transparent 0 11%, #481058 11% 13%),
+                  linear-gradient(#ffe8a7, #ff658b 70%, #d033bd);
+      box-shadow: 0 0 45px 15px #ff62a488, 0 0 100px #f334a766;
       filter: drop-shadow(0 0 var(--beat-glow, 18px) #ff79bc);
     }
-
     #driveScene .mountains {
-      position: absolute;
-      inset: 40% 0 36%;
-      background: #1b0d3a;
-      clip-path: polygon(
-        0 70%, 9% 35%, 18% 75%, 30% 20%,
-        40% 70%, 51% 32%, 62% 76%,
-        73% 25%, 86% 72%, 94% 37%,
-        100% 65%, 100% 100%, 0 100%
-      );
+      position: absolute; inset: 40% 0 36%; background: #1b0d3a;
+      clip-path: polygon(0 70%, 9% 35%, 18% 75%, 30% 20%, 40% 70%, 51% 32%, 62% 76%, 73% 25%, 86% 72%, 94% 37%, 100% 65%, 100% 100%, 0 100%);
       filter: drop-shadow(0 -4px 8px #ea55db);
     }
-
     #driveScene .mountains.back {
-      inset: 36% -10% 39%;
-      opacity: .5;
-      background: #63307f;
-      transform: scaleX(1.15);
-      animation: mountainDrift 12s ease-in-out infinite alternate;
+      inset: 36% -10% 39%; opacity: .5; background: #63307f;
+      transform: scaleX(1.15); animation: mountainDrift 12s ease-in-out infinite alternate;
     }
-
-    @keyframes mountainDrift {
-      to { transform: translateX(-3%) scaleX(1.15); }
-    }
-
+    @keyframes mountainDrift { to { transform: translateX(-3%) scaleX(1.15); } }
     #driveScene .horizon {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 55%;
-      height: 3px;
-      background: #ff70de;
-      box-shadow: 0 0 15px #ff3fcb;
+      position: absolute; left: 0; right: 0; top: 55%; height: 3px;
+      background: #ff70de; box-shadow: 0 0 15px #ff3fcb;
     }
-
     #driveScene .road {
-      position: absolute;
-      left: -8%;
-      right: -8%;
-      top: 55%;
-      bottom: -10%;
-      background: linear-gradient(
-        90deg,
-        #ff39cb 0 1%,
-        #140d2f 1% 49.5%,
-        #ff43d9 49.5% 50.5%,
-        #140d2f 50.5% 99%,
-        #ff39cb 99%
-      );
+      position: absolute; left: -8%; right: -8%; top: 55%; bottom: -10%;
+      background: linear-gradient(90deg, #ff39cb 0 1%, #140d2f 1% 49.5%, #ff43d9 49.5% 50.5%, #140d2f 50.5% 99%, #ff39cb 99%);
       clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
       box-shadow: 0 0 30px #ff46de;
     }
-
     #driveScene .road::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent 0 43px,
-        #27eafa 44px 47px,
-        transparent 48px 84px
-      );
-      background-size: 100% 84px;
-      opacity: .7;
+      content: ""; position: absolute; inset: 0;
+      background: repeating-linear-gradient(to bottom, transparent 0 43px, #27eafa 44px 47px, transparent 48px 84px);
+      background-size: 100% 84px; opacity: .7;
       animation: roadMove .55s linear infinite;
     }
-
     #driveScene .road::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        90deg,
-        #ff59dc80,
-        transparent 8% 92%,
-        #ff59dc80
-      );
-      filter: blur(14px);
-      animation: roadGlow 1s ease-in-out infinite alternate;
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(90deg, #ff59dc80, transparent 8% 92%, #ff59dc80);
+      filter: blur(14px); animation: roadGlow 1s ease-in-out infinite alternate;
     }
-
-    @keyframes roadGlow {
-      to { opacity: .35; }
-    }
-
-    @keyframes roadMove {
-      to { background-position-y: -84px; }
-    }
-
+    @keyframes roadGlow { to { opacity: .35; } }
+    @keyframes roadMove { to { background-position-y: -84px; } }
     #driveScene .car {
-      position: absolute;
-      z-index: 1;
-      left: 50%;
-      bottom: 5%;
-      width: min(650px, 82vw);
-      height: auto;
-      transform: translateX(-50%);
-      filter:
-        drop-shadow(0 15px 25px #08051e)
-        drop-shadow(0 0 13px #fb4de8);
+      position: absolute; z-index: 1; left: 50%; bottom: 5%; width: min(650px, 82vw);
+      height: auto; transform: translateX(-50%);
+      filter: drop-shadow(0 15px 25px #08051e) drop-shadow(0 0 13px #fb4de8);
       animation: carBob .55s ease-in-out infinite alternate;
     }
-
     #driveScene .carGlow {
-      position: absolute;
-      z-index: 1;
-      left: 50%;
-      bottom: 5%;
-      width: min(500px, 65vw);
-      height: 38px;
-      transform: translateX(-50%);
-      border-radius: 50%;
-      background: #f143dc;
-      filter: blur(28px);
-      opacity: .55;
+      position: absolute; z-index: 1; left: 50%; bottom: 5%; width: min(500px, 65vw);
+      height: 38px; transform: translateX(-50%); border-radius: 50%;
+      background: #f143dc; filter: blur(28px); opacity: .55;
       animation: carGlow 1s ease-in-out infinite alternate;
     }
-
-    @keyframes carGlow {
-      to {
-        opacity: .85;
-        transform: translateX(-50%) scale(1.18);
-      }
-    }
-
+    @keyframes carGlow { to { opacity: .85; transform: translateX(-50%) scale(1.18); } }
     @keyframes carBob {
       from { transform: translate(-50%, 0); }
       to { transform: translate(-50%, -6px); }
     }
-
     #intro.drive:not(.playing) #driveScene .road::before,
     #intro.drive:not(.playing) #driveScene .road::after,
     #intro.drive:not(.playing) #driveScene .car,
@@ -488,32 +217,20 @@
     #intro.drive:not(.playing) #driveScene .mountains.back {
       animation-play-state: paused;
     }
-
     #intro.drive #introText {
-      background: #ffb8e8;
-      color: #310a41;
-      box-shadow: 0 0 20px #ff46d4;
+      background: #ffb8e8; color: #310a41; box-shadow: 0 0 20px #ff46d4;
     }
-
     #intro.drive #musicButton {
-      background: #90edfa;
-      color: #1b1742;
-      border-color: #8af7ff;
+      background: #90edfa; color: #1b1742; border-color: #8af7ff;
       box-shadow: 0 0 20px #32e8ff88;
     }
-
-    /* DRIVE BY BUTTON POSITIONS */
     #intro.drive #introText,
     #intro.drive #musicButton,
     #intro.drive #songButton {
-      position: absolute;
-      z-index: 4;
+      position: absolute; z-index: 4;
       top: max(20px, env(safe-area-inset-top));
-      margin: 0;
-      font-size: 14px;
-      white-space: nowrap;
+      margin: 0; font-size: 14px; white-space: nowrap;
     }
-
     #intro.drive #introText { right: 410px; }
     #intro.drive #musicButton { right: 210px; }
     #intro.drive #songButton { right: 18px; }
@@ -522,263 +239,230 @@
       #intro.drive #introText,
       #intro.drive #musicButton,
       #intro.drive #songButton {
-        left: auto;
-        right: 12px;
-        padding: 8px 12px;
-        font-size: 12px;
+        left: auto; right: 12px; padding: 8px 12px; font-size: 12px;
       }
-
-      #intro.drive #introText {
-        top: max(12px, env(safe-area-inset-top));
-      }
-      #intro.drive #musicButton {
-        top: max(53px, calc(env(safe-area-inset-top) + 41px));
-      }
-      #intro.drive #songButton {
-        top: max(94px, calc(env(safe-area-inset-top) + 82px));
-      }
+      #intro.drive #introText { top: max(12px, env(safe-area-inset-top)); }
+      #intro.drive #musicButton { top: max(53px, calc(env(safe-area-inset-top) + 41px)); }
+      #intro.drive #songButton { top: max(94px, calc(env(safe-area-inset-top) + 82px)); }
     }
 
     .tinyClickWave {
-      position: fixed;
-      z-index: 1000;
-      width: 32px;
-      height: 32px;
-      border: 1.5px solid #ffc4e0e6;
-      border-radius: 50%;
-      box-shadow: 0 0 9px #ff9bcc80;
-      pointer-events: none;
+      position: fixed; z-index: 1000; width: 32px; height: 32px;
+      border: 1.5px solid #ffc4e0e6; border-radius: 50%;
+      box-shadow: 0 0 9px #ff9bcc80; pointer-events: none;
       animation: tinyWave .55s ease-out forwards;
     }
-
     @keyframes tinyWave {
-      from {
-        transform: translate(-50%, -50%) scale(.2);
-        opacity: .9;
-      }
-      to {
-        transform: translate(-50%, -50%) scale(1.5);
-        opacity: 0;
-      }
+      from { transform: translate(-50%, -50%) scale(.2); opacity: .9; }
+      to { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
     }
 
-    /* RUNNING BABY CATS */
+    /* BABY CATS */
     #littleRunners {
-      position: absolute;
-      left: -220px;
-      bottom: 4%;
-      width: clamp(150px, 24vw, 220px);
-      z-index: 2;
-      pointer-events: none;
+      position: absolute; left: -220px; bottom: 4%;
+      width: clamp(150px, 24vw, 220px); z-index: 2; pointer-events: none;
       animation: runAcross 18s linear infinite;
     }
-
     #littleRunners img {
-      display: block;
-      width: 100%;
-      height: auto;
+      display: block; width: 100%; height: auto;
       filter: drop-shadow(0 0 8px #ffc3e159);
       animation: kittenHop .54s ease-in-out infinite;
     }
-
     @keyframes runAcross {
       0%, 8% { transform: translateX(0); }
-      77%, 100% {
-        transform: translateX(calc(100vw + 440px));
-      }
+      77%, 100% { transform: translateX(calc(100vw + 440px)); }
     }
-
     @keyframes kittenHop {
       50% { transform: translateY(-7px) rotate(-2deg); }
     }
-
     #littleRunners::before {
-      content: "✦";
-      position: absolute;
-      right: -32px;
-      top: 25%;
-      color: #fff6b5;
-      font-size: 24px;
-      text-shadow:
-        0 0 8px #fff,
-        0 0 18px #ffe58c,
-        0 0 35px #ffc6f1;
+      content: "✦"; position: absolute; right: -32px; top: 25%;
+      color: #fff6b5; font-size: 24px;
+      text-shadow: 0 0 8px #fff, 0 0 18px #ffe58c, 0 0 35px #ffc6f1;
       animation: pixieFlutter 1.4s ease-in-out infinite alternate;
     }
-
     @keyframes pixieFlutter {
-      from {
-        transform: translateY(12px) rotate(-15deg) scale(.8);
-        opacity: .7;
-      }
-      to {
-        transform: translate(14px, -22px) rotate(20deg) scale(1.2);
-      }
+      from { transform: translateY(12px) rotate(-15deg) scale(.8); opacity: .7; }
+      to { transform: translate(14px, -22px) rotate(20deg) scale(1.2); }
     }
-
-    #littleRunners::after,
-    .blackKittenSpeed {
-      position: absolute;
-      color: #ffd4e8;
-      font-size: 19px;
+    #littleRunners::after, .blackKittenSpeed {
+      position: absolute; color: #ffd4e8; font-size: 19px;
       text-shadow: 0 0 10px #ffadd2;
       animation: runningDust .7s ease-out infinite;
     }
-
     #littleRunners::after {
-      content: "·  ✧  ·";
-      left: -24px;
-      bottom: 14%;
+      content: "·  ✧  ·"; left: -24px; bottom: 14%;
     }
-
     .blackKittenSpeed {
-      left: 49%;
-      bottom: 22%;
-      animation-duration: .55s;
+      left: 49%; bottom: 22%; animation-duration: .55s;
     }
-
     @keyframes runningDust {
-      from {
-        transform: translate(12px, 4px) scale(.6);
-        opacity: .7;
-      }
-      to {
-        transform: translate(-22px, -12px) scale(1.2);
-        opacity: 0;
-      }
+      from { transform: translate(12px, 4px) scale(.6); opacity: .7; }
+      to { transform: translate(-22px, -12px) scale(1.2); opacity: 0; }
     }
 
-    /* MAIN WEBSITE */
-    #mainWebsite {
-      min-height: 100vh;
+    /* ANIMATED HEART ENVELOPE */
+    #letterScene {
+      position: absolute; inset: 0; z-index: 12;
+      display: grid; place-items: center; padding: 25px;
+      background: radial-gradient(circle, #492842f5, #130b1bef 75%);
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity .5s, visibility .5s;
+    }
+    #letterScene.show {
+      opacity: 1; visibility: visible; pointer-events: auto;
+    }
+    .envelopeWrap {
+      position: relative; width: min(390px, 88vw); height: 360px;
+      display: grid; place-items: end center;
+    }
+    .envelope {
+      position: absolute; bottom: 22px; width: 100%; height: 210px;
+      border-radius: 8px 8px 18px 18px; background: #e785ac;
+      box-shadow: 0 25px 65px #0009, 0 0 45px #ff93c980;
+    }
+    .envelope::before {
+      content: ""; position: absolute; inset: 0; z-index: 3;
+      background: #ffa9ca;
+      clip-path: polygon(0 0, 50% 59%, 100% 0);
+      transform-origin: top; transition: transform .8s ease;
+    }
+    .envelope::after {
+      content: "♡"; position: absolute; z-index: 5;
+      left: 50%; top: 50%; transform: translate(-50%, -20%);
+      width: 58px; height: 58px; display: grid; place-items: center;
+      border-radius: 50%; background: #fff0f7; color: #b8356d;
+      font-size: 38px; box-shadow: 0 0 18px #fff3;
+      transition: opacity .4s;
+    }
+    #letterScene.open .envelope::before {
+      transform: rotateX(180deg);
+    }
+    #letterScene.open .envelope::after {
       opacity: 0;
-      transform: translateY(20px);
+    }
+    .letterPaper {
+      position: absolute; z-index: 2; left: 8%; right: 8%; bottom: 45px;
+      min-height: 245px; padding: 25px 24px; border-radius: 10px;
+      background: #fff3f7; color: #5c2b48; text-align: center;
+      box-shadow: 0 7px 25px #0005;
+      transform: translateY(95px) scale(.88); opacity: 0;
+      transition: transform 1s .65s, opacity .8s .65s;
+    }
+    #letterScene.open .letterPaper {
+      transform: translateY(-72px) scale(1);
+      opacity: 1; z-index: 4;
+    }
+    .letterPaper h2 {
+      margin: 0 0 10px; font-size: 26px;
+    }
+    .letterPaper p { line-height: 1.5; }
+    .letterCode {
+      margin: 15px 0; padding: 9px 12px; border-radius: 12px;
+      background: #ffd8e9; color: #a42d63;
+      font-size: clamp(16px, 5vw, 23px);
+      font-weight: 900; letter-spacing: .06em;
+      overflow-wrap: anywhere;
+    }
+    .letterContinue {
+      padding: 10px 20px; border: 0; border-radius: 999px;
+      background: #b73d75; color: white; font-weight: bold; cursor: pointer;
+    }
+    .letterContinue:hover { background: #912554; }
+    .letterSpark {
+      position: absolute; color: #ffe7f2; font-size: 28px;
+      text-shadow: 0 0 15px #ff8bc6;
+      animation: letterSparkle 2s ease-in-out infinite alternate;
+    }
+    .letterSpark.one { top: 15%; left: 13%; }
+    .letterSpark.two {
+      top: 28%; right: 10%; animation-delay: .6s;
+    }
+    .letterSpark.three {
+      bottom: 18%; right: 14%; animation-delay: 1.2s;
+    }
+    @keyframes letterSparkle {
+      to { transform: translateY(-13px) scale(1.25); opacity: .4; }
+    }
+    @media (max-width: 420px) {
+      .letterPaper { padding: 20px 16px; }
+      .letterPaper h2 { font-size: 23px; }
+    }
+
+    /* MAIN HOME */
+    #mainWebsite {
+      min-height: 100vh; opacity: 0; transform: translateY(20px);
       transition: opacity 1.5s ease, transform 1.5s ease;
     }
-
     #mainWebsite.show {
-      opacity: 1;
-      transform: translateY(0);
+      opacity: 1; transform: translateY(0);
     }
-
-    /* MENU THAT OPENS FROM THE TOP */
     .menuZone {
-      position: fixed;
-      inset: 0 0 auto;
-      z-index: 40;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      position: fixed; inset: 0 0 auto; z-index: 40;
+      display: flex; flex-direction: column; align-items: center;
       pointer-events: none;
     }
-
     .menuHandle {
-      pointer-events: auto;
-      padding: 10px 23px;
+      pointer-events: auto; padding: 10px 23px;
       border: 1px solid #ffc6e180;
       border-radius: 0 0 18px 18px;
-      background: #26152fe8;
-      color: #ffe9f4;
-      font-weight: bold;
-      cursor: pointer;
+      background: #26152fe8; color: #ffe9f4;
+      font-weight: bold; cursor: pointer;
       box-shadow: 0 7px 24px #0005;
       backdrop-filter: blur(14px);
     }
-
     .siteMenu {
       width: min(850px, 96vw);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 16px;
       padding: 18px 24px;
       border: 1px solid #ffbedd55;
       border-radius: 0 0 22px 22px;
       background: #1e1128f2;
       box-shadow: 0 18px 42px #0008;
       backdrop-filter: blur(18px);
-      opacity: 0;
-      visibility: hidden;
+      opacity: 0; visibility: hidden;
       transform: translateY(-14px);
       transition: opacity .3s, transform .3s, visibility .3s;
     }
-
     .menuZone:hover .siteMenu,
     .menuZone:focus-within .siteMenu,
     .menuZone.open .siteMenu {
-      pointer-events: auto;
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
+      pointer-events: auto; opacity: 1;
+      visibility: visible; transform: translateY(0);
     }
-
-    .siteMenu a {
-      color: #ffe9f4;
-      text-decoration: none;
-    }
-
+    .siteMenu a { color: #ffe9f4; text-decoration: none; }
     .siteLogo {
-      font-size: 21px;
-      font-weight: bold;
-      white-space: nowrap;
+      font-size: 21px; font-weight: bold; white-space: nowrap;
     }
-
-    .menuLinks {
-      display: flex;
-      gap: 25px;
-    }
+    .menuLinks { display: flex; gap: 25px; }
     .menuLinks a { opacity: .75; }
-    .menuLinks a:hover {
-      opacity: 1;
-      color: #ff9fcc;
-    }
-
+    .menuLinks a:hover { opacity: 1; color: #ff9fcc; }
     #backToIntro {
-      padding: 10px 16px;
-      border: 1px solid #ffb9d2;
-      border-radius: 999px;
-      background: #ffcfdf;
-      color: #6b2445;
-      font-weight: bold;
-      cursor: pointer;
+      padding: 10px 16px; border: 1px solid #ffb9d2;
+      border-radius: 999px; background: #ffcfdf;
+      color: #6b2445; font-weight: bold; cursor: pointer;
     }
     #backToIntro:hover { background: #ffe5ef; }
 
-    /* NEW VIDEO BELL */
     .notificationBell {
-      position: fixed;
-      z-index: 45;
-      top: 14px;
-      right: 18px;
-      width: 48px;
-      height: 48px;
-      border: 1px solid #ffb9d2;
-      border-radius: 50%;
-      background: #321b3ce8;
-      color: #ffe7f2;
-      font-size: 23px;
-      cursor: pointer;
+      position: fixed; z-index: 45; top: 14px; right: 18px;
+      width: 48px; height: 48px;
+      border: 1px solid #ffb9d2; border-radius: 50%;
+      background: #321b3ce8; color: #ffe7f2;
+      font-size: 23px; cursor: pointer;
       box-shadow: 0 6px 22px #0005;
     }
-
     .notificationBell.new {
       animation: bellRing 2.6s ease-in-out infinite;
       box-shadow: 0 0 24px #ff8ac7;
     }
-
     .notificationBell.new::after {
-      content: "";
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      background: #ff4b99;
+      content: ""; position: absolute;
+      top: 4px; right: 4px; width: 11px; height: 11px;
+      border-radius: 50%; background: #ff4b99;
       box-shadow: 0 0 8px #ff4b99;
     }
-
     @keyframes bellRing {
       0%, 70%, 100% { transform: rotate(0); }
       75% { transform: rotate(-12deg); }
@@ -786,201 +470,121 @@
       85% { transform: rotate(-8deg); }
       90% { transform: rotate(8deg); }
     }
-
     .notificationHint {
-      position: fixed;
-      z-index: 44;
-      top: 70px;
-      right: 18px;
-      padding: 9px 14px;
-      border: 1px solid #ffc6e188;
-      border-radius: 12px;
-      background: #321b3cf0;
-      color: #fff0f8;
-      font-size: 13px;
+      position: fixed; z-index: 44; top: 70px; right: 18px;
+      padding: 9px 14px; border: 1px solid #ffc6e188;
+      border-radius: 12px; background: #321b3cf0;
+      color: #fff0f8; font-size: 13px;
       box-shadow: 0 8px 22px #0005;
     }
-
     .notificationHint[hidden] { display: none; }
 
-    /* WELCOME TO OUR WORLD */
     .welcomeSection {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      overflow: hidden;
-      padding: 90px max(8vw, 25px);
-      background:
-        radial-gradient(circle at 76% 45%, #b465a54d, transparent 28%),
-        radial-gradient(circle at 18% 75%, #e78caf33, transparent 35%),
-        linear-gradient(140deg, #190e27, #301632 60%, #160c24);
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      overflow: hidden; padding: 90px max(8vw, 25px);
+      background: radial-gradient(circle at 76% 45%, #b465a54d, transparent 28%),
+                  radial-gradient(circle at 18% 75%, #e78caf33, transparent 35%),
+                  linear-gradient(140deg, #190e27, #301632 60%, #160c24);
     }
-
     .welcomeSection::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      opacity: .55;
-      pointer-events: none;
-      background-image:
-        radial-gradient(#ffd7ee 1px, transparent 2px),
-        radial-gradient(#ba9eff 1px, transparent 2px);
+      content: ""; position: absolute; inset: 0;
+      opacity: .55; pointer-events: none;
+      background-image: radial-gradient(#ffd7ee 1px, transparent 2px),
+                        radial-gradient(#ba9eff 1px, transparent 2px);
       background-size: 110px 120px, 170px 145px;
       background-position: 20px 38px, 85px 75px;
     }
-
     .welcomeGlow {
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      right: 12%;
-      top: 25%;
-      border-radius: 50%;
-      background: #f9a5d344;
-      filter: blur(80px);
+      position: absolute; width: 300px; height: 300px;
+      right: 12%; top: 25%; border-radius: 50%;
+      background: #f9a5d344; filter: blur(80px);
       pointer-events: none;
     }
-
     .welcomeOrbit {
-      position: absolute;
-      right: 9%;
-      top: 50%;
-      width: min(35vw, 430px);
-      aspect-ratio: 1;
+      position: absolute; right: 9%; top: 50%;
+      width: min(35vw, 430px); aspect-ratio: 1;
       transform: translateY(-50%);
-      border: 1px solid #ffc3e777;
-      border-radius: 50%;
-      box-shadow:
-        0 0 50px #ff9ed74d,
-        inset 0 0 60px #ff8ac336;
+      border: 1px solid #ffc3e777; border-radius: 50%;
+      box-shadow: 0 0 50px #ff9ed74d, inset 0 0 60px #ff8ac336;
       pointer-events: none;
       animation: orbitFloat 5s ease-in-out infinite alternate;
     }
-
     .welcomeOrbit::before {
-      content: "♡";
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
+      content: "♡"; position: absolute; inset: 0;
+      display: grid; place-items: center;
       color: #ffd2e8;
       font-size: clamp(120px, 18vw, 260px);
       text-shadow: 0 0 35px #ff7cbd;
     }
-
     .welcomeOrbit::after {
-      content: "✦";
-      position: absolute;
-      top: 10%;
-      right: 6%;
-      color: #ffe1f1;
-      font-size: 38px;
-      text-shadow: 0 0 16px #ff7cbd;
+      content: "✦"; position: absolute;
+      top: 10%; right: 6%; color: #ffe1f1;
+      font-size: 38px; text-shadow: 0 0 16px #ff7cbd;
     }
-
     @keyframes orbitFloat {
-      to {
-        transform: translateY(calc(-50% - 18px)) rotate(5deg);
-      }
+      to { transform: translateY(calc(-50% - 18px)) rotate(5deg); }
     }
-
     .eyebrow {
-      color: #ffabd1;
-      font-size: 13px;
-      font-weight: bold;
-      letter-spacing: 3px;
+      color: #ffabd1; font-size: 13px;
+      font-weight: bold; letter-spacing: 3px;
       text-transform: uppercase;
     }
-
     .welcomeSection h1 {
-      position: relative;
-      z-index: 1;
-      max-width: 780px;
+      position: relative; z-index: 1; max-width: 780px;
       font-size: clamp(48px, 8vw, 100px);
-      line-height: 1.05;
-      margin: 12px 0 20px;
+      line-height: 1.05; margin: 12px 0 20px;
       text-shadow: 0 8px 30px #0006;
     }
-
     .welcomeSection h1 span { color: #ffaad1; }
-
     .welcomeSection > p:not(.eyebrow) {
-      position: relative;
-      max-width: 520px;
-      line-height: 1.7;
-      opacity: .85;
+      position: relative; max-width: 520px;
+      line-height: 1.7; opacity: .85;
     }
 
-    /* OUR MOMENTS */
     .contentSection {
       padding: 90px max(8vw, 25px);
       scroll-margin-top: 80px;
     }
-
     .sectionHeading { margin-bottom: 34px; }
     .sectionHeading h2 {
       font-size: clamp(36px, 5vw, 60px);
       margin: 8px 0;
     }
-    .sectionHeading p {
-      line-height: 1.6;
-      opacity: .8;
-    }
-
+    .sectionHeading p { line-height: 1.6; opacity: .8; }
     .videoGrid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 24px;
     }
-
     .videoCard {
-      overflow: hidden;
-      border: 1px solid #ffc6e133;
-      border-radius: 22px;
-      background: #2a1a34;
+      overflow: hidden; border: 1px solid #ffc6e133;
+      border-radius: 22px; background: #2a1a34;
       box-shadow: 0 12px 35px #0003;
     }
-
     .videoPreview {
-      display: grid;
-      place-items: center;
+      display: grid; place-items: center;
       aspect-ratio: 16 / 9;
-      background:
-        radial-gradient(circle at center, #ffb4d57a, transparent 38%),
-        linear-gradient(135deg, #51315f, #a05c87);
-      color: white;
-      font-size: 50px;
+      background: radial-gradient(circle at center, #ffb4d57a, transparent 38%),
+                  linear-gradient(135deg, #51315f, #a05c87);
+      color: white; font-size: 50px;
     }
-
     .videoEmbed {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border: 0;
+      display: block; width: 100%;
+      aspect-ratio: 16 / 9; border: 0;
     }
-
     .cardText { padding: 22px; }
     .cardText span {
-      color: #ffafd3;
-      font-size: 12px;
+      color: #ffafd3; font-size: 12px;
       letter-spacing: 2px;
     }
     .cardText h3 { margin: 9px 0; }
-    .cardText p {
-      line-height: 1.6;
-      opacity: .8;
-    }
-
+    .cardText p { line-height: 1.6; opacity: .8; }
     footer {
-      padding: 30px;
-      text-align: center;
-      color: #ffc2de;
-      border-top: 1px solid #ffc6e122;
+      padding: 30px; text-align: center;
+      color: #ffc2de; border-top: 1px solid #ffc6e122;
     }
-
     @media (max-width: 650px) {
       .siteMenu {
         justify-content: center;
@@ -990,16 +594,13 @@
       .videoGrid { grid-template-columns: 1fr; }
       .welcomeSection { min-height: 100vh; }
       .welcomeOrbit {
-        right: -20%;
-        width: 75vw;
-        opacity: .33;
+        right: -20%; width: 75vw; opacity: .33;
       }
     }
   </style>
 </head>
 
 <body>
-  <!-- CAT SCREEN -->
   <div id="intro">
     <button id="catButton" type="button" aria-label="Enter the website">
       <img id="catPicture" src="Tail.png" alt="Two cats standing together">
@@ -1036,9 +637,35 @@
       <div class="carGlow"></div>
       <img class="car" src="Car.png" alt="">
     </div>
+
+    <div
+      id="letterScene"
+      role="dialog"
+      aria-modal="true"
+      aria-label="A secret letter"
+      aria-hidden="true">
+      <span class="letterSpark one">✦</span>
+      <span class="letterSpark two">♡</span>
+      <span class="letterSpark three">✧</span>
+
+      <div class="envelopeWrap">
+        <div class="envelope"></div>
+
+        <div class="letterPaper">
+          <h2>A letter for you ♡</h2>
+          <p>Here is the little code to our world:</p>
+          <div class="letterCode" id="letterCode">AkuSayangKamu</div>
+          <button
+            class="letterContinue"
+            id="letterContinue"
+            type="button">
+            Continue ♡
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- MAIN HOME -->
   <main id="mainWebsite">
     <div class="menuZone" id="menuZone">
       <button
@@ -1079,7 +706,6 @@
     <section class="welcomeSection" id="home">
       <div class="welcomeGlow"></div>
       <div class="welcomeOrbit" aria-hidden="true"></div>
-
       <p class="eyebrow">✦ A little world for us ✦</p>
       <h1>Welcome To<br><span>Our World ♡</span></h1>
       <p>Our little world, filled with moments we love.</p>
@@ -1146,6 +772,8 @@
     const menuHandle = document.getElementById("menuHandle");
     const notificationBell = document.getElementById("notificationBell");
     const notificationHint = document.getElementById("notificationHint");
+    const letterScene = document.getElementById("letterScene");
+    const letterContinue = document.getElementById("letterContinue");
     const runnerPicture = document.querySelector("#littleRunners img");
     const carPicture = document.querySelector("#driveScene .car");
 
@@ -1205,7 +833,7 @@
     let average = 0;
     let pulse = 0;
 
-    /* NEW VIDEO NOTIFICATION */
+    /* VIDEO BELL */
     const latestVideo = [
       ...document.querySelectorAll("#videos .videoEmbed")
     ].map(video => video.getAttribute("src")).join("|");
@@ -1234,7 +862,7 @@
       });
     });
 
-    /* SLIDING MENU */
+    /* MENU */
     menuHandle.addEventListener("click", () => {
       const open = menuZone.classList.toggle("open");
       menuHandle.setAttribute("aria-expanded", String(open));
@@ -1247,10 +875,9 @@
       });
     });
 
-    /* CAT ANIMATION FRAMES */
+    /* CAT FRAMES */
     setInterval(() => {
       if (screen !== "intro" || !introMusic.paused) return;
-
       idleFrame = (idleFrame + 1) % idleFrames.length;
       catPicture.src = idleFrames[idleFrame];
     }, 450);
@@ -1261,12 +888,7 @@
     }, 180);
 
     setInterval(() => {
-      if (
-        screen !== "intro" ||
-        mode !== "drive" ||
-        introMusic.paused
-      ) return;
-
+      if (screen !== "intro" || mode !== "drive" || introMusic.paused) return;
       carFrame = (carFrame + 1) % carFrames.length;
       carPicture.src = carFrames[carFrame];
     }, 240);
@@ -1315,9 +937,7 @@
 
       analyser.getByteFrequencyData(frequencies);
 
-      const hzPerBin =
-        beatContext.sampleRate / analyser.fftSize;
-
+      const hzPerBin = beatContext.sampleRate / analyser.fftSize;
       const first = Math.floor(60 / hzPerBin);
       const last = Math.min(
         frequencies.length - 1,
@@ -1325,13 +945,11 @@
       );
 
       let total = 0;
-
       for (let i = first; i <= last; i++) {
         total += frequencies[i];
       }
 
       const bass = total / (last - first + 1);
-
       average = average === 0
         ? bass
         : average * .94 + bass * .06;
@@ -1347,22 +965,10 @@
 
       pulse = Math.max(hit, pulse * .84);
 
-      intro.style.setProperty(
-        "--beat-lift",
-        `${-12 * pulse}px`
-      );
-      intro.style.setProperty(
-        "--beat-zoom",
-        `${1 + .045 * pulse}`
-      );
-      intro.style.setProperty(
-        "--beat-glow",
-        `${18 + 32 * pulse}px`
-      );
-      intro.style.setProperty(
-        "--beat-light",
-        `${.25 + .5 * pulse}`
-      );
+      intro.style.setProperty("--beat-lift", `${-12 * pulse}px`);
+      intro.style.setProperty("--beat-zoom", `${1 + .045 * pulse}`);
+      intro.style.setProperty("--beat-glow", `${18 + 32 * pulse}px`);
+      intro.style.setProperty("--beat-light", `${.25 + .5 * pulse}`);
 
       beatFrame = requestAnimationFrame(animateBeat);
     }
@@ -1438,7 +1044,7 @@
       }
     });
 
-    /* HEART, WIND, AND FOOTSTEP SOUNDS */
+    /* HEART, WIND, FOOTSTEP SOUNDS */
     function note(frequency, when, duration, volume) {
       if (!soundContext) return;
 
@@ -1454,14 +1060,12 @@
 
       oscillator.connect(gain);
       gain.connect(soundContext.destination);
-
       oscillator.start(when);
       oscillator.stop(when + duration);
     }
 
     function heartSound() {
       if (!soundContext) return;
-
       const now = soundContext.currentTime;
       note(660, now, .25, .09);
       note(880, now + .12, .4, .07);
@@ -1497,7 +1101,6 @@
       filter.frequency.value = 500;
 
       const now = soundContext.currentTime;
-
       gain.gain.setValueAtTime(.001, now);
       gain.gain.linearRampToValueAtTime(.035, now + .4);
       gain.gain.linearRampToValueAtTime(.001, now + 1.5);
@@ -1516,7 +1119,7 @@
       }, ms);
     }
 
-    /* ENTER THE MAIN HOME */
+    /* WALK INTO THE MAIN HOME */
     function enterWebsite() {
       if (screen !== "intro") return;
 
@@ -1554,7 +1157,6 @@
           catPicture.src = "Walking Away.png";
           catPicture.alt = "Two cats walking away together";
           catPicture.style.opacity = "1";
-
           intro.classList.add("breezy");
           catButton.classList.add("walking");
 
@@ -1578,10 +1180,43 @@
       });
     }
 
-    catButton.addEventListener("click", enterWebsite);
-    introText.addEventListener("click", enterWebsite);
+    /* OPEN THE HEART ENVELOPE */
+    function showLetter() {
+      if (screen !== "intro") return;
 
-    /* GO BACK TO THE CATS */
+      screen = "letter";
+      letterScene.classList.add("show");
+      letterScene.setAttribute("aria-hidden", "false");
+
+      requestAnimationFrame(() => {
+        letterScene.classList.add("open");
+      });
+
+      setTimeout(() => {
+        if (screen === "letter") {
+          letterContinue.focus();
+        }
+      }, 1600);
+    }
+
+    catButton.addEventListener("click", showLetter);
+    introText.addEventListener("click", showLetter);
+
+    letterContinue.addEventListener("click", () => {
+      if (screen !== "letter") return;
+
+      screen = "letterClosing";
+      letterScene.classList.remove("show", "open");
+      letterScene.setAttribute("aria-hidden", "true");
+
+      setTimeout(() => {
+        if (screen !== "letterClosing") return;
+        screen = "intro";
+        enterWebsite();
+      }, 500);
+    });
+
+    /* BACK TO THE CATS */
     backButton.addEventListener("click", () => {
       ++transitionId;
       screen = "intro";
@@ -1603,6 +1238,9 @@
       introText.disabled = false;
 
       intro.classList.remove("loving", "breezy");
+      letterScene.classList.remove("show", "open");
+      letterScene.setAttribute("aria-hidden", "true");
+
       catButton.classList.remove("walking");
       catPicture.style.opacity = "1";
 

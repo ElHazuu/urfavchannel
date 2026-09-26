@@ -166,7 +166,121 @@
     .updateIcon { color: #ffabd1; font-size: 30px; }
     footer { padding: 30px; text-align: center; color: #ffc2de; border-top: 1px solid #ffc6e122; }
     @media (max-width: 650px) { .siteMenu { justify-content: center; } .menuLinks { gap: 18px; } .videoGrid { grid-template-columns: 1fr; } .welcomeSection { min-height: 70vh; } }
-  </style>
+    /* Extra Drive By effects */
+#driveScene .stars {
+  animation: starShimmer 3s ease-in-out infinite alternate;
+}
+
+@keyframes starShimmer {
+  to { opacity: 1; filter: drop-shadow(0 0 4px #bdf6ff); }
+}
+
+#driveScene .shootingStar {
+  position: absolute;
+  top: 12%;
+  left: -20%;
+  width: 110px;
+  height: 2px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, transparent, #fff, #8cecff);
+  box-shadow: 0 0 12px #9af6ff;
+  transform: rotate(-18deg);
+  animation: shootingStar 7s ease-in infinite;
+}
+
+#driveScene .shootingStar.second {
+  top: 26%;
+  animation-delay: 3.5s;
+  animation-duration: 9s;
+}
+
+@keyframes shootingStar {
+  0%, 76% { opacity: 0; transform: translate(0, 0) rotate(-18deg); }
+  79% { opacity: 1; }
+  91%, 100% { opacity: 0; transform: translate(120vw, 28vh) rotate(-18deg); }
+}
+
+#driveScene .mountains.back {
+  inset: 36% -10% 39%;
+  opacity: .5;
+  background: #63307f;
+  transform: scaleX(1.15);
+  animation: mountainDrift 12s ease-in-out infinite alternate;
+}
+
+@keyframes mountainDrift {
+  to { transform: translateX(-3%) scaleX(1.15); }
+}
+
+#driveScene .road::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #ff59dc80, transparent 8% 92%, #ff59dc80);
+  filter: blur(14px);
+  animation: roadGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes roadGlow {
+  to { opacity: .35; }
+}
+
+#driveScene .carGlow {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 5%;
+  width: min(500px, 65vw);
+  height: 38px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #f143dc;
+  filter: blur(28px);
+  opacity: .55;
+  animation: carGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes carGlow {
+  to { opacity: .85; transform: translateX(-50%) scale(1.18); }
+}
+
+#driveScene .lightTrail {
+  position: absolute;
+  z-index: 1;
+  bottom: -8%;
+  width: 3px;
+  height: 45%;
+  background: linear-gradient(transparent, #ff72e8);
+  box-shadow: 0 0 13px #ff4bdc;
+  opacity: .7;
+  transform-origin: top;
+  animation: trailRush .8s linear infinite;
+}
+
+#driveScene .lightTrail.left {
+  left: 45%;
+  transform: rotate(28deg);
+}
+
+#driveScene .lightTrail.right {
+  right: 45%;
+  transform: rotate(-28deg);
+  animation-delay: -.4s;
+}
+
+@keyframes trailRush {
+  from { opacity: 0; height: 8%; }
+  35% { opacity: .8; }
+  to { opacity: 0; height: 55%; }
+}
+
+#intro.drive:not(.playing) #driveScene .road::after,
+#intro.drive:not(.playing) #driveScene .carGlow,
+#intro.drive:not(.playing) #driveScene .lightTrail,
+#intro.drive:not(.playing) #driveScene .mountains.back {
+  animation-play-state: paused;
+}
+     </style>
 </head>
 <body>
   <div id="intro">
@@ -180,7 +294,7 @@
     <button id="musicButton" type="button">♫ Play music ♡</button>
     <button id="songButton" type="button">♪ Switch to Drive By</button>
     <div id="littleRunners" aria-hidden="true"><img src="Baby.png" alt=""><span class="blackKittenSpeed">✧ · ·</span></div>
-    <div id="driveScene" aria-hidden="true"><div class="stars"></div><div class="sun"></div><div class="mountains"></div><div class="horizon"></div><div class="road"></div><img class="car" src="Car.png" alt=""></div>
+   <div id="driveScene" aria-hidden="true"><div class="stars"></div><div class="shootingStar"></div><div class="shootingStar second"></div><div class="sun"></div><div class="mountains back"></div><div class="mountains"></div><div class="horizon"></div><div class="road"></div><div class="lightTrail left"></div><div class="lightTrail right"></div><div class="carGlow"></div><img class="car" src="Car.png" alt=""></div>
   </div>
 
   <main id="mainWebsite">

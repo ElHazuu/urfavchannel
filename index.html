@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="site-build" content="ocean-sayang-20260927-fixed">
   <title>Our Sayang ♡</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -361,6 +362,65 @@
     #intro #introText, #intro #musicButton, #intro #songButton { display: block; margin-left: auto; margin-right: auto; }
     #mainWebsite:not([data-wallpaper="original"]) { --scene-accent: #ffd2ea; --scene-surface: #251a2b; }
     #mainWebsite[data-wallpaper="underwater"] { --scene-accent: #8de6ef; --scene-surface: #123e5e; --scene-bg: linear-gradient(#176686, #145376 40%, #123e68 75%, #0e2a4f); }
+    .underseaBackdrop { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    #mainWebsite[data-wallpaper="underwater"] .underseaBackdrop { display: block; }
+    #mainWebsite[data-wallpaper="underwater"] .welcomeSection,
+    #mainWebsite[data-wallpaper="underwater"] .contentSection,
+    #mainWebsite[data-wallpaper="underwater"] .storySection,
+    #mainWebsite[data-wallpaper="underwater"] footer { position: relative; z-index: 1; }
+    .underseaBackdrop::before { content: ""; position: absolute; inset: -15% -30% 0; opacity: .6;
+      background: repeating-linear-gradient(108deg, transparent 0 10%, #c6fbff25 12%, #d9ffff08 17%, transparent 22% 35%);
+      transform-origin: 50% 0; animation: seaRays 13s ease-in-out infinite alternate; }
+    .underseaBackdrop::after { content: ""; position: absolute; inset: 0; opacity: .32;
+      background: radial-gradient(ellipse at 50% -12%, #d6ffff87, transparent 55%),
+                  repeating-radial-gradient(ellipse at 50% -30%, transparent 0 65px, #b7fbff12 85px 93px, transparent 125px 190px);
+      animation: seaShimmer 9s ease-in-out infinite alternate; }
+    @keyframes seaRays { to { transform: skewX(-9deg) translateX(4%); opacity: .58; } }
+    @keyframes seaShimmer { to { opacity: .55; transform: translateY(10px); } }
+    .seaBubble { position: absolute; z-index: 1; left: var(--x); bottom: -35px; width: var(--size); aspect-ratio: 1;
+      border: 1px solid #d8ffff9c; border-radius: 50%; background: radial-gradient(circle at 30% 27%, #ffffffad, transparent 30%), #c4faff12;
+      box-shadow: inset -3px -4px 7px #2ea6c43d, 0 0 9px #b8ffff38;
+      animation: seaBubbleRise var(--duration) linear infinite; animation-delay: var(--delay); }
+    @keyframes seaBubbleRise { from { transform: translate(0, 0) scale(.75); opacity: 0; }
+      12% { opacity: .68; } 88% { opacity: .5; } to { transform: translate(var(--drift), -110vh) scale(1.15); opacity: 0; } }
+    .seaFish { position: absolute; z-index: 1; left: -100px; top: var(--y); width: 42px; height: 21px;
+      border-radius: 65% 45% 45% 65%; background: #b9faff55; opacity: .44;
+      filter: drop-shadow(0 0 9px #8cf6ff5c); transform: scale(var(--scale));
+      animation: fishSwim var(--duration) linear infinite; animation-delay: var(--delay); }
+    .seaFish::after { content: ""; position: absolute; left: -12px; top: 1px; width: 0; height: 0;
+      border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right: 17px solid #b9faff55; }
+    .seaFish::before { content: ""; position: absolute; right: 8px; top: 6px; width: 3px; height: 3px; border-radius: 50%; background: #123e5e; }
+    @keyframes fishSwim { to { left: calc(100% + 120px); transform: translateY(-28px) scale(var(--scale)); } }
+    .seaClickBubble { position: fixed; z-index: 2; left: var(--x); top: var(--y); width: var(--size); aspect-ratio: 1;
+      border: 1px solid #d7ffffb8; border-radius: 50%; background: radial-gradient(circle at 30% 25%, #fff9, transparent 35%);
+      pointer-events: none; animation: seaClickRise 1.8s ease-out forwards; }
+    @keyframes seaClickRise { to { opacity: 0; transform: translate(var(--drift), -150px) scale(1.5); } }
+    .seaPearl { display: none; position: fixed; z-index: 44; right: 26px; bottom: 25px; width: 68px; height: 57px;
+      border: 1px solid #b7faffba; border-radius: 58% 58% 48% 48%; background: linear-gradient(160deg, #75d9e5, #187692);
+      color: #fff; cursor: pointer; box-shadow: 0 7px 22px #052d4b9c, inset 0 -8px 0 #0e4c77;
+      animation: pearlFloat 3.6s ease-in-out infinite alternate; }
+    .seaPearl::before { content: ""; position: absolute; left: 21px; top: 5px; width: 25px; height: 25px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, white, #dcfaff 52%, #8dcbd9); box-shadow: 0 0 17px #dbffff; }
+    .seaPearl span { position: relative; top: 14px; font: 700 9px "DM Sans", Arial, sans-serif; letter-spacing: .06em; }
+    #mainWebsite[data-wallpaper="underwater"] .seaPearl { display: block; }
+    .seaPearl:hover { filter: brightness(1.2); }
+    .seaPearl:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+    @keyframes pearlFloat { to { transform: translateY(-7px); } }
+    .seaPearlMessage[hidden] { display: none; }
+    .seaPearlMessage { position: fixed; inset: 0; z-index: 89; display: grid; place-items: center; padding: 22px;
+      background: #052a49cb; backdrop-filter: blur(7px); }
+    .seaPearlCard { width: min(460px, 100%); padding: 42px 30px 28px; border: 1px solid #b4f8ffb8; border-radius: 28px;
+      background: radial-gradient(circle at 50% 0%, #69ced683, transparent 65%), #103c5c; color: #f4ffff;
+      text-align: center; box-shadow: 0 25px 85px #001b32c9, 0 0 42px #a0efff57; }
+    .seaPearlCard .pearlIcon { display: block; margin-bottom: 12px; font-size: 37px; text-shadow: 0 0 18px #c9ffff; }
+    .seaPearlCard p { font: 500 clamp(29px, 5vw, 42px)/1.15 "Cormorant Garamond", Georgia, serif; }
+    .seaPearlCard button { padding: 10px 24px; border: 1px solid #a9f5ff; border-radius: 50px; background: #c5f7f5; color: #114259; cursor: pointer; }
+    #mainWebsite[data-wallpaper="underwater"] .videoCard { background: #123e5eed; color: #f4fdff; }
+    #mainWebsite[data-wallpaper="underwater"] .cardText p { color: #d3f4f8; }
+    @media (prefers-reduced-motion: reduce) {
+      .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaFish, .seaPearl { animation: none !important; }
+      .seaFish { display: none; }
+    }
     #mainWebsite:not([data-wallpaper="original"])::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: var(--scene-bg); }
     #mainWebsite:not([data-wallpaper="original"]) .welcomeSection,
     #mainWebsite:not([data-wallpaper="original"]) .contentSection,
@@ -402,6 +462,7 @@
   </div>
 
   <main id="mainWebsite">
+    <div class="underseaBackdrop" id="underseaBackdrop" aria-hidden="true"></div>
     <div class="themeTools">
       <button class="themeButton" id="themeButton" type="button" aria-label="Choose page colors" aria-expanded="false" aria-controls="themePanel">🎨</button>
       <div class="themePanel" id="themePanel" hidden>
@@ -435,6 +496,13 @@
       </nav>
     </div>
     <button class="notificationBell" id="notificationBell" type="button" aria-label="See new video">🔔</button>
+    <button class="seaPearl" id="seaPearl" type="button" aria-label="Open a secret message in the pearl"><span>OPEN ME</span></button>
+    <div class="seaPearlMessage" id="seaPearlMessage" role="dialog" aria-modal="true" aria-label="Message in a pearl" hidden>
+      <div class="seaPearlCard"><span class="pearlIcon" aria-hidden="true">✧</span>
+        <p>Even in the deepest ocean, I would always find my way back to you. ♡</p>
+        <button id="closeSeaPearl" type="button">Close the pearl</button>
+      </div>
+    </div>
     <span class="notificationHint" id="notificationHint" hidden>New video is waiting ♡</span>
     <section class="welcomeSection" id="home" data-wallpaper="original">
       <span class="originalShootingStar" aria-hidden="true"></span>
@@ -465,7 +533,7 @@
           <img src="OurWorld.png" onerror="this.onerror=null;this.src='Our World.jpg'" alt="Our World" loading="lazy">
           <span class="storyNote"><strong>Our World ♡</strong><span>Our first time playing Minecraft together</span></span>
         </button>
-        <button class="storyCard" type="button" aria-label="My Sayang. Show note" aria-pressed="false">
+        <button class="storyCard" type="button" aria-label="My Sayang. Show a love phrase">
           <img src="My Sayang.png" alt="My Sayang" loading="lazy">
           <span class="storyNote"><strong>My Sayang ♡</strong><span>Most beautiful girl in this world</span></span>
         </button>
@@ -647,6 +715,7 @@
       menuHandle.setAttribute("aria-expanded", "false");
     }));
     document.querySelectorAll(".storyCard").forEach(card => card.addEventListener("click", () => {
+      if (card.classList.contains("sayangCard")) return;
       const showing = card.classList.toggle("show-note");
       card.setAttribute("aria-pressed", String(showing));
       if (card === ourWorldCard) {
@@ -868,10 +937,10 @@
   </script>
 <style>
   .storyCard { isolation: isolate; }
-  .storyCard.loveActive .storyNote { opacity: 0 !important; }
+  .storyCard.sayangCard .storyNote { display: none !important; }
   .galleryFx { position: absolute; inset: 0; z-index: 5; overflow: hidden; pointer-events: none; }
   .loveBubble {
-    position: absolute; top: 26%; left: 50%; width: max-content; max-width: 86%;
+    position: absolute; z-index: 2; bottom: 8%; left: 50%; width: max-content; max-width: 86%;
     padding: 13px 18px; border: 1px solid #fff8; border-radius: 22px;
     background: #351b3ce8; color: #fff; font: 700 clamp(16px, 2vw, 23px)/1.25 "DM Sans", Arial, sans-serif;
     text-align: center; box-shadow: 0 8px 26px #0008, 0 0 22px #ff9ed699;
@@ -886,9 +955,10 @@
     from { opacity: 0; transform: translate(-50%, 12px) scale(.86); }
     to { opacity: 1; transform: translate(-50%, 0) scale(1); }
   }
-  .loveBubble.leaving { animation: loveBubbleOut var(--fade-time, .4s) ease-in forwards; }
+  .loveBubble.leaving { animation: loveBubbleOut var(--fade-time, .48s) ease-in forwards; }
   @keyframes loveBubbleOut {
-    to { opacity: 0; filter: blur(1px); transform: translate(-50%, -15px) scale(1.06); }
+    45% { opacity: 1; transform: translate(-50%, -3px) scale(1.12); }
+    to { opacity: 0; transform: translate(-50%, -12px) scale(.16); }
   }
   .loveFallingHeart {
     position: absolute; top: -25px; left: var(--x); color: #ffd1eb;
@@ -901,7 +971,7 @@
     100% { opacity: 0; transform: translate(var(--drift), 355px) rotate(80deg); }
   }
   .loveSmoke, .shotSmoke {
-    position: absolute; left: var(--x); top: var(--y); width: var(--size); height: var(--size);
+    position: absolute; z-index: 3; left: var(--x); top: var(--y); width: var(--size); height: var(--size);
     border-radius: 50%; background: #fff9; filter: blur(3px);
     animation: smokePuff .8s ease-out forwards;
   }
@@ -962,7 +1032,7 @@
     "Aku Sayang Kamu", "I love you more than life", "I miss you everyday",
     "I wish you were here", "I can't wait to meet you", "MUAH"
   ];
-  let lastPhrase = -1, lastClickAt = 0, lastCharacter = "", characterTimer, characterRun = 0;
+  let lastPhrase = -1, lastClickAt = 0, bubbleTimer, lastCharacter = "", characterTimer, characterRun = 0;
   sayang.classList.add("sayangCard");
   const loveLayer = document.createElement("span");
   loveLayer.className = "galleryFx";
@@ -976,24 +1046,34 @@
       dot.style.setProperty("--x", x + "%");
       dot.style.setProperty("--y", y + "%");
       dot.style.setProperty("--size", (10 + Math.random() * 15) + "px");
-      dot.style.setProperty("--dx", (Math.random() * 85 - 42) + "px");
-      dot.style.setProperty("--dy", (-20 - Math.random() * 60) + "px");
+      dot.style.setProperty("--dx", (Math.random() * (type === "loveSmoke" ? 150 : 85) - (type === "loveSmoke" ? 75 : 42)) + "px");
+      dot.style.setProperty("--dy", (type === "loveSmoke" ? Math.random() * 100 - 50 : -20 - Math.random() * 60) + "px");
       layer.append(dot);
       setTimeout(() => dot.remove(), 850);
     }
+  }
+
+  function dismissBubble(bubble, fast = false) {
+    if (!bubble || bubble.classList.contains("leaving")) return;
+    const duration = fast ? 180 : 480;
+    bubble.style.setProperty("--fade-time", duration + "ms");
+    bubble.classList.add("leaving");
+    setTimeout(() => {
+      for (let i = 0; i < (fast ? 9 : 15); i++) {
+        puff(loveLayer, 50 + (Math.random() * 38 - 19), 80 + (Math.random() * 8 - 4), "loveSmoke", 1);
+      }
+      bubble.remove();
+      if (!loveLayer.querySelector(".loveBubble:not(.leaving)")) sayang.classList.remove("loveActive");
+    }, duration);
   }
 
   sayang.addEventListener("click", () => {
     const now = performance.now();
     const fast = now - lastClickAt < 600;
     lastClickAt = now;
+    clearTimeout(bubbleTimer);
     const previous = loveLayer.querySelector(".loveBubble:not(.leaving)");
-    if (previous) {
-      previous.style.setProperty("--fade-time", fast ? ".12s" : ".4s");
-      previous.classList.add("leaving");
-      puff(loveLayer, 50, 25, "loveSmoke", fast ? 4 : 7);
-      setTimeout(() => previous.remove(), fast ? 140 : 420);
-    }
+    if (previous) dismissBubble(previous, fast);
     loveLayer.querySelectorAll(".loveFallingHeart").forEach(heart => heart.remove());
     sayang.classList.add("loveActive");
     let choice;
@@ -1005,6 +1085,7 @@
     bubble.className = "loveBubble";
     bubble.textContent = phrases[choice];
     loveLayer.append(bubble);
+    bubbleTimer = setTimeout(() => dismissBubble(bubble), 3000);
 
     for (let i = 0; i < 6; i++) {
       const heart = document.createElement("span");
@@ -1125,6 +1206,59 @@
   gun.addEventListener("click", fire);
   gun.addEventListener("keydown", event => {
     if (event.key === "Enter" || event.key === " ") { event.preventDefault(); fire(event); }
+  });
+})();
+</script>
+<script>
+(() => {
+  const site = document.getElementById("mainWebsite");
+  const sea = document.getElementById("underseaBackdrop");
+  const pearl = document.getElementById("seaPearl");
+  const message = document.getElementById("seaPearlMessage");
+  const close = document.getElementById("closeSeaPearl");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  for (let i = 0; i < 14; i++) {
+    const bubble = document.createElement("span");
+    bubble.className = "seaBubble";
+    bubble.style.setProperty("--x", (4 + (i * 29 % 93)) + "%");
+    bubble.style.setProperty("--size", (5 + i % 5 * 3) + "px");
+    bubble.style.setProperty("--duration", (12 + i % 6 * 2) + "s");
+    bubble.style.setProperty("--delay", (-i * 2.7) + "s");
+    bubble.style.setProperty("--drift", (i % 2 ? -28 : 32) + "px");
+    sea.append(bubble);
+  }
+  for (let i = 0; i < 2; i++) {
+    const fish = document.createElement("span");
+    fish.className = "seaFish";
+    fish.style.setProperty("--y", (35 + i * 38) + "%");
+    fish.style.setProperty("--scale", i ? ".7" : "1");
+    fish.style.setProperty("--duration", (32 + i * 13) + "s");
+    fish.style.setProperty("--delay", (-12 - i * 21) + "s");
+    sea.append(fish);
+  }
+
+  site.addEventListener("click", event => {
+    if (site.dataset.wallpaper !== "underwater" || reducedMotion.matches) return;
+    if (!event.target.matches(".welcomeSection, .contentSection, .storySection")) return;
+    for (let i = 0; i < 7; i++) {
+      const bubble = document.createElement("span");
+      bubble.className = "seaClickBubble";
+      bubble.style.setProperty("--x", (event.clientX + Math.random() * 48 - 24) + "px");
+      bubble.style.setProperty("--y", (event.clientY + Math.random() * 24 - 12) + "px");
+      bubble.style.setProperty("--size", (6 + Math.random() * 12) + "px");
+      bubble.style.setProperty("--drift", (Math.random() * 75 - 38) + "px");
+      sea.append(bubble);
+      setTimeout(() => bubble.remove(), 1850);
+    }
+  });
+
+  function closeMessage() { message.hidden = true; pearl.focus(); }
+  pearl.addEventListener("click", () => { message.hidden = false; close.focus(); });
+  close.addEventListener("click", closeMessage);
+  message.addEventListener("click", event => { if (event.target === message) closeMessage(); });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !message.hidden) closeMessage();
   });
 })();
 </script>

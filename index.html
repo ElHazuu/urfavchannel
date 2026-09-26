@@ -266,7 +266,32 @@
     <span class="wind two"></span>
     <span class="wind three"></span>
 
-    <div id="introText">click us ♡</div>
+   <button id="introText" type="button"
+  onclick="document.getElementById('catButton').click()">
+  ♡ Come with us ♡
+</button>
+
+<style>
+  #introText {
+    margin-top: 12px;
+    padding: 12px 24px;
+    border: 1px solid #ffc7df;
+    border-radius: 999px;
+    background: #ffdeed;
+    color: #6b3150;
+    font: bold 16px Arial, sans-serif;
+    letter-spacing: 1px;
+    opacity: 1;
+    cursor: pointer;
+    box-shadow: 0 5px 20px #ff9bc066;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.4s;
+  }
+
+  #introText:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 26px #ff9bc099;
+  }
+</style>
     <button id="musicButton" type="button">♫ Play music ♡</button>
   </div>
 

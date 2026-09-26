@@ -3,10 +3,141 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our Website</title>
+  <title>Our Place</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0b0b;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* INTRO SCREEN */
+    #intro {
+      position: fixed;
+      inset: 0;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 1s ease;
+    }
+
+    #cat {
+      width: min(420px, 80vw);
+      cursor: pointer;
+      animation: float 2.2s ease-in-out infinite;
+      transition: transform 0.8s ease, opacity 0.8s ease;
+    }
+
+    #cat:hover {
+      transform: scale(1.06);
+    }
+
+    #introText {
+      margin-top: 20px;
+      font-size: 18px;
+      letter-spacing: 2px;
+      opacity: 0.7;
+      transition: opacity 0.5s ease;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    #cat.disappear {
+      animation: none;
+      transform: scale(0.2) rotate(15deg);
+      opacity: 0;
+    }
+
+    /* MAIN WEBSITE */
+    #mainWebsite {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.5s ease, transform 1.5s ease;
+      padding: 30px;
+    }
+
+    #mainWebsite.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1 {
+      font-size: clamp(40px, 8vw, 90px);
+      margin: 0 0 10px;
+    }
+
+    p {
+      font-size: 18px;
+      opacity: 0.75;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Welcome ❤️</h1>
-  <p>This is our website.</p>
+
+  <!-- INTRO -->
+  <div id="intro">
+    <img
+      src="Cat Waving.png"
+      id="cat"
+      alt="Waving cat"
+    >
+
+    <div id="introText">
+      click me ♡
+    </div>
+  </div>
+
+  <!-- MAIN WEBSITE -->
+  <main id="mainWebsite">
+    <h1>Welcome ❤️</h1>
+    <p>A little place made just for you.</p>
+  </main>
+
+  <script>
+    const cat = document.getElementById("cat");
+    const intro = document.getElementById("intro");
+    const mainWebsite = document.getElementById("mainWebsite");
+    const introText = document.getElementById("introText");
+
+    cat.addEventListener("click", function () {
+      introText.style.opacity = "0";
+      cat.classList.add("disappear");
+
+      setTimeout(function () {
+        intro.style.opacity = "0";
+        mainWebsite.classList.add("show");
+      }, 650);
+
+      setTimeout(function () {
+        intro.style.display = "none";
+      }, 1600);
+    });
+  </script>
+
 </body>
 </html>

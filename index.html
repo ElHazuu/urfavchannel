@@ -852,5 +852,414 @@
       setTimeout(() => wave.remove(), 600);
     }, true);
   </script>
+  <style>
+  .storyCard { isolation: isolate; }
+  .storyCard.loveActive .storyNote { opacity: 0 !important; }
+
+  .galleryFx {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .loveBubble {
+    position: absolute;
+    top: 26%;
+    left: 50%;
+    width: max-content;
+    max-width: 86%;
+    padding: 13px 18px;
+    border: 1px solid #fff8;
+    border-radius: 22px;
+    background: #351b3ce8;
+    color: #fff;
+    font: 700 clamp(16px, 2vw, 23px)/1.25 "DM Sans", Arial, sans-serif;
+    text-align: center;
+    box-shadow: 0 8px 26px #0008, 0 0 22px #ff9ed699;
+    transform: translate(-50%, 15px) scale(.75);
+    opacity: 0;
+    animation: loveBubbleFloat 2.2s ease-out forwards;
+  }
+
+  .loveBubble::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 48%;
+    width: 14px;
+    height: 14px;
+    transform: rotate(45deg);
+    background: #351b3c;
+  }
+
+  @keyframes loveBubbleFloat {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, 15px) scale(.75);
+    }
+    18%, 72% {
+      opacity: 1;
+      transform: translate(-50%, -5px) scale(1);
+    }
+    100% {
+      opacity: 0;
+      filter: blur(7px);
+      transform: translate(-50%, -25px) scale(1.13);
+    }
+  }
+
+  .loveFallingHeart {
+    position: absolute;
+    top: -25px;
+    left: var(--x);
+    color: #ffd1eb;
+    font-size: var(--size);
+    text-shadow: 0 0 11px #ff85bd;
+    animation: heartFall var(--duration) ease-in forwards;
+  }
+
+  @keyframes heartFall {
+    0% {
+      opacity: 0;
+      transform: translateY(0) rotate(-20deg);
+    }
+    15% { opacity: 1; }
+    100% {
+      opacity: 0;
+      transform: translate(var(--drift), 355px) rotate(80deg);
+    }
+  }
+
+  .loveSmoke, .shotSmoke {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: #fff9;
+    filter: blur(3px);
+    animation: smokePuff .8s ease-out forwards;
+  }
+
+  @keyframes smokePuff {
+    from {
+      opacity: .75;
+      transform: translate(-50%, -50%) scale(.2);
+    }
+    to {
+      opacity: 0;
+      transform:
+        translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+        scale(2.3);
+    }
+  }
+
+  .storyCard .reactionCharacter {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 8px 13px #0009);
+  }
+
+  .storyCard .reactionCharacter[hidden] {
+    display: none !important;
+  }
+
+  .storyCard.playingReacting > img:first-child {
+    opacity: 0;
+  }
+
+  .storyCard .reactionCharacter.angry {
+    animation: angryBob 1.15s ease-in-out infinite alternate;
+  }
+
+  @keyframes angryBob {
+    to { transform: translateY(-5px) rotate(-.8deg); }
+  }
+
+  .storyCard .reactionCharacter.recoil {
+    animation: gunRecoil .24s ease-out;
+  }
+
+  @keyframes gunRecoil {
+    50% { transform: translate(5px, 3px) rotate(1deg); }
+  }
+
+  .storyCard .gunHotspot {
+    position: absolute;
+    z-index: 6;
+    display: none;
+    width: 52px;
+    height: 52px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    cursor: crosshair;
+  }
+
+  .storyCard .gunHotspot:focus-visible {
+    outline: 2px solid #ffe68b;
+  }
+
+  .storyCard .gunHotspot.active {
+    display: block;
+  }
+
+  .gunFlash {
+    position: absolute;
+    z-index: 7;
+    left: var(--x);
+    top: var(--y);
+    width: 65px;
+    height: 65px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle,
+      #fff 0 9%,
+      #fff6a8 15%,
+      #ffc82d 32%,
+      transparent 70%
+    );
+    filter: drop-shadow(0 0 15px #ffbd25);
+    animation: flashBang .23s ease-out forwards;
+  }
+
+  @keyframes flashBang {
+    from { opacity: 1; scale: .5; }
+    to { opacity: 0; scale: 1.8; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reactionCharacter.angry { animation: none !important; }
+    .loveBubble {
+      animation-duration: .01ms;
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+</style>
+
+<script>
+(() => {
+  const cards = document.querySelectorAll(
+    "#story .storyGallery .storyCard"
+  );
+  const sayang = cards[1];
+  const playing = cards[2];
+
+  if (!sayang || !playing) return;
+
+  const phrases = [
+    "Aku Sayang Kamu",
+    "I love you more than life",
+    "I miss you everyday",
+    "I wish you were here",
+    "I can't wait to meet you",
+    "MUAH"
+  ];
+
+  let lastPhrase = -1;
+  let loveRun = 0;
+  let lastCharacter = "";
+
+  sayang.classList.add("sayangCard");
+
+  const loveLayer = document.createElement("span");
+  loveLayer.className = "galleryFx";
+  loveLayer.setAttribute("aria-live", "polite");
+  sayang.append(loveLayer);
+
+  function puff(layer, x, y, type, count) {
+    for (let i = 0; i < count; i++) {
+      const dot = document.createElement("span");
+      dot.className = type;
+      dot.style.setProperty("--x", x + "%");
+      dot.style.setProperty("--y", y + "%");
+      dot.style.setProperty(
+        "--size",
+        (10 + Math.random() * 15) + "px"
+      );
+      dot.style.setProperty(
+        "--dx",
+        (Math.random() * 85 - 42) + "px"
+      );
+      dot.style.setProperty(
+        "--dy",
+        (-20 - Math.random() * 60) + "px"
+      );
+      layer.append(dot);
+      setTimeout(() => dot.remove(), 850);
+    }
+  }
+
+  sayang.addEventListener("click", () => {
+    const run = ++loveRun;
+    loveLayer.replaceChildren();
+    sayang.classList.add("loveActive");
+
+    let choice;
+    do {
+      choice = Math.floor(Math.random() * phrases.length);
+    } while (choice === lastPhrase);
+    lastPhrase = choice;
+
+    const bubble = document.createElement("span");
+    bubble.className = "loveBubble";
+    bubble.textContent = phrases[choice];
+    loveLayer.append(bubble);
+
+    for (let i = 0; i < 6; i++) {
+      const heart = document.createElement("span");
+      heart.className = "loveFallingHeart";
+      heart.textContent = i % 2 ? "♥" : "♡";
+      heart.style.setProperty(
+        "--x",
+        (12 + Math.random() * 76) + "%"
+      );
+      heart.style.setProperty(
+        "--size",
+        (17 + Math.random() * 14) + "px"
+      );
+      heart.style.setProperty(
+        "--duration",
+        (2.4 + Math.random()) + "s"
+      );
+      heart.style.setProperty(
+        "--drift",
+        (Math.random() * 80 - 40) + "px"
+      );
+      loveLayer.append(heart);
+    }
+
+    setTimeout(() => {
+      if (run === loveRun) {
+        puff(loveLayer, 50, 24, "loveSmoke", 8);
+      }
+    }, 1900);
+
+    setTimeout(() => {
+      if (run === loveRun) {
+        loveLayer.replaceChildren();
+        sayang.classList.remove("loveActive");
+      }
+    }, 3600);
+  });
+
+  const character = document.createElement("img");
+  character.className = "reactionCharacter";
+  character.alt = "";
+  character.hidden = true;
+
+  const gun = document.createElement("span");
+  gun.className = "gunHotspot";
+  gun.setAttribute("role", "button");
+  gun.setAttribute("tabindex", "0");
+  gun.setAttribute("aria-label", "Fire the prop gun");
+
+  const shotLayer = document.createElement("span");
+  shotLayer.className = "galleryFx";
+  playing.append(character, shotLayer, gun);
+
+  function positionGun() {
+    if (character.hidden || lastCharacter !== "shooting") return;
+
+    const boxWidth = character.clientWidth - 24;
+    const boxHeight = character.clientHeight - 24;
+    const imageRatio =
+      character.naturalWidth / character.naturalHeight || .75;
+    const height = Math.min(boxHeight, boxWidth / imageRatio);
+    const width = height * imageRatio;
+
+    const left =
+      (character.clientWidth - width) / 2 + width * .207;
+    const top =
+      (character.clientHeight - height) / 2 + height * .107;
+
+    gun.style.left = left + "px";
+    gun.style.top = top + "px";
+  }
+
+  playing.addEventListener("click", event => {
+    if (event.target === gun) return;
+
+    shotLayer.replaceChildren();
+
+    const next =
+      Math.random() < .5 ? "angry" : "shooting";
+
+    lastCharacter =
+      next === lastCharacter
+        ? (next === "angry" ? "shooting" : "angry")
+        : next;
+
+    character.hidden = false;
+    playing.classList.add("playingReacting");
+    character.src =
+      lastCharacter === "angry"
+        ? "Angry Girl.png"
+        : "Shooting Girl.png";
+    character.className =
+      "reactionCharacter " + lastCharacter;
+
+    gun.classList.toggle(
+      "active",
+      lastCharacter === "shooting"
+    );
+
+    if (lastCharacter === "shooting") {
+      character.onload = positionGun;
+      requestAnimationFrame(positionGun);
+    }
+  });
+
+  window.addEventListener("resize", positionGun);
+
+  function fire(event) {
+    event.stopPropagation();
+    if (lastCharacter !== "shooting") return;
+
+    const x =
+      parseFloat(gun.style.left) / playing.clientWidth * 100;
+    const y =
+      parseFloat(gun.style.top) / playing.clientHeight * 100;
+
+    const flash = document.createElement("span");
+    flash.className = "gunFlash";
+    flash.style.setProperty("--x", x + "%");
+    flash.style.setProperty("--y", y + "%");
+    shotLayer.append(flash);
+
+    setTimeout(() => flash.remove(), 260);
+    setTimeout(() => {
+      puff(shotLayer, x, y, "shotSmoke", 7);
+    }, 90);
+
+    character.classList.remove("recoil");
+    void character.offsetWidth;
+    character.classList.add("recoil");
+
+    setTimeout(() => {
+      character.classList.remove("recoil");
+    }, 260);
+  }
+
+  gun.addEventListener("click", fire);
+
+  gun.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      fire(event);
+    }
+  });
+})();
+</script>
 </body>
 </html>

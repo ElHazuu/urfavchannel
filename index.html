@@ -58,23 +58,17 @@
     @keyframes footsteps { from { transform: rotate(-2deg); } to { transform: rotate(2deg) translateY(-7px); } }
     @keyframes walkAway { 75% { opacity: 1; } to { transform: translateY(-100px) scale(.12); opacity: 0; } }
     .musicNote { position: absolute; font-size: 35px; opacity: 0; pointer-events: none; }
-    .musicNote.left { left: 8%; top: 25%; }
-    .musicNote.right { right: 8%; top: 35%; animation-delay: .8s !important; }
+    .musicNote.left { left: 8%; top: 25%; } .musicNote.right { right: 8%; top: 35%; animation-delay: .8s !important; }
     #intro.dancing .musicNote { animation: noteRise 1.6s ease-out infinite; }
     @keyframes noteRise { 0% { opacity: 0; transform: translateY(20px); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(-85px); } }
     .heart { position: absolute; z-index: 5; left: 50%; top: 38%; opacity: 0; pointer-events: none; font-size: 38px; }
     #intro.loving .heart { animation: rise 1.6s ease-out forwards; }
-    .heart.one { --side: -90px; }
-    .heart.two { --side: 10px; animation-delay: .18s !important; }
-    .heart.three { --side: 100px; animation-delay: .35s !important; }
+    .heart.one { --side: -90px; } .heart.two { --side: 10px; animation-delay: .18s !important; } .heart.three { --side: 100px; animation-delay: .35s !important; }
     @keyframes rise { 0% { opacity: 0; transform: translate(-50%, 10px) scale(.4); } 25% { opacity: 1; } 100% { opacity: 0; transform: translate(calc(-50% + var(--side)), -160px) scale(1.3); } }
     .wind { position: absolute; left: -180px; width: 120px; height: 3px; border-radius: 100%; background: #ffffff80; opacity: 0; pointer-events: none; }
-    .wind.one { top: 38%; }
-    .wind.two { top: 55%; width: 85px; }
-    .wind.three { top: 68%; width: 150px; }
+    .wind.one { top: 38%; } .wind.two { top: 55%; width: 85px; } .wind.three { top: 68%; width: 150px; }
     #intro.breezy .wind { animation: windBlow 1.15s linear infinite; }
-    #intro.breezy .wind.two { animation-delay: .3s; }
-    #intro.breezy .wind.three { animation-delay: .65s; }
+    #intro.breezy .wind.two { animation-delay: .3s; } #intro.breezy .wind.three { animation-delay: .65s; }
     @keyframes windBlow { 20%, 80% { opacity: .5; } 100% { left: 110%; opacity: 0; } }
     #introText, #musicButton {
       position: relative; z-index: 2; border-radius: 999px; font-weight: bold; cursor: pointer;
@@ -150,7 +144,7 @@
 
     /* Main website */
     #mainWebsite { min-height: 100vh; opacity: 0; transform: translateY(20px); transition: opacity 1.5s ease, transform 1.5s ease; background: #140e1d; color: #fbf3f8; font-family: "DM Sans", Arial, sans-serif; }
-    #mainWebsite.show { opacity: 1; transform: translateY(0); }
+    #mainWebsite.show { opacity: 1; transform: none; }
     .menuZone { position: fixed; inset: 0 0 auto; z-index: 40; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
     .menuHandle { pointer-events: auto; display: flex; align-items: center; gap: 25px; padding: 12px 18px; border: 1px solid #f0bdd16b; border-top: 0; border-radius: 0 0 20px 20px; background: #201520ee; color: #fff3f8; font-size: 11px; font-weight: 700; letter-spacing: .16em; cursor: pointer; box-shadow: 0 8px 26px #08050b88; backdrop-filter: blur(18px); }
     .menuHandle span { color: #f4aeca; letter-spacing: .06em; }
@@ -180,7 +174,9 @@
     .welcomeGlow { position: absolute; width: 330px; height: 330px; right: 8%; top: 24%; border-radius: 50%; background: #f9a5d32e; filter: blur(85px); pointer-events: none; }
     .welcomeOrbit { position: absolute; right: 8%; top: 52%; width: min(31vw, 420px); aspect-ratio: 1; transform: translateY(-50%); border: 1px solid #ffc3e759; border-radius: 50%; box-shadow: 0 0 65px #ff9ed72a, inset 0 0 70px #ff8ac32b; pointer-events: none; animation: orbitFloat 5s ease-in-out infinite alternate; }
     .welcomeOrbit::before { content: "♡"; position: absolute; inset: 0; display: grid; place-items: center; color: #ffd2e8; font-size: clamp(120px, 17vw, 240px); font-family: "Cormorant Garamond", Georgia, serif; text-shadow: 0 0 45px #ff7cbd99; }
-    .welcomeOrbit::after { content: "✦"; position: absolute; top: 8%; right: 7%; color: #ffe1f1; font-size: 35px; text-shadow: 0 0 16px #ff7cbd; }
+    .orbitStar { position: absolute; inset: 0; animation: starOrbit 9s linear infinite; }
+    .orbitStar::before { content: "✦"; position: absolute; left: 50%; top: -21px; transform: translateX(-50%); color: #ffe1f1; font-size: 35px; text-shadow: 0 0 16px #ff7cbd; }
+    @keyframes starOrbit { to { transform: rotate(360deg); } }
     @keyframes orbitFloat { to { transform: translateY(calc(-50% - 15px)) rotate(4deg); } }
     .eyebrow { position: relative; z-index: 1; margin: 0 0 18px; color: #edb6d0; font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
     .welcomeSection h1 { position: relative; z-index: 1; max-width: 870px; margin: 0 0 24px; font: 500 clamp(70px, 10vw, 148px)/.88 "Cormorant Garamond", Georgia, serif; letter-spacing: -.045em; text-shadow: 0 8px 35px #0006; }
@@ -202,7 +198,15 @@
     .storyCard:hover .storyNote, .storyCard:focus-visible .storyNote, .storyCard.show-note .storyNote { opacity: 1; transform: translateY(0); }
     .storyNote strong { display: block; margin-bottom: 5px; font: 600 29px "Cormorant Garamond", Georgia, serif; }
     .storyNote span { display: block; font-size: 13px; line-height: 1.5; }
-
+    .galleryChaseLane { position: relative; height: 132px; margin: 38px calc(-1 * max(8vw, 25px)) -80px; overflow: hidden; pointer-events: none; }
+    .galleryChase { position: absolute; left: -330px; bottom: 5px; display: flex; align-items: end; gap: 13px; width: 280px; animation: galleryRun 18s linear infinite; }
+    .galleryChase img { display: block; width: 205px; height: 115px; object-fit: contain; filter: drop-shadow(0 5px 8px #0006); animation: galleryCatHop .55s ease-in-out infinite alternate; }
+    .chicken { display: block; width: 68px; height: 74px; flex: none; filter: drop-shadow(0 6px 5px #0005); animation: chickenHop .5s ease-in-out infinite alternate; }
+    .chicken .wing { transform-origin: 27px 35px; animation: chickenWing .45s ease-in-out infinite alternate; }
+    @keyframes galleryRun { to { left: calc(100% + 30px); } }
+    @keyframes galleryCatHop { to { transform: translateY(-7px) rotate(-2deg); } }
+    @keyframes chickenHop { to { transform: translateY(-10px) rotate(3deg); } }
+    @keyframes chickenWing { to { transform: rotate(-20deg); } }
     .contentSection { padding: 110px max(8vw, 25px) 130px; scroll-margin-top: 70px; background: radial-gradient(circle at 80% 5%, #70355c3b, transparent 32%), #17101e; }
     .sectionHeading { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 30px; margin-bottom: 40px; padding-bottom: 27px; border-bottom: 1px solid #f6c6dd3d; }
     .sectionHeading .eyebrow { margin-bottom: 10px; }
@@ -222,6 +226,37 @@
     .cardText p { margin: 0; color: #d8c1d1; font-size: 13px; line-height: 1.6; }
     footer { padding: 30px; border-top: 1px solid #ffc6e122; color: #d9afc6; font-size: 11px; letter-spacing: .16em; text-align: center; text-transform: uppercase; }
 
+    /* Main page color controls */
+    #mainWebsite { --theme-bg: #140e1d; --theme-surface: #251a2b; --theme-text: #fbf3f8; --theme-muted: #dbc4d3; --theme-line: #f6c6dd3d; --theme-accent: #d987b6; background: var(--theme-bg); color: var(--theme-text); }
+    #mainWebsite[data-theme="light"] { --theme-bg: #fff9f8; --theme-surface: #fff; --theme-text: #342638; --theme-muted: #6a5967; --theme-line: #896d803d; }
+    #mainWebsite .welcomeSection { background: radial-gradient(circle at 80% 48%, color-mix(in srgb, var(--theme-accent) 27%, transparent), transparent 35%), linear-gradient(145deg, var(--theme-bg), color-mix(in srgb, var(--theme-accent) 12%, var(--theme-bg))); }
+    #mainWebsite .storySection { background: radial-gradient(circle at 18% 10%, color-mix(in srgb, var(--theme-accent) 24%, transparent), transparent 37%), var(--theme-bg); }
+    #mainWebsite .contentSection { background: radial-gradient(circle at 82% 8%, color-mix(in srgb, var(--theme-accent) 19%, transparent), transparent 34%), var(--theme-bg); }
+    #mainWebsite .heroLine, #mainWebsite .eyebrow, #mainWebsite .scrollNote, #mainWebsite .heroSubtitle, #mainWebsite .storyHeading p:last-child, #mainWebsite .cardText p, #mainWebsite .menuLinks small, #mainWebsite .menuLinks a span:last-child { color: var(--theme-muted); }
+    #mainWebsite .welcomeOrbit { border-color: color-mix(in srgb, var(--theme-accent) 55%, transparent); box-shadow: 0 0 65px color-mix(in srgb, var(--theme-accent) 18%, transparent), inset 0 0 70px color-mix(in srgb, var(--theme-accent) 18%, transparent); }
+    #mainWebsite .welcomeOrbit::before, #mainWebsite .orbitStar::before, #mainWebsite .welcomeSection h1 span { color: var(--theme-accent); }
+    #mainWebsite .menuHandle, #mainWebsite .siteMenu, #mainWebsite .notificationBell, #mainWebsite .notificationHint, #mainWebsite .themePanel { background: var(--theme-surface); color: var(--theme-text); border-color: var(--theme-line); }
+    #mainWebsite .menuLinks a { color: var(--theme-text); }
+    #mainWebsite .menuLinks a:hover, #mainWebsite .menuLinks a:focus-visible { background: color-mix(in srgb, var(--theme-accent) 22%, transparent); }
+    #mainWebsite .menuHandle span, #mainWebsite .menuPanelHead small, #mainWebsite .cardText span { color: var(--theme-muted); }
+    #mainWebsite .menuPanelHead, #mainWebsite .sectionHeading, #mainWebsite footer { border-color: var(--theme-line); }
+    #mainWebsite .videoCard { background: var(--theme-surface); color: var(--theme-text); border-color: var(--theme-line); }
+    #mainWebsite .videoPreview, #mainWebsite .storyCard { background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--theme-accent) 38%, var(--theme-surface)), var(--theme-surface) 75%); border-color: var(--theme-line); }
+    #mainWebsite .storyCard { color: #fff4fa; }
+    #mainWebsite .notificationHint, #mainWebsite footer { color: var(--theme-muted); }
+    #mainWebsite #backToIntro { background: var(--theme-accent); color: #1b1020; border-color: transparent; }
+    .themeTools { position: fixed; z-index: 46; top: 13px; left: 18px; font-family: "DM Sans", Arial, sans-serif; }
+    .themeButton { width: 44px; height: 44px; border: 1px solid var(--theme-line); border-radius: 50%; background: var(--theme-surface); color: var(--theme-text); font-size: 21px; cursor: pointer; box-shadow: 0 6px 22px #0004; }
+    .themePanel { position: absolute; top: 52px; left: 0; width: min(275px, calc(100vw - 36px)); padding: 17px; border: 1px solid var(--theme-line); border-radius: 18px; box-shadow: 0 18px 45px #0006; }
+    .themePanel[hidden] { display: none; }
+    .themePanel p { margin: 0 0 14px; font-size: 13px; font-weight: 700; }
+    .themeMode { width: 100%; padding: 10px; border: 1px solid var(--theme-line); border-radius: 10px; background: color-mix(in srgb, var(--theme-accent) 22%, var(--theme-surface)); color: var(--theme-text); cursor: pointer; }
+    .themePanel label { display: block; margin: 15px 0 6px; font-size: 12px; color: var(--theme-muted); }
+    .colorPicker { display: block; width: 100%; height: 38px; padding: 2px; border: 1px solid var(--theme-line); border-radius: 9px; background: var(--theme-surface); cursor: pointer; }
+    .swatches { display: flex; gap: 9px; margin-top: 13px; }
+    .swatches button { width: 29px; height: 29px; padding: 0; border: 2px solid #fff; border-radius: 50%; background: var(--swatch); cursor: pointer; box-shadow: 0 0 0 1px #756773; }
+    .swatches button:hover, .swatches button:focus-visible { transform: scale(1.15); }
+
     @media (max-width: 700px) {
       .welcomeSection { padding-top: 140px; }
       .welcomeSection h1 { font-size: clamp(67px, 16vw, 110px); }
@@ -232,7 +267,8 @@
       .menuPanelHead { padding-right: 48px; }
     }
     @media (prefers-reduced-motion: reduce) {
-      #mainWebsite .welcomeOrbit, #mainWebsite .notificationBell.new { animation: none; }
+      #mainWebsite .welcomeOrbit, #mainWebsite .orbitStar, #mainWebsite .notificationBell.new, #mainWebsite .galleryChase, #mainWebsite .galleryChase img, #mainWebsite .chicken, #mainWebsite .chicken .wing { animation: none; }
+      #mainWebsite .galleryChase { left: 20px; }
       #mainWebsite .videoCard { transition: none; }
     }
   </style>
@@ -253,6 +289,22 @@
   </div>
 
   <main id="mainWebsite">
+    <div class="themeTools">
+      <button class="themeButton" id="themeButton" type="button" aria-label="Choose page colors" aria-expanded="false" aria-controls="themePanel">🎨</button>
+      <div class="themePanel" id="themePanel" hidden>
+        <p>Make this page yours ♡</p>
+        <button class="themeMode" id="themeMode" type="button">☀ Switch to light mode</button>
+        <label for="colorPicker">Choose any color</label>
+        <input class="colorPicker" id="colorPicker" type="color" value="#d987b6">
+        <div class="swatches" aria-label="Suggested colors">
+          <button type="button" data-color="#d987b6" style="--swatch:#d987b6" aria-label="Pink"></button>
+          <button type="button" data-color="#a78be2" style="--swatch:#a78be2" aria-label="Purple"></button>
+          <button type="button" data-color="#62b8c8" style="--swatch:#62b8c8" aria-label="Blue"></button>
+          <button type="button" data-color="#e7ac62" style="--swatch:#e7ac62" aria-label="Gold"></button>
+          <button type="button" data-color="#87ba86" style="--swatch:#87ba86" aria-label="Green"></button>
+        </div>
+      </div>
+    </div>
     <div class="menuZone" id="menuZone">
       <button class="menuHandle" id="menuHandle" type="button" aria-expanded="false" aria-controls="siteMenu">✦ OUR SAYANG <span>MENU ↓</span></button>
       <nav class="siteMenu" id="siteMenu" aria-label="Main menu">
@@ -267,29 +319,23 @@
     </div>
     <button class="notificationBell" id="notificationBell" type="button" aria-label="See new video">🔔</button>
     <span class="notificationHint" id="notificationHint" hidden>New video is waiting ♡</span>
-
     <section class="welcomeSection" id="home">
-      <div class="welcomeGlow"></div><div class="welcomeOrbit" aria-hidden="true"></div>
+      <div class="welcomeGlow"></div><div class="welcomeOrbit" aria-hidden="true"><span class="orbitStar"></span></div>
       <div class="heroLine">A PLACE FOR OUR STORY</div>
       <p class="eyebrow">✦ A little world for us ✦</p>
       <h1>Welcome to<br><span>Our World.</span></h1>
       <p class="heroSubtitle">A place for you to watch my videos and, whenever you visit, remember that I love you more.</p>
       <a class="scrollNote" href="#videos">SCROLL TO SEE MY LATEST VIDEOS ↓</a>
     </section>
-
     <section class="contentSection" id="videos">
       <div class="sectionHeading">
         <div><p class="eyebrow">01 / Videos</p><h2>Videos</h2></div>
       </div>
       <div class="videoGrid">
-        <div class="videoCard featured">
-          <iframe class="videoEmbed" src="https://www.youtube-nocookie.com/embed/NKo4wzEY5I8" title="Our first video" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-          <div class="cardText"><span>VIDEO 01</span><h3>Our first video</h3><p>Press play to watch it here ♡</p></div>
-        </div>
+        <div class="videoCard featured"><iframe class="videoEmbed" src="https://www.youtube-nocookie.com/embed/NKo4wzEY5I8" title="Our first video" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><div class="cardText"><span>VIDEO 01</span><h3>Our first video</h3><p>Press play to watch it here ♡</p></div></div>
         <div class="videoCard comingSoon"><div class="videoPreview">✦</div><div class="cardText"><span>COMING SOON</span></div></div>
       </div>
     </section>
-
     <section class="storySection" id="story">
       <div class="storyHeading">
         <p class="eyebrow">✦ A LITTLE GALLERY ✦</p>
@@ -310,8 +356,27 @@
           <span class="storyNote"><strong>Playing together ♡</strong><span>First time playing COD with my girl</span></span>
         </button>
       </div>
+      <div class="galleryChaseLane" aria-hidden="true">
+        <div class="galleryChase">
+          <img id="galleryRunnerPicture" src="Baby.png" alt="">
+          <svg class="chicken" viewBox="0 0 64 64" shape-rendering="crispEdges" aria-hidden="true">
+            <rect x="18" y="6" width="28" height="26" fill="#fff9ea"/>
+            <rect x="14" y="26" width="40" height="25" fill="#fff9ea"/>
+            <rect x="10" y="31" width="8" height="15" fill="#ded8cc"/>
+            <rect x="25" y="15" width="5" height="6" fill="#272431"/>
+            <rect x="39" y="15" width="5" height="6" fill="#272431"/>
+            <rect x="29" y="22" width="8" height="7" fill="#e9ae43"/>
+            <rect x="31" y="29" width="5" height="7" fill="#d64c52"/>
+            <rect x="27" y="2" width="10" height="5" fill="#d64c52"/>
+            <rect x="22" y="50" width="5" height="8" fill="#dda540"/>
+            <rect x="42" y="50" width="5" height="8" fill="#dda540"/>
+            <rect x="18" y="58" width="12" height="4" fill="#dda540"/>
+            <rect x="38" y="58" width="12" height="4" fill="#dda540"/>
+            <g class="wing"><rect x="14" y="34" width="14" height="12" fill="#e8e2d8"/></g>
+          </svg>
+        </div>
+      </div>
     </section>
-
     <footer>Aku Sayang Kamu Cantik ♡</footer>
   </main>
 
@@ -330,7 +395,12 @@
     const menuHandle = document.getElementById("menuHandle");
     const notificationBell = document.getElementById("notificationBell");
     const notificationHint = document.getElementById("notificationHint");
+    const themeButton = document.getElementById("themeButton");
+    const themePanel = document.getElementById("themePanel");
+    const themeMode = document.getElementById("themeMode");
+    const colorPicker = document.getElementById("colorPicker");
     const runnerPicture = document.querySelector("#littleRunners img");
+    const galleryRunnerPicture = document.getElementById("galleryRunnerPicture");
     const carPicture = document.querySelector("#driveScene .car");
     const idleFrames = ["Tail.png", "Tail 2.png", "Tail 3.png"];
     const danceFrames = ["Dance 1.png", "Dance 2.png", "Dance 3.png", "Dance 4.png"];
@@ -346,6 +416,39 @@
     let danceTimer = null;
     let soundContext = null;
     let beatContext = null, analyser = null, frequencies = null, beatFrame = null, average = 0, pulse = 0;
+    let galleryRunFrame = 0;
+
+    function setTheme(theme) {
+      const chosen = theme === "light" ? "light" : "dark";
+      mainWebsite.dataset.theme = chosen;
+      themeMode.textContent = chosen === "light" ? "☾ Switch to dark mode" : "☀ Switch to light mode";
+      try { localStorage.setItem("ourSayangTheme", chosen); } catch (error) {}
+    }
+    function setColor(color) {
+      if (!/^#[0-9a-fA-F]{6}$/.test(color)) return;
+      mainWebsite.style.setProperty("--theme-accent", color);
+      colorPicker.value = color;
+      try { localStorage.setItem("ourSayangColor", color); } catch (error) {}
+    }
+    let savedTheme = "dark", savedColor = "#d987b6";
+    try {
+      savedTheme = localStorage.getItem("ourSayangTheme") || savedTheme;
+      savedColor = localStorage.getItem("ourSayangColor") || savedColor;
+    } catch (error) {}
+    setTheme(savedTheme);
+    setColor(savedColor);
+    themeButton.addEventListener("click", () => {
+      themePanel.hidden = !themePanel.hidden;
+      themeButton.setAttribute("aria-expanded", String(!themePanel.hidden));
+    });
+    document.addEventListener("click", event => {
+      if (event.target.closest(".themeTools")) return;
+      themePanel.hidden = true;
+      themeButton.setAttribute("aria-expanded", "false");
+    });
+    themeMode.addEventListener("click", () => setTheme(mainWebsite.dataset.theme === "light" ? "dark" : "light"));
+    colorPicker.addEventListener("input", () => setColor(colorPicker.value));
+    document.querySelectorAll("[data-color]").forEach(button => button.addEventListener("click", () => setColor(button.dataset.color)));
 
     const latestVideo = [...document.querySelectorAll("#videos .videoEmbed")].map(video => video.getAttribute("src")).join("|");
     let seenVideo = "";
@@ -381,6 +484,11 @@
     setInterval(() => {
       runFrame = (runFrame + 1) % runningFrames.length;
       runnerPicture.src = runningFrames[runFrame];
+    }, 180);
+    setInterval(() => {
+      if (screen !== "website") return;
+      galleryRunFrame = (galleryRunFrame + 1) % runningFrames.length;
+      galleryRunnerPicture.src = runningFrames[galleryRunFrame];
     }, 180);
     setInterval(() => {
       if (screen !== "intro" || mode !== "drive" || introMusic.paused) return;
@@ -483,12 +591,7 @@
       oscillator.connect(gain); gain.connect(soundContext.destination);
       oscillator.start(when); oscillator.stop(when + duration);
     }
-    function heartSound() {
-      if (!soundContext) return;
-      const now = soundContext.currentTime;
-      note(660, now, .25, .09);
-      note(880, now + .12, .4, .07);
-    }
+    function heartSound() { if (!soundContext) return; const now = soundContext.currentTime; note(660, now, .25, .09); note(880, now + .12, .4, .07); }
     function footstep() { if (soundContext) note(110, soundContext.currentTime, .09, .045); }
     function windSound() {
       if (!soundContext) return;
@@ -502,32 +605,20 @@
       gain.gain.setValueAtTime(.001, now);
       gain.gain.linearRampToValueAtTime(.035, now + .4);
       gain.gain.linearRampToValueAtTime(.001, now + 1.5);
-      source.connect(filter); filter.connect(gain); gain.connect(beatContext.destination); source.start(now);
+      source.connect(filter); filter.connect(gain); gain.connect(soundContext.destination); source.start(now);
     }
-    function later(ms, id, action) {
-      setTimeout(() => {
-        if (transitionId === id && screen === "entering") action();
-      }, ms);
-    }
+    function later(ms, id, action) { setTimeout(() => { if (transitionId === id && screen === "entering") action(); }, ms); }
     function enterWebsite() {
       if (screen !== "intro") return;
       screen = "entering";
       const id = ++transitionId;
-      introMusic.pause();
-      introMusic.currentTime = 0;
+      introMusic.pause(); introMusic.currentTime = 0;
       stopDance();
       intro.classList.remove("drive", "playing");
-      musicButton.style.opacity = "0";
-      musicButton.disabled = true;
-      songButton.style.opacity = "0";
-      songButton.disabled = true;
-      introText.style.opacity = "0";
-      introText.disabled = true;
-      try {
-        soundContext = soundContext || new (window.AudioContext || window.webkitAudioContext)();
-        soundContext.resume();
-        heartSound();
-      } catch (error) { soundContext = null; }
+      musicButton.style.opacity = "0"; musicButton.disabled = true;
+      songButton.style.opacity = "0"; songButton.disabled = true;
+      introText.style.opacity = "0"; introText.disabled = true;
+      try { soundContext = soundContext || new (window.AudioContext || window.webkitAudioContext)(); soundContext.resume(); heartSound(); } catch (error) { soundContext = null; }
       intro.classList.add("loving");
       later(1100, id, () => {
         catPicture.style.opacity = "0";
@@ -535,38 +626,26 @@
           catPicture.src = "Walking Away.png";
           catPicture.alt = "Two cats walking away together";
           catPicture.style.opacity = "1";
-          intro.classList.add("breezy");
-          catButton.classList.add("walking");
-          windSound();
-          footstep();
+          intro.classList.add("breezy"); catButton.classList.add("walking");
+          windSound(); footstep();
           [350, 700, 1050, 1400].forEach(delay => later(delay, id, footstep));
         });
       });
-      later(3850, id, () => {
-        intro.style.opacity = "0";
-        mainWebsite.classList.add("show");
-      });
-      later(4850, id, () => {
-        intro.style.display = "none";
-        screen = "website";
-      });
+      later(3850, id, () => { intro.style.opacity = "0"; mainWebsite.classList.add("show"); });
+      later(4850, id, () => { intro.style.display = "none"; screen = "website"; });
     }
     catButton.addEventListener("click", enterWebsite);
     introText.addEventListener("click", enterWebsite);
     backButton.addEventListener("click", () => {
       ++transitionId;
       screen = "intro";
-      introMusic.pause();
-      introMusic.currentTime = 0;
+      introMusic.pause(); introMusic.currentTime = 0;
       stopDance();
       musicButton.textContent = "♫ Play music ♡";
-      musicButton.style.opacity = "1";
-      musicButton.disabled = false;
-      songButton.style.opacity = "1";
-      songButton.disabled = false;
+      musicButton.style.opacity = "1"; musicButton.disabled = false;
+      songButton.style.opacity = "1"; songButton.disabled = false;
       intro.classList.toggle("drive", mode === "drive");
-      introText.style.opacity = "1";
-      introText.disabled = false;
+      introText.style.opacity = "1"; introText.disabled = false;
       intro.classList.remove("loving", "breezy");
       catButton.classList.remove("walking");
       catPicture.style.opacity = "1";
@@ -576,11 +655,27 @@
       requestAnimationFrame(() => { intro.style.opacity = "1"; });
     });
     document.addEventListener("click", event => {
+      if (screen === "website" && mainWebsite.contains(event.target)) {
+        try {
+          soundContext = soundContext || new (window.AudioContext || window.webkitAudioContext)();
+          soundContext.resume();
+          const oscillator = soundContext.createOscillator();
+          const gain = soundContext.createGain();
+          oscillator.type = "sine";
+          oscillator.frequency.setValueAtTime(630, soundContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(820, soundContext.currentTime + .09);
+          gain.gain.setValueAtTime(.022, soundContext.currentTime);
+          gain.gain.exponentialRampToValueAtTime(.001, soundContext.currentTime + .14);
+          oscillator.connect(gain);
+          gain.connect(soundContext.destination);
+          oscillator.start();
+          oscillator.stop(soundContext.currentTime + .14);
+        } catch (error) {}
+      }
       if (!event.target.closest("button")) return;
       const wave = document.createElement("span");
       wave.className = "tinyClickWave";
-      wave.style.left = event.clientX + "px";
-      wave.style.top = event.clientY + "px";
+      wave.style.left = event.clientX + "px"; wave.style.top = event.clientY + "px";
       document.body.appendChild(wave);
       setTimeout(() => wave.remove(), 600);
     }, true);

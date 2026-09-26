@@ -2823,5 +2823,212 @@
     syncWallpaper();
   })();
 </script>
+  <style>
+  /* Original wallpaper: carry the chosen color through the page. */
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .menuHandle,
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .siteMenu {
+    border-color: var(--accent) !important;
+    background: color-mix(
+      in srgb, var(--accent) 15%, #241827
+    ) !important;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .menuHandle span,
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .siteMenu h2 {
+    color: color-mix(in srgb, var(--accent) 75%, white) !important;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .siteMenu a:hover,
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .siteMenu button:hover {
+    background: color-mix(
+      in srgb, var(--accent) 35%, transparent
+    ) !important;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .videoCard {
+    border-color: var(--accent) !important;
+    background: color-mix(
+      in srgb, var(--accent) 17%, var(--surface)
+    ) !important;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .videoPreview {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 22%, #251a2b),
+      color-mix(in srgb, var(--accent) 62%, #251a2b)
+    ) !important;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .videoCard .cardText h3,
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .sectionHeading h2 {
+    color: color-mix(
+      in srgb, var(--accent) 68%, var(--page-text)
+    ) !important;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .storyCard {
+    border-color: var(--accent) !important;
+    background: color-mix(
+      in srgb, var(--accent) 28%, #38243d
+    ) !important;
+  }
+
+  /* The actual pictures are untouched; only their details change. */
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .storyNote {
+    background: linear-gradient(
+      transparent,
+      color-mix(in srgb, var(--accent) 38%, #1b0e24) 55%
+    ) !important;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .storyNote strong {
+    color: color-mix(in srgb, var(--accent) 70%, white);
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .storyCard:hover,
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .storyCard:focus-visible {
+    box-shadow:
+      0 20px 42px #0004,
+      0 0 25px color-mix(
+        in srgb, var(--accent) 48%, transparent
+      );
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  footer {
+    border-color: color-mix(
+      in srgb, var(--accent) 45%, transparent
+    ) !important;
+  }
+
+  /* The heart popup is outside mainWebsite, so it gets the color
+     through --active-original-color set by the script below. */
+  body:has(.welcomeSection[data-wallpaper="original"])
+  .kissCard {
+    border-color: var(--active-original-color, #d987b6) !important;
+    background:
+      radial-gradient(
+        circle at 50% 34%,
+        color-mix(
+          in srgb,
+          var(--active-original-color, #d987b6) 48%,
+          transparent
+        ),
+        transparent 52%
+      ),
+      linear-gradient(
+        145deg,
+        color-mix(
+          in srgb,
+          var(--active-original-color, #d987b6) 30%,
+          #3e2649
+        ),
+        #201328
+      ) !important;
+    box-shadow:
+      0 30px 100px #000a,
+      0 0 55px color-mix(
+        in srgb,
+        var(--active-original-color, #d987b6) 55%,
+        transparent
+      ) !important;
+  }
+
+  body:has(.welcomeSection[data-wallpaper="original"])
+  .kissCard h2 {
+    color: color-mix(
+      in srgb,
+      var(--active-original-color, #d987b6) 65%,
+      white
+    );
+  }
+
+  body:has(.welcomeSection[data-wallpaper="original"])
+  .kissCard button {
+    border-color: var(--active-original-color, #d987b6);
+  }
+
+  /* Leave the Welcome heading white. */
+  #mainWebsite .welcomeSection h1 {
+    color: white !important;
+  }
+
+  #mainWebsite .welcomeSection h1 span {
+    color: white !important;
+  }
+</style>
+
+<script>
+  (() => {
+    const website = document.getElementById("mainWebsite");
+    const welcome = document.querySelector(".welcomeSection");
+    const modeSwitch = document.getElementById("appearanceSwitch");
+    const modeLabel = document.querySelector(
+      '#appearanceSwitchRow label'
+    );
+
+    if (!website || !welcome) return;
+
+    function refreshAppearance() {
+      // Show the mode that is currently active.
+      if (modeLabel) {
+        modeLabel.textContent =
+          website.dataset.theme === "light"
+            ? "Light Mode"
+            : "Dark Mode";
+      }
+
+      if (modeSwitch) {
+        modeSwitch.setAttribute(
+          "aria-label",
+          website.dataset.theme === "light"
+            ? "Light Mode"
+            : "Dark Mode"
+        );
+      }
+
+      // The heart popup sits outside the main page, so share the color.
+      if (welcome.dataset.wallpaper === "original") {
+        const chosenColor = getComputedStyle(website)
+          .getPropertyValue("--accent")
+          .trim();
+
+        document.body.style.setProperty(
+          "--active-original-color",
+          chosenColor || "#d987b6"
+        );
+      }
+    }
+
+    // Update immediately when you use the switch or color picker.
+    new MutationObserver(refreshAppearance).observe(website, {
+      attributes: true,
+      attributeFilter: ["data-theme", "style"]
+    });
+
+    new MutationObserver(refreshAppearance).observe(welcome, {
+      attributes: true,
+      attributeFilter: ["data-wallpaper"]
+    });
+
+    refreshAppearance();
+  })();
+</script>
 </body>
 </html>

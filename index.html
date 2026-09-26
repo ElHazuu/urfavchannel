@@ -198,6 +198,57 @@
 
     p { font-size: 18px; opacity: 0.75; }
   </style>
+  /* Dance background — appears only while music plays */
+#intro:has(#catButton.dancing) {
+  background:
+    radial-gradient(ellipse at 50% 82%, rgba(255, 151, 208, 0.32), transparent 42%),
+    radial-gradient(circle at 25% 30%, rgba(160, 112, 255, 0.22), transparent 35%),
+    radial-gradient(circle at 78% 35%, rgba(255, 121, 176, 0.20), transparent 35%),
+    #100917;
+  animation: danceLights 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes danceLights {
+  from { background-color: #100917; }
+  to { background-color: #23112d; }
+}
+
+/* Small floating sparkles */
+#intro:has(#catButton.dancing)::before {
+  content: "✦     ·        ✧       ·     ✦";
+  position: absolute;
+  top: 15%;
+  left: 0;
+  width: 100%;
+  color: #ffd6e9;
+  font-size: clamp(18px, 3vw, 34px);
+  letter-spacing: 5vw;
+  text-align: center;
+  opacity: 0.7;
+  pointer-events: none;
+  animation: sparkleFloat 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes sparkleFloat {
+  from { transform: translateY(0); opacity: 0.35; }
+  to { transform: translateY(-22px); opacity: 0.9; }
+}
+
+/* Soft spotlight beneath the cats */
+#catButton.dancing::after {
+  content: "";
+  position: absolute;
+  bottom: 2%;
+  left: 15%;
+  width: 70%;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffabd6;
+  filter: blur(25px);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: -1;
+}
 </head>
 
 <body>

@@ -321,6 +321,27 @@
       color: var(--theme-accent);
       text-shadow: 0 0 24px color-mix(in srgb, var(--theme-accent) 62%, transparent);
     }
+    #mainWebsite[data-wallpaper="original"] .welcomeSection::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image: radial-gradient(#fff 1.5px, transparent 2px), radial-gradient(#ffe2f1 1px, transparent 2px);
+      background-size: 260px 230px, 340px 310px;
+      background-position: 45px 70px, 170px 110px;
+      opacity: .28; animation: originalStarGlimmer 5s ease-in-out infinite alternate;
+    }
+    @keyframes originalStarGlimmer { to { opacity: .7; filter: drop-shadow(0 0 5px #ffe3f5); } }
+    .originalShootingStar { display: none; }
+    #mainWebsite[data-wallpaper="original"] .originalShootingStar {
+      display: block; position: absolute; z-index: 1; top: 23%; left: 72%;
+      width: 95px; height: 2px; border-radius: 50%; pointer-events: none;
+      background: linear-gradient(90deg, transparent, #fff, #ffd5ec);
+      box-shadow: 0 0 9px #ffe5f3; transform: rotate(-18deg); opacity: 0;
+      animation: originalShootingStar 15s linear infinite;
+    }
+    @keyframes originalShootingStar {
+      0%, 88% { opacity: 0; transform: translate(0, 0) rotate(-18deg); }
+      90% { opacity: .9; }
+      95%, 100% { opacity: 0; transform: translate(-170px, 65px) rotate(-18deg); }
+    }
     .themeMode { position: relative; padding: 11px 50px 11px 12px; text-align: left; font-weight: 700; }
     .themeMode::after { content: ""; position: absolute; top: 50%; right: 9px; width: 30px; height: 18px; transform: translateY(-50%); border-radius: 20px; background: #746479; }
     .themeMode::before { content: ""; position: absolute; z-index: 1; top: 50%; right: 24px; width: 14px; height: 14px; transform: translateY(-50%); border-radius: 50%; background: white; transition: right .2s; }
@@ -340,10 +361,6 @@
     #intro #introText, #intro #musicButton, #intro #songButton { display: block; margin-left: auto; margin-right: auto; }
     #mainWebsite:not([data-wallpaper="original"]) { --scene-accent: #ffd2ea; --scene-surface: #251a2b; }
     #mainWebsite[data-wallpaper="underwater"] { --scene-accent: #8de6ef; --scene-surface: #123e5e; --scene-bg: linear-gradient(#176686, #145376 40%, #123e68 75%, #0e2a4f); }
-    #mainWebsite[data-wallpaper="rose"] { --scene-accent: #ffc2e0; --scene-surface: #492840; --scene-bg: radial-gradient(circle at 78% 43%, #f6a4d888, transparent 29%), linear-gradient(145deg, #1a1025, #654060); }
-    #mainWebsite[data-wallpaper="storybook"] { --scene-accent: #f8c8dc; --scene-surface: #3d305a; --scene-bg: linear-gradient(170deg, #241a45, #714474 55%, #b47b98 82%, #30213e); }
-    #mainWebsite[data-wallpaper="minecraft"] { --scene-accent: #ffe2a9; --scene-surface: #34495b; --scene-bg: linear-gradient(#4d81a0, #e8a5b2 68%, #524b6b); }
-    #mainWebsite[data-wallpaper="synthwave"] { --scene-accent: #ff8bdf; --scene-surface: #292044; --scene-bg: linear-gradient(#181537, #693c83 55%, #ea6fa2 71%, #1c1742 72%); }
     #mainWebsite:not([data-wallpaper="original"])::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: var(--scene-bg); }
     #mainWebsite:not([data-wallpaper="original"]) .welcomeSection,
     #mainWebsite:not([data-wallpaper="original"]) .contentSection,
@@ -402,10 +419,6 @@
         <div class="wallpaperChoices">
           <button type="button" data-wallpaper="original">♡ Original</button>
           <button type="button" data-wallpaper="underwater">🌊 Underwater</button>
-          <button type="button" data-wallpaper="rose">🌸 Rose glow</button>
-          <button type="button" data-wallpaper="storybook">✨ Storybook sky</button>
-          <button type="button" data-wallpaper="minecraft">🌿 Blocky sunset</button>
-          <button type="button" data-wallpaper="synthwave">🌆 Synthwave</button>
         </div>
       </div>
     </div>
@@ -424,6 +437,7 @@
     <button class="notificationBell" id="notificationBell" type="button" aria-label="See new video">🔔</button>
     <span class="notificationHint" id="notificationHint" hidden>New video is waiting ♡</span>
     <section class="welcomeSection" id="home" data-wallpaper="original">
+      <span class="originalShootingStar" aria-hidden="true"></span>
       <div class="welcomeGlow"></div><button class="welcomeOrbit" id="heartMomentButton" type="button" aria-label="See our cats' little moment"><span class="orbitStar" aria-hidden="true"></span></button>
       <div class="heroLine">A PLACE FOR OUR STORY</div>
       <p class="eyebrow">✦ A little world for us ✦</p>
@@ -579,7 +593,7 @@
     const wallpaperButton = document.getElementById("wallpaperButton");
     const wallpaperPanel = document.getElementById("wallpaperPanel");
     const welcomeSection = document.querySelector(".welcomeSection");
-    const wallpaperNames = ["original", "underwater", "rose", "storybook", "minecraft", "synthwave"];
+    const wallpaperNames = ["original", "underwater"];
     function setWallpaper(name) {
       if (!wallpaperNames.includes(name)) name = "original";
       welcomeSection.dataset.wallpaper = name;
@@ -852,226 +866,104 @@
       setTimeout(() => wave.remove(), 600);
     }, true);
   </script>
-  <style>
+<style>
   .storyCard { isolation: isolate; }
   .storyCard.loveActive .storyNote { opacity: 0 !important; }
-
-  .galleryFx {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
+  .galleryFx { position: absolute; inset: 0; z-index: 5; overflow: hidden; pointer-events: none; }
   .loveBubble {
-    position: absolute;
-    top: 26%;
-    left: 50%;
-    width: max-content;
-    max-width: 86%;
-    padding: 13px 18px;
-    border: 1px solid #fff8;
-    border-radius: 22px;
-    background: #351b3ce8;
-    color: #fff;
-    font: 700 clamp(16px, 2vw, 23px)/1.25 "DM Sans", Arial, sans-serif;
-    text-align: center;
-    box-shadow: 0 8px 26px #0008, 0 0 22px #ff9ed699;
-    transform: translate(-50%, 15px) scale(.75);
-    opacity: 0;
-    animation: loveBubbleFloat 2.2s ease-out forwards;
+    position: absolute; top: 26%; left: 50%; width: max-content; max-width: 86%;
+    padding: 13px 18px; border: 1px solid #fff8; border-radius: 22px;
+    background: #351b3ce8; color: #fff; font: 700 clamp(16px, 2vw, 23px)/1.25 "DM Sans", Arial, sans-serif;
+    text-align: center; box-shadow: 0 8px 26px #0008, 0 0 22px #ff9ed699;
+    transform: translate(-50%, 0); opacity: 1;
+    animation: loveBubbleIn .35s ease-out both;
   }
-
   .loveBubble::after {
-    content: "";
-    position: absolute;
-    bottom: -8px;
-    left: 48%;
-    width: 14px;
-    height: 14px;
-    transform: rotate(45deg);
-    background: #351b3c;
+    content: ""; position: absolute; bottom: -8px; left: 48%; width: 14px; height: 14px;
+    transform: rotate(45deg); background: #351b3c;
   }
-
-  @keyframes loveBubbleFloat {
-    0% {
-      opacity: 0;
-      transform: translate(-50%, 15px) scale(.75);
-    }
-    18%, 72% {
-      opacity: 1;
-      transform: translate(-50%, -5px) scale(1);
-    }
-    100% {
-      opacity: 0;
-      filter: blur(7px);
-      transform: translate(-50%, -25px) scale(1.13);
-    }
+  @keyframes loveBubbleIn {
+    from { opacity: 0; transform: translate(-50%, 12px) scale(.86); }
+    to { opacity: 1; transform: translate(-50%, 0) scale(1); }
   }
-
+  .loveBubble.leaving { animation: loveBubbleOut var(--fade-time, .4s) ease-in forwards; }
+  @keyframes loveBubbleOut {
+    to { opacity: 0; filter: blur(1px); transform: translate(-50%, -15px) scale(1.06); }
+  }
   .loveFallingHeart {
-    position: absolute;
-    top: -25px;
-    left: var(--x);
-    color: #ffd1eb;
-    font-size: var(--size);
-    text-shadow: 0 0 11px #ff85bd;
+    position: absolute; top: -25px; left: var(--x); color: #ffd1eb;
+    font-size: var(--size); text-shadow: 0 0 11px #ff85bd;
     animation: heartFall var(--duration) ease-in forwards;
   }
-
   @keyframes heartFall {
-    0% {
-      opacity: 0;
-      transform: translateY(0) rotate(-20deg);
-    }
+    0% { opacity: 0; transform: translateY(0) rotate(-20deg); }
     15% { opacity: 1; }
-    100% {
-      opacity: 0;
-      transform: translate(var(--drift), 355px) rotate(80deg);
-    }
+    100% { opacity: 0; transform: translate(var(--drift), 355px) rotate(80deg); }
   }
-
   .loveSmoke, .shotSmoke {
-    position: absolute;
-    left: var(--x);
-    top: var(--y);
-    width: var(--size);
-    height: var(--size);
-    border-radius: 50%;
-    background: #fff9;
-    filter: blur(3px);
+    position: absolute; left: var(--x); top: var(--y); width: var(--size); height: var(--size);
+    border-radius: 50%; background: #fff9; filter: blur(3px);
     animation: smokePuff .8s ease-out forwards;
   }
-
   @keyframes smokePuff {
-    from {
-      opacity: .75;
-      transform: translate(-50%, -50%) scale(.2);
-    }
-    to {
-      opacity: 0;
-      transform:
-        translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
-        scale(2.3);
-    }
+    from { opacity: .75; transform: translate(-50%, -50%) scale(.2); }
+    to { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(2.3); }
   }
-
   .storyCard .reactionCharacter {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    display: block;
-    width: 100%;
-    height: 100%;
-    padding: 12px;
-    object-fit: contain;
-    pointer-events: none;
+    position: absolute; inset: 0; z-index: 2; display: block; width: 100%; height: 100%;
+    padding: 12px; object-fit: contain; pointer-events: none;
     filter: drop-shadow(0 8px 13px #0009);
   }
-
-  .storyCard .reactionCharacter[hidden] {
-    display: none !important;
-  }
-
-  .storyCard.playingReacting > img:first-child {
-    opacity: 0;
-  }
-
-  .storyCard .reactionCharacter.angry {
-    animation: angryBob 1.15s ease-in-out infinite alternate;
-  }
-
-  @keyframes angryBob {
-    to { transform: translateY(-5px) rotate(-.8deg); }
-  }
-
-  .storyCard .reactionCharacter.recoil {
-    animation: gunRecoil .24s ease-out;
-  }
-
-  @keyframes gunRecoil {
-    50% { transform: translate(5px, 3px) rotate(1deg); }
-  }
-
+  .storyCard .reactionCharacter[hidden] { display: none !important; }
+  .storyCard > img:first-child { transition: transform .45s, opacity .4s, filter .4s; }
+  .storyCard.playingReacting > img:first-child { opacity: .82; filter: blur(1px); }
+  .storyCard .reactionCharacter.fading { opacity: 0; transition: opacity .45s; }
+  .storyCard .reactionCharacter.angry { animation: angryBob 1.15s ease-in-out infinite alternate; }
+  @keyframes angryBob { to { transform: translateY(-5px) rotate(-.8deg); } }
+  .storyCard .reactionCharacter.recoil { animation: gunRecoil .24s ease-out; }
+  @keyframes gunRecoil { 50% { transform: translate(5px, 3px) rotate(1deg); } }
   .storyCard .gunHotspot {
-    position: absolute;
-    z-index: 6;
-    display: none;
-    width: 52px;
-    height: 52px;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    cursor: crosshair;
+    position: absolute; z-index: 6; display: none; width: 52px; height: 52px;
+    transform: translate(-50%, -50%); border-radius: 50%; cursor: crosshair;
   }
-
-  .storyCard .gunHotspot:focus-visible {
-    outline: 2px solid #ffe68b;
-  }
-
-  .storyCard .gunHotspot.active {
-    display: block;
-  }
-
+  .storyCard .gunHotspot:focus-visible { outline: 2px solid #ffe68b; }
+  .storyCard .gunHotspot.active { display: block; }
   .gunFlash {
-    position: absolute;
-    z-index: 7;
-    left: var(--x);
-    top: var(--y);
-    width: 65px;
-    height: 65px;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(
-      circle,
-      #fff 0 9%,
-      #fff6a8 15%,
-      #ffc82d 32%,
-      transparent 70%
-    );
-    filter: drop-shadow(0 0 15px #ffbd25);
-    animation: flashBang .23s ease-out forwards;
+    position: absolute; z-index: 7; left: var(--x); top: var(--y);
+    width: 65px; height: 65px; transform: translate(-50%, -50%);
+    background: radial-gradient(circle, #fff 0 9%, #fff6a8 15%, #ffc82d 32%, transparent 70%);
+    filter: drop-shadow(0 0 15px #ffbd25); animation: flashBang .23s ease-out forwards;
   }
-
-  @keyframes flashBang {
-    from { opacity: 1; scale: .5; }
-    to { opacity: 0; scale: 1.8; }
+  @keyframes flashBang { from { opacity: 1; scale: .5; } to { opacity: 0; scale: 1.8; } }
+  .bulletScreenFx { position: fixed; inset: 0; z-index: 1000; overflow: hidden; pointer-events: none; }
+  .tinyBullet {
+    position: absolute; left: var(--start-x); top: var(--start-y);
+    width: 11px; height: 3px; border-radius: 50%; background: #ffe990;
+    box-shadow: 0 0 8px #fff3b0, 0 0 15px #ffc432;
+    animation: bulletFly 2.5s ease-out forwards;
   }
-
+  @keyframes bulletFly {
+    0% { opacity: 1; transform: translate(0, 0) rotate(var(--angle)); }
+    75% { opacity: .75; }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--angle)); }
+  }
   @media (prefers-reduced-motion: reduce) {
     .reactionCharacter.angry { animation: none !important; }
-    .loveBubble {
-      animation-duration: .01ms;
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
+    .loveBubble { animation-duration: .01ms; }
+    .tinyBullet { animation-duration: .01ms; }
   }
 </style>
-
 <script>
 (() => {
-  const cards = document.querySelectorAll(
-    "#story .storyGallery .storyCard"
-  );
-  const sayang = cards[1];
-  const playing = cards[2];
-
+  const cards = document.querySelectorAll("#story .storyGallery .storyCard");
+  const sayang = cards[1], playing = cards[2];
   if (!sayang || !playing) return;
-
   const phrases = [
-    "Aku Sayang Kamu",
-    "I love you more than life",
-    "I miss you everyday",
-    "I wish you were here",
-    "I can't wait to meet you",
-    "MUAH"
+    "Aku Sayang Kamu", "I love you more than life", "I miss you everyday",
+    "I wish you were here", "I can't wait to meet you", "MUAH"
   ];
-
-  let lastPhrase = -1;
-  let loveRun = 0;
-  let lastCharacter = "";
-
+  let lastPhrase = -1, lastClickAt = 0, lastCharacter = "", characterTimer, characterRun = 0;
   sayang.classList.add("sayangCard");
-
   const loveLayer = document.createElement("span");
   loveLayer.className = "galleryFx";
   loveLayer.setAttribute("aria-live", "polite");
@@ -1083,32 +975,30 @@
       dot.className = type;
       dot.style.setProperty("--x", x + "%");
       dot.style.setProperty("--y", y + "%");
-      dot.style.setProperty(
-        "--size",
-        (10 + Math.random() * 15) + "px"
-      );
-      dot.style.setProperty(
-        "--dx",
-        (Math.random() * 85 - 42) + "px"
-      );
-      dot.style.setProperty(
-        "--dy",
-        (-20 - Math.random() * 60) + "px"
-      );
+      dot.style.setProperty("--size", (10 + Math.random() * 15) + "px");
+      dot.style.setProperty("--dx", (Math.random() * 85 - 42) + "px");
+      dot.style.setProperty("--dy", (-20 - Math.random() * 60) + "px");
       layer.append(dot);
       setTimeout(() => dot.remove(), 850);
     }
   }
 
   sayang.addEventListener("click", () => {
-    const run = ++loveRun;
-    loveLayer.replaceChildren();
+    const now = performance.now();
+    const fast = now - lastClickAt < 600;
+    lastClickAt = now;
+    const previous = loveLayer.querySelector(".loveBubble:not(.leaving)");
+    if (previous) {
+      previous.style.setProperty("--fade-time", fast ? ".12s" : ".4s");
+      previous.classList.add("leaving");
+      puff(loveLayer, 50, 25, "loveSmoke", fast ? 4 : 7);
+      setTimeout(() => previous.remove(), fast ? 140 : 420);
+    }
+    loveLayer.querySelectorAll(".loveFallingHeart").forEach(heart => heart.remove());
     sayang.classList.add("loveActive");
-
     let choice;
-    do {
-      choice = Math.floor(Math.random() * phrases.length);
-    } while (choice === lastPhrase);
+    do { choice = Math.floor(Math.random() * phrases.length); }
+    while (choice === lastPhrase);
     lastPhrase = choice;
 
     const bubble = document.createElement("span");
@@ -1120,146 +1010,124 @@
       const heart = document.createElement("span");
       heart.className = "loveFallingHeart";
       heart.textContent = i % 2 ? "♥" : "♡";
-      heart.style.setProperty(
-        "--x",
-        (12 + Math.random() * 76) + "%"
-      );
-      heart.style.setProperty(
-        "--size",
-        (17 + Math.random() * 14) + "px"
-      );
-      heart.style.setProperty(
-        "--duration",
-        (2.4 + Math.random()) + "s"
-      );
-      heart.style.setProperty(
-        "--drift",
-        (Math.random() * 80 - 40) + "px"
-      );
+      heart.style.setProperty("--x", (12 + Math.random() * 76) + "%");
+      heart.style.setProperty("--size", (17 + Math.random() * 14) + "px");
+      heart.style.setProperty("--duration", (2.4 + Math.random()) + "s");
+      heart.style.setProperty("--drift", (Math.random() * 80 - 40) + "px");
       loveLayer.append(heart);
+      setTimeout(() => heart.remove(), 3600);
     }
-
-    setTimeout(() => {
-      if (run === loveRun) {
-        puff(loveLayer, 50, 24, "loveSmoke", 8);
-      }
-    }, 1900);
-
-    setTimeout(() => {
-      if (run === loveRun) {
-        loveLayer.replaceChildren();
-        sayang.classList.remove("loveActive");
-      }
-    }, 3600);
   });
 
   const character = document.createElement("img");
   character.className = "reactionCharacter";
   character.alt = "";
   character.hidden = true;
-
   const gun = document.createElement("span");
   gun.className = "gunHotspot";
   gun.setAttribute("role", "button");
   gun.setAttribute("tabindex", "0");
   gun.setAttribute("aria-label", "Fire the prop gun");
-
   const shotLayer = document.createElement("span");
   shotLayer.className = "galleryFx";
   playing.append(character, shotLayer, gun);
 
   function positionGun() {
     if (character.hidden || lastCharacter !== "shooting") return;
-
     const boxWidth = character.clientWidth - 24;
     const boxHeight = character.clientHeight - 24;
-    const imageRatio =
-      character.naturalWidth / character.naturalHeight || .75;
+    const imageRatio = character.naturalWidth / character.naturalHeight || .75;
     const height = Math.min(boxHeight, boxWidth / imageRatio);
     const width = height * imageRatio;
-
-    const left =
-      (character.clientWidth - width) / 2 + width * .207;
-    const top =
-      (character.clientHeight - height) / 2 + height * .107;
-
+    const left = (character.clientWidth - width) / 2 + width * .207;
+    const top = (character.clientHeight - height) / 2 + height * .107;
     gun.style.left = left + "px";
     gun.style.top = top + "px";
   }
 
   playing.addEventListener("click", event => {
     if (event.target === gun) return;
-
+    clearTimeout(characterTimer);
+    const run = ++characterRun;
     shotLayer.replaceChildren();
-
-    const next =
-      Math.random() < .5 ? "angry" : "shooting";
-
-    lastCharacter =
-      next === lastCharacter
-        ? (next === "angry" ? "shooting" : "angry")
-        : next;
-
+    const next = Math.random() < .5 ? "angry" : "shooting";
+    lastCharacter = next === lastCharacter ? (next === "angry" ? "shooting" : "angry") : next;
     character.hidden = false;
     playing.classList.add("playingReacting");
-    character.src =
-      lastCharacter === "angry"
-        ? "Angry Girl.png"
-        : "Shooting Girl.png";
-    character.className =
-      "reactionCharacter " + lastCharacter;
-
-    gun.classList.toggle(
-      "active",
-      lastCharacter === "shooting"
-    );
-
+    character.src = lastCharacter === "angry" ? "Angry Girl.png" : "Shooting Girl.png";
+    character.className = "reactionCharacter " + lastCharacter;
+    gun.classList.toggle("active", lastCharacter === "shooting");
     if (lastCharacter === "shooting") {
       character.onload = positionGun;
       requestAnimationFrame(positionGun);
     }
+    characterTimer = setTimeout(() => {
+      character.classList.add("fading");
+      gun.classList.remove("active");
+      setTimeout(() => {
+        if (run !== characterRun) return;
+        character.hidden = true;
+        playing.classList.remove("playingReacting");
+        character.classList.remove("fading");
+        lastCharacter = "";
+      }, 460);
+    }, 3600);
   });
-
   window.addEventListener("resize", positionGun);
 
   function fire(event) {
     event.stopPropagation();
     if (lastCharacter !== "shooting") return;
-
-    const x =
-      parseFloat(gun.style.left) / playing.clientWidth * 100;
-    const y =
-      parseFloat(gun.style.top) / playing.clientHeight * 100;
-
+    const x = parseFloat(gun.style.left) / playing.clientWidth * 100;
+    const y = parseFloat(gun.style.top) / playing.clientHeight * 100;
     const flash = document.createElement("span");
     flash.className = "gunFlash";
     flash.style.setProperty("--x", x + "%");
     flash.style.setProperty("--y", y + "%");
     shotLayer.append(flash);
-
     setTimeout(() => flash.remove(), 260);
-    setTimeout(() => {
-      puff(shotLayer, x, y, "shotSmoke", 7);
-    }, 90);
-
+    setTimeout(() => puff(shotLayer, x, y, "shotSmoke", 7), 90);
     character.classList.remove("recoil");
     void character.offsetWidth;
     character.classList.add("recoil");
-
-    setTimeout(() => {
-      character.classList.remove("recoil");
-    }, 260);
-  }
-
-  gun.addEventListener("click", fire);
-
-  gun.addEventListener("keydown", event => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      fire(event);
+    setTimeout(() => character.classList.remove("recoil"), 260);
+    try {
+      const context = new (window.AudioContext || window.webkitAudioContext)();
+      const buffer = context.createBuffer(1, Math.floor(context.sampleRate * .12), context.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+      const noise = context.createBufferSource();
+      const filter = context.createBiquadFilter();
+      const gain = context.createGain();
+      noise.buffer = buffer; filter.type = "lowpass"; filter.frequency.value = 1600;
+      gain.gain.setValueAtTime(.14, context.currentTime);
+      gain.gain.exponentialRampToValueAtTime(.001, context.currentTime + .12);
+      noise.connect(filter); filter.connect(gain); gain.connect(context.destination);
+      noise.start(); noise.stop(context.currentTime + .12);
+      setTimeout(() => context.close(), 500);
+    } catch (error) {}
+    const screen = document.createElement("span");
+    screen.className = "bulletScreenFx";
+    document.body.append(screen);
+    const rect = gun.getBoundingClientRect();
+    for (let i = 0; i < 7; i++) {
+      const bullet = document.createElement("span");
+      bullet.className = "tinyBullet";
+      bullet.style.setProperty("--start-x", (rect.left + rect.width / 2) + "px");
+      bullet.style.setProperty("--start-y", (rect.top + rect.height / 2) + "px");
+      bullet.style.setProperty("--dx", (-80 - Math.random() * 340) + "px");
+      bullet.style.setProperty("--dy", (Math.random() * 220 - 110) + "px");
+      bullet.style.setProperty("--angle", (Math.random() * 45 - 22) + "deg");
+      screen.append(bullet);
     }
+    setTimeout(() => screen.remove(), 2600);
+  }
+  gun.addEventListener("click", fire);
+  gun.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") { event.preventDefault(); fire(event); }
   });
 })();
 </script>
+
 </body>
 </html>

@@ -1299,6 +1299,69 @@
         scroll-behavior: auto !important;
       }
     }
+    /* Make the selected wallpaper cover the entire main website */
+#mainWebsite {
+  position: relative;
+  isolation: isolate;
+  background: transparent !important;
+}
+
+#mainWebsite::before,
+#mainWebsite::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+#mainWebsite .welcomeSection,
+#mainWebsite .storySection,
+#mainWebsite .contentSection {
+  background: transparent !important;
+}
+
+/* The wallpaper now lives behind every section */
+#mainWebsite:has(.welcomeSection[data-wallpaper="underwater"])::before {
+  background:
+    radial-gradient(ellipse at 52% 0%, #8bd5ed66, transparent 48%),
+    linear-gradient(#176686, #145376 40%, #123e68 75%, #0e2a4f);
+}
+
+#mainWebsite:has(.welcomeSection[data-wallpaper="underwater"])::after {
+  background: repeating-linear-gradient(
+    106deg,
+    transparent 0 14%,
+    #d6fcff30 17% 19%,
+    transparent 23% 33%
+  );
+  animation: underwaterLight 9s ease-in-out infinite alternate;
+}
+
+#mainWebsite:has(.welcomeSection[data-wallpaper="rose"])::before {
+  background:
+    radial-gradient(circle at 78% 43%, #f6a4d888, transparent 29%),
+    radial-gradient(circle at 10% 80%, #c06baa77, transparent 35%),
+    linear-gradient(145deg, #1a1025, #654060);
+}
+
+#mainWebsite:has(.welcomeSection[data-wallpaper="storybook"])::before {
+  background:
+    radial-gradient(circle at 77% 32%, #f9aac866, transparent 25%),
+    linear-gradient(170deg, #241a45, #714474 55%, #b47b98 82%, #30213e);
+}
+
+#mainWebsite:has(.welcomeSection[data-wallpaper="minecraft"])::before {
+  background:
+    radial-gradient(circle at 78% 29%, #ffecbd80, transparent 22%),
+    linear-gradient(#4d81a0, #e8a5b2 68%, #524b6b);
+}
+
+#mainWebsite:has(.welcomeSection[data-wallpaper="synthwave"])::before {
+  background:
+    radial-gradient(circle at 78% 41%, #ff8eae 0 9%, transparent 10%),
+    linear-gradient(#181537, #693c83 55%, #ea6fa2 71%, #1c1742 72%);
+}
   </style>
 </head>
 

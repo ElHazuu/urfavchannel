@@ -3,45 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Our Place</title>
+  <title>Our Place ♡</title>
 
   <style>
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
+      background: #140e1d;
+      color: #fff4fa;
       font-family: Arial, sans-serif;
-      background: #0b0b0b;
-      color: white;
       overflow-x: hidden;
     }
 
+    button { font: inherit; cursor: pointer; }
+
+    /* FIRST SCREEN */
     #intro {
       position: fixed;
       inset: 0;
-      z-index: 10;
+      z-index: 100;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: black;
       overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 70%, #ffb0d133, transparent 42%),
+        radial-gradient(circle at 18% 22%, #aa7dd724, transparent 32%),
+        radial-gradient(circle at 82% 28%, #ff9bbe1f, transparent 30%),
+        linear-gradient(160deg, #120d1b, #251629 65%, #120d1b);
       transition: opacity 1s ease;
+    }
+
+    #intro::before {
+      content: "♡  ✦  ♡  ✦  ♡";
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: calc(100vw - 32px);
+      padding: 0 18px 12px;
+      border-bottom: 1px solid #ffcae28c;
+      color: #ffd1e7;
+      font-size: clamp(19px, 2.5vw, 28px);
+      letter-spacing: 0.25em;
+      white-space: nowrap;
+      pointer-events: none;
+      animation: ornamentFloat 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes ornamentFloat {
+      to { transform: translate(-50%, -8px); }
+    }
+
+    #intro.dancing {
+      background:
+        radial-gradient(ellipse at 50% 80%, #ff97d052, transparent 42%),
+        radial-gradient(circle at 25% 30%, #a070ff38, transparent 35%),
+        radial-gradient(circle at 78% 35%, #ff79b633, transparent 35%),
+        #100917;
+    }
+
+    #intro.dancing::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 55%, #ff79bc, transparent 42%),
+        radial-gradient(circle at 25% 30%, #9c78ff, transparent 30%);
+      opacity: var(--beat-light, 0.1);
     }
 
     #catButton {
       position: relative;
+      z-index: 1;
       width: min(600px, 85vw);
       padding: 0;
       border: 0;
       background: none;
-      cursor: pointer;
     }
 
     #catPicture {
       display: block;
       width: 100%;
-      height: auto;
       max-height: 60vh;
       object-fit: contain;
       animation: float 2.4s ease-in-out infinite;
@@ -49,28 +96,13 @@
     }
 
     @keyframes float {
-      0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-9px); }
     }
 
-    .musicNote {
-      position: absolute;
-      font-size: 35px;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .musicNote.left { left: 8%; top: 25%; }
-    .musicNote.right { right: 8%; top: 35%; animation-delay: 0.8s !important; }
-
-    #catButton.dancing .musicNote {
-      animation: noteRise 1.6s ease-out infinite;
-    }
-
-    @keyframes noteRise {
-      0% { opacity: 0; transform: translateY(20px); }
-      25% { opacity: 1; }
-      100% { opacity: 0; transform: translateY(-85px); }
+    #intro.dancing #catButton {
+      transform: translateY(var(--beat-lift, 0px))
+                 scale(var(--beat-zoom, 1));
+      filter: drop-shadow(0 0 var(--beat-glow, 18px) #ff80c4);
     }
 
     #catButton.walking {
@@ -82,47 +114,47 @@
     }
 
     @keyframes footsteps {
-      from { transform: rotate(-2deg) translateY(0); }
+      from { transform: rotate(-2deg); }
       to { transform: rotate(2deg) translateY(-7px); }
     }
 
     @keyframes walkAway {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
       75% { opacity: 1; }
-      100% { transform: translateY(-100px) scale(0.12); opacity: 0; }
+      100% {
+        transform: translateY(-100px) scale(0.12);
+        opacity: 0;
+      }
     }
 
-    #introText {
-      margin-top: 8px;
-      font-size: 18px;
-      letter-spacing: 2px;
-      opacity: 0.7;
-      transition: opacity 0.4s ease;
+    .musicNote {
+      position: absolute;
+      font-size: 35px;
+      opacity: 0;
+      pointer-events: none;
     }
 
-    #musicButton {
-      margin-top: 24px;
-      padding: 13px 26px;
-      border: 1px solid #ffb9d2;
-      border-radius: 999px;
-      background: #ffcfdf;
-      color: #6b2445;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(255, 158, 196, 0.25);
-      transition: transform 0.2s ease, background 0.2s ease, opacity 0.4s ease;
+    .musicNote.left { left: 8%; top: 25%; }
+    .musicNote.right {
+      right: 8%;
+      top: 35%;
+      animation-delay: 0.8s !important;
     }
 
-    #musicButton:hover {
-      transform: scale(1.06);
-      background: #ffe0eb;
+    #intro.dancing .musicNote {
+      animation: noteRise 1.6s ease-out infinite;
+    }
+
+    @keyframes noteRise {
+      0% { opacity: 0; transform: translateY(20px); }
+      25% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-85px); }
     }
 
     .heart {
       position: absolute;
+      z-index: 5;
       left: 50%;
-      top: 43%;
+      top: 38%;
       opacity: 0;
       pointer-events: none;
       font-size: 38px;
@@ -132,16 +164,26 @@
       animation: rise 1.6s ease-out forwards;
     }
 
-    .heart:nth-of-type(1) { --side: -90px; animation-delay: 0s !important; }
-    .heart:nth-of-type(2) { --side: 10px; animation-delay: 0.18s !important; }
-    .heart:nth-of-type(3) { --side: 100px; animation-delay: 0.35s !important; }
+    .heart.one { --side: -90px; }
+    .heart.two {
+      --side: 10px;
+      animation-delay: 0.18s !important;
+    }
+    .heart.three {
+      --side: 100px;
+      animation-delay: 0.35s !important;
+    }
 
     @keyframes rise {
-      0% { opacity: 0; transform: translate(-50%, 10px) scale(0.4); }
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 10px) scale(0.4);
+      }
       25% { opacity: 1; }
       100% {
         opacity: 0;
-        transform: translate(calc(-50% + var(--side)), -160px) scale(1.3);
+        transform: translate(calc(-50% + var(--side)), -160px)
+                   scale(1.3);
       }
     }
 
@@ -151,7 +193,7 @@
       width: 120px;
       height: 3px;
       border-radius: 100%;
-      background: rgba(255, 255, 255, 0.5);
+      background: #ffffff80;
       opacity: 0;
       pointer-events: none;
     }
@@ -168,19 +210,156 @@
     #intro.breezy .wind.three { animation-delay: 0.65s; }
 
     @keyframes windBlow {
-      0% { left: -180px; opacity: 0; }
       20%, 80% { opacity: 0.5; }
       100% { left: 110%; opacity: 0; }
     }
 
+    #introText,
+    #musicButton {
+      position: relative;
+      z-index: 2;
+      border-radius: 999px;
+      font-weight: bold;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.4s;
+    }
+
+    #introText {
+      margin-top: 12px;
+      padding: 12px 24px;
+      border: 1px solid #ffc7df;
+      background: #ffdeed;
+      color: #6b3150;
+      letter-spacing: 1px;
+      box-shadow: 0 5px 20px #ff9bc066;
+    }
+
+    #musicButton {
+      margin-top: 20px;
+      padding: 13px 26px;
+      border: 1px solid #ffb9d2;
+      background: #ffcfdf;
+      color: #6b2445;
+      box-shadow: 0 0 20px #ff9ec440;
+    }
+
+    #introText:hover,
+    #musicButton:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 8px 26px #ff9bc099;
+    }
+
+    .tinyClickWave {
+      position: fixed;
+      z-index: 1000;
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid #ffc4e0e6;
+      border-radius: 50%;
+      box-shadow: 0 0 9px #ff9bcc80;
+      pointer-events: none;
+      animation: tinyWave 0.55s ease-out forwards;
+    }
+
+    @keyframes tinyWave {
+      from {
+        transform: translate(-50%, -50%) scale(0.2);
+        opacity: 0.9;
+      }
+      to {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    /* RUNNING BABY CATS */
+    #littleRunners {
+      position: absolute;
+      left: -220px;
+      bottom: 4%;
+      width: clamp(150px, 24vw, 220px);
+      z-index: 2;
+      pointer-events: none;
+      animation: runAcross 18s linear infinite;
+    }
+
+    #littleRunners img {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 0 8px #ffc3e159);
+      animation: kittenHop 0.54s ease-in-out infinite;
+    }
+
+    @keyframes runAcross {
+      0%, 8% { transform: translateX(0); }
+      77%, 100% {
+        transform: translateX(calc(100vw + 440px));
+      }
+    }
+
+    @keyframes kittenHop {
+      50% { transform: translateY(-7px) rotate(-2deg); }
+    }
+
+    #littleRunners::before {
+      content: "✦";
+      position: absolute;
+      right: -32px;
+      top: 25%;
+      color: #fff6b5;
+      font-size: 24px;
+      text-shadow:
+        0 0 8px #fff,
+        0 0 18px #ffe58c,
+        0 0 35px #ffc6f1;
+      animation: pixieFlutter 1.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes pixieFlutter {
+      from {
+        transform: translateY(12px) rotate(-15deg) scale(0.8);
+        opacity: 0.7;
+      }
+      to {
+        transform: translate(14px, -22px) rotate(20deg) scale(1.2);
+      }
+    }
+
+    #littleRunners::after,
+    .blackKittenSpeed {
+      position: absolute;
+      color: #ffd4e8;
+      font-size: 19px;
+      text-shadow: 0 0 10px #ffadd2;
+      animation: runningDust 0.7s ease-out infinite;
+    }
+
+    #littleRunners::after {
+      content: "·  ✧  ·";
+      left: -24px;
+      bottom: 14%;
+    }
+
+    .blackKittenSpeed {
+      left: 49%;
+      bottom: 22%;
+      animation-duration: 0.55s;
+    }
+
+    @keyframes runningDust {
+      from {
+        transform: translate(12px, 4px) scale(0.6);
+        opacity: 0.7;
+      }
+      to {
+        transform: translate(-22px, -12px) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    /* PAGE AFTER CLICKING */
     #mainWebsite {
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 30px;
-      text-align: center;
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 1.5s ease, transform 1.5s ease;
@@ -191,353 +370,326 @@
       transform: translateY(0);
     }
 
-    h1 {
-      font-size: clamp(40px, 8vw, 90px);
-      margin: 0 0 10px;
+    .siteMenu {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 18px max(6vw, 22px);
+      background: #1e1128e0;
+      border-bottom: 1px solid #ffbedd33;
+      backdrop-filter: blur(14px);
     }
 
-    p { font-size: 18px; opacity: 0.75; }
-    /* Dance background — appears only while music plays */
-#intro:has(#catButton.dancing) {
-  background:
-    radial-gradient(ellipse at 50% 82%, rgba(255, 151, 208, 0.32), transparent 42%),
-    radial-gradient(circle at 25% 30%, rgba(160, 112, 255, 0.22), transparent 35%),
-    radial-gradient(circle at 78% 35%, rgba(255, 121, 176, 0.20), transparent 35%),
-    #100917;
-  animation: danceLights 2.5s ease-in-out infinite alternate;
-}
+    .siteMenu a {
+      color: #ffe9f4;
+      text-decoration: none;
+    }
 
-@keyframes danceLights {
-  from { background-color: #100917; }
-  to { background-color: #23112d; }
-}
+    .siteLogo {
+      font-size: 21px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
 
-/* Small floating sparkles */
-#intro:has(#catButton.dancing)::before {
-  content: "✦     ·        ✧       ·     ✦";
-  position: absolute;
-  top: 15%;
-  left: 0;
-  width: 100%;
-  color: #ffd6e9;
-  font-size: clamp(18px, 3vw, 34px);
-  letter-spacing: 5vw;
-  text-align: center;
-  opacity: 0.7;
-  pointer-events: none;
-  animation: sparkleFloat 2.8s ease-in-out infinite alternate;
-}
+    .menuLinks {
+      display: flex;
+      gap: 25px;
+    }
 
-@keyframes sparkleFloat {
-  from { transform: translateY(0); opacity: 0.35; }
-  to { transform: translateY(-22px); opacity: 0.9; }
-}
+    .menuLinks a { opacity: 0.75; }
 
-/* Soft spotlight beneath the cats */
-#catButton.dancing::after {
-  content: "";
-  position: absolute;
-  bottom: 2%;
-  left: 15%;
-  width: 70%;
-  height: 28px;
-  border-radius: 50%;
-  background: #ffabd6;
-  filter: blur(25px);
-  opacity: 0.55;
-  pointer-events: none;
-  z-index: -1;
-}
+    .menuLinks a:hover {
+      opacity: 1;
+      color: #ff9fcc;
+    }
+
+    #backToIntro {
+      padding: 10px 16px;
+      border: 1px solid #ffb9d2;
+      border-radius: 999px;
+      background: #ffcfdf;
+      color: #6b2445;
+      font-weight: bold;
+    }
+
+    #backToIntro:hover { background: #ffe5ef; }
+
+    .welcomeSection {
+      position: relative;
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden;
+      padding: 90px max(8vw, 25px);
+      background:
+        radial-gradient(circle at 75% 45%, #7d3f7655, transparent 34%),
+        radial-gradient(circle at 20% 75%, #e78caf33, transparent 35%),
+        #1b1126;
+    }
+
+    .welcomeGlow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      right: 12%;
+      top: 25%;
+      border-radius: 50%;
+      background: #f9a5d344;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      color: #ffabd1;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .welcomeSection h1 {
+      position: relative;
+      font-size: clamp(48px, 8vw, 100px);
+      line-height: 1.05;
+      margin: 12px 0 20px;
+    }
+
+    .welcomeSection h1 span { color: #ffaad1; }
+
+    .welcomeSection > p:not(.eyebrow) {
+      max-width: 520px;
+      line-height: 1.7;
+      opacity: 0.8;
+    }
+
+    .exploreButton {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 24px;
+      border-radius: 999px;
+      background: #ffd3e7;
+      color: #542240;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 8px 30px #ff9bc044;
+      transition: transform 0.2s;
+    }
+
+    .exploreButton:hover {
+      transform: translateY(-3px);
+    }
+
+    .contentSection {
+      padding: 90px max(8vw, 25px);
+      scroll-margin-top: 80px;
+    }
+
+    .sectionHeading { margin-bottom: 34px; }
+
+    .sectionHeading h2 {
+      font-size: clamp(36px, 5vw, 60px);
+      margin: 8px 0;
+    }
+
+    .sectionHeading p {
+      line-height: 1.6;
+      opacity: 0.8;
+    }
+
+    .videoGrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .videoCard,
+    .updateCard {
+      overflow: hidden;
+      border: 1px solid #ffc6e133;
+      border-radius: 22px;
+      background: #2a1a34;
+      box-shadow: 0 12px 35px #0003;
+    }
+
+    .videoPreview {
+      display: grid;
+      place-items: center;
+      aspect-ratio: 16 / 9;
+      background:
+        radial-gradient(circle at center, #ffb4d57a, transparent 38%),
+        linear-gradient(135deg, #51315f, #a05c87);
+      color: white;
+      font-size: 50px;
+    }
+
+    .cardText { padding: 22px; }
+
+    .cardText span {
+      color: #ffafd3;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    .cardText h3,
+    .updateCard h3 { margin: 9px 0; }
+
+    .cardText p,
+    .updateCard p {
+      line-height: 1.6;
+      opacity: 0.8;
+    }
+
+    .updatesSection { background: #1d1328; }
+
+    .updateCard {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      max-width: 750px;
+      padding: 28px;
+    }
+
+    .updateIcon {
+      color: #ffabd1;
+      font-size: 30px;
+    }
+
+    footer {
+      padding: 30px;
+      text-align: center;
+      color: #ffc2de;
+      border-top: 1px solid #ffc6e122;
+    }
+
+    @media (max-width: 650px) {
+      .siteMenu { justify-content: center; }
+      .menuLinks { gap: 18px; }
+      .videoGrid { grid-template-columns: 1fr; }
+      .welcomeSection { min-height: 70vh; }
+    }
   </style>
 </head>
+
 <body>
   <div id="intro">
-    <button id="catButton" aria-label="Enter the website">
-      <img id="catPicture" src="Holding Hands.png" alt="Two cats holding hands">
+    <button id="catButton" type="button"
+            aria-label="Enter the website">
+      <img id="catPicture" src="Tail.png"
+           alt="Two cats standing together">
       <span class="musicNote left">♫</span>
       <span class="musicNote right">♪</span>
     </button>
 
-    <span class="heart">💗</span>
-    <span class="heart">💕</span>
-    <span class="heart">💗</span>
+    <span class="heart one">💗</span>
+    <span class="heart two">💕</span>
+    <span class="heart three">💗</span>
 
     <span class="wind one"></span>
     <span class="wind two"></span>
     <span class="wind three"></span>
 
-   <button id="introText" type="button"
-  onclick="document.getElementById('catButton').click()">
-  ♡ Come with us ♡
-</button>
+    <button id="introText" type="button">
+      ♡ Come with us ♡
+    </button>
 
-<style>
-  #introText {
-    margin-top: 12px;
-    padding: 12px 24px;
-    border: 1px solid #ffc7df;
-    border-radius: 999px;
-    background: #ffdeed;
-    color: #6b3150;
-    font: bold 16px Arial, sans-serif;
-    letter-spacing: 1px;
-    opacity: 1;
-    cursor: pointer;
-    box-shadow: 0 5px 20px #ff9bc066;
-    transition: transform 0.2s, box-shadow 0.2s, opacity 0.4s;
-  }
+    <button id="musicButton" type="button">
+      ♫ Play music ♡
+    </button>
 
-  #introText:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 26px #ff9bc099;
-  }
-</style>
-    <button id="musicButton" type="button">♫ Play music ♡</button>
+    <div id="littleRunners" aria-hidden="true">
+      <img src="Baby.png" alt="">
+      <span class="blackKittenSpeed">✧ · ·</span>
+    </div>
   </div>
 
- <main id="mainWebsite">
-  <nav class="siteMenu">
-    <a class="siteLogo" href="#home">♡ Our Place</a>
-    <div class="menuLinks">
-      <a href="#home">Home</a>
-      <a href="#videos">Videos</a>
-      <a href="#updates">Updates</a>
-    </div>
-  </nav>
+  <main id="mainWebsite">
+    <nav class="siteMenu" aria-label="Main menu">
+      <a class="siteLogo" href="#home">♡ Our Place</a>
 
-  <section class="welcomeSection" id="home">
-    <div class="welcomeGlow"></div>
-    <p class="eyebrow">✦ A little world for us ✦</p>
-    <h1>Welcome to<br><span>Our Place ♡</span></h1>
-    <p>A cozy place to share videos, little moments, and everything new.</p>
-    <a class="exploreButton" href="#videos">Explore our place ↓</a>
-  </section>
+      <div class="menuLinks">
+        <a href="#home">Home</a>
+        <a href="#videos">Videos</a>
+        <a href="#updates">Updates</a>
+      </div>
 
-  <section class="contentSection" id="videos">
-    <div class="sectionHeading">
-      <p class="eyebrow">♡ Watch together</p>
-      <h2>Our videos</h2>
-      <p>Our favorite moments, all in one place.</p>
-    </div>
+      <button id="backToIntro" type="button">
+        ↶ Back to the cats
+      </button>
+    </nav>
 
-    <div class="videoGrid">
-      <div class="videoCard">
-        <div class="videoPreview">▶</div>
-        <div class="cardText">
-          <span>VIDEO 01</span>
-          <h3>Our first video</h3>
-          <p>Your YouTube video will go here.</p>
+    <section class="welcomeSection" id="home">
+      <div class="welcomeGlow"></div>
+      <p class="eyebrow">✦ A little world for us ✦</p>
+      <h1>Welcome to<br><span>Our Place ♡</span></h1>
+      <p>
+        A cozy place to share videos, little moments,
+        and everything new.
+      </p>
+      <a class="exploreButton" href="#videos">
+        Explore our place ↓
+      </a>
+    </section>
+
+    <section class="contentSection" id="videos">
+      <div class="sectionHeading">
+        <p class="eyebrow">♡ Watch together</p>
+        <h2>Our videos</h2>
+        <p>Our favorite moments, all in one place.</p>
+      </div>
+
+      <div class="videoGrid">
+        <div class="videoCard">
+          <div class="videoPreview">▶</div>
+          <div class="cardText">
+            <span>VIDEO 01</span>
+            <h3>Our first video</h3>
+            <p>Your YouTube video will go here.</p>
+          </div>
+        </div>
+
+        <div class="videoCard">
+          <div class="videoPreview">▶</div>
+          <div class="cardText">
+            <span>VIDEO 02</span>
+            <h3>Another little moment</h3>
+            <p>Your next YouTube video will go here.</p>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div class="videoCard">
-        <div class="videoPreview">▶</div>
-        <div class="cardText">
-          <span>VIDEO 02</span>
-          <h3>Another little moment</h3>
-          <p>Your next YouTube video will go here.</p>
+    <section class="contentSection updatesSection" id="updates">
+      <div class="sectionHeading">
+        <p class="eyebrow">✦ What’s new</p>
+        <h2>Updates</h2>
+        <p>Little things we add along the way.</p>
+      </div>
+
+      <div class="updateCard">
+        <span class="updateIcon">♡</span>
+        <div>
+          <h3>Our place is open!</h3>
+          <p>
+            This is where new pictures, videos,
+            and surprises will appear.
+          </p>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="contentSection updatesSection" id="updates">
-    <div class="sectionHeading">
-      <p class="eyebrow">✦ What’s new</p>
-      <h2>Updates</h2>
-      <p>Little things we add along the way.</p>
-    </div>
+    <footer>Made with love ♡</footer>
+  </main>
 
-    <div class="updateCard">
-      <span class="updateIcon">♡</span>
-      <div>
-        <h3>Our place is open!</h3>
-        <p>This is where new pictures, videos, and surprises will appear.</p>
-      </div>
-    </div>
-  </section>
-
-  <footer>Made with love ♡</footer>
-</main>
-
-<style>
-  html { scroll-behavior: smooth; }
-
-  #mainWebsite {
-    display: block;
-    padding: 0;
-    text-align: left;
-    background: #140e1d;
-    color: #fff4fa;
-  }
-
-  .siteMenu {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    padding: 18px max(6vw, 22px);
-    background: rgba(30, 17, 40, 0.88);
-    border-bottom: 1px solid rgba(255, 190, 221, 0.2);
-    backdrop-filter: blur(14px);
-  }
-
-  .siteMenu a {
-    color: #ffe9f4;
-    text-decoration: none;
-  }
-
-  .siteLogo {
-    font-size: 21px;
-    font-weight: bold;
-    white-space: nowrap;
-  }
-
-  .menuLinks { display: flex; gap: 25px; }
-  .menuLinks a { opacity: 0.75; transition: opacity 0.2s, color 0.2s; }
-  .menuLinks a:hover { opacity: 1; color: #ff9fcc; }
-
-  .welcomeSection {
-    position: relative;
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    overflow: hidden;
-    padding: 90px max(8vw, 25px);
-    background:
-      radial-gradient(circle at 75% 45%, #7d3f7655, transparent 34%),
-      radial-gradient(circle at 20% 75%, #e78caf33, transparent 35%),
-      #1b1126;
-  }
-
-  .welcomeGlow {
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    right: 12%;
-    top: 25%;
-    border-radius: 50%;
-    background: #f9a5d344;
-    filter: blur(80px);
-    pointer-events: none;
-  }
-
-  #mainWebsite .eyebrow {
-    color: #ffabd1;
-    font-size: 13px;
-    font-weight: bold;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-  }
-
-  .welcomeSection h1 {
-    position: relative;
-    font-size: clamp(48px, 8vw, 100px);
-    line-height: 1.05;
-    margin: 12px 0 20px;
-  }
-
-  .welcomeSection h1 span { color: #ffaad1; }
-
-  .welcomeSection > p:not(.eyebrow) {
-    max-width: 520px;
-    line-height: 1.7;
-  }
-
-  .exploreButton {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 14px 24px;
-    border-radius: 999px;
-    background: #ffd3e7;
-    color: #542240;
-    font-weight: bold;
-    text-decoration: none;
-    box-shadow: 0 8px 30px #ff9bc044;
-    transition: transform 0.2s;
-  }
-
-  .exploreButton:hover { transform: translateY(-3px); }
-
-  .contentSection {
-    padding: 90px max(8vw, 25px);
-    scroll-margin-top: 70px;
-  }
-
-  .sectionHeading { margin-bottom: 34px; }
-  .sectionHeading h2 {
-    font-size: clamp(36px, 5vw, 60px);
-    margin: 8px 0;
-  }
-
-  .videoGrid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-  }
-
-  .videoCard, .updateCard {
-    overflow: hidden;
-    border: 1px solid #ffc6e133;
-    border-radius: 22px;
-    background: #2a1a34;
-    box-shadow: 0 12px 35px #0003;
-  }
-
-  .videoPreview {
-    display: grid;
-    place-items: center;
-    aspect-ratio: 16 / 9;
-    background:
-      radial-gradient(circle at center, #ffb4d57a, transparent 38%),
-      linear-gradient(135deg, #51315f, #a05c87);
-    color: white;
-    font-size: 50px;
-  }
-
-  .cardText { padding: 22px; }
-  .cardText span { color: #ffafd3; font-size: 12px; letter-spacing: 2px; }
-  .cardText h3, .updateCard h3 { margin: 9px 0; }
-  #mainWebsite p { line-height: 1.6; }
-
-  .updatesSection { background: #1d1328; }
-
-  .updateCard {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    max-width: 750px;
-    padding: 28px;
-  }
-
-  .updateIcon { color: #ffabd1; font-size: 30px; }
-
-  #mainWebsite footer {
-    padding: 30px;
-    text-align: center;
-    color: #ffc2de;
-    border-top: 1px solid #ffc6e122;
-  }
-
-  @media (max-width: 650px) {
-    .siteMenu { flex-wrap: wrap; justify-content: center; }
-    .menuLinks { gap: 18px; }
-    .videoGrid { grid-template-columns: 1fr; }
-    .welcomeSection { min-height: 70vh; }
-  }
-</style>
-
-  <audio
-    id="introMusic"
-    src="Ariana Grande - everytime (Official Instrumental).mp3"
-    loop
-    preload="auto"
-  ></audio>
+  <audio id="introMusic"
+         src="Ariana Grande - everytime (Official Instrumental).mp3"
+         loop preload="auto"></audio>
 
   <script>
     const intro = document.getElementById("intro");
@@ -547,50 +699,172 @@
     const mainWebsite = document.getElementById("mainWebsite");
     const musicButton = document.getElementById("musicButton");
     const introMusic = document.getElementById("introMusic");
+    const backButton = document.getElementById("backToIntro");
+    const runnerPicture =
+      document.querySelector("#littleRunners img");
 
-    const danceFrames = [
-      "Dance 1.png",
-      "Dance 2.png",
-      "Dance 3.png",
-      "Dance 4.png"
+    const idleFrames = [
+      "Tail.png", "Tail 2.png", "Tail 3.png"
     ];
 
-    // Load the pictures before the first dance.
-    [...danceFrames, "Walking Away.png"].forEach(function (filename) {
-      const picture = new Image();
-      picture.src = filename;
+    const danceFrames = [
+      "Dance 1.png", "Dance 2.png",
+      "Dance 3.png", "Dance 4.png"
+    ];
+
+    const runningFrames = [
+      "Baby.png", "Baby 2.png", "Baby 3.png",
+      "Baby 4.png", "Baby 5.png", "Baby 6.png"
+    ];
+
+    [
+      ...idleFrames,
+      ...danceFrames,
+      ...runningFrames,
+      "Walking Away.png"
+    ].forEach(function (filename) {
+      const image = new Image();
+      image.src = filename;
     });
 
-    let clicked = false;
+    let screen = "intro";
+    let transitionId = 0;
+    let idleFrame = 0;
+    let danceFrame = 0;
+    let runFrame = 0;
     let danceTimer = null;
-    let frameNumber = 0;
-    let soundContext;
+    let soundContext = null;
+    let beatContext = null;
+    let analyser = null;
+    let frequencies = null;
+    let beatFrame = null;
+    let average = 0;
+    let pulse = 0;
+
+    /* Standing cats */
+    setInterval(function () {
+      if (screen !== "intro" || !introMusic.paused) return;
+
+      idleFrame = (idleFrame + 1) % idleFrames.length;
+      catPicture.src = idleFrames[idleFrame];
+    }, 450);
+
+    /* Running baby cats */
+    setInterval(function () {
+      runFrame = (runFrame + 1) % runningFrames.length;
+      runnerPicture.src = runningFrames[runFrame];
+    }, 180);
 
     function startDance() {
       if (danceTimer) return;
 
-      frameNumber = 0;
-      catPicture.src = danceFrames[frameNumber];
+      danceFrame = 0;
+      catPicture.src = danceFrames[0];
       catPicture.alt = "Two cats dancing";
-      catButton.classList.add("dancing");
+      intro.classList.add("dancing");
 
       danceTimer = setInterval(function () {
-        frameNumber = (frameNumber + 1) % danceFrames.length;
-        catPicture.src = danceFrames[frameNumber];
+        danceFrame = (danceFrame + 1) % danceFrames.length;
+        catPicture.src = danceFrames[danceFrame];
       }, 220);
     }
 
     function stopDance() {
       clearInterval(danceTimer);
       danceTimer = null;
-      catButton.classList.remove("dancing");
-      catPicture.src = "Holding Hands.png";
-      catPicture.alt = "Two cats holding hands";
+      intro.classList.remove("dancing");
+      intro.style.setProperty("--beat-light", "0");
+      catPicture.src = idleFrames[idleFrame];
+      catPicture.alt = "Two cats standing together";
     }
 
+    function prepareBeat() {
+      if (beatContext) return;
+
+      beatContext =
+        new (window.AudioContext || window.webkitAudioContext)();
+
+      const source =
+        beatContext.createMediaElementSource(introMusic);
+
+      analyser = beatContext.createAnalyser();
+      analyser.fftSize = 2048;
+      frequencies =
+        new Uint8Array(analyser.frequencyBinCount);
+
+      source.connect(analyser);
+      analyser.connect(beatContext.destination);
+    }
+
+    function animateBeat() {
+      if (introMusic.paused || !analyser) return;
+
+      analyser.getByteFrequencyData(frequencies);
+
+      const hzPerBin =
+        beatContext.sampleRate / analyser.fftSize;
+      const first = Math.floor(60 / hzPerBin);
+      const last = Math.min(
+        frequencies.length - 1,
+        Math.ceil(220 / hzPerBin)
+      );
+
+      let total = 0;
+      for (let i = first; i <= last; i++) {
+        total += frequencies[i];
+      }
+
+      const bass = total / (last - first + 1);
+      average =
+        average === 0
+          ? bass
+          : average * 0.94 + bass * 0.06;
+
+      const hit = Math.min(
+        1,
+        Math.max(
+          0,
+          (bass - average * 0.85) /
+          (average * 0.55 + 12)
+        )
+      );
+
+      pulse = Math.max(hit, pulse * 0.84);
+
+      intro.style.setProperty(
+        "--beat-lift", `${-12 * pulse}px`
+      );
+      intro.style.setProperty(
+        "--beat-zoom", `${1 + 0.045 * pulse}`
+      );
+      intro.style.setProperty(
+        "--beat-glow", `${18 + 32 * pulse}px`
+      );
+      intro.style.setProperty(
+        "--beat-light", `${0.25 + 0.5 * pulse}`
+      );
+
+      beatFrame = requestAnimationFrame(animateBeat);
+    }
+
+    introMusic.addEventListener("play", function () {
+      cancelAnimationFrame(beatFrame);
+      average = 0;
+      animateBeat();
+    });
+
+    introMusic.addEventListener("pause", function () {
+      cancelAnimationFrame(beatFrame);
+      pulse = 0;
+    });
+
     musicButton.addEventListener("click", async function () {
+      if (screen !== "intro") return;
+
       if (introMusic.paused) {
         try {
+          prepareBeat();
+          await beatContext.resume();
           await introMusic.play();
           musicButton.textContent = "♫ Pause music ♡";
           startDance();
@@ -604,52 +878,82 @@
       }
     });
 
-    function note(frequency, start, duration, volume) {
+    function note(frequency, when, duration, volume) {
+      if (!soundContext) return;
+
       const oscillator = soundContext.createOscillator();
       const gain = soundContext.createGain();
 
       oscillator.type = "sine";
       oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(0, start);
-      gain.gain.linearRampToValueAtTime(volume, start + 0.03);
-      gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+
+      gain.gain.setValueAtTime(0.001, when);
+      gain.gain.linearRampToValueAtTime(
+        volume, when + 0.03
+      );
+      gain.gain.exponentialRampToValueAtTime(
+        0.001, when + duration
+      );
 
       oscillator.connect(gain);
       gain.connect(soundContext.destination);
-      oscillator.start(start);
-      oscillator.stop(start + duration);
+      oscillator.start(when);
+      oscillator.stop(when + duration);
     }
 
     function heartSound() {
+      if (!soundContext) return;
+
       const now = soundContext.currentTime;
       note(660, now, 0.25, 0.09);
       note(880, now + 0.12, 0.4, 0.07);
     }
 
     function footstep() {
-      note(110, soundContext.currentTime, 0.09, 0.045);
+      if (soundContext) {
+        note(
+          110,
+          soundContext.currentTime,
+          0.09,
+          0.045
+        );
+      }
     }
 
     function windSound() {
-      const length = Math.floor(soundContext.sampleRate * 1.5);
-      const buffer = soundContext.createBuffer(1, length, soundContext.sampleRate);
+      if (!soundContext) return;
+
+      const length =
+        Math.floor(soundContext.sampleRate * 1.5);
+      const buffer =
+        soundContext.createBuffer(
+          1, length, soundContext.sampleRate
+        );
       const data = buffer.getChannelData(0);
 
       for (let i = 0; i < length; i++) {
         data[i] = Math.random() * 2 - 1;
       }
 
-      const source = soundContext.createBufferSource();
-      const filter = soundContext.createBiquadFilter();
-      const gain = soundContext.createGain();
-      const now = soundContext.currentTime;
+      const source =
+        soundContext.createBufferSource();
+      const filter =
+        soundContext.createBiquadFilter();
+      const gain =
+        soundContext.createGain();
 
       source.buffer = buffer;
       filter.type = "lowpass";
       filter.frequency.value = 500;
+
+      const now = soundContext.currentTime;
       gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(0.035, now + 0.4);
-      gain.gain.linearRampToValueAtTime(0.001, now + 1.5);
+      gain.gain.linearRampToValueAtTime(
+        0.035, now + 0.4
+      );
+      gain.gain.linearRampToValueAtTime(
+        0.001, now + 1.5
+      );
 
       source.connect(filter);
       filter.connect(gain);
@@ -657,29 +961,55 @@
       source.start(now);
     }
 
-    catButton.addEventListener("click", function () {
-      if (clicked) return;
-      clicked = true;
+    function later(milliseconds, id, action) {
+      setTimeout(function () {
+        if (
+          transitionId === id &&
+          screen === "entering"
+        ) {
+          action();
+        }
+      }, milliseconds);
+    }
+
+    function enterWebsite() {
+      if (screen !== "intro") return;
+
+      screen = "entering";
+      const id = ++transitionId;
 
       introMusic.pause();
       introMusic.currentTime = 0;
       stopDance();
+
       musicButton.style.opacity = "0";
       musicButton.disabled = true;
-
-      soundContext = new (window.AudioContext || window.webkitAudioContext)();
-      soundContext.resume();
-      heartSound();
-
       introText.style.opacity = "0";
+      introText.disabled = true;
+
+      try {
+        soundContext =
+          soundContext ||
+          new (
+            window.AudioContext ||
+            window.webkitAudioContext
+          )();
+
+        soundContext.resume();
+        heartSound();
+      } catch (error) {
+        soundContext = null;
+      }
+
       intro.classList.add("loving");
 
-      (function () {
+      later(1100, id, function () {
         catPicture.style.opacity = "0";
 
-        (function () {
+        later(250, id, function () {
           catPicture.src = "Walking Away.png";
-          catPicture.alt = "Two cats walking away together";
+          catPicture.alt =
+            "Two cats walking away together";
           catPicture.style.opacity = "1";
 
           intro.classList.add("breezy");
@@ -687,538 +1017,85 @@
 
           windSound();
           footstep();
-          (footstep, 350);
-          (footstep, 700);
-          setTimeout(footstep, 1050);
-          setTimeout(footstep, 1400);
-        }, 250);
-      }, 1100);
 
-      setTimeout(function () {
+          [350, 700, 1050, 1400].forEach(
+            function (delay) {
+              later(delay, id, footstep);
+            }
+          );
+        });
+      });
+
+      later(3850, id, function () {
         intro.style.opacity = "0";
         mainWebsite.classList.add("show");
-      }, 3850);
+      });
 
-   setTimeout(function () {
-  if (clicked) intro.style.display = "none";
-}, 4850);
+      later(4850, id, function () {
+        intro.style.display = "none";
+        screen = "website";
+      });
+    }
+
+    catButton.addEventListener(
+      "click", enterWebsite
+    );
+    introText.addEventListener(
+      "click", enterWebsite
+    );
+
+    backButton.addEventListener("click", function () {
+      ++transitionId;
+      screen = "intro";
+
+      introMusic.pause();
+      introMusic.currentTime = 0;
+      stopDance();
+
+      musicButton.textContent = "♫ Play music ♡";
+      musicButton.style.opacity = "1";
+      musicButton.disabled = false;
+
+      introText.style.opacity = "1";
+      introText.disabled = false;
+
+      intro.classList.remove(
+        "loving", "breezy"
+      );
+      catButton.classList.remove("walking");
+      catPicture.style.opacity = "1";
+
+      mainWebsite.classList.remove("show");
+      window.scrollTo(0, 0);
+
+      intro.style.display = "flex";
+      requestAnimationFrame(function () {
+        intro.style.opacity = "1";
+      });
     });
+
+    document.addEventListener(
+      "click",
+      function (event) {
+        if (!event.target.closest("button")) return;
+
+        const wave =
+          document.createElement("span");
+
+        wave.className = "tinyClickWave";
+        wave.style.left =
+          event.clientX + "px";
+        wave.style.top =
+          event.clientY + "px";
+
+        document.body.appendChild(wave);
+
+        setTimeout(function () {
+          wave.remove();
+        }, 600);
+      },
+      true
+    );
   </script>
-  <style>
-  /* Extra glow that responds to the song */
-  #intro {
-    --beat-glow: 18px;
-    --beat-lift: 0px;
-    --beat-zoom: 1;
-    --beat-light: 0.25;
-  }
-
-  #intro::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at 50% 55%, #ff79bc 0%, transparent 42%),
-      radial-gradient(circle at 25% 30%, #9c78ff 0%, transparent 30%),
-      radial-gradient(circle at 80% 35%, #ffb2d7 0%, transparent 30%);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.1s linear;
-  }
-
-  #intro:has(#catButton.dancing)::after {
-    opacity: var(--beat-light);
-  }
-
-  #catButton,
-  #introText,
-  #musicButton {
-    z-index: 1;
-  }
-
-  #catButton.dancing {
-    transform: translateY(var(--beat-lift)) scale(var(--beat-zoom));
-    filter: drop-shadow(0 0 var(--beat-glow) #ff80c4);
-    transition: transform 0.08s linear, filter 0.08s linear;
-  }
-</style>
-
-<script>
-  // Read the song's bass levels and turn them into light and movement.
-  (function () {
-    const music = document.getElementById("introMusic");
-    const button = document.getElementById("musicButton");
-    const introScreen = document.getElementById("intro");
-
-    let beatAudioContext;
-    let analyser;
-    let frequencies;
-    let animationFrame;
-    let average = 0;
-    let pulse = 0;
-
-    button.addEventListener("click", function () {
-      if (!beatAudioContext) {
-        beatAudioContext =
-          new (window.AudioContext || window.webkitAudioContext)();
-
-        const source = beatAudioContext.createMediaElementSource(music);
-        analyser = beatAudioContext.createAnalyser();
-        analyser.fftSize = 2048;
-        frequencies = new Uint8Array(analyser.frequencyBinCount);
-
-        source.connect(analyser);
-        analyser.connect(beatAudioContext.destination);
-      }
-
-      beatAudioContext.resume();
-    });
-
-    function animateToMusic() {
-      if (music.paused || !analyser) return;
-
-      analyser.getByteFrequencyData(frequencies);
-
-      const hzPerBin = beatAudioContext.sampleRate / analyser.fftSize;
-      const first = Math.floor(60 / hzPerBin);
-      const last = Math.min(
-        frequencies.length - 1,
-        Math.ceil(220 / hzPerBin)
-      );
-
-      let total = 0;
-      for (let i = first; i <= last; i++) {
-        total += frequencies[i];
-      }
-
-      const bass = total / (last - first + 1);
-      average = average === 0 ? bass : average * 0.94 + bass * 0.06;
-
-      const hit = Math.min(
-        1,
-        Math.max(0, (bass - average * 0.85) / (average * 0.55 + 12))
-      );
-
-      pulse = Math.max(hit, pulse * 0.84);
-
-      introScreen.style.setProperty(
-        "--beat-lift",
-        `${-12 * pulse}px`
-      );
-      introScreen.style.setProperty(
-        "--beat-zoom",
-        `${1 + 0.045 * pulse}`
-      );
-      introScreen.style.setProperty(
-        "--beat-glow",
-        `${18 + 32 * pulse}px`
-      );
-      introScreen.style.setProperty(
-        "--beat-light",
-        `${0.25 + 0.5 * pulse}`
-      );
-
-      animationFrame = requestAnimationFrame(animateToMusic);
-    }
-
-    music.addEventListener("play", function () {
-      cancelAnimationFrame(animationFrame);
-      average = 0;
-      animateToMusic();
-    });
-
-    music.addEventListener("pause", function () {
-      cancelAnimationFrame(animationFrame);
-      pulse = 0;
-      introScreen.style.setProperty("--beat-lift", "0px");
-      introScreen.style.setProperty("--beat-zoom", "1");
-      introScreen.style.setProperty("--beat-light", "0");
-    });
-  })();
-</script>
-  <style>
-  /* Calm background before the music starts */
-  #intro {
-    background:
-      radial-gradient(ellipse at 50% 70%, rgba(255, 176, 209, 0.20), transparent 42%),
-      radial-gradient(circle at 18% 22%, rgba(170, 125, 215, 0.14), transparent 32%),
-      radial-gradient(circle at 82% 28%, rgba(255, 155, 190, 0.12), transparent 30%),
-      linear-gradient(160deg, #120d1b, #251629 65%, #120d1b);
-  }
-
-  #intro::before {
-    content: "♡       ✧        ♡       ·       ✧";
-    position: absolute;
-    top: 16%;
-    left: 0;
-    width: 100%;
-    color: #ffd8e8;
-    font-size: clamp(18px, 3vw, 30px);
-    letter-spacing: 4vw;
-    text-align: center;
-    opacity: 0.45;
-    pointer-events: none;
-    animation: calmFloat 5s ease-in-out infinite alternate;
-  }
-
-  @keyframes calmFloat {
-    from { transform: translateY(0); opacity: 0.3; }
-    to { transform: translateY(-18px); opacity: 0.65; }
-  }
-</style>
-  <style>
-  #littleRunners {
-    position: absolute;
-    left: -220px;
-    bottom: 4%;
-    width: clamp(150px, 24vw, 220px);
-    z-index: 2;
-    pointer-events: none;
-    animation: runAcross 18s linear infinite;
-  }
-
-  #littleRunners img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  @keyframes runAcross {
-    0%, 8% {
-      transform: translateX(0);
-    }
-
-    77%, 100% {
-      transform: translateX(calc(100vw + 440px));
-    }
-  }
-</style>
-
-<script>
-  (function () {
-    const runningFrames = [
-      "Baby.png",
-      "Baby 2.png",
-      "Baby 3.png",
-      "Baby 4.png",
-      "Baby 5.png",
-      "Baby 6.png"
-    ];
-
-    runningFrames.forEach(function (filename) {
-      const image = new Image();
-      image.src = filename;
-    });
-
-    const runners = document.createElement("div");
-    runners.id = "littleRunners";
-    runners.setAttribute("aria-hidden", "true");
-
-    const picture = document.createElement("img");
-    picture.src = runningFrames[0];
-    picture.alt = "";
-    runners.appendChild(picture);
-
-    document.getElementById("intro").appendChild(runners);
-
-    let frame = 0;
-    setInterval(function () {
-      frame = (frame + 1) % runningFrames.length;
-      picture.src = runningFrames[frame];
-    }, 180);
-  })();
-</script>
-<style>
-  /* Glowing pixie just ahead of the running cats */
-  #littleRunners::before {
-    content: "✦";
-    position: absolute;
-    right: -32px;
-    top: 25%;
-    color: #fff6b5;
-    font-size: 24px;
-    line-height: 1;
-    text-shadow:
-      0 0 8px #ffffff,
-      0 0 18px #ffe58c,
-      0 0 35px #ffc6f1;
-    filter: drop-shadow(0 0 12px #ffe58c);
-    animation: pixieFlutter 1.4s ease-in-out infinite alternate;
-  }
-
-  @keyframes pixieFlutter {
-    from {
-      transform: translate(0, 12px) rotate(-15deg) scale(0.8);
-      opacity: 0.7;
-    }
-    to {
-      transform: translate(14px, -22px) rotate(20deg) scale(1.2);
-      opacity: 1;
-    }
-  }
-
-  /* Little dust sparkles behind their paws */
-  #littleRunners::after {
-    content: "·  ✧  ·";
-    position: absolute;
-    left: -24px;
-    bottom: 14%;
-    color: #ffd4e8;
-    font-size: 20px;
-    letter-spacing: 7px;
-    opacity: 0;
-    text-shadow: 0 0 10px #ffadd2;
-    animation: runningDust 0.7s ease-out infinite;
-  }
-
-  @keyframes runningDust {
-    from {
-      transform: translate(12px, 4px) scale(0.6);
-      opacity: 0.7;
-    }
-    to {
-      transform: translate(-22px, -12px) scale(1.2);
-      opacity: 0;
-    }
-  }
-
-  /* Gentle glow around the little runners */
-  #littleRunners img {
-    filter: drop-shadow(0 0 8px rgba(255, 195, 225, 0.35));
-  }
-</style>
-  <style>
-  /* Glowing pixie just ahead of the running cats */
-  #littleRunners::before {
-    content: "✦";
-    position: absolute;
-    right: -32px;
-    top: 25%;
-    color: #fff6b5;
-    font-size: 24px;
-    line-height: 1;
-    text-shadow:
-      0 0 8px #ffffff,
-      0 0 18px #ffe58c,
-      0 0 35px #ffc6f1;
-    filter: drop-shadow(0 0 12px #ffe58c);
-    animation: pixieFlutter 1.4s ease-in-out infinite alternate;
-  }
-
-  @keyframes pixieFlutter {
-    from {
-      transform: translate(0, 12px) rotate(-15deg) scale(0.8);
-      opacity: 0.7;
-    }
-    to {
-      transform: translate(14px, -22px) rotate(20deg) scale(1.2);
-      opacity: 1;
-    }
-  }
-
-  /* Little dust sparkles behind their paws */
-  #littleRunners::after {
-    content: "·  ✧  ·";
-    position: absolute;
-    left: -24px;
-    bottom: 14%;
-    color: #ffd4e8;
-    font-size: 20px;
-    letter-spacing: 7px;
-    opacity: 0;
-    text-shadow: 0 0 10px #ffadd2;
-    animation: runningDust 0.7s ease-out infinite;
-  }
-
-  @keyframes runningDust {
-    from {
-      transform: translate(12px, 4px) scale(0.6);
-      opacity: 0.7;
-    }
-    to {
-      transform: translate(-22px, -12px) scale(1.2);
-      opacity: 0;
-    }
-  }
-
-  /* Gentle glow around the little runners */
-  #littleRunners img {
-    filter: drop-shadow(0 0 8px rgba(255, 195, 225, 0.35));
-  }
-</style>
-  <style>
-  /* One matching heart-and-star ornament */
-  #intro::before,
-  #intro:has(#catButton.dancing)::before {
-    content: "♡  ✦  ♡  ✦  ♡";
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    width: max-content;
-    max-width: calc(100vw - 32px);
-    padding: 0 18px 12px;
-    border-bottom: 1px solid rgba(255, 202, 226, 0.55);
-    color: #ffd1e7;
-    font-size: clamp(19px, 2.5vw, 28px);
-    letter-spacing: 0.25em;
-    white-space: nowrap;
-    text-align: center;
-    opacity: 0.75;
-    pointer-events: none;
-    z-index: 2;
-    animation: ornamentFloat 4s ease-in-out infinite alternate;
-  }
-
-  @keyframes ornamentFloat {
-    from { transform: translate(-50%, 0); }
-    to { transform: translate(-50%, -8px); }
-  }
-
-  /* Hearts appear in front of the cats when clicked */
-  #intro .heart {
-    top: 38%;
-    z-index: 5;
-  }
-
-  /* Tiny wave at the point of a button click */
-  .tinyClickWave {
-    position: fixed;
-    width: 32px;
-    height: 32px;
-    border: 1.5px solid rgba(255, 196, 224, 0.9);
-    border-radius: 50%;
-    box-shadow: 0 0 9px rgba(255, 155, 204, 0.5);
-    pointer-events: none;
-    z-index: 10000;
-    animation: tinyWave 0.55s ease-out forwards;
-  }
-
-  @keyframes tinyWave {
-    from {
-      transform: translate(-50%, -50%) scale(0.2);
-      opacity: 0.9;
-    }
-    to {
-      transform: translate(-50%, -50%) scale(1.5);
-      opacity: 0;
-    }
-  }
-</style>
-
-<script>
-  document.addEventListener("click", function (event) {
-    if (!event.target.closest("button")) return;
-
-    const wave = document.createElement("span");
-    wave.className = "tinyClickWave";
-    wave.style.left = event.clientX + "px";
-    wave.style.top = event.clientY + "px";
-    document.body.appendChild(wave);
-
-    setTimeout(function () {
-      wave.remove();
-    }, 600);
-  }, true);
-</script>
-  <style>
-  #littleRunners img {
-    animation: kittenHop 0.54s ease-in-out infinite;
-  }
-
-  @keyframes kittenHop {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-7px) rotate(-2deg); }
-  }
-
-  .blackKittenSpeed {
-    position: absolute;
-    left: 49%;
-    bottom: 22%;
-    color: #ffe4f0;
-    font-size: 19px;
-    text-shadow: 0 0 8px #ff9fc9;
-    animation: speedTrail 0.55s ease-out infinite;
-  }
-
-  @keyframes speedTrail {
-    from { transform: translateX(8px); opacity: 0.8; }
-    to { transform: translateX(-18px); opacity: 0; }
-  }
-</style>
-
-<script>
-  const runners = document.getElementById("littleRunners");
-  if (runners) {
-    const speed = document.createElement("span");
-    speed.className = "blackKittenSpeed";
-    speed.textContent = "✧ · ·";
-    runners.appendChild(speed);
-  }
-</script>
-  <script>
-  (function () {
-    const idleFrames = ["Tail.png", "Tail 2.png", "Tail 3.png"];
-    const picture = document.getElementById("catPicture");
-    const button = document.getElementById("catButton");
-    const intro = document.getElementById("intro");
-
-    idleFrames.forEach(function (filename) {
-      const image = new Image();
-      image.src = filename;
-    });
-
-    let frame = 0;
-    picture.src = idleFrames[frame];
-
-    setInterval(function () {
-      if (button.classList.contains("dancing") ||
-          intro.classList.contains("loving")) return;
-
-      frame = (frame + 1) % idleFrames.length;
-      picture.src = idleFrames[frame];
-    }, 450);
-  })();
-</script>
 </body>
-<style>
-  #backToIntro {
-    padding: 10px 16px;
-    border: 1px solid #ffb9d2;
-    border-radius: 999px;
-    background: #ffcfdf;
-    color: #6b2445;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
-  #backToIntro:hover {
-    background: #ffe5ef;
-  }
-</style>
-
-<script>
-  document.getElementById("backToIntro").addEventListener("click", function () {
-    clicked = false;
-
-    introMusic.pause();
-    introMusic.currentTime = 0;
-    musicButton.textContent = "♫ Play music ♡";
-    musicButton.style.opacity = "1";
-    musicButton.disabled = false;
-
-    intro.classList.remove("loving", "breezy");
-    catButton.classList.remove("walking", "dancing");
-    catPicture.src = "Tail.png";
-    catPicture.style.opacity = "1";
-    introText.style.opacity = "1";
-
-    mainWebsite.classList.remove("show");
-    window.scrollTo(0, 0);
-
-    intro.style.display = "flex";
-    requestAnimationFrame(function () {
-      intro.style.opacity = "1";
-    });
-  });
-</script>
 </html>

@@ -17,7 +17,10 @@
       overflow-x: hidden;
     }
 
-    button { font: inherit; cursor: pointer; }
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
 
     /* FIRST SCREEN */
     #intro {
@@ -43,7 +46,6 @@
       top: 10%;
       left: 50%;
       transform: translateX(-50%);
-      max-width: calc(100vw - 32px);
       padding: 0 18px 12px;
       border-bottom: 1px solid #ffcae28c;
       color: #ffd1e7;
@@ -56,25 +58,6 @@
 
     @keyframes ornamentFloat {
       to { transform: translate(-50%, -8px); }
-    }
-
-    #intro.dancing {
-      background:
-        radial-gradient(ellipse at 50% 80%, #ff97d052, transparent 42%),
-        radial-gradient(circle at 25% 30%, #a070ff38, transparent 35%),
-        radial-gradient(circle at 78% 35%, #ff79b633, transparent 35%),
-        #100917;
-    }
-
-    #intro.dancing::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 50% 55%, #ff79bc, transparent 42%),
-        radial-gradient(circle at 25% 30%, #9c78ff, transparent 30%);
-      opacity: var(--beat-light, 0.1);
     }
 
     #catButton {
@@ -99,31 +82,31 @@
       50% { transform: translateY(-9px); }
     }
 
+    #intro.dancing {
+      background:
+        radial-gradient(ellipse at 50% 80%, #ff97d052, transparent 42%),
+        radial-gradient(circle at 25% 30%, #a070ff38, transparent 35%),
+        radial-gradient(circle at 78% 35%, #ff79b633, transparent 35%),
+        #100917;
+    }
+
+    #intro.dancing::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 55%, #ff79bc, transparent 42%),
+        radial-gradient(circle at 25% 30%, #9c78ff, transparent 30%);
+      opacity: var(--beat-light, 0.1);
+    }
+
     #intro.dancing #catButton {
       transform: translateY(var(--beat-lift, 0px))
                  scale(var(--beat-zoom, 1));
-      filter: drop-shadow(0 0 var(--beat-glow, 18px) #ff80c4);
-    }
-
-    #catButton.walking {
-      animation: walkAway 2.4s ease-in forwards;
-    }
-
-    #catButton.walking #catPicture {
-      animation: footsteps 0.32s ease-in-out infinite alternate;
-    }
-
-    @keyframes footsteps {
-      from { transform: rotate(-2deg); }
-      to { transform: rotate(2deg) translateY(-7px); }
-    }
-
-    @keyframes walkAway {
-      75% { opacity: 1; }
-      100% {
-        transform: translateY(-100px) scale(0.12);
-        opacity: 0;
-      }
+      filter: drop-shadow(
+        0 0 var(--beat-glow, 18px) #ff80c4
+      );
     }
 
     .musicNote {
@@ -182,8 +165,31 @@
       25% { opacity: 1; }
       100% {
         opacity: 0;
-        transform: translate(calc(-50% + var(--side)), -160px)
-                   scale(1.3);
+        transform:
+          translate(calc(-50% + var(--side)), -160px)
+          scale(1.3);
+      }
+    }
+
+    #catButton.walking {
+      animation: walkAway 2.4s ease-in forwards;
+    }
+
+    #catButton.walking #catPicture {
+      animation: footsteps 0.32s ease-in-out
+                 infinite alternate;
+    }
+
+    @keyframes footsteps {
+      from { transform: rotate(-2deg); }
+      to { transform: rotate(2deg) translateY(-7px); }
+    }
+
+    @keyframes walkAway {
+      75% { opacity: 1; }
+      100% {
+        transform: translateY(-100px) scale(0.12);
+        opacity: 0;
       }
     }
 
@@ -206,8 +212,13 @@
       animation: windBlow 1.15s linear infinite;
     }
 
-    #intro.breezy .wind.two { animation-delay: 0.3s; }
-    #intro.breezy .wind.three { animation-delay: 0.65s; }
+    #intro.breezy .wind.two {
+      animation-delay: 0.3s;
+    }
+
+    #intro.breezy .wind.three {
+      animation-delay: 0.65s;
+    }
 
     @keyframes windBlow {
       20%, 80% { opacity: 0.5; }
@@ -215,12 +226,16 @@
     }
 
     #introText,
-    #musicButton {
+    #musicButton,
+    #songButton {
       position: relative;
       z-index: 2;
       border-radius: 999px;
       font-weight: bold;
-      transition: transform 0.2s, box-shadow 0.2s, opacity 0.4s;
+      transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        opacity 0.4s;
     }
 
     #introText {
@@ -242,33 +257,20 @@
       box-shadow: 0 0 20px #ff9ec440;
     }
 
+    #songButton {
+      margin-top: 12px;
+      padding: 10px 20px;
+      border: 1px solid #ffb9d2;
+      background: #ffffff16;
+      color: #ffe4f2;
+      box-shadow: 0 0 15px #ff70c133;
+    }
+
     #introText:hover,
-    #musicButton:hover {
+    #musicButton:hover,
+    #songButton:hover {
       transform: translateY(-3px) scale(1.04);
       box-shadow: 0 8px 26px #ff9bc099;
-    }
-
-    .tinyClickWave {
-      position: fixed;
-      z-index: 1000;
-      width: 32px;
-      height: 32px;
-      border: 1.5px solid #ffc4e0e6;
-      border-radius: 50%;
-      box-shadow: 0 0 9px #ff9bcc80;
-      pointer-events: none;
-      animation: tinyWave 0.55s ease-out forwards;
-    }
-
-    @keyframes tinyWave {
-      from {
-        transform: translate(-50%, -50%) scale(0.2);
-        opacity: 0.9;
-      }
-      to {
-        transform: translate(-50%, -50%) scale(1.5);
-        opacity: 0;
-      }
     }
 
     /* RUNNING BABY CATS */
@@ -285,7 +287,6 @@
     #littleRunners img {
       display: block;
       width: 100%;
-      height: auto;
       filter: drop-shadow(0 0 8px #ffc3e159);
       animation: kittenHop 0.54s ease-in-out infinite;
     }
@@ -298,7 +299,9 @@
     }
 
     @keyframes kittenHop {
-      50% { transform: translateY(-7px) rotate(-2deg); }
+      50% {
+        transform: translateY(-7px) rotate(-2deg);
+      }
     }
 
     #littleRunners::before {
@@ -312,16 +315,20 @@
         0 0 8px #fff,
         0 0 18px #ffe58c,
         0 0 35px #ffc6f1;
-      animation: pixieFlutter 1.4s ease-in-out infinite alternate;
+      animation: pixieFlutter 1.4s ease-in-out
+                 infinite alternate;
     }
 
     @keyframes pixieFlutter {
       from {
-        transform: translateY(12px) rotate(-15deg) scale(0.8);
+        transform:
+          translateY(12px) rotate(-15deg) scale(0.8);
         opacity: 0.7;
       }
       to {
-        transform: translate(14px, -22px) rotate(20deg) scale(1.2);
+        transform:
+          translate(14px, -22px)
+          rotate(20deg) scale(1.2);
       }
     }
 
@@ -357,12 +364,184 @@
       }
     }
 
-    /* PAGE AFTER CLICKING */
+    /* SYNTHWAVE MODE */
+    #driveScene {
+      display: none;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background:
+        linear-gradient(
+          #100725 0%,
+          #421259 38%,
+          #da3e8e 55%,
+          #180d35 56%,
+          #070717 100%
+        );
+    }
+
+    #intro.drive #driveScene {
+      display: block;
+    }
+
+    #intro.drive #catButton,
+    #intro.drive #littleRunners {
+      visibility: hidden;
+    }
+
+    #driveScene .stars {
+      position: absolute;
+      inset: 0 0 45%;
+      opacity: 0.7;
+      background-image:
+        radial-gradient(#fff 1px, transparent 2px),
+        radial-gradient(#9defff 1px, transparent 2px);
+      background-size: 100px 85px, 145px 125px;
+      background-position: 12px 8px, 60px 43px;
+    }
+
+    #driveScene .sun {
+      position: absolute;
+      left: 50%;
+      top: 18%;
+      width: clamp(190px, 28vw, 360px);
+      aspect-ratio: 1;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0 11%,
+          #481058 11% 13%
+        ),
+        linear-gradient(
+          #ffe8a7,
+          #ff658b 70%,
+          #d033bd
+        );
+      box-shadow:
+        0 0 45px 15px #ff62a488,
+        0 0 100px #f334a766;
+      filter: drop-shadow(
+        0 0 var(--beat-glow, 18px) #ff79bc
+      );
+    }
+
+    #driveScene .mountains {
+      position: absolute;
+      inset: 40% 0 36%;
+      background: #1b0d3a;
+      clip-path: polygon(
+        0 70%, 9% 35%, 18% 75%,
+        30% 20%, 40% 70%, 51% 32%,
+        62% 76%, 73% 25%, 86% 72%,
+        94% 37%, 100% 65%,
+        100% 100%, 0 100%
+      );
+    }
+
+    #driveScene .horizon {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 55%;
+      height: 3px;
+      background: #ff70de;
+      box-shadow: 0 0 15px #ff3fcb;
+    }
+
+    #driveScene .road {
+      position: absolute;
+      left: -8%;
+      right: -8%;
+      top: 55%;
+      bottom: -10%;
+      background:
+        linear-gradient(
+          90deg,
+          #ff39cb 0 1%,
+          #140d2f 1% 49.5%,
+          #ff43d9 49.5% 50.5%,
+          #140d2f 50.5% 99%,
+          #ff39cb 99%
+        );
+      clip-path: polygon(
+        45% 0,
+        55% 0,
+        100% 100%,
+        0 100%
+      );
+    }
+
+    #driveScene .road::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0 43px,
+          #27eafa 44px 47px,
+          transparent 48px 84px
+        );
+      background-size: 100% 84px;
+      opacity: 0.7;
+      animation: roadMove 0.55s linear infinite;
+    }
+
+    @keyframes roadMove {
+      to { background-position-y: 84px; }
+    }
+
+    #driveScene .car {
+      position: absolute;
+      z-index: 1;
+      left: 50%;
+      bottom: 5%;
+      width: min(650px, 82vw);
+      height: auto;
+      transform: translateX(-50%);
+      filter:
+        drop-shadow(0 15px 25px #08051e)
+        drop-shadow(0 0 13px #fb4de8);
+      animation:
+        carBob 0.55s ease-in-out infinite alternate;
+    }
+
+    @keyframes carBob {
+      from { transform: translate(-50%, 0); }
+      to { transform: translate(-50%, -6px); }
+    }
+
+    #intro.drive:not(.playing)
+    #driveScene .road::before,
+    #intro.drive:not(.playing)
+    #driveScene .car {
+      animation-play-state: paused;
+    }
+
+    #intro.drive #introText {
+      background: #ffb8e8;
+      color: #310a41;
+      box-shadow: 0 0 20px #ff46d4;
+    }
+
+    #intro.drive #musicButton {
+      background: #90edfa;
+      color: #1b1742;
+      border-color: #8af7ff;
+      box-shadow: 0 0 20px #32e8ff88;
+    }
+
+    /* MAIN WEBSITE */
     #mainWebsite {
       min-height: 100vh;
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 1.5s ease, transform 1.5s ease;
+      transition:
+        opacity 1.5s ease,
+        transform 1.5s ease;
     }
 
     #mainWebsite.show {
@@ -393,7 +572,6 @@
     .siteLogo {
       font-size: 21px;
       font-weight: bold;
-      white-space: nowrap;
     }
 
     .menuLinks {
@@ -417,8 +595,6 @@
       font-weight: bold;
     }
 
-    #backToIntro:hover { background: #ffe5ef; }
-
     .welcomeSection {
       position: relative;
       min-height: 80vh;
@@ -429,8 +605,16 @@
       overflow: hidden;
       padding: 90px max(8vw, 25px);
       background:
-        radial-gradient(circle at 75% 45%, #7d3f7655, transparent 34%),
-        radial-gradient(circle at 20% 75%, #e78caf33, transparent 35%),
+        radial-gradient(
+          circle at 75% 45%,
+          #7d3f7655,
+          transparent 34%
+        ),
+        radial-gradient(
+          circle at 20% 75%,
+          #e78caf33,
+          transparent 35%
+        ),
         #1b1126;
     }
 
@@ -461,7 +645,9 @@
       margin: 12px 0 20px;
     }
 
-    .welcomeSection h1 span { color: #ffaad1; }
+    .welcomeSection h1 span {
+      color: #ffaad1;
+    }
 
     .welcomeSection > p:not(.eyebrow) {
       max-width: 520px;
@@ -479,11 +665,6 @@
       font-weight: bold;
       text-decoration: none;
       box-shadow: 0 8px 30px #ff9bc044;
-      transition: transform 0.2s;
-    }
-
-    .exploreButton:hover {
-      transform: translateY(-3px);
     }
 
     .contentSection {
@@ -491,21 +672,19 @@
       scroll-margin-top: 80px;
     }
 
-    .sectionHeading { margin-bottom: 34px; }
+    .sectionHeading {
+      margin-bottom: 34px;
+    }
 
     .sectionHeading h2 {
       font-size: clamp(36px, 5vw, 60px);
       margin: 8px 0;
     }
 
-    .sectionHeading p {
-      line-height: 1.6;
-      opacity: 0.8;
-    }
-
     .videoGrid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
       gap: 24px;
     }
 
@@ -523,9 +702,16 @@
       place-items: center;
       aspect-ratio: 16 / 9;
       background:
-        radial-gradient(circle at center, #ffb4d57a, transparent 38%),
-        linear-gradient(135deg, #51315f, #a05c87);
-      color: white;
+        radial-gradient(
+          circle at center,
+          #ffb4d57a,
+          transparent 38%
+        ),
+        linear-gradient(
+          135deg,
+          #51315f,
+          #a05c87
+        );
       font-size: 50px;
     }
 
@@ -537,20 +723,18 @@
       letter-spacing: 2px;
     }
 
-    .cardText h3,
-    .updateCard h3 { margin: 9px 0; }
-
     .cardText p,
     .updateCard p {
       line-height: 1.6;
       opacity: 0.8;
     }
 
-    .updatesSection { background: #1d1328; }
+    .updatesSection {
+      background: #1d1328;
+    }
 
     .updateCard {
       display: flex;
-      align-items: flex-start;
       gap: 20px;
       max-width: 750px;
       padding: 28px;
@@ -565,7 +749,30 @@
       padding: 30px;
       text-align: center;
       color: #ffc2de;
-      border-top: 1px solid #ffc6e122;
+    }
+
+    .tinyClickWave {
+      position: fixed;
+      z-index: 1000;
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid #ffc4e0e6;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: tinyWave 0.55s ease-out forwards;
+    }
+
+    @keyframes tinyWave {
+      from {
+        transform:
+          translate(-50%, -50%) scale(0.2);
+        opacity: 0.9;
+      }
+      to {
+        transform:
+          translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+      }
     }
 
     @media (max-width: 650px) {
@@ -581,7 +788,8 @@
   <div id="intro">
     <button id="catButton" type="button"
             aria-label="Enter the website">
-      <img id="catPicture" src="Tail.png"
+      <img id="catPicture"
+           src="Tail.png"
            alt="Two cats standing together">
       <span class="musicNote left">♫</span>
       <span class="musicNote right">♪</span>
@@ -603,15 +811,32 @@
       ♫ Play music ♡
     </button>
 
+    <button id="songButton" type="button">
+      ♪ Switch to Drive By
+    </button>
+
     <div id="littleRunners" aria-hidden="true">
       <img src="Baby.png" alt="">
-      <span class="blackKittenSpeed">✧ · ·</span>
+      <span class="blackKittenSpeed">
+        ✧ · ·
+      </span>
+    </div>
+
+    <div id="driveScene" aria-hidden="true">
+      <div class="stars"></div>
+      <div class="sun"></div>
+      <div class="mountains"></div>
+      <div class="horizon"></div>
+      <div class="road"></div>
+      <img class="car" src="Car.png" alt="">
     </div>
   </div>
 
   <main id="mainWebsite">
     <nav class="siteMenu" aria-label="Main menu">
-      <a class="siteLogo" href="#home">♡ Our Place</a>
+      <a class="siteLogo" href="#home">
+        ♡ Our Place
+      </a>
 
       <div class="menuLinks">
         <a href="#home">Home</a>
@@ -626,11 +851,16 @@
 
     <section class="welcomeSection" id="home">
       <div class="welcomeGlow"></div>
-      <p class="eyebrow">✦ A little world for us ✦</p>
-      <h1>Welcome to<br><span>Our Place ♡</span></h1>
+      <p class="eyebrow">
+        ✦ A little world for us ✦
+      </p>
+      <h1>
+        Welcome to<br>
+        <span>Our Place ♡</span>
+      </h1>
       <p>
-        A cozy place to share videos, little moments,
-        and everything new.
+        A cozy place to share videos,
+        little moments, and everything new.
       </p>
       <a class="exploreButton" href="#videos">
         Explore our place ↓
@@ -641,7 +871,10 @@
       <div class="sectionHeading">
         <p class="eyebrow">♡ Watch together</p>
         <h2>Our videos</h2>
-        <p>Our favorite moments, all in one place.</p>
+        <p>
+          Our favorite moments,
+          all in one place.
+        </p>
       </div>
 
       <div class="videoGrid">
@@ -659,17 +892,23 @@
           <div class="cardText">
             <span>VIDEO 02</span>
             <h3>Another little moment</h3>
-            <p>Your next YouTube video will go here.</p>
+            <p>
+              Your next YouTube video
+              will go here.
+            </p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="contentSection updatesSection" id="updates">
+    <section class="contentSection updatesSection"
+             id="updates">
       <div class="sectionHeading">
         <p class="eyebrow">✦ What’s new</p>
         <h2>Updates</h2>
-        <p>Little things we add along the way.</p>
+        <p>
+          Little things we add along the way.
+        </p>
       </div>
 
       <div class="updateCard">
@@ -677,8 +916,8 @@
         <div>
           <h3>Our place is open!</h3>
           <p>
-            This is where new pictures, videos,
-            and surprises will appear.
+            This is where new pictures,
+            videos, and surprises will appear.
           </p>
         </div>
       </div>
@@ -687,40 +926,75 @@
     <footer>Made with love ♡</footer>
   </main>
 
-  <audio id="introMusic"
-         src="Ariana Grande - everytime (Official Instrumental).mp3"
-         loop preload="auto"></audio>
+  <audio
+    id="introMusic"
+    src="Ariana Grande - everytime (Official Instrumental).mp3"
+    loop
+    preload="auto">
+  </audio>
 
   <script>
-    const intro = document.getElementById("intro");
-    const catButton = document.getElementById("catButton");
-    const catPicture = document.getElementById("catPicture");
-    const introText = document.getElementById("introText");
-    const mainWebsite = document.getElementById("mainWebsite");
-    const musicButton = document.getElementById("musicButton");
-    const introMusic = document.getElementById("introMusic");
-    const backButton = document.getElementById("backToIntro");
+    const intro =
+      document.getElementById("intro");
+    const catButton =
+      document.getElementById("catButton");
+    const catPicture =
+      document.getElementById("catPicture");
+    const introText =
+      document.getElementById("introText");
+    const mainWebsite =
+      document.getElementById("mainWebsite");
+    const musicButton =
+      document.getElementById("musicButton");
+    const introMusic =
+      document.getElementById("introMusic");
+    const backButton =
+      document.getElementById("backToIntro");
+    const songButton =
+      document.getElementById("songButton");
     const runnerPicture =
-      document.querySelector("#littleRunners img");
+      document.querySelector(
+        "#littleRunners img"
+      );
+    const carPicture =
+      document.querySelector(
+        "#driveScene .car"
+      );
 
     const idleFrames = [
-      "Tail.png", "Tail 2.png", "Tail 3.png"
+      "Tail.png",
+      "Tail 2.png",
+      "Tail 3.png"
     ];
 
     const danceFrames = [
-      "Dance 1.png", "Dance 2.png",
-      "Dance 3.png", "Dance 4.png"
+      "Dance 1.png",
+      "Dance 2.png",
+      "Dance 3.png",
+      "Dance 4.png"
     ];
 
     const runningFrames = [
-      "Baby.png", "Baby 2.png", "Baby 3.png",
-      "Baby 4.png", "Baby 5.png", "Baby 6.png"
+      "Baby.png",
+      "Baby 2.png",
+      "Baby 3.png",
+      "Baby 4.png",
+      "Baby 5.png",
+      "Baby 6.png"
+    ];
+
+    const carFrames = [
+      "Car.png",
+      "Car2.png",
+      "Car3.png",
+      "Car4.png"
     ];
 
     [
       ...idleFrames,
       ...danceFrames,
       ...runningFrames,
+      ...carFrames,
       "Walking Away.png"
     ].forEach(function (filename) {
       const image = new Image();
@@ -728,10 +1002,12 @@
     });
 
     let screen = "intro";
+    let mode = "cute";
     let transitionId = 0;
     let idleFrame = 0;
     let danceFrame = 0;
     let runFrame = 0;
+    let carFrame = 0;
     let danceTimer = null;
     let soundContext = null;
     let beatContext = null;
@@ -741,22 +1017,41 @@
     let average = 0;
     let pulse = 0;
 
-    /* Standing cats */
+    /* Idle tail and ear frames */
     setInterval(function () {
-      if (screen !== "intro" || !introMusic.paused) return;
+      if (
+        screen !== "intro" ||
+        !introMusic.paused
+      ) return;
 
-      idleFrame = (idleFrame + 1) % idleFrames.length;
+      idleFrame =
+        (idleFrame + 1) % idleFrames.length;
       catPicture.src = idleFrames[idleFrame];
     }, 450);
 
-    /* Running baby cats */
+    /* Running kittens */
     setInterval(function () {
-      runFrame = (runFrame + 1) % runningFrames.length;
-      runnerPicture.src = runningFrames[runFrame];
+      runFrame =
+        (runFrame + 1) % runningFrames.length;
+      runnerPicture.src =
+        runningFrames[runFrame];
     }, 180);
 
+    /* Cats moving inside the car */
+    setInterval(function () {
+      if (
+        screen !== "intro" ||
+        mode !== "drive" ||
+        introMusic.paused
+      ) return;
+
+      carFrame =
+        (carFrame + 1) % carFrames.length;
+      carPicture.src = carFrames[carFrame];
+    }, 240);
+
     function startDance() {
-      if (danceTimer) return;
+      if (mode === "drive" || danceTimer) return;
 
       danceFrame = 0;
       catPicture.src = danceFrames[0];
@@ -764,8 +1059,11 @@
       intro.classList.add("dancing");
 
       danceTimer = setInterval(function () {
-        danceFrame = (danceFrame + 1) % danceFrames.length;
-        catPicture.src = danceFrames[danceFrame];
+        danceFrame =
+          (danceFrame + 1) %
+          danceFrames.length;
+        catPicture.src =
+          danceFrames[danceFrame];
       }, 220);
     }
 
@@ -773,140 +1071,292 @@
       clearInterval(danceTimer);
       danceTimer = null;
       intro.classList.remove("dancing");
-      intro.style.setProperty("--beat-light", "0");
+      intro.style.setProperty(
+        "--beat-light", "0"
+      );
       catPicture.src = idleFrames[idleFrame];
-      catPicture.alt = "Two cats standing together";
+      catPicture.alt =
+        "Two cats standing together";
     }
 
     function prepareBeat() {
       if (beatContext) return;
 
       beatContext =
-        new (window.AudioContext || window.webkitAudioContext)();
+        new (
+          window.AudioContext ||
+          window.webkitAudioContext
+        )();
 
       const source =
-        beatContext.createMediaElementSource(introMusic);
+        beatContext.createMediaElementSource(
+          introMusic
+        );
 
       analyser = beatContext.createAnalyser();
       analyser.fftSize = 2048;
+
       frequencies =
-        new Uint8Array(analyser.frequencyBinCount);
+        new Uint8Array(
+          analyser.frequencyBinCount
+        );
 
       source.connect(analyser);
-      analyser.connect(beatContext.destination);
+      analyser.connect(
+        beatContext.destination
+      );
     }
 
     function animateBeat() {
-      if (introMusic.paused || !analyser) return;
+      if (
+        introMusic.paused ||
+        !analyser
+      ) return;
 
-      analyser.getByteFrequencyData(frequencies);
-
-      const hzPerBin =
-        beatContext.sampleRate / analyser.fftSize;
-      const first = Math.floor(60 / hzPerBin);
-      const last = Math.min(
-        frequencies.length - 1,
-        Math.ceil(220 / hzPerBin)
+      analyser.getByteFrequencyData(
+        frequencies
       );
 
+      const hzPerBin =
+        beatContext.sampleRate /
+        analyser.fftSize;
+
+      const first =
+        Math.floor(60 / hzPerBin);
+
+      const last =
+        Math.min(
+          frequencies.length - 1,
+          Math.ceil(220 / hzPerBin)
+        );
+
       let total = 0;
-      for (let i = first; i <= last; i++) {
+      for (
+        let i = first;
+        i <= last;
+        i++
+      ) {
         total += frequencies[i];
       }
 
-      const bass = total / (last - first + 1);
+      const bass =
+        total / (last - first + 1);
+
       average =
         average === 0
           ? bass
-          : average * 0.94 + bass * 0.06;
+          : average * 0.94 +
+            bass * 0.06;
 
-      const hit = Math.min(
-        1,
+      const hit =
+        Math.min(
+          1,
+          Math.max(
+            0,
+            (bass - average * 0.85) /
+            (average * 0.55 + 12)
+          )
+        );
+
+      pulse =
         Math.max(
-          0,
-          (bass - average * 0.85) /
-          (average * 0.55 + 12)
-        )
-      );
-
-      pulse = Math.max(hit, pulse * 0.84);
+          hit,
+          pulse * 0.84
+        );
 
       intro.style.setProperty(
-        "--beat-lift", `${-12 * pulse}px`
-      );
-      intro.style.setProperty(
-        "--beat-zoom", `${1 + 0.045 * pulse}`
-      );
-      intro.style.setProperty(
-        "--beat-glow", `${18 + 32 * pulse}px`
-      );
-      intro.style.setProperty(
-        "--beat-light", `${0.25 + 0.5 * pulse}`
+        "--beat-lift",
+        `${-12 * pulse}px`
       );
 
-      beatFrame = requestAnimationFrame(animateBeat);
+      intro.style.setProperty(
+        "--beat-zoom",
+        `${1 + 0.045 * pulse}`
+      );
+
+      intro.style.setProperty(
+        "--beat-glow",
+        `${18 + 32 * pulse}px`
+      );
+
+      intro.style.setProperty(
+        "--beat-light",
+        `${0.25 + 0.5 * pulse}`
+      );
+
+      beatFrame =
+        requestAnimationFrame(
+          animateBeat
+        );
     }
 
-    introMusic.addEventListener("play", function () {
-      cancelAnimationFrame(beatFrame);
-      average = 0;
-      animateBeat();
-    });
+    introMusic.addEventListener(
+      "play",
+      function () {
+        cancelAnimationFrame(
+          beatFrame
+        );
+        average = 0;
+        animateBeat();
+      }
+    );
 
-    introMusic.addEventListener("pause", function () {
-      cancelAnimationFrame(beatFrame);
-      pulse = 0;
-    });
+    introMusic.addEventListener(
+      "pause",
+      function () {
+        cancelAnimationFrame(
+          beatFrame
+        );
+        pulse = 0;
+        intro.classList.remove(
+          "playing"
+        );
+      }
+    );
 
-    musicButton.addEventListener("click", async function () {
-      if (screen !== "intro") return;
+    musicButton.addEventListener(
+      "click",
+      async function () {
+        if (screen !== "intro") return;
 
-      if (introMusic.paused) {
+        if (introMusic.paused) {
+          try {
+            prepareBeat();
+            await beatContext.resume();
+            await introMusic.play();
+
+            musicButton.textContent =
+              "♫ Pause music ♡";
+
+            intro.classList.add(
+              "playing"
+            );
+
+            startDance();
+          } catch (error) {
+            musicButton.textContent =
+              "Could not play music";
+          }
+        } else {
+          introMusic.pause();
+
+          musicButton.textContent =
+            "♫ Play music ♡";
+
+          stopDance();
+        }
+      }
+    );
+
+    songButton.addEventListener(
+      "click",
+      async function () {
+        if (screen !== "intro") return;
+
+        introMusic.pause();
+        stopDance();
+
+        mode =
+          mode === "cute"
+            ? "drive"
+            : "cute";
+
+        intro.classList.toggle(
+          "drive",
+          mode === "drive"
+        );
+
+        if (mode === "drive") {
+          carFrame = 0;
+          carPicture.src =
+            carFrames[0];
+        }
+
+        songButton.textContent =
+          mode === "drive"
+            ? "♪ Switch to everytime"
+            : "♪ Switch to Drive By";
+
+        introMusic.src =
+          mode === "drive"
+            ? "Eric Bellinger - Drive By (Audio).mp3"
+            : "Ariana Grande - everytime (Official Instrumental).mp3";
+
+        introMusic.load();
+
         try {
           prepareBeat();
           await beatContext.resume();
           await introMusic.play();
-          musicButton.textContent = "♫ Pause music ♡";
+
+          musicButton.textContent =
+            "♫ Pause music ♡";
+
+          intro.classList.add(
+            "playing"
+          );
+
           startDance();
         } catch (error) {
-          musicButton.textContent = "Could not play music";
+          musicButton.textContent =
+            "Could not play music";
         }
-      } else {
-        introMusic.pause();
-        musicButton.textContent = "♫ Play music ♡";
-        stopDance();
       }
-    });
+    );
 
-    function note(frequency, when, duration, volume) {
+    function note(
+      frequency,
+      when,
+      duration,
+      volume
+    ) {
       if (!soundContext) return;
 
-      const oscillator = soundContext.createOscillator();
-      const gain = soundContext.createGain();
+      const oscillator =
+        soundContext.createOscillator();
+      const gain =
+        soundContext.createGain();
 
       oscillator.type = "sine";
-      oscillator.frequency.value = frequency;
+      oscillator.frequency.value =
+        frequency;
 
-      gain.gain.setValueAtTime(0.001, when);
+      gain.gain.setValueAtTime(
+        0.001, when
+      );
       gain.gain.linearRampToValueAtTime(
-        volume, when + 0.03
+        volume,
+        when + 0.03
       );
       gain.gain.exponentialRampToValueAtTime(
-        0.001, when + duration
+        0.001,
+        when + duration
       );
 
       oscillator.connect(gain);
-      gain.connect(soundContext.destination);
+      gain.connect(
+        soundContext.destination
+      );
+
       oscillator.start(when);
-      oscillator.stop(when + duration);
+      oscillator.stop(
+        when + duration
+      );
     }
 
     function heartSound() {
       if (!soundContext) return;
 
-      const now = soundContext.currentTime;
+      const now =
+        soundContext.currentTime;
+
       note(660, now, 0.25, 0.09);
-      note(880, now + 0.12, 0.4, 0.07);
+      note(
+        880,
+        now + 0.12,
+        0.4,
+        0.07
+      );
     }
 
     function footstep() {
@@ -924,15 +1374,28 @@
       if (!soundContext) return;
 
       const length =
-        Math.floor(soundContext.sampleRate * 1.5);
+        Math.floor(
+          soundContext.sampleRate *
+          1.5
+        );
+
       const buffer =
         soundContext.createBuffer(
-          1, length, soundContext.sampleRate
+          1,
+          length,
+          soundContext.sampleRate
         );
-      const data = buffer.getChannelData(0);
 
-      for (let i = 0; i < length; i++) {
-        data[i] = Math.random() * 2 - 1;
+      const data =
+        buffer.getChannelData(0);
+
+      for (
+        let i = 0;
+        i < length;
+        i++
+      ) {
+        data[i] =
+          Math.random() * 2 - 1;
       }
 
       const source =
@@ -946,22 +1409,38 @@
       filter.type = "lowpass";
       filter.frequency.value = 500;
 
-      const now = soundContext.currentTime;
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(
-        0.035, now + 0.4
+      const now =
+        soundContext.currentTime;
+
+      gain.gain.setValueAtTime(
+        0.001,
+        now
       );
+
       gain.gain.linearRampToValueAtTime(
-        0.001, now + 1.5
+        0.035,
+        now + 0.4
+      );
+
+      gain.gain.linearRampToValueAtTime(
+        0.001,
+        now + 1.5
       );
 
       source.connect(filter);
       filter.connect(gain);
-      gain.connect(soundContext.destination);
+      gain.connect(
+        soundContext.destination
+      );
+
       source.start(now);
     }
 
-    function later(milliseconds, id, action) {
+    function later(
+      milliseconds,
+      id,
+      action
+    ) {
       setTimeout(function () {
         if (
           transitionId === id &&
@@ -982,9 +1461,21 @@
       introMusic.currentTime = 0;
       stopDance();
 
-      musicButton.style.opacity = "0";
+      intro.classList.remove(
+        "drive",
+        "playing"
+      );
+
+      musicButton.style.opacity =
+        "0";
       musicButton.disabled = true;
-      introText.style.opacity = "0";
+
+      songButton.style.opacity =
+        "0";
+      songButton.disabled = true;
+
+      introText.style.opacity =
+        "0";
       introText.disabled = true;
 
       try {
@@ -1001,98 +1492,190 @@
         soundContext = null;
       }
 
-      intro.classList.add("loving");
+      intro.classList.add(
+        "loving"
+      );
 
-      later(1100, id, function () {
-        catPicture.style.opacity = "0";
+      later(
+        1100,
+        id,
+        function () {
+          catPicture.style.opacity =
+            "0";
 
-        later(250, id, function () {
-          catPicture.src = "Walking Away.png";
-          catPicture.alt =
-            "Two cats walking away together";
-          catPicture.style.opacity = "1";
+          later(
+            250,
+            id,
+            function () {
+              catPicture.src =
+                "Walking Away.png";
 
-          intro.classList.add("breezy");
-          catButton.classList.add("walking");
+              catPicture.alt =
+                "Two cats walking away together";
 
-          windSound();
-          footstep();
+              catPicture.style.opacity =
+                "1";
 
-          [350, 700, 1050, 1400].forEach(
-            function (delay) {
-              later(delay, id, footstep);
+              intro.classList.add(
+                "breezy"
+              );
+
+              catButton.classList.add(
+                "walking"
+              );
+
+              windSound();
+              footstep();
+
+              [
+                350,
+                700,
+                1050,
+                1400
+              ].forEach(
+                function (delay) {
+                  later(
+                    delay,
+                    id,
+                    footstep
+                  );
+                }
+              );
             }
           );
-        });
-      });
+        }
+      );
 
-      later(3850, id, function () {
-        intro.style.opacity = "0";
-        mainWebsite.classList.add("show");
-      });
+      later(
+        3850,
+        id,
+        function () {
+          intro.style.opacity =
+            "0";
 
-      later(4850, id, function () {
-        intro.style.display = "none";
-        screen = "website";
-      });
+          mainWebsite.classList.add(
+            "show"
+          );
+        }
+      );
+
+      later(
+        4850,
+        id,
+        function () {
+          intro.style.display =
+            "none";
+
+          screen = "website";
+        }
+      );
     }
 
     catButton.addEventListener(
-      "click", enterWebsite
+      "click",
+      enterWebsite
     );
+
     introText.addEventListener(
-      "click", enterWebsite
+      "click",
+      enterWebsite
     );
 
-    backButton.addEventListener("click", function () {
-      ++transitionId;
-      screen = "intro";
+    backButton.addEventListener(
+      "click",
+      function () {
+        ++transitionId;
+        screen = "intro";
 
-      introMusic.pause();
-      introMusic.currentTime = 0;
-      stopDance();
+        introMusic.pause();
+        introMusic.currentTime = 0;
+        stopDance();
 
-      musicButton.textContent = "♫ Play music ♡";
-      musicButton.style.opacity = "1";
-      musicButton.disabled = false;
+        musicButton.textContent =
+          "♫ Play music ♡";
+        musicButton.style.opacity =
+          "1";
+        musicButton.disabled =
+          false;
 
-      introText.style.opacity = "1";
-      introText.disabled = false;
+        songButton.style.opacity =
+          "1";
+        songButton.disabled =
+          false;
 
-      intro.classList.remove(
-        "loving", "breezy"
-      );
-      catButton.classList.remove("walking");
-      catPicture.style.opacity = "1";
+        intro.classList.toggle(
+          "drive",
+          mode === "drive"
+        );
 
-      mainWebsite.classList.remove("show");
-      window.scrollTo(0, 0);
+        introText.style.opacity =
+          "1";
+        introText.disabled =
+          false;
 
-      intro.style.display = "flex";
-      requestAnimationFrame(function () {
-        intro.style.opacity = "1";
-      });
-    });
+        intro.classList.remove(
+          "loving",
+          "breezy"
+        );
+
+        catButton.classList.remove(
+          "walking"
+        );
+
+        catPicture.style.opacity =
+          "1";
+
+        mainWebsite.classList.remove(
+          "show"
+        );
+
+        window.scrollTo(0, 0);
+
+        intro.style.display =
+          "flex";
+
+        requestAnimationFrame(
+          function () {
+            intro.style.opacity =
+              "1";
+          }
+        );
+      }
+    );
 
     document.addEventListener(
       "click",
       function (event) {
-        if (!event.target.closest("button")) return;
+        if (
+          !event.target.closest(
+            "button"
+          )
+        ) return;
 
         const wave =
-          document.createElement("span");
+          document.createElement(
+            "span"
+          );
 
-        wave.className = "tinyClickWave";
+        wave.className =
+          "tinyClickWave";
+
         wave.style.left =
           event.clientX + "px";
+
         wave.style.top =
           event.clientY + "px";
 
-        document.body.appendChild(wave);
+        document.body.appendChild(
+          wave
+        );
 
-        setTimeout(function () {
-          wave.remove();
-        }, 600);
+        setTimeout(
+          function () {
+            wave.remove();
+          },
+          600
+        );
       },
       true
     );

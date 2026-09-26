@@ -888,5 +888,40 @@
     }, 600);
   }, true);
 </script>
+  <style>
+  #littleRunners img {
+    animation: kittenHop 0.54s ease-in-out infinite;
+  }
+
+  @keyframes kittenHop {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-7px) rotate(-2deg); }
+  }
+
+  .blackKittenSpeed {
+    position: absolute;
+    left: 49%;
+    bottom: 22%;
+    color: #ffe4f0;
+    font-size: 19px;
+    text-shadow: 0 0 8px #ff9fc9;
+    animation: speedTrail 0.55s ease-out infinite;
+  }
+
+  @keyframes speedTrail {
+    from { transform: translateX(8px); opacity: 0.8; }
+    to { transform: translateX(-18px); opacity: 0; }
+  }
+</style>
+
+<script>
+  const runners = document.getElementById("littleRunners");
+  if (runners) {
+    const speed = document.createElement("span");
+    speed.className = "blackKittenSpeed";
+    speed.textContent = "✧ · ·";
+    runners.appendChild(speed);
+  }
+</script>
 </body>
 </html>

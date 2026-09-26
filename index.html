@@ -609,5 +609,65 @@
     to { transform: translateY(-18px); opacity: 0.65; }
   }
 </style>
+  <style>
+  #littleRunners {
+    position: absolute;
+    left: -220px;
+    bottom: 4%;
+    width: clamp(150px, 24vw, 220px);
+    z-index: 2;
+    pointer-events: none;
+    animation: runAcross 18s linear infinite;
+  }
+
+  #littleRunners img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @keyframes runAcross {
+    0%, 8% {
+      transform: translateX(0);
+    }
+
+    77%, 100% {
+      transform: translateX(calc(100vw + 440px));
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const runningFrames = [
+      "Running 1.png",
+      "Running 2.png",
+      "Running 3.png",
+      "Running 4.png"
+    ];
+
+    runningFrames.forEach(function (filename) {
+      const preload = new Image();
+      preload.src = filename;
+    });
+
+    const runners = document.createElement("div");
+    runners.id = "littleRunners";
+    runners.setAttribute("aria-hidden", "true");
+
+    const picture = document.createElement("img");
+    picture.src = runningFrames[0];
+    picture.alt = "";
+    runners.appendChild(picture);
+
+    document.getElementById("intro").appendChild(runners);
+
+    let frame = 0;
+    setInterval(function () {
+      frame = (frame + 1) % runningFrames.length;
+      picture.src = runningFrames[frame];
+    }, 180);
+  })();
+</script>
 </body>
 </html>

@@ -2377,5 +2377,165 @@
       });
   })();
 </script>
+  <style>
+  /* Custom color is available only with the Original wallpaper. */
+  #mainWebsite:not(:has(.welcomeSection[data-wallpaper="original"]))
+  #customColorArea {
+    display: none;
+  }
+
+  #customColorArea {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid #ffffff38;
+  }
+
+  #customColorArea label {
+    display: block;
+    margin-bottom: 10px;
+    color: #fff4f9;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  #customColorPicker {
+    display: block;
+    width: 100%;
+    height: 48px;
+    padding: 4px;
+    border: 1px solid #ffffff80;
+    border-radius: 12px;
+    background: #ffffff18;
+    cursor: pointer;
+  }
+
+  /* Make the chosen color visible on the Original wallpaper. */
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])::before {
+    background:
+      radial-gradient(
+        circle at 79% 52%,
+        color-mix(in srgb, var(--accent) 48%, transparent),
+        transparent 32%
+      ),
+      radial-gradient(
+        circle at 14% 87%,
+        color-mix(in srgb, var(--accent) 34%, transparent),
+        transparent 39%
+      ),
+      linear-gradient(
+        145deg,
+        #150e1d,
+        color-mix(in srgb, var(--accent) 25%, #25152a) 62%,
+        #110d18
+      ) !important;
+  }
+
+  #mainWebsite:has(.welcomeSection[data-wallpaper="original"])
+  .welcomeOrbit {
+    border-color: var(--accent);
+    box-shadow:
+      0 0 65px color-mix(in srgb, var(--accent) 45%, transparent),
+      inset 0 0 70px color-mix(in srgb, var(--accent) 28%, transparent);
+  }
+</style>
+
+<script>
+  (() => {
+    const website = document.getElementById("mainWebsite");
+    const welcome = document.querySelector(".welcomeSection");
+    const themePanel = document.getElementById("themePanel");
+    const themeChoices = themePanel?.querySelector(".themeChoices");
+
+    if (!website || !welcome || !themePanel || !themeChoices) return;
+
+    // Add one custom color picker below the existing preset buttons.
+    let customArea = document.getElementById("customColorArea");
+
+    if (!customArea) {
+      customArea = document.createElement("div");
+      customArea.id = "customColorArea";
+      customArea.innerHTML = `
+        <label for="customColorPicker">Choose any color</label>
+        <input
+          id="customColorPicker"
+          type="color"
+          value="#d987b6"
+          aria-label="Choose any wallpaper color"
+        >
+      `;
+      themeChoices.after(customArea);
+    }
+
+    const picker = document.getElementById("customColorPicker");
+    const presetButtons = [
+      ...themePanel.querySelectorAll("[data-accent]")
+    ];
+
+    const validColor = color => /^#[0-9a-f]{6}$/i.test(color || "");
+
+    function applyColor(color) {
+      if (!validColor(color)) return;
+      website.style.setProperty("--accent", color);
+      localStorage.setItem("ourAccent", color);
+    }
+
+    // Remember a custom color separately from the preset wallpaper colors.
+    const savedCustom = localStorage.getItem("ourCustomColor");
+    if (validColor(savedCustom)) picker.value = savedCustom;
+
+    function updateWallpaperColor() {
+      const isOriginal = welcome.dataset.wallpaper === "original";
+
+      if (isOriginal) {
+        if (validColor(localStorage.getItem("ourCustomColor"))) {
+          applyColor(localStorage.getItem("ourCustomColor"));
+        }
+
+        picker.value = validColor(
+          website.style.getPropertyValue("--accent").trim()
+        )
+          ? website.style.getPropertyValue("--accent").trim()
+          : "#d987b6";
+      } else {
+        // Other wallpapers use one of the existing preset colors.
+        const savedPreset = localStorage.getItem("ourPresetColor");
+        applyColor(validColor(savedPreset) ? savedPreset : "#d987b6");
+      }
+    }
+
+    picker.addEventListener("input", () => {
+      localStorage.setItem("ourCustomColor", picker.value);
+
+      if (welcome.dataset.wallpaper === "original") {
+        applyColor(picker.value);
+      }
+    });
+
+    presetButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        const color = button.dataset.accent;
+        if (!validColor(color)) return;
+
+        localStorage.setItem("ourPresetColor", color);
+
+        if (welcome.dataset.wallpaper === "original") {
+          // A preset can also be the starting point for a custom color.
+          picker.value = color;
+          localStorage.setItem("ourCustomColor", color);
+        }
+
+        applyColor(color);
+      });
+    });
+
+    // React whenever the wallpaper chooser changes the wallpaper.
+    new MutationObserver(updateWallpaperColor).observe(welcome, {
+      attributes: true,
+      attributeFilter: ["data-wallpaper"]
+    });
+
+    updateWallpaperColor();
+  })();
+</script>
 </body>
 </html>

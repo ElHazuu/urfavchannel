@@ -264,12 +264,6 @@
       transform: scaleX(-1);
       filter: brightness(.88) drop-shadow(0 0 8px #ee8c8abb) drop-shadow(0 5px 9px #000a);
     }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .chickenPanic {
-      display: block; top: -31px; left: 58px; right: auto; color: #fff2b8;
-      font-size: 28px; line-height: 1; z-index: 3;
-      text-shadow: 0 0 5px #fff, 0 0 12px #ff9a64, 0 0 22px #d65c64;
-      animation: panicPop .36s ease-in-out infinite alternate;
-    }
     @keyframes nautilusEscape { from { transform: translate(0, 3px) rotate(2deg); } to { transform: translate(6px, -7px) rotate(-3deg); } }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .chickenWrap::before,
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .chickenWrap::after {
@@ -551,10 +545,18 @@
     #mainWebsite:not([data-wallpaper="original"]) .themeButton { border-color: var(--scene-accent); }
     #mainWebsite[data-theme="light"]:not([data-wallpaper="original"]) .videoCard { background: color-mix(in srgb, var(--scene-accent) 12%, white); color: #342638; }
     #mainWebsite[data-theme="light"]:not([data-wallpaper="original"]) .cardText p { color: #64505f; }
+    /* Video details in underwater light mode use the wallpaper's blue palette. */
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .videoCard {
+      background: #e5f8fa; color: #103e58; border-color: #76cbd4;
+    }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .cardText h3 { color: #103e58; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .cardText span { color: #0b667b; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .cardText p { color: #31566a; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .videoPreview { color: #0b667b; }
     /* Underwater light mode: dark water behind the hero copy keeps every line readable. */
     #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeSection {
       background: radial-gradient(circle at 82% 50%, #90dbe5 0%, #4ba9c2 35%, transparent 66%),
-                  linear-gradient(105deg, #103e5a 0%, #1b6381 53%, #5bb2c8 100%);
+                  linear-gradient(105deg, #103e5a 0%, #1b6381 53%, #5bb2c8 100%) !important;
     }
     #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .heroLine,
     #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .eyebrow,

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="site-build" content="underwater-chase-effects-20260927">
+  <meta name="site-build" content="underwater-deep-ocean-20260927">
   <title>Our Sayang ♡</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -248,7 +248,7 @@
     @keyframes chickenHop { to { transform: translateY(-10px) rotate(3deg); } }
     #mainWebsite[data-wallpaper="underwater"] .galleryChase { width: 270px; animation-name: gallerySwimAcross; }
     #mainWebsite[data-wallpaper="underwater"] .galleryChase::before {
-      content: "◦  ○  ◦"; color: #c7faff; text-shadow: 0 0 9px #90edff;
+      content: none; animation: none;
     }
     #mainWebsite[data-wallpaper="underwater"] .galleryChase > img { flex: none; width: 140px; height: 125px; animation: underwaterCatSwim .9s ease-in-out infinite alternate; }
     #mainWebsite[data-wallpaper="underwater"] .chickenWrap { width: 105px; height: 95px; animation: salmonDart .58s ease-in-out infinite alternate; }
@@ -378,7 +378,8 @@
     #mainWebsite:not([data-wallpaper="original"]) .colorPicker { display: none; }
     #intro #introText, #intro #musicButton, #intro #songButton { display: block; margin-left: auto; margin-right: auto; }
     #mainWebsite:not([data-wallpaper="original"]) { --scene-accent: #ffd2ea; --scene-surface: #251a2b; }
-    #mainWebsite[data-wallpaper="underwater"] { --scene-accent: #8de6ef; --scene-surface: #123e5e; --scene-bg: linear-gradient(#176686, #145376 40%, #123e68 75%, #0e2a4f); }
+    #mainWebsite[data-wallpaper="underwater"] { --scene-accent: #8de6ef; --scene-surface: #155b78; --scene-bg: linear-gradient(#237c9e, #176686 42%, #145376 76%, #123e68); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] { --scene-accent: #83eefa; --scene-surface: #0a2846; --scene-bg: radial-gradient(ellipse at 55% 10%, #17476c 0%, transparent 58%), linear-gradient(#0b3153, #071c3a 48%, #041327); }
     #mainWebsite[data-wallpaper="underwater"] .welcomeOrbit {
       border-color: color-mix(in srgb, var(--scene-accent) 88%, transparent);
       box-shadow: 0 0 65px color-mix(in srgb, var(--scene-accent) 38%, transparent),
@@ -411,6 +412,12 @@
       background: radial-gradient(ellipse at 50% -12%, #d6ffff87, transparent 55%),
                   repeating-radial-gradient(ellipse at 50% -30%, transparent 0 65px, #b7fbff12 85px 93px, transparent 125px 190px);
       animation: seaShimmer 9s ease-in-out infinite alternate; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::before { opacity: .12; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::after { opacity: .12; }
+    .glowSquid { display: none; position: absolute; z-index: 2; left: -150px; top: var(--squid-y); width: var(--squid-size); height: auto; opacity: .84; object-fit: contain; filter: drop-shadow(0 0 13px #55e5f8a6) drop-shadow(0 0 32px #4abbdc66); animation: squidDrift var(--squid-duration) linear infinite; animation-delay: var(--squid-delay); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .glowSquid { display: block; }
+    #mainWebsite .glowSquid[hidden] { display: none; }
+    @keyframes squidDrift { from { left: -180px; transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-36px) rotate(4deg); } to { left: calc(100% + 180px); transform: translateY(8px) rotate(-3deg); } }
     @keyframes seaRays { to { transform: skewX(-9deg) translateX(4%); opacity: .58; } }
     @keyframes seaShimmer { to { opacity: .55; transform: translateY(10px); } }
     .seaBubble { position: absolute; z-index: 1; left: var(--x); bottom: -35px; width: var(--size); aspect-ratio: 1;
@@ -454,8 +461,9 @@
     #mainWebsite[data-wallpaper="underwater"] .videoCard { background: #123e5eed; color: #f4fdff; }
     #mainWebsite[data-wallpaper="underwater"] .cardText p { color: #d3f4f8; }
     @media (prefers-reduced-motion: reduce) {
-      .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaFish, .seaPearl { animation: none !important; }
+      .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaFish, .seaPearl, .glowSquid { animation: none !important; }
       .seaFish { display: none; }
+      .glowSquid { left: 65% !important; }
       #mainWebsite[data-wallpaper="underwater"] .galleryChase,
       #mainWebsite[data-wallpaper="underwater"] .galleryChase > img,
       #mainWebsite[data-wallpaper="underwater"] .chickenWrap { animation: none !important; }
@@ -639,9 +647,11 @@
     const chickenFrames = ["Chicken.png", "Chicken2.png", "Chicken3.png", "Chicken4.png", "Chicken5.png", "Chicken6.png"];
     const underwaterCatFrames = ["frame-1.png", "frame-2.png", "frame-3.png", "frame-4.png", "frame-5.png", "frame-6.png"];
     const salmonFrames = ["salmon-frame-1.png", "salmon-frame-2.png", "salmon-frame-3.png", "salmon-frame-4.png"];
+    const glowSquidFrames = [1, 2, 3, 4].map(number => `glow-squid-frame-${number}.png`);
+    const adultGlowSquidFrames = [1, 2, 3, 4].map(number => `adult-glow-squid-frame-${number}.png`);
     const carFrames = ["Car.png", "Car2.png", "Car3.png", "Car4.png"];
     const kissFrames = ["Kiss.png", "Kiss2.png", "Kiss3.png", "Kiss4.png", "Kiss5.png", "Kiss6.png"];
-    [...idleFrames, ...danceFrames, ...runningFrames, ...chickenFrames, ...underwaterCatFrames, ...salmonFrames, ...carFrames, ...kissFrames, "Walking Away.png"].forEach(filename => { const image = new Image(); image.src = filename; });
+    [...idleFrames, ...danceFrames, ...runningFrames, ...chickenFrames, ...underwaterCatFrames, ...salmonFrames, ...glowSquidFrames, ...adultGlowSquidFrames, ...carFrames, ...kissFrames, "Walking Away.png"].forEach(filename => { const image = new Image(); image.src = filename; });
     let kissTimer;
     function playKiss() {
       clearInterval(kissTimer);
@@ -671,12 +681,13 @@
     let beatContext = null, analyser = null, frequencies = null, beatFrame = null, average = 0, pulse = 0;
     let galleryRunFrame = 0, chickenFrame = 0;
 
-    function setTheme(theme) {
+    function setTheme(theme, save = true) {
       const chosen = theme === "light" ? "light" : "dark";
       mainWebsite.dataset.theme = chosen;
       themeMode.textContent = chosen === "light" ? "☀ Light Mode" : "🌙 Dark Mode";
       themeMode.setAttribute("aria-checked", String(chosen === "light"));
-      try { localStorage.setItem("ourSayangTheme", chosen); } catch (error) {}
+      if (save && mainWebsite.dataset.wallpaper !== "underwater") savedTheme = chosen;
+      if (save) try { localStorage.setItem(mainWebsite.dataset.wallpaper === "underwater" ? "ourSayangUnderwaterTheme" : "ourSayangTheme", chosen); } catch (error) {}
     }
     function setColor(color) {
       if (!/^#[0-9a-fA-F]{6}$/.test(color)) return;
@@ -689,7 +700,7 @@
       savedTheme = localStorage.getItem("ourSayangTheme") || savedTheme;
       savedColor = localStorage.getItem("ourSayangColor") || savedColor;
     } catch (error) {}
-    setTheme(savedTheme);
+    setTheme(savedTheme, false);
     setColor(savedColor);
     themeButton.addEventListener("click", () => {
       themePanel.hidden = !themePanel.hidden;
@@ -710,6 +721,9 @@
       if (!wallpaperNames.includes(name)) name = "original";
       welcomeSection.dataset.wallpaper = name;
       mainWebsite.dataset.wallpaper = name;
+      let wallpaperTheme = name === "underwater" ? "light" : savedTheme;
+      try { if (name === "underwater") wallpaperTheme = localStorage.getItem("ourSayangUnderwaterTheme") || "light"; } catch (error) {}
+      setTheme(wallpaperTheme, false);
       galleryRunFrame = 0;
       chickenFrame = 0;
       galleryRunnerPicture.src = name === "underwater" ? underwaterCatFrames[0] : runningFrames[0];
@@ -1288,6 +1302,34 @@
   const message = document.getElementById("seaPearlMessage");
   const close = document.getElementById("closeSeaPearl");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  const squidFrames = {
+    baby: [1, 2, 3, 4].map(number => `glow-squid-frame-${number}.png`),
+    adult: [1, 2, 3, 4].map(number => `adult-glow-squid-frame-${number}.png`)
+  };
+  const squids = [
+    { kind: "baby", y: "19%", size: "75px", duration: "32s", delay: "-11s" },
+    { kind: "adult", y: "53%", size: "125px", duration: "44s", delay: "-24s" },
+    { kind: "baby", y: "77%", size: "62px", duration: "38s", delay: "-31s" }
+  ].map(spec => {
+    const squid = document.createElement("img");
+    squid.className = "glowSquid";
+    squid.alt = "";
+    squid.src = squidFrames[spec.kind][0];
+    squid.style.setProperty("--squid-y", spec.y);
+    squid.style.setProperty("--squid-size", spec.size);
+    squid.style.setProperty("--squid-duration", spec.duration);
+    squid.style.setProperty("--squid-delay", spec.delay);
+    squid.addEventListener("error", () => { squid.hidden = true; });
+    sea.append(squid);
+    return { element: squid, frames: squidFrames[spec.kind] };
+  });
+  let squidFrame = 0;
+  setInterval(() => {
+    if (site.dataset.wallpaper !== "underwater" || site.dataset.theme !== "dark" || reducedMotion.matches) return;
+    squidFrame = (squidFrame + 1) % 4;
+    squids.forEach(({ element, frames }) => { if (!element.hidden) element.src = frames[squidFrame]; });
+  }, 260);
 
   for (let i = 0; i < 14; i++) {
     const bubble = document.createElement("span");

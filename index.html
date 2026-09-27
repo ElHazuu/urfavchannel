@@ -569,6 +569,49 @@
     #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .heroLine::after {
       background: linear-gradient(90deg, #e8fcffb8, transparent);
     }
+    /* Playlist shortcut follows the active wallpaper and original accent color. */
+    .spotifyLink {
+      position: fixed; z-index: 45; left: 18px; bottom: 20px;
+      display: inline-flex; align-items: center; gap: 10px; min-height: 48px;
+      padding: 6px 15px 6px 7px; border: 1px solid var(--spotify-accent);
+      border-radius: 999px; color: var(--spotify-ink); text-decoration: none;
+      background: var(--spotify-bg); box-shadow: 0 7px 25px #0005, 0 0 20px var(--spotify-glow);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+      --spotify-ink: var(--theme-text); --spotify-accent: var(--theme-accent);
+      --spotify-bg: color-mix(in srgb, var(--theme-accent) 20%, var(--theme-surface));
+      --spotify-glow: color-mix(in srgb, var(--theme-accent) 35%, transparent);
+    }
+    .spotifyLink:hover { transform: translateY(-3px); box-shadow: 0 11px 30px #0005, 0 0 28px var(--spotify-glow); }
+    .spotifyLink:focus-visible { outline: 3px solid var(--spotify-accent); outline-offset: 4px; }
+    .spotifyMark { width: 34px; height: 34px; display: grid; place-items: center; flex: none;
+      border-radius: 50%; background: color-mix(in srgb, var(--spotify-accent) 31%, transparent); }
+    .spotifyMark svg { width: 27px; height: 27px; display: block; }
+    .spotifyLabel { font-size: 10px; font-weight: 800; letter-spacing: .14em; white-space: nowrap; }
+    #mainWebsite[data-wallpaper="original"][data-theme="light"] .spotifyLink {
+      --spotify-bg: color-mix(in srgb, var(--theme-accent) 14%, white);
+      --spotify-ink: #342638;
+    }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .spotifyLink {
+      --spotify-accent: #0f8297; --spotify-ink: #093f54;
+      --spotify-bg: #e1faffed; --spotify-glow: #66dce888;
+    }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .spotifyMark {
+      background: #b8eef5; box-shadow: inset 0 0 0 1px #3db3c7;
+    }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .spotifyLink {
+      --spotify-accent: #77f2d1; --spotify-ink: #c0fff0;
+      --spotify-bg: #031923ed; --spotify-glow: #31d6b266;
+      border-style: double; border-width: 3px;
+    }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .spotifyMark {
+      background: #0c4b50; box-shadow: 0 0 11px #54e9c5a8;
+    }
+    @media (max-width: 480px) {
+      .spotifyLink { width: 48px; height: 48px; padding: 6px; justify-content: center; }
+      .spotifyLabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    }
+    @media (prefers-reduced-motion: reduce) { .spotifyLink { transition: none; } }
     @media (max-width: 650px) { .wallpaperTools { left: 68px; } .wallpaperPanel { left: -52px; } }
 </style>
 </head>
@@ -608,6 +651,10 @@
     <div class="squidHabitat" id="squidHabitat" aria-hidden="true"></div>
     <div class="squidFamilyHabitat" id="squidFamilyHabitat" aria-hidden="true"></div>
     <div class="nautilusHabitat" id="nautilusHabitat" aria-hidden="true"></div>
+    <a class="spotifyLink" href="https://open.spotify.com/playlist/6ptQECZkUfTkpPQjyqExgx?si=089d40778801400e&amp;pt=894dc0ac2a22754bc4fb4aedabf057ee" target="_blank" rel="noopener noreferrer" aria-label="Open our Spotify playlist in a new tab">
+      <span class="spotifyMark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.8"/><path d="M7.8 12.1c5.4-1.5 11.8-.8 16.7 2.3M8.8 16.6c4.8-1.2 10.1-.4 14.1 2.2M10 20.8c3.6-.8 7.9-.1 11 1.8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+      <span class="spotifyLabel">OUR PLAYLIST ♫</span>
+    </a>
     <div class="themeTools">
       <button class="themeButton" id="themeButton" type="button" aria-label="Choose page colors" aria-expanded="false" aria-controls="themePanel">🎨</button>
       <div class="themePanel" id="themePanel" hidden>

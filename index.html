@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="site-build" content="underwater-heart-ornament-20260927">
+  <meta name="site-build" content="underwater-salmon-chase-20260927">
   <title>Our Sayang ♡</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -246,6 +246,17 @@
     @keyframes galleryRun { from { left: -330px; } to { left: calc(100% + 30px); } }
     @keyframes galleryCatHop { to { transform: translateY(-7px) rotate(-2deg); } }
     @keyframes chickenHop { to { transform: translateY(-10px) rotate(3deg); } }
+    #mainWebsite[data-wallpaper="underwater"] .galleryChase { width: 270px; animation-name: gallerySwimAcross; }
+    #mainWebsite[data-wallpaper="underwater"] .galleryChase::before {
+      content: "◦  ○  ◦"; color: #c7faff; text-shadow: 0 0 9px #90edff;
+    }
+    #mainWebsite[data-wallpaper="underwater"] .galleryChase > img { flex: none; width: 140px; height: 125px; animation: underwaterCatSwim .7s ease-in-out infinite alternate; }
+    #mainWebsite[data-wallpaper="underwater"] .chickenWrap { width: 105px; height: 95px; animation: salmonDart .43s ease-in-out infinite alternate; }
+    #mainWebsite[data-wallpaper="underwater"] .chicken { filter: drop-shadow(0 5px 8px #031d3599); }
+    #mainWebsite[data-wallpaper="underwater"] .chickenPanic { display: none; }
+    @keyframes gallerySwimAcross { from { left: -300px; } to { left: calc(100% + 30px); } }
+    @keyframes underwaterCatSwim { to { transform: translateY(-6px) rotate(2deg); } }
+    @keyframes salmonDart { to { transform: translateY(-9px) rotate(-4deg); } }
     .contentSection { padding: 110px max(8vw, 25px) 130px; scroll-margin-top: 70px; background: radial-gradient(circle at 80% 5%, #70355c3b, transparent 32%), #17101e; }
     .sectionHeading { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 30px; margin-bottom: 40px; padding-bottom: 27px; border-bottom: 1px solid #f6c6dd3d; }
     .sectionHeading .eyebrow { margin-bottom: 10px; }
@@ -439,6 +450,9 @@
     @media (prefers-reduced-motion: reduce) {
       .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaFish, .seaPearl { animation: none !important; }
       .seaFish { display: none; }
+      #mainWebsite[data-wallpaper="underwater"] .galleryChase,
+      #mainWebsite[data-wallpaper="underwater"] .galleryChase > img,
+      #mainWebsite[data-wallpaper="underwater"] .chickenWrap { animation: none !important; }
     }
     #mainWebsite:not([data-wallpaper="original"])::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: var(--scene-bg); }
     #mainWebsite:not([data-wallpaper="original"]) .welcomeSection,
@@ -614,9 +628,11 @@
     const danceFrames = ["Dance 1.png", "Dance 2.png", "Dance 3.png", "Dance 4.png"];
     const runningFrames = ["Baby.png", "Baby 2.png", "Baby 3.png", "Baby 4.png", "Baby 5.png", "Baby 6.png"];
     const chickenFrames = ["Chicken.png", "Chicken2.png", "Chicken3.png", "Chicken4.png", "Chicken5.png", "Chicken6.png"];
+    const underwaterCatFrames = ["frame-1.png", "frame-2.png", "frame-3.png", "frame-4.png", "frame-5.png", "frame-6.png"];
+    const salmonFrames = ["salmon-frame-1.png", "salmon-frame-2.png", "salmon-frame-3.png", "salmon-frame-4.png"];
     const carFrames = ["Car.png", "Car2.png", "Car3.png", "Car4.png"];
     const kissFrames = ["Kiss.png", "Kiss2.png", "Kiss3.png", "Kiss4.png", "Kiss5.png", "Kiss6.png"];
-    [...idleFrames, ...danceFrames, ...runningFrames, ...chickenFrames, ...carFrames, ...kissFrames, "Walking Away.png"].forEach(filename => { const image = new Image(); image.src = filename; });
+    [...idleFrames, ...danceFrames, ...runningFrames, ...chickenFrames, ...underwaterCatFrames, ...salmonFrames, ...carFrames, ...kissFrames, "Walking Away.png"].forEach(filename => { const image = new Image(); image.src = filename; });
     let kissTimer;
     function playKiss() {
       clearInterval(kissTimer);
@@ -644,7 +660,7 @@
     let danceTimer = null;
     let soundContext = null;
     let beatContext = null, analyser = null, frequencies = null, beatFrame = null, average = 0, pulse = 0;
-    let galleryRunFrame = 0;
+    let galleryRunFrame = 0, chickenFrame = 0;
 
     function setTheme(theme) {
       const chosen = theme === "light" ? "light" : "dark";
@@ -685,6 +701,11 @@
       if (!wallpaperNames.includes(name)) name = "original";
       welcomeSection.dataset.wallpaper = name;
       mainWebsite.dataset.wallpaper = name;
+      galleryRunFrame = 0;
+      chickenFrame = 0;
+      galleryRunnerPicture.src = name === "underwater" ? underwaterCatFrames[0] : runningFrames[0];
+      chickenPicture.src = name === "underwater" ? salmonFrames[0] : chickenFrames[0];
+      ourWorldCard.setAttribute("aria-label", name === "underwater" ? "Our World. Play swimming cats chasing a salmon" : "Our World. Play cat and chicken chase");
       document.querySelectorAll("[data-wallpaper]").forEach(button => {
         if (button.tagName === "BUTTON") button.setAttribute("aria-pressed", String(button.dataset.wallpaper === name));
       });
@@ -739,8 +760,9 @@
       card.setAttribute("aria-pressed", String(showing));
       if (card === ourWorldCard) {
         galleryChaseLane.classList.toggle("active", showing);
-        galleryRunnerPicture.src = runningFrames[0];
-        chickenPicture.src = chickenFrames[0];
+        const underwater = mainWebsite.dataset.wallpaper === "underwater";
+        galleryRunnerPicture.src = underwater ? underwaterCatFrames[0] : runningFrames[0];
+        chickenPicture.src = underwater ? salmonFrames[0] : chickenFrames[0];
         galleryRunFrame = 0;
         chickenFrame = 0;
       }
@@ -755,13 +777,15 @@
       runFrame = (runFrame + 1) % runningFrames.length;
       runnerPicture.src = runningFrames[runFrame];
     }, 180);
-    let chickenFrame = 0;
     setInterval(() => {
       if (screen !== "website" || !galleryChaseLane.classList.contains("active")) return;
-      galleryRunFrame = (galleryRunFrame + 1) % runningFrames.length;
-      galleryRunnerPicture.src = runningFrames[galleryRunFrame];
-      chickenFrame = (chickenFrame + 1) % chickenFrames.length;
-      chickenPicture.src = chickenFrames[chickenFrame];
+      const underwater = mainWebsite.dataset.wallpaper === "underwater";
+      const catFrames = underwater ? underwaterCatFrames : runningFrames;
+      const preyFrames = underwater ? salmonFrames : chickenFrames;
+      galleryRunFrame = (galleryRunFrame + 1) % catFrames.length;
+      galleryRunnerPicture.src = catFrames[galleryRunFrame];
+      chickenFrame = (chickenFrame + 1) % preyFrames.length;
+      chickenPicture.src = preyFrames[chickenFrame];
     }, 180);
     setInterval(() => {
       if (screen !== "intro" || mode !== "drive" || introMusic.paused) return;

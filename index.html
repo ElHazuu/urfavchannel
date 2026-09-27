@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="site-build" content="underwater-salmon-chase-20260927">
+  <meta name="site-build" content="underwater-chase-effects-20260927">
   <title>Our Sayang ♡</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -250,13 +250,19 @@
     #mainWebsite[data-wallpaper="underwater"] .galleryChase::before {
       content: "◦  ○  ◦"; color: #c7faff; text-shadow: 0 0 9px #90edff;
     }
-    #mainWebsite[data-wallpaper="underwater"] .galleryChase > img { flex: none; width: 140px; height: 125px; animation: underwaterCatSwim .7s ease-in-out infinite alternate; }
-    #mainWebsite[data-wallpaper="underwater"] .chickenWrap { width: 105px; height: 95px; animation: salmonDart .43s ease-in-out infinite alternate; }
+    #mainWebsite[data-wallpaper="underwater"] .galleryChase > img { flex: none; width: 140px; height: 125px; animation: underwaterCatSwim .9s ease-in-out infinite alternate; }
+    #mainWebsite[data-wallpaper="underwater"] .chickenWrap { width: 105px; height: 95px; animation: salmonDart .58s ease-in-out infinite alternate; }
     #mainWebsite[data-wallpaper="underwater"] .chicken { filter: drop-shadow(0 5px 8px #031d3599); }
     #mainWebsite[data-wallpaper="underwater"] .chickenPanic { display: none; }
+    #mainWebsite[data-wallpaper="underwater"] .chickenWrap::before,
+    #mainWebsite[data-wallpaper="underwater"] .chickenWrap::after { content: ""; position: absolute; z-index: -1; left: -18px; top: 46%; width: 26px; height: 2px; border-radius: 100%; background: linear-gradient(90deg, transparent, #b9faffbd); box-shadow: 0 0 7px #8deaf4; animation: salmonWake .75s ease-out infinite; }
+    #mainWebsite[data-wallpaper="underwater"] .chickenWrap::after { top: 58%; width: 19px; animation-delay: -.37s; }
+    #mainWebsite[data-wallpaper="underwater"] .swimTrailBubble { position: absolute; z-index: 0; left: var(--x); top: var(--y); width: var(--size); height: var(--size); border: 1px solid #c8fbffb8; border-radius: 50%; box-shadow: inset 0 0 3px #fff8, 0 0 6px #8beaff88; animation: swimTrailRise 1.55s ease-out forwards; }
     @keyframes gallerySwimAcross { from { left: -300px; } to { left: calc(100% + 30px); } }
-    @keyframes underwaterCatSwim { to { transform: translateY(-6px) rotate(2deg); } }
-    @keyframes salmonDart { to { transform: translateY(-9px) rotate(-4deg); } }
+    @keyframes underwaterCatSwim { from { transform: translateY(3px) rotate(-2deg); } to { transform: translateY(-7px) rotate(3deg); } }
+    @keyframes salmonDart { from { transform: translateY(3px) rotate(3deg); } to { transform: translateY(-9px) rotate(-5deg); } }
+    @keyframes salmonWake { from { opacity: .8; transform: translateX(0) scaleX(.8); } to { opacity: 0; transform: translateX(-25px) scaleX(1.4); } }
+    @keyframes swimTrailRise { from { opacity: .8; transform: translate(0, 0) scale(.7); } to { opacity: 0; transform: translate(var(--drift), -43px) scale(1.25); } }
     .contentSection { padding: 110px max(8vw, 25px) 130px; scroll-margin-top: 70px; background: radial-gradient(circle at 80% 5%, #70355c3b, transparent 32%), #17101e; }
     .sectionHeading { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 30px; margin-bottom: 40px; padding-bottom: 27px; border-bottom: 1px solid #f6c6dd3d; }
     .sectionHeading .eyebrow { margin-bottom: 10px; }
@@ -453,6 +459,9 @@
       #mainWebsite[data-wallpaper="underwater"] .galleryChase,
       #mainWebsite[data-wallpaper="underwater"] .galleryChase > img,
       #mainWebsite[data-wallpaper="underwater"] .chickenWrap { animation: none !important; }
+      #mainWebsite[data-wallpaper="underwater"] .chickenWrap::before,
+      #mainWebsite[data-wallpaper="underwater"] .chickenWrap::after,
+      #mainWebsite[data-wallpaper="underwater"] .swimTrailBubble { display: none; }
     }
     #mainWebsite:not([data-wallpaper="original"])::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: var(--scene-bg); }
     #mainWebsite:not([data-wallpaper="original"]) .welcomeSection,
@@ -787,6 +796,25 @@
       chickenFrame = (chickenFrame + 1) % preyFrames.length;
       chickenPicture.src = preyFrames[chickenFrame];
     }, 180);
+    setInterval(() => {
+      if (screen !== "website" || mainWebsite.dataset.wallpaper !== "underwater" ||
+          !galleryChaseLane.classList.contains("active") ||
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const lane = galleryChaseLane.getBoundingClientRect();
+      for (const sprite of [galleryRunnerPicture, chickenPicture]) {
+        const rect = sprite.getBoundingClientRect();
+        const x = rect.left - lane.left + rect.width * .13;
+        if (x < 0 || x > lane.width) continue;
+        const bubble = document.createElement("span");
+        bubble.className = "swimTrailBubble";
+        bubble.style.setProperty("--x", x + "px");
+        bubble.style.setProperty("--y", (rect.top - lane.top + rect.height * .62) + "px");
+        bubble.style.setProperty("--size", (4 + Math.random() * 5) + "px");
+        bubble.style.setProperty("--drift", (-12 - Math.random() * 15) + "px");
+        galleryChaseLane.append(bubble);
+        setTimeout(() => bubble.remove(), 1600);
+      }
+    }, 360);
     setInterval(() => {
       if (screen !== "intro" || mode !== "drive" || introMusic.paused) return;
       carFrame = (carFrame + 1) % carFrames.length;

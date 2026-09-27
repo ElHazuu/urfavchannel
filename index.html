@@ -379,7 +379,7 @@
     #intro #introText, #intro #musicButton, #intro #songButton { display: block; margin-left: auto; margin-right: auto; }
     #mainWebsite:not([data-wallpaper="original"]) { --scene-accent: #ffd2ea; --scene-surface: #251a2b; }
     #mainWebsite[data-wallpaper="underwater"] { --scene-accent: #8de6ef; --scene-surface: #155b78; --scene-bg: linear-gradient(#237c9e, #176686 42%, #145376 76%, #123e68); }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] { --scene-accent: #78dbe9; --scene-surface: #06111c; --scene-bg: radial-gradient(ellipse at 52% 8%, #051524 0%, transparent 38%), linear-gradient(#020a13 0%, #010610 48%, #000307 100%); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] { --scene-accent: #78dbe9; --scene-surface: #06111c; --scene-bg: linear-gradient(#01060c 0%, #01040a 55%, #000204 100%); }
     #mainWebsite[data-wallpaper="underwater"] { background: var(--scene-bg); background-attachment: fixed; }
     #mainWebsite[data-wallpaper="underwater"] .welcomeOrbit {
       border-color: color-mix(in srgb, var(--scene-accent) 88%, transparent);
@@ -402,10 +402,16 @@
     #mainWebsite[data-wallpaper="underwater"] .welcomeGlow { background: #79e6f638; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .welcomeGlow { background: transparent; box-shadow: none; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .welcomeOrbit { box-shadow: 0 0 12px #61cddc33, inset 0 0 20px #61cddc21; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .welcomeOrbit:hover { box-shadow: 0 0 18px #61cddc55, inset 0 0 24px #61cddc33; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .welcomeOrbit::before,
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .orbitStar::before { text-shadow: 0 0 7px #73dbe188; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .welcomeSection::before { opacity: 0; }
     .underseaBackdrop { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"] .underseaBackdrop { display: block; }
-    .squidHabitat { display: none; position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .squidHabitat { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .squidHabitat { display: block; }
+    .nautilusHabitat { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .nautilusHabitat { display: block; }
     .monumentHabitat { display: none; position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"] .monumentHabitat { display: block; }
     .oceanMonument { position: absolute; top: 44%; left: 50%; width: min(82vw, 700px); height: auto; transform: translateX(-50%); opacity: .38; filter: drop-shadow(0 25px 38px #0529449c); }
@@ -428,11 +434,15 @@
     .squidDrifter { display: none; position: absolute; left: -200px; top: var(--squid-y); width: var(--squid-size); aspect-ratio: 1; animation: squidRoam var(--squid-duration) linear infinite; animation-delay: var(--squid-delay); }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .squidDrifter { display: block; }
     #mainWebsite .squidDrifter[hidden], #mainWebsite .nautilusDrifter[hidden] { display: none; }
-    .squidDrifter::before { content: ""; position: absolute; inset: -70%; border-radius: 50%; background: radial-gradient(circle, #a0ffffb2 0%, #58eeff6e 19%, #29bfeb2b 43%, transparent 70%); filter: blur(18px); animation: squidLight 3.4s ease-in-out infinite alternate; }
-    .glowSquid { position: relative; width: 100%; height: auto; object-fit: contain; filter: brightness(1.55) saturate(1.2) drop-shadow(0 0 8px #b5ffff) drop-shadow(0 0 24px #70f7fff2) drop-shadow(0 0 44px #29c6f499); }
+    .glowSquid { position: relative; width: 100%; height: auto; object-fit: contain; animation: squidPulse 3.4s ease-in-out infinite alternate; animation-delay: var(--squid-glow-delay); }
+    .squidSpark { position: absolute; left: 74%; top: 23%; width: 3px; height: 3px; border-radius: 50%; background: #d7ffff; box-shadow: 0 0 7px 3px #68eeff, -30px 30px 0 -1px #b9ffff; animation: squidSparkle 2.3s ease-in-out infinite alternate; animation-delay: var(--squid-glow-delay); }
     #mainWebsite .glowSquid[hidden] { display: none; }
     @keyframes squidRoam { 0% { left: -200px; transform: translateY(0) rotate(-5deg); } 25% { transform: translateY(-28px) rotate(3deg); } 50% { transform: translateY(18px) rotate(-3deg); } 75% { transform: translateY(-20px) rotate(4deg); } 100% { left: calc(100% + 200px); transform: translateY(10px) rotate(-4deg); } }
-    @keyframes squidLight { to { opacity: .58; transform: scale(1.2); } }
+    @keyframes squidPulse {
+      from { filter: brightness(1.1) saturate(1.2) drop-shadow(0 0 5px #8cfaff) drop-shadow(0 0 13px #37d6ed9c); }
+      to { filter: brightness(1.7) saturate(1.3) drop-shadow(0 0 8px #d4ffff) drop-shadow(0 0 22px #78f6fff0) drop-shadow(0 0 32px #28c5e799); }
+    }
+    @keyframes squidSparkle { to { opacity: .2; transform: translate(6px, -4px) scale(.6); } }
     @keyframes seaRays { to { transform: skewX(-9deg) translateX(4%); opacity: .58; } }
     @keyframes seaShimmer { to { opacity: .55; transform: translateY(10px); } }
     .seaBubble { position: absolute; z-index: 1; left: var(--x); bottom: -35px; width: var(--size); aspect-ratio: 1;
@@ -442,7 +452,7 @@
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .seaBubble { filter: brightness(.13); box-shadow: none; }
     @keyframes seaBubbleRise { from { transform: translate(0, 0) scale(.75); opacity: 0; }
       12% { opacity: .68; } 88% { opacity: .5; } to { transform: translate(var(--drift), -110vh) scale(1.15); opacity: 0; } }
-    .nautilusDrifter { display: none; position: absolute; z-index: 1; left: -150px; top: var(--nautilus-y); width: var(--nautilus-size); opacity: .9; animation: nautilusRoam var(--nautilus-duration) linear infinite; animation-delay: var(--nautilus-delay); }
+    .nautilusDrifter { display: none; position: absolute; z-index: 1; left: -150px; top: var(--nautilus-y); width: var(--nautilus-size); opacity: var(--nautilus-opacity, .8); animation: nautilusRoam var(--nautilus-duration) linear infinite; animation-delay: var(--nautilus-delay); }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .nautilusDrifter { display: block; }
     .nautilusDrifter::after { content: ""; position: absolute; left: -22px; top: 40%; width: 20px; height: 20px; border: 1px solid #8be6ed70; border-radius: 50%; box-shadow: -17px 9px 0 -6px #8be6ed80; animation: nautilusWake 1.5s ease-out infinite; }
     .nautilusDrifter img { display: block; width: 100%; height: auto; transform: scaleX(-1); filter: brightness(.7) drop-shadow(0 0 5px #60c9d35c); animation: nautilusPulse 2.8s ease-in-out infinite alternate; }
@@ -477,7 +487,7 @@
     #mainWebsite[data-wallpaper="underwater"] .videoCard { background: #123e5eed; color: #f4fdff; }
     #mainWebsite[data-wallpaper="underwater"] .cardText p { color: #d3f4f8; }
     @media (prefers-reduced-motion: reduce) {
-      .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaPearl, .squidDrifter, .squidDrifter::before, .nautilusDrifter, .nautilusDrifter::after, .nautilusDrifter img { animation: none !important; }
+      .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaPearl, .squidDrifter, .glowSquid, .squidSpark, .nautilusDrifter, .nautilusDrifter::after, .nautilusDrifter img { animation: none !important; }
       #mainWebsite[data-wallpaper="underwater"] .galleryChase,
       #mainWebsite[data-wallpaper="underwater"] .galleryChase > img,
       #mainWebsite[data-wallpaper="underwater"] .chickenWrap { animation: none !important; }
@@ -544,6 +554,7 @@
       </svg>
     </div>
     <div class="squidHabitat" id="squidHabitat" aria-hidden="true"></div>
+    <div class="nautilusHabitat" id="nautilusHabitat" aria-hidden="true"></div>
     <div class="themeTools">
       <button class="themeButton" id="themeButton" type="button" aria-label="Choose page colors" aria-expanded="false" aria-controls="themePanel">🎨</button>
       <div class="themePanel" id="themePanel" hidden>
@@ -1331,6 +1342,7 @@
   const site = document.getElementById("mainWebsite");
   const sea = document.getElementById("underseaBackdrop");
   const squidHabitat = document.getElementById("squidHabitat");
+  const nautilusHabitat = document.getElementById("nautilusHabitat");
   const pearl = document.getElementById("seaPearl");
   const message = document.getElementById("seaPearlMessage");
   const close = document.getElementById("closeSeaPearl");
@@ -1341,9 +1353,9 @@
     adult: [1, 2, 3, 4].map(number => `adult-glow-squid-frame-${number}.png`)
   };
   const squids = [
-    { kind: "baby", y: "12%", size: "75px", duration: "34s", delay: "-11s" },
-    { kind: "adult", y: "49%", size: "125px", duration: "46s", delay: "-27s" },
-    { kind: "baby", y: "80%", size: "62px", duration: "39s", delay: "-33s" }
+    { kind: "baby", y: "13%", size: "58px", duration: "39s", delay: "-11s", glowDelay: "-1s" },
+    { kind: "adult", y: "47%", size: "102px", duration: "52s", delay: "-31s", glowDelay: "-2.2s" },
+    { kind: "baby", y: "83%", size: "48px", duration: "45s", delay: "-22s", glowDelay: "-3s" }
   ].map(spec => {
     const drifter = document.createElement("span");
     drifter.className = "squidDrifter";
@@ -1355,8 +1367,12 @@
     drifter.style.setProperty("--squid-size", spec.size);
     drifter.style.setProperty("--squid-duration", spec.duration);
     drifter.style.setProperty("--squid-delay", spec.delay);
+    drifter.style.setProperty("--squid-glow-delay", spec.glowDelay);
     squid.addEventListener("error", () => { drifter.hidden = true; });
     drifter.append(squid);
+    const spark = document.createElement("span");
+    spark.className = "squidSpark";
+    drifter.append(spark);
     squidHabitat.append(drifter);
     return { element: squid, frames: squidFrames[spec.kind] };
   });
@@ -1379,8 +1395,8 @@
   }
   const nautilusFrames = [1, 2, 3, 4, 5, 6].map(number => `nautilus-frame-${number}.png`);
   const nautiluses = [
-    { y: "29%", size: "104px", duration: "43s", delay: "-19s" },
-    { y: "71%", size: "77px", duration: "57s", delay: "-39s" }
+    { y: "31%", size: "78px", duration: "49s", delay: "-20s", opacity: ".78" },
+    { y: "68%", size: "59px", duration: "63s", delay: "-45s", opacity: ".62" }
   ].map(spec => {
     const drifter = document.createElement("span");
     drifter.className = "nautilusDrifter";
@@ -1388,12 +1404,13 @@
     drifter.style.setProperty("--nautilus-size", spec.size);
     drifter.style.setProperty("--nautilus-duration", spec.duration);
     drifter.style.setProperty("--nautilus-delay", spec.delay);
+    drifter.style.setProperty("--nautilus-opacity", spec.opacity);
     const image = document.createElement("img");
     image.src = nautilusFrames[0];
     image.alt = "";
     image.addEventListener("error", () => { drifter.hidden = true; });
     drifter.append(image);
-    sea.append(drifter);
+    nautilusHabitat.append(drifter);
     return image;
   });
   let nautilusFrame = 0;

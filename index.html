@@ -265,7 +265,8 @@
       filter: brightness(.88) drop-shadow(0 0 8px #ee8c8abb) drop-shadow(0 5px 9px #000a);
     }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .chickenPanic {
-      display: block; top: -10px; left: 0; right: auto; color: #fff2b8;
+      display: block; top: -31px; left: 58px; right: auto; color: #fff2b8;
+      font-size: 28px; line-height: 1; z-index: 3;
       text-shadow: 0 0 5px #fff, 0 0 12px #ff9a64, 0 0 22px #d65c64;
       animation: panicPop .36s ease-in-out infinite alternate;
     }
@@ -550,6 +551,24 @@
     #mainWebsite:not([data-wallpaper="original"]) .themeButton { border-color: var(--scene-accent); }
     #mainWebsite[data-theme="light"]:not([data-wallpaper="original"]) .videoCard { background: color-mix(in srgb, var(--scene-accent) 12%, white); color: #342638; }
     #mainWebsite[data-theme="light"]:not([data-wallpaper="original"]) .cardText p { color: #64505f; }
+    /* Underwater light mode: dark water behind the hero copy keeps every line readable. */
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeSection {
+      background: radial-gradient(circle at 82% 50%, #90dbe5 0%, #4ba9c2 35%, transparent 66%),
+                  linear-gradient(105deg, #103e5a 0%, #1b6381 53%, #5bb2c8 100%);
+    }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .heroLine,
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .eyebrow,
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .heroSubtitle,
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .scrollNote {
+      color: #f7feff; text-shadow: 0 2px 9px #062b43a6;
+    }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .heroSubtitle { font-weight: 500; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeSection h1 span {
+      color: #a6f5f3; text-shadow: 0 3px 17px #082f48b3;
+    }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .heroLine::after {
+      background: linear-gradient(90deg, #e8fcffb8, transparent);
+    }
     @media (max-width: 650px) { .wallpaperTools { left: 68px; } .wallpaperPanel { left: -52px; } }
 </style>
 </head>

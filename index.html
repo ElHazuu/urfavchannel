@@ -284,7 +284,7 @@
     footer { padding: 30px; border-top: 1px solid #ffc6e122; color: #d9afc6; font-size: 11px; letter-spacing: .16em; text-align: center; text-transform: uppercase; }
 
     /* Main page color controls */
-    #mainWebsite { --theme-bg: #140e1d; --theme-surface: #251a2b; --theme-text: #fbf3f8; --theme-muted: #dbc4d3; --theme-line: #f6c6dd3d; --theme-accent: #d987b6; background: var(--theme-bg); color: var(--theme-text); }
+    #mainWebsite { position: relative; --theme-bg: #140e1d; --theme-surface: #251a2b; --theme-text: #fbf3f8; --theme-muted: #dbc4d3; --theme-line: #f6c6dd3d; --theme-accent: #d987b6; background: var(--theme-bg); color: var(--theme-text); }
     #mainWebsite[data-theme="light"] { --theme-bg: #fff9f8; --theme-surface: #fff; --theme-text: #342638; --theme-muted: #6a5967; --theme-line: #896d803d; }
     #mainWebsite .welcomeSection { background: radial-gradient(circle at 80% 48%, color-mix(in srgb, var(--theme-accent) 27%, transparent), transparent 35%), linear-gradient(145deg, var(--theme-bg), color-mix(in srgb, var(--theme-accent) 12%, var(--theme-bg))); }
     #mainWebsite .storySection { background: radial-gradient(circle at 18% 10%, color-mix(in srgb, var(--theme-accent) 24%, transparent), transparent 37%), var(--theme-bg); }
@@ -406,11 +406,11 @@
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .welcomeOrbit::before,
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .orbitStar::before { text-shadow: 0 0 7px #73dbe188; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .welcomeSection::before { opacity: 0; }
-    .underseaBackdrop { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .underseaBackdrop { display: none; position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"] .underseaBackdrop { display: block; }
-    .squidHabitat { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .squidHabitat { display: none; position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .squidHabitat { display: block; }
-    .nautilusHabitat { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .nautilusHabitat { display: none; position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .nautilusHabitat { display: block; }
     .monumentHabitat { display: none; position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"] .monumentHabitat { display: block; }
@@ -445,7 +445,7 @@
     @keyframes squidSparkle { to { opacity: .2; transform: translate(6px, -4px) scale(.6); } }
     @keyframes seaRays { to { transform: skewX(-9deg) translateX(4%); opacity: .58; } }
     @keyframes seaShimmer { to { opacity: .55; transform: translateY(10px); } }
-    .seaBubble { position: absolute; z-index: 1; left: var(--x); bottom: -35px; width: var(--size); aspect-ratio: 1;
+    .seaBubble { position: absolute; z-index: 1; left: var(--x); bottom: var(--bubble-bottom); width: var(--size); aspect-ratio: 1;
       border: 1px solid #d8ffff9c; border-radius: 50%; background: radial-gradient(circle at 30% 27%, #ffffffad, transparent 30%), #c4faff12;
       box-shadow: inset -3px -4px 7px #2ea6c43d, 0 0 9px #b8ffff38;
       animation: seaBubbleRise var(--duration) linear infinite; animation-delay: var(--delay); }
@@ -460,7 +460,7 @@
     @keyframes nautilusRoam { 0% { left: -150px; transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-24px) rotate(4deg); } 100% { left: calc(100% + 150px); transform: translateY(9px) rotate(-4deg); } }
     @keyframes nautilusWake { to { opacity: 0; transform: translate(-22px, 14px) scale(1.4); } }
     @keyframes nautilusPulse { to { filter: brightness(.85) drop-shadow(0 0 9px #70d9dc8a); } }
-    .seaClickBubble { position: fixed; z-index: 2; left: var(--x); top: var(--y); width: var(--size); aspect-ratio: 1;
+    .seaClickBubble { position: absolute; z-index: 2; left: var(--x); top: var(--y); width: var(--size); aspect-ratio: 1;
       border: 1px solid #d7ffffb8; border-radius: 50%; background: radial-gradient(circle at 30% 25%, #fff9, transparent 35%);
       pointer-events: none; animation: seaClickRise 1.8s ease-out forwards; }
     @keyframes seaClickRise { to { opacity: 0; transform: translate(var(--drift), -150px) scale(1.5); } }
@@ -1391,6 +1391,7 @@
     bubble.style.setProperty("--duration", (12 + i % 6 * 2) + "s");
     bubble.style.setProperty("--delay", (-i * 2.7) + "s");
     bubble.style.setProperty("--drift", (i % 2 ? -28 : 32) + "px");
+    bubble.style.setProperty("--bubble-bottom", (i * 31 % 94) + "%");
     sea.append(bubble);
   }
   const nautilusFrames = [1, 2, 3, 4, 5, 6].map(number => `nautilus-frame-${number}.png`);
@@ -1426,8 +1427,9 @@
     for (let i = 0; i < 7; i++) {
       const bubble = document.createElement("span");
       bubble.className = "seaClickBubble";
-      bubble.style.setProperty("--x", (event.clientX + Math.random() * 48 - 24) + "px");
-      bubble.style.setProperty("--y", (event.clientY + Math.random() * 24 - 12) + "px");
+      const siteBounds = site.getBoundingClientRect();
+      bubble.style.setProperty("--x", (event.clientX - siteBounds.left + Math.random() * 48 - 24) + "px");
+      bubble.style.setProperty("--y", (event.clientY - siteBounds.top + Math.random() * 24 - 12) + "px");
       bubble.style.setProperty("--size", (6 + Math.random() * 12) + "px");
       bubble.style.setProperty("--drift", (Math.random() * 75 - 38) + "px");
       sea.append(bubble);

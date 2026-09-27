@@ -571,6 +571,29 @@
     #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .heroLine::after {
       background: linear-gradient(90deg, #e8fcffb8, transparent);
     }
+    /* The underwater light-mode heart keeps its shape against the pale water. */
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeOrbit {
+      border: 2px solid #0d6075;
+      box-shadow: 0 0 0 1px #d9ffff66, inset 0 0 24px #0c6a7e24, 0 8px 30px #07445a36;
+    }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeOrbit:hover {
+      box-shadow: 0 0 0 2px #a7eff2a8, inset 0 0 32px #0c6a7e35, 0 10px 35px #07445a55;
+    }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeOrbit::before {
+      color: #0d6075; text-shadow: 0 0 12px #b7faff99;
+    }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeOrbit::after,
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .orbitStar::before { color: #0b5369; }
+    .spotifySpark {
+      position: fixed; z-index: 60; left: var(--spark-x); top: var(--spark-y);
+      pointer-events: none; color: var(--spark-color); font-size: 21px; font-weight: 800;
+      text-shadow: 0 0 9px currentColor; animation: spotifyBurst .8s ease-out forwards;
+    }
+    @keyframes spotifyBurst {
+      from { transform: translate(-50%, -50%) scale(.45); opacity: 1; }
+      to { transform: translate(calc(-50% + var(--spark-dx)), calc(-50% + var(--spark-dy))) rotate(var(--spark-rotate)) scale(1.1); opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) { .spotifySpark { display: none; } }
     /* Playlist shortcut follows the active wallpaper and original accent color. */
     .spotifyLink {
       position: fixed; z-index: 45; left: 18px; bottom: 20px;
@@ -579,12 +602,13 @@
       border-radius: 999px; color: var(--spotify-ink); text-decoration: none;
       background: var(--spotify-bg); box-shadow: 0 7px 25px #0005, 0 0 20px var(--spotify-glow);
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      transform: translateY(var(--spotify-y, 0px));
       transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
       --spotify-ink: var(--theme-text); --spotify-accent: var(--theme-accent);
       --spotify-bg: color-mix(in srgb, var(--theme-accent) 20%, var(--theme-surface));
       --spotify-glow: color-mix(in srgb, var(--theme-accent) 35%, transparent);
     }
-    .spotifyLink:hover { transform: translateY(-3px); box-shadow: 0 11px 30px #0005, 0 0 28px var(--spotify-glow); }
+    .spotifyLink:hover { transform: translateY(calc(var(--spotify-y, 0px) - 3px)); box-shadow: 0 11px 30px #0005, 0 0 28px var(--spotify-glow); }
     .spotifyLink:focus-visible { outline: 3px solid var(--spotify-accent); outline-offset: 4px; }
     .spotifyMark { width: 34px; height: 34px; display: grid; place-items: center; flex: none;
       border-radius: 50%; background: color-mix(in srgb, var(--spotify-accent) 31%, transparent); }
@@ -1096,6 +1120,58 @@
       oscillator.start(when); oscillator.stop(when + duration);
     }
     function heartSound() { if (!soundContext) return; const now = soundContext.currentTime; note(660, now, .25, .09); note(880, now + .12, .4, .07); }
+    const spotifyLink = document.querySelector(".spotifyLink");
+    spotifyLink.addEventListener("click", () => {
+      // A short three-note chime stays on this page while Spotify opens in a new tab.
+      try {
+        soundContext = soundContext || new (window.AudioContext || window.webkitAudioContext)();
+        soundContext.resume();
+        const now = soundContext.currentTime;
+        note(523.25, now, .18, .05);
+        note(659.25, now + .09, .2, .045);
+        note(783.99, now + .18, .29, .04);
+      } catch (error) {}
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const rect = spotifyLink.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+      const color = getComputedStyle(spotifyLink).color;
+      ["♪", "✦", "♫", "♪", "✦", "♫"].forEach((symbol, index) => {
+        const angle = (-150 + index * 60 + (Math.random() - .5) * 24) * Math.PI / 180;
+        const distance = 48 + Math.random() * 28;
+        const spark = document.createElement("span");
+        spark.className = "spotifySpark";
+        spark.textContent = symbol;
+        spark.style.setProperty("--spark-x", `${cx}px`);
+        spark.style.setProperty("--spark-y", `${cy}px`);
+        spark.style.setProperty("--spark-color", color);
+        spark.style.setProperty("--spark-dx", `${Math.cos(angle) * distance}px`);
+        spark.style.setProperty("--spark-dy", `${Math.sin(angle) * distance}px`);
+        spark.style.setProperty("--spark-rotate", `${index % 2 ? 35 : -35}deg`);
+        document.body.appendChild(spark);
+        spark.addEventListener("animationend", () => spark.remove(), { once: true });
+        setTimeout(() => spark.remove(), 1000);
+      });
+    });
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      let lastScrollY = window.scrollY, offset = 0, velocity = 0, springFrame = 0;
+      function springStep() {
+        velocity = (velocity - offset * .16) * .78;
+        offset += velocity;
+        spotifyLink.style.setProperty("--spotify-y", `${offset.toFixed(2)}px`);
+        if (Math.abs(offset) < .1 && Math.abs(velocity) < .1) {
+          spotifyLink.style.setProperty("--spotify-y", "0px");
+          offset = velocity = springFrame = 0;
+          return;
+        }
+        springFrame = requestAnimationFrame(springStep);
+      }
+      window.addEventListener("scroll", () => {
+        const y = window.scrollY;
+        velocity = Math.max(-18, Math.min(18, velocity + (y - lastScrollY) * .14));
+        lastScrollY = y;
+        if (!springFrame) springFrame = requestAnimationFrame(springStep);
+      }, { passive: true });
+    }
     function footstep() { if (soundContext) note(110, soundContext.currentTime, .09, .045); }
     function windSound() {
       if (!soundContext) return;
@@ -1159,7 +1235,7 @@
       requestAnimationFrame(() => { intro.style.opacity = "1"; });
     });
     document.addEventListener("click", event => {
-      if (screen === "website" && mainWebsite.contains(event.target)) {
+      if (screen === "website" && mainWebsite.contains(event.target) && !event.target.closest(".spotifyLink")) {
         try {
           soundContext = soundContext || new (window.AudioContext || window.webkitAudioContext)();
           soundContext.resume();

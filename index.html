@@ -225,6 +225,34 @@
     .storyHeading h2 { margin: 8px 0 10px; font: 500 clamp(55px, 7vw, 96px)/.95 "Cormorant Garamond", Georgia, serif; }
     .storyHeading p:last-child { color: #ebccdd; font-size: 14px; line-height: 1.6; }
     .storyGallery { max-width: 1100px; margin: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    /* The kitten climbs the first gallery card and settles on its top edge. */
+    .storyCardWithKitten { position: relative; min-width: 0; transition: transform .3s; }
+    .storyCardWithKitten:hover, .storyCardWithKitten:focus-within { transform: translateY(-5px); }
+    .storyCardWithKitten .storyCard { height: 100%; }
+    #ourWorldCard:hover, #ourWorldCard:focus-visible { transform: none; }
+    .kittenPerch {
+      position: absolute; z-index: 6; left: 68%; top: -68px;
+      width: clamp(78px, 7vw, 96px); aspect-ratio: 1; pointer-events: none;
+      opacity: 0; transform: translate(-255px, var(--kitten-climb-height, 350px));
+      filter: drop-shadow(0 5px 5px #0005);
+    }
+    .kittenPerch img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .kittenPerch.climbing { animation: kittenClimb 3.3s cubic-bezier(.28,.55,.35,1) both; }
+    .kittenPerch.perched { opacity: 1; transform: none; animation: kittenBreathe 3.2s ease-in-out infinite; }
+    @keyframes kittenClimb {
+      0% { opacity: 0; transform: translate(-255px, var(--kitten-climb-height)) rotate(-14deg); }
+      8% { opacity: 1; }
+      20% { transform: translate(-215px, calc(var(--kitten-climb-height) - 65px)) rotate(-11deg); }
+      42% { transform: translate(-165px, calc(var(--kitten-climb-height) - 160px)) rotate(-8deg); }
+      63% { transform: translate(-105px, 95px) rotate(-5deg); }
+      82% { transform: translate(-36px, -12px) rotate(6deg); }
+      92% { transform: translate(-10px, 7px) rotate(-3deg); }
+      100% { opacity: 1; transform: translate(0, 0) rotate(0); }
+    }
+    @keyframes kittenBreathe { 50% { transform: translateY(-3px) rotate(1deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .kittenPerch, .kittenPerch.climbing, .kittenPerch.perched { opacity: 1; transform: none; animation: none; }
+    }
     .storyCard { position: relative; display: block; width: 100%; min-height: 350px; padding: 0; overflow: hidden; border: 1px solid #ffcade66; border-radius: 24px; background: radial-gradient(circle at 50% 28%, #a3679555, #38243d 70%); color: #fff4fa; cursor: pointer; box-shadow: 0 20px 42px #0004; transition: transform .3s, box-shadow .3s; }
     .storyCard:hover, .storyCard:focus-visible { transform: translateY(-5px); box-shadow: 0 26px 50px #0006; }
     .storyCard:focus-visible { outline: 2px solid #ffd4e6; outline-offset: 4px; }
@@ -747,10 +775,13 @@
         <p>Hover over a picture, or tap it, to read a little note ♡</p>
       </div>
       <div class="storyGallery">
-        <button class="storyCard" id="ourWorldCard" type="button" aria-label="Our World. Play cat and chicken chase" aria-pressed="false">
-          <img src="OurWorld.png" onerror="this.onerror=null;this.src='Our World.jpg'" alt="Our World" loading="lazy">
-          <span class="storyNote"><strong>Our World ♡</strong><span>Our first time playing Minecraft together</span></span>
-        </button>
+        <div class="storyCardWithKitten" id="kittenCardWrap">
+          <button class="storyCard" id="ourWorldCard" type="button" aria-label="Our World. Play cat and chicken chase" aria-pressed="false">
+            <img src="OurWorld.png" onerror="this.onerror=null;this.src='Our World.jpg'" alt="Our World" loading="lazy">
+            <span class="storyNote"><strong>Our World ♡</strong><span>Our first time playing Minecraft together</span></span>
+          </button>
+          <span class="kittenPerch" id="kittenPerch" aria-hidden="true"><img id="kittenPicture" src="siamese-kitten-frame-01.png" alt=""></span>
+        </div>
         <button class="storyCard" type="button" aria-label="My Sayang. Show a love phrase">
           <img src="My Sayang.png" alt="My Sayang" loading="lazy">
           <span class="storyNote"><strong>My Sayang ♡</strong><span>Most beautiful girl in this world</span></span>
@@ -803,6 +834,39 @@
     const chickenPicture = document.getElementById("chickenPicture");
     const galleryChaseLane = document.getElementById("galleryChaseLane");
     const ourWorldCard = document.getElementById("ourWorldCard");
+    const kittenCardWrap = document.getElementById("kittenCardWrap");
+    const kittenPerch = document.getElementById("kittenPerch");
+    const kittenPicture = document.getElementById("kittenPicture");
+    const kittenFrames = Array.from({ length: 12 }, (_, index) =>
+      `siamese-kitten-frame-${String(index + 1).padStart(2, "0")}.png`);
+    kittenFrames.forEach(src => { const image = new Image(); image.src = src; });
+    let kittenStarted = false, kittenVisible = false, kittenFrame = 0, kittenTimer = null;
+    function updateKittenFrames() {
+      if (kittenVisible && !document.hidden && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        if (!kittenTimer) kittenTimer = setInterval(() => {
+          kittenFrame = (kittenFrame + 1) % kittenFrames.length;
+          kittenPicture.src = kittenFrames[kittenFrame];
+        }, 170);
+      } else if (kittenTimer) { clearInterval(kittenTimer); kittenTimer = null; }
+    }
+    const kittenObserver = new IntersectionObserver(entries => {
+      kittenVisible = entries[0].isIntersecting;
+      if (kittenVisible && !kittenStarted) {
+        kittenStarted = true;
+        kittenCardWrap.style.setProperty("--kitten-climb-height", `${ourWorldCard.offsetHeight}px`);
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) kittenPerch.classList.add("perched");
+        else kittenPerch.classList.add("climbing");
+      }
+      updateKittenFrames();
+    }, { threshold: .18 });
+    kittenObserver.observe(kittenCardWrap);
+    kittenPerch.addEventListener("animationend", event => {
+      if (event.animationName === "kittenClimb") {
+        kittenPerch.classList.remove("climbing");
+        kittenPerch.classList.add("perched");
+      }
+    });
+    document.addEventListener("visibilitychange", updateKittenFrames);
     const heartMomentButton = document.getElementById("heartMomentButton");
     const kissScene = document.getElementById("kissScene");
     const kissPicture = document.getElementById("kissPicture");

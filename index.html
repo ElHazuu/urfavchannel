@@ -251,7 +251,7 @@
     }
     @keyframes kittenBreathe { 50% { transform: translateY(-3px) rotate(1deg); } }
     @media (prefers-reduced-motion: reduce) {
-      .kittenPerch, .kittenPerch.climbing, .kittenPerch.perched { opacity: 1; transform: none; animation: none; }
+      .kittenPerch.climbing, .kittenPerch.perched { opacity: 1; transform: none; animation: none; }
     }
     .storyCard { position: relative; display: block; width: 100%; min-height: 350px; padding: 0; overflow: hidden; border: 1px solid #ffcade66; border-radius: 24px; background: radial-gradient(circle at 50% 28%, #a3679555, #38243d 70%); color: #fff4fa; cursor: pointer; box-shadow: 0 20px 42px #0004; transition: transform .3s, box-shadow .3s; }
     .storyCard:hover, .storyCard:focus-visible { transform: translateY(-5px); box-shadow: 0 26px 50px #0006; }
@@ -780,7 +780,7 @@
             <img src="OurWorld.png" onerror="this.onerror=null;this.src='Our World.jpg'" alt="Our World" loading="lazy">
             <span class="storyNote"><strong>Our World ♡</strong><span>Our first time playing Minecraft together</span></span>
           </button>
-          <span class="kittenPerch" id="kittenPerch" aria-hidden="true"><img id="kittenPicture" src="siamese-kitten-frame-01.png" alt=""></span>
+          <span class="kittenPerch" id="kittenPerch" aria-hidden="true"><img id="kittenPicture" src="siamese-kitten-climb-01.png" alt=""></span>
         </div>
         <button class="storyCard" type="button" aria-label="My Sayang. Show a love phrase">
           <img src="My Sayang.png" alt="My Sayang" loading="lazy">
@@ -839,30 +839,48 @@
     const kittenPicture = document.getElementById("kittenPicture");
     const kittenFrames = Array.from({ length: 12 }, (_, index) =>
       `siamese-kitten-frame-${String(index + 1).padStart(2, "0")}.png`);
-    kittenFrames.forEach(src => { const image = new Image(); image.src = src; });
-    let kittenStarted = false, kittenVisible = false, kittenFrame = 0, kittenTimer = null;
+    const kittenClimbFrames = [1, 2, 3, 4].map(number =>
+      `siamese-kitten-climb-${String(number).padStart(2, "0")}.png`);
+    [...kittenClimbFrames, ...kittenFrames].forEach(src => { const image = new Image(); image.src = src; });
+    let kittenStarted = false, kittenVisible = false, kittenFrame = 0, kittenTimer = null, climbTick = 0;
+    const climbSequence = [0, 0, 1, 0, 1, 1, 0, 1, 1, 2, 1, 2, 2, 2, 3, 3, 3, 3, 3];
     function updateKittenFrames() {
-      if (kittenVisible && !document.hidden && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      if (kittenStarted && kittenVisible && !document.hidden && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         if (!kittenTimer) kittenTimer = setInterval(() => {
-          kittenFrame = (kittenFrame + 1) % kittenFrames.length;
-          kittenPicture.src = kittenFrames[kittenFrame];
+          if (kittenPerch.classList.contains("climbing")) {
+            kittenPicture.src = kittenClimbFrames[climbSequence[Math.min(climbTick++, climbSequence.length - 1)]];
+          } else {
+            kittenFrame = (kittenFrame + 1) % kittenFrames.length;
+            kittenPicture.src = kittenFrames[kittenFrame];
+          }
         }, 170);
       } else if (kittenTimer) { clearInterval(kittenTimer); kittenTimer = null; }
     }
+    function startKittenClimb() {
+      kittenStarted = true;
+      kittenVisible = true;
+      kittenFrame = climbTick = 0;
+      kittenPicture.src = kittenClimbFrames[0];
+      kittenCardWrap.style.setProperty("--kitten-climb-height", `${ourWorldCard.offsetHeight}px`);
+      kittenPerch.classList.remove("perched", "climbing");
+      // Reset the CSS animation so another click genuinely starts a new climb.
+      void kittenPerch.offsetWidth;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        kittenPicture.src = kittenFrames[0];
+        kittenPerch.classList.add("perched");
+      } else kittenPerch.classList.add("climbing");
+      updateKittenFrames();
+    }
     const kittenObserver = new IntersectionObserver(entries => {
       kittenVisible = entries[0].isIntersecting;
-      if (kittenVisible && !kittenStarted) {
-        kittenStarted = true;
-        kittenCardWrap.style.setProperty("--kitten-climb-height", `${ourWorldCard.offsetHeight}px`);
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) kittenPerch.classList.add("perched");
-        else kittenPerch.classList.add("climbing");
-      }
       updateKittenFrames();
     }, { threshold: .18 });
     kittenObserver.observe(kittenCardWrap);
     kittenPerch.addEventListener("animationend", event => {
       if (event.animationName === "kittenClimb") {
         kittenPerch.classList.remove("climbing");
+        kittenPicture.src = kittenFrames[0];
+        kittenFrame = 0;
         kittenPerch.classList.add("perched");
       }
     });
@@ -1034,6 +1052,7 @@
       const showing = card.classList.toggle("show-note");
       card.setAttribute("aria-pressed", String(showing));
       if (card === ourWorldCard) {
+        startKittenClimb();
         galleryChaseLane.classList.toggle("active", showing);
         const underwater = mainWebsite.dataset.wallpaper === "underwater";
         galleryRunnerPicture.src = underwater ? underwaterCatFrames[0] : runningFrames[0];

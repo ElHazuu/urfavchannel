@@ -379,7 +379,7 @@
     #intro #introText, #intro #musicButton, #intro #songButton { display: block; margin-left: auto; margin-right: auto; }
     #mainWebsite:not([data-wallpaper="original"]) { --scene-accent: #ffd2ea; --scene-surface: #251a2b; }
     #mainWebsite[data-wallpaper="underwater"] { --scene-accent: #8de6ef; --scene-surface: #155b78; --scene-bg: linear-gradient(#237c9e, #176686 42%, #145376 76%, #123e68); }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] { --scene-accent: #83eefa; --scene-surface: #071e32; --scene-bg: radial-gradient(ellipse at 58% 18%, #0b3040 0%, transparent 46%), linear-gradient(#061b2b 0%, #03111f 38%, #010813 100%); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] { --scene-accent: #78dbe9; --scene-surface: #06111c; --scene-bg: radial-gradient(ellipse at 52% 8%, #051524 0%, transparent 38%), linear-gradient(#020a13 0%, #010610 48%, #000307 100%); }
     #mainWebsite[data-wallpaper="underwater"] { background: var(--scene-bg); background-attachment: fixed; }
     #mainWebsite[data-wallpaper="underwater"] .welcomeOrbit {
       border-color: color-mix(in srgb, var(--scene-accent) 88%, transparent);
@@ -400,6 +400,8 @@
     }
     #mainWebsite[data-wallpaper="underwater"] .welcomeOrbit::after { color: #dcfbff; }
     #mainWebsite[data-wallpaper="underwater"] .welcomeGlow { background: #79e6f638; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .welcomeGlow { background: transparent; box-shadow: none; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .welcomeOrbit { box-shadow: 0 0 12px #61cddc33, inset 0 0 20px #61cddc21; }
     .underseaBackdrop { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"] .underseaBackdrop { display: block; }
     .squidHabitat { display: none; position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
@@ -407,9 +409,9 @@
     .monumentHabitat { display: none; position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"] .monumentHabitat { display: block; }
     .oceanMonument { position: absolute; top: 44%; left: 50%; width: min(82vw, 700px); height: auto; transform: translateX(-50%); opacity: .38; filter: drop-shadow(0 25px 38px #0529449c); }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .oceanMonument { opacity: .18; filter: drop-shadow(0 0 12px #4ad1dc30) drop-shadow(0 28px 45px #00101dbb); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .oceanMonument { opacity: .075; filter: brightness(.38); }
     .monumentLantern { fill: #b7faff; filter: drop-shadow(0 0 8px #83f5ff); }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .monumentLantern { fill: #8acacf; filter: drop-shadow(0 0 8px #85f7ff88); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .monumentLantern { fill: #628e96; filter: none; }
     #mainWebsite[data-wallpaper="underwater"] .welcomeSection,
     #mainWebsite[data-wallpaper="underwater"] .contentSection,
     #mainWebsite[data-wallpaper="underwater"] .storySection,
@@ -421,13 +423,13 @@
       background: radial-gradient(ellipse at 50% -12%, #d6ffff87, transparent 55%),
                   repeating-radial-gradient(ellipse at 50% -30%, transparent 0 65px, #b7fbff12 85px 93px, transparent 125px 190px);
       animation: seaShimmer 9s ease-in-out infinite alternate; }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::before { opacity: .025; animation: none; }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::after { opacity: .035; animation: none; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::before,
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::after { opacity: 0; animation: none; }
     .squidDrifter { display: none; position: absolute; left: -200px; top: var(--squid-y); width: var(--squid-size); aspect-ratio: 1; animation: squidRoam var(--squid-duration) linear infinite; animation-delay: var(--squid-delay); }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .squidDrifter { display: block; }
     #mainWebsite .squidDrifter[hidden], #mainWebsite .nautilusDrifter[hidden] { display: none; }
-    .squidDrifter::before { content: ""; position: absolute; inset: -45%; border-radius: 50%; background: radial-gradient(circle, #76ffff58 0%, #47dffb25 30%, transparent 68%); filter: blur(12px); animation: squidLight 3.4s ease-in-out infinite alternate; }
-    .glowSquid { position: relative; width: 100%; height: auto; object-fit: contain; filter: brightness(1.3) drop-shadow(0 0 13px #83ffffe8) drop-shadow(0 0 28px #42d9fbaa); }
+    .squidDrifter::before { content: ""; position: absolute; inset: -70%; border-radius: 50%; background: radial-gradient(circle, #a0ffffb2 0%, #58eeff6e 19%, #29bfeb2b 43%, transparent 70%); filter: blur(18px); animation: squidLight 3.4s ease-in-out infinite alternate; }
+    .glowSquid { position: relative; width: 100%; height: auto; object-fit: contain; filter: brightness(1.55) saturate(1.2) drop-shadow(0 0 8px #b5ffff) drop-shadow(0 0 24px #70f7fff2) drop-shadow(0 0 44px #29c6f499); }
     #mainWebsite .glowSquid[hidden] { display: none; }
     @keyframes squidRoam { 0% { left: -200px; transform: translateY(0) rotate(-5deg); } 25% { transform: translateY(-28px) rotate(3deg); } 50% { transform: translateY(18px) rotate(-3deg); } 75% { transform: translateY(-20px) rotate(4deg); } 100% { left: calc(100% + 200px); transform: translateY(10px) rotate(-4deg); } }
     @keyframes squidLight { to { opacity: .58; transform: scale(1.2); } }
@@ -437,17 +439,17 @@
       border: 1px solid #d8ffff9c; border-radius: 50%; background: radial-gradient(circle at 30% 27%, #ffffffad, transparent 30%), #c4faff12;
       box-shadow: inset -3px -4px 7px #2ea6c43d, 0 0 9px #b8ffff38;
       animation: seaBubbleRise var(--duration) linear infinite; animation-delay: var(--delay); }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .seaBubble { filter: brightness(.3); box-shadow: none; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .seaBubble { filter: brightness(.13); box-shadow: none; }
     @keyframes seaBubbleRise { from { transform: translate(0, 0) scale(.75); opacity: 0; }
       12% { opacity: .68; } 88% { opacity: .5; } to { transform: translate(var(--drift), -110vh) scale(1.15); opacity: 0; } }
     .nautilusDrifter { display: none; position: absolute; z-index: 1; left: -150px; top: var(--nautilus-y); width: var(--nautilus-size); opacity: .9; animation: nautilusRoam var(--nautilus-duration) linear infinite; animation-delay: var(--nautilus-delay); }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .nautilusDrifter { display: block; }
     .nautilusDrifter::after { content: ""; position: absolute; left: -22px; top: 40%; width: 20px; height: 20px; border: 1px solid #8be6ed70; border-radius: 50%; box-shadow: -17px 9px 0 -6px #8be6ed80; animation: nautilusWake 1.5s ease-out infinite; }
-    .nautilusDrifter img { display: block; width: 100%; height: auto; filter: drop-shadow(0 0 8px #60c9d38a); animation: nautilusPulse 2.8s ease-in-out infinite alternate; }
+    .nautilusDrifter img { display: block; width: 100%; height: auto; transform: scaleX(-1); filter: brightness(.7) drop-shadow(0 0 5px #60c9d35c); animation: nautilusPulse 2.8s ease-in-out infinite alternate; }
     .nautilusDrifter img[hidden] { display: none; }
     @keyframes nautilusRoam { 0% { left: -150px; transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-24px) rotate(4deg); } 100% { left: calc(100% + 150px); transform: translateY(9px) rotate(-4deg); } }
     @keyframes nautilusWake { to { opacity: 0; transform: translate(-22px, 14px) scale(1.4); } }
-    @keyframes nautilusPulse { to { filter: drop-shadow(0 0 13px #70d9dcba); } }
+    @keyframes nautilusPulse { to { filter: brightness(.85) drop-shadow(0 0 9px #70d9dc8a); } }
     .seaClickBubble { position: fixed; z-index: 2; left: var(--x); top: var(--y); width: var(--size); aspect-ratio: 1;
       border: 1px solid #d7ffffb8; border-radius: 50%; background: radial-gradient(circle at 30% 25%, #fff9, transparent 35%);
       pointer-events: none; animation: seaClickRise 1.8s ease-out forwards; }

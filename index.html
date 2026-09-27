@@ -379,7 +379,8 @@
     #intro #introText, #intro #musicButton, #intro #songButton { display: block; margin-left: auto; margin-right: auto; }
     #mainWebsite:not([data-wallpaper="original"]) { --scene-accent: #ffd2ea; --scene-surface: #251a2b; }
     #mainWebsite[data-wallpaper="underwater"] { --scene-accent: #8de6ef; --scene-surface: #155b78; --scene-bg: linear-gradient(#237c9e, #176686 42%, #145376 76%, #123e68); }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] { --scene-accent: #83eefa; --scene-surface: #0a2846; --scene-bg: radial-gradient(ellipse at 55% 10%, #17476c 0%, transparent 58%), linear-gradient(#0b3153, #071c3a 48%, #041327); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] { --scene-accent: #83eefa; --scene-surface: #071e32; --scene-bg: radial-gradient(ellipse at 58% 18%, #0b3040 0%, transparent 46%), linear-gradient(#061b2b 0%, #03111f 38%, #010813 100%); }
+    #mainWebsite[data-wallpaper="underwater"] { background: var(--scene-bg); background-attachment: fixed; }
     #mainWebsite[data-wallpaper="underwater"] .welcomeOrbit {
       border-color: color-mix(in srgb, var(--scene-accent) 88%, transparent);
       box-shadow: 0 0 65px color-mix(in srgb, var(--scene-accent) 38%, transparent),
@@ -406,9 +407,9 @@
     .monumentHabitat { display: none; position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"] .monumentHabitat { display: block; }
     .oceanMonument { position: absolute; top: 44%; left: 50%; width: min(82vw, 700px); height: auto; transform: translateX(-50%); opacity: .38; filter: drop-shadow(0 25px 38px #0529449c); }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .oceanMonument { opacity: .58; filter: drop-shadow(0 0 26px #44c5d958) drop-shadow(0 28px 45px #00101dbb); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .oceanMonument { opacity: .18; filter: drop-shadow(0 0 12px #4ad1dc30) drop-shadow(0 28px 45px #00101dbb); }
     .monumentLantern { fill: #b7faff; filter: drop-shadow(0 0 8px #83f5ff); }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .monumentLantern { fill: #d5ffff; filter: drop-shadow(0 0 13px #85f7ff); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .monumentLantern { fill: #8acacf; filter: drop-shadow(0 0 8px #85f7ff88); }
     #mainWebsite[data-wallpaper="underwater"] .welcomeSection,
     #mainWebsite[data-wallpaper="underwater"] .contentSection,
     #mainWebsite[data-wallpaper="underwater"] .storySection,
@@ -420,28 +421,33 @@
       background: radial-gradient(ellipse at 50% -12%, #d6ffff87, transparent 55%),
                   repeating-radial-gradient(ellipse at 50% -30%, transparent 0 65px, #b7fbff12 85px 93px, transparent 125px 190px);
       animation: seaShimmer 9s ease-in-out infinite alternate; }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::before { opacity: .12; }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::after { opacity: .12; }
-    .glowSquid { display: none; position: absolute; left: -160px; top: var(--squid-y); width: var(--squid-size); height: auto; opacity: .84; object-fit: contain; filter: drop-shadow(0 0 13px #55e5f8a6) drop-shadow(0 0 32px #4abbdc66); animation: squidRoam var(--squid-duration) linear infinite; animation-delay: var(--squid-delay); }
-    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .glowSquid { display: block; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::before { opacity: .025; animation: none; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::after { opacity: .035; animation: none; }
+    .squidDrifter { display: none; position: absolute; left: -200px; top: var(--squid-y); width: var(--squid-size); aspect-ratio: 1; animation: squidRoam var(--squid-duration) linear infinite; animation-delay: var(--squid-delay); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .squidDrifter { display: block; }
+    #mainWebsite .squidDrifter[hidden], #mainWebsite .nautilusDrifter[hidden] { display: none; }
+    .squidDrifter::before { content: ""; position: absolute; inset: -45%; border-radius: 50%; background: radial-gradient(circle, #76ffff58 0%, #47dffb25 30%, transparent 68%); filter: blur(12px); animation: squidLight 3.4s ease-in-out infinite alternate; }
+    .glowSquid { position: relative; width: 100%; height: auto; object-fit: contain; filter: brightness(1.3) drop-shadow(0 0 13px #83ffffe8) drop-shadow(0 0 28px #42d9fbaa); }
     #mainWebsite .glowSquid[hidden] { display: none; }
-    @keyframes squidRoam { 0% { left: -160px; transform: translateY(0) rotate(-5deg); } 25% { transform: translateY(-28px) rotate(3deg); } 50% { transform: translateY(18px) rotate(-3deg); } 75% { transform: translateY(-20px) rotate(4deg); } 100% { left: calc(100% + 160px); transform: translateY(10px) rotate(-4deg); } }
+    @keyframes squidRoam { 0% { left: -200px; transform: translateY(0) rotate(-5deg); } 25% { transform: translateY(-28px) rotate(3deg); } 50% { transform: translateY(18px) rotate(-3deg); } 75% { transform: translateY(-20px) rotate(4deg); } 100% { left: calc(100% + 200px); transform: translateY(10px) rotate(-4deg); } }
+    @keyframes squidLight { to { opacity: .58; transform: scale(1.2); } }
     @keyframes seaRays { to { transform: skewX(-9deg) translateX(4%); opacity: .58; } }
     @keyframes seaShimmer { to { opacity: .55; transform: translateY(10px); } }
     .seaBubble { position: absolute; z-index: 1; left: var(--x); bottom: -35px; width: var(--size); aspect-ratio: 1;
       border: 1px solid #d8ffff9c; border-radius: 50%; background: radial-gradient(circle at 30% 27%, #ffffffad, transparent 30%), #c4faff12;
       box-shadow: inset -3px -4px 7px #2ea6c43d, 0 0 9px #b8ffff38;
       animation: seaBubbleRise var(--duration) linear infinite; animation-delay: var(--delay); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .seaBubble { filter: brightness(.3); box-shadow: none; }
     @keyframes seaBubbleRise { from { transform: translate(0, 0) scale(.75); opacity: 0; }
       12% { opacity: .68; } 88% { opacity: .5; } to { transform: translate(var(--drift), -110vh) scale(1.15); opacity: 0; } }
-    .seaFish { position: absolute; z-index: 1; left: -100px; top: var(--y); width: 42px; height: 21px;
-      border-radius: 65% 45% 45% 65%; background: #b9faff55; opacity: .44;
-      filter: drop-shadow(0 0 9px #8cf6ff5c); transform: scale(var(--scale));
-      animation: fishSwim var(--duration) linear infinite; animation-delay: var(--delay); }
-    .seaFish::after { content: ""; position: absolute; left: -12px; top: 1px; width: 0; height: 0;
-      border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right: 17px solid #b9faff55; }
-    .seaFish::before { content: ""; position: absolute; right: 8px; top: 6px; width: 3px; height: 3px; border-radius: 50%; background: #123e5e; }
-    @keyframes fishSwim { to { left: calc(100% + 120px); transform: translateY(-28px) scale(var(--scale)); } }
+    .nautilusDrifter { display: none; position: absolute; z-index: 1; left: -150px; top: var(--nautilus-y); width: var(--nautilus-size); opacity: .9; animation: nautilusRoam var(--nautilus-duration) linear infinite; animation-delay: var(--nautilus-delay); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .nautilusDrifter { display: block; }
+    .nautilusDrifter::after { content: ""; position: absolute; left: -22px; top: 40%; width: 20px; height: 20px; border: 1px solid #8be6ed70; border-radius: 50%; box-shadow: -17px 9px 0 -6px #8be6ed80; animation: nautilusWake 1.5s ease-out infinite; }
+    .nautilusDrifter img { display: block; width: 100%; height: auto; filter: drop-shadow(0 0 8px #60c9d38a); animation: nautilusPulse 2.8s ease-in-out infinite alternate; }
+    .nautilusDrifter img[hidden] { display: none; }
+    @keyframes nautilusRoam { 0% { left: -150px; transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-24px) rotate(4deg); } 100% { left: calc(100% + 150px); transform: translateY(9px) rotate(-4deg); } }
+    @keyframes nautilusWake { to { opacity: 0; transform: translate(-22px, 14px) scale(1.4); } }
+    @keyframes nautilusPulse { to { filter: drop-shadow(0 0 13px #70d9dcba); } }
     .seaClickBubble { position: fixed; z-index: 2; left: var(--x); top: var(--y); width: var(--size); aspect-ratio: 1;
       border: 1px solid #d7ffffb8; border-radius: 50%; background: radial-gradient(circle at 30% 25%, #fff9, transparent 35%);
       pointer-events: none; animation: seaClickRise 1.8s ease-out forwards; }
@@ -469,8 +475,7 @@
     #mainWebsite[data-wallpaper="underwater"] .videoCard { background: #123e5eed; color: #f4fdff; }
     #mainWebsite[data-wallpaper="underwater"] .cardText p { color: #d3f4f8; }
     @media (prefers-reduced-motion: reduce) {
-      .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaFish, .seaPearl, .glowSquid { animation: none !important; }
-      .seaFish { display: none; }
+      .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaPearl, .squidDrifter, .squidDrifter::before, .nautilusDrifter, .nautilusDrifter::after, .nautilusDrifter img { animation: none !important; }
       #mainWebsite[data-wallpaper="underwater"] .galleryChase,
       #mainWebsite[data-wallpaper="underwater"] .galleryChase > img,
       #mainWebsite[data-wallpaper="underwater"] .chickenWrap { animation: none !important; }
@@ -673,9 +678,10 @@
     const salmonFrames = ["salmon-frame-1.png", "salmon-frame-2.png", "salmon-frame-3.png", "salmon-frame-4.png"];
     const glowSquidFrames = [1, 2, 3, 4].map(number => `glow-squid-frame-${number}.png`);
     const adultGlowSquidFrames = [1, 2, 3, 4].map(number => `adult-glow-squid-frame-${number}.png`);
+    const nautilusFrames = [1, 2, 3, 4, 5, 6].map(number => `nautilus-frame-${number}.png`);
     const carFrames = ["Car.png", "Car2.png", "Car3.png", "Car4.png"];
     const kissFrames = ["Kiss.png", "Kiss2.png", "Kiss3.png", "Kiss4.png", "Kiss5.png", "Kiss6.png"];
-    [...idleFrames, ...danceFrames, ...runningFrames, ...chickenFrames, ...underwaterCatFrames, ...salmonFrames, ...glowSquidFrames, ...adultGlowSquidFrames, ...carFrames, ...kissFrames, "Walking Away.png"].forEach(filename => { const image = new Image(); image.src = filename; });
+    [...idleFrames, ...danceFrames, ...runningFrames, ...chickenFrames, ...underwaterCatFrames, ...salmonFrames, ...glowSquidFrames, ...adultGlowSquidFrames, ...nautilusFrames, ...carFrames, ...kissFrames, "Walking Away.png"].forEach(filename => { const image = new Image(); image.src = filename; });
     let kissTimer;
     function playKiss() {
       clearInterval(kissTimer);
@@ -1337,16 +1343,19 @@
     { kind: "adult", y: "49%", size: "125px", duration: "46s", delay: "-27s" },
     { kind: "baby", y: "80%", size: "62px", duration: "39s", delay: "-33s" }
   ].map(spec => {
+    const drifter = document.createElement("span");
+    drifter.className = "squidDrifter";
     const squid = document.createElement("img");
     squid.className = "glowSquid";
     squid.alt = "";
     squid.src = squidFrames[spec.kind][0];
-    squid.style.setProperty("--squid-y", spec.y);
-    squid.style.setProperty("--squid-size", spec.size);
-    squid.style.setProperty("--squid-duration", spec.duration);
-    squid.style.setProperty("--squid-delay", spec.delay);
-    squid.addEventListener("error", () => { squid.hidden = true; });
-    squidHabitat.append(squid);
+    drifter.style.setProperty("--squid-y", spec.y);
+    drifter.style.setProperty("--squid-size", spec.size);
+    drifter.style.setProperty("--squid-duration", spec.duration);
+    drifter.style.setProperty("--squid-delay", spec.delay);
+    squid.addEventListener("error", () => { drifter.hidden = true; });
+    drifter.append(squid);
+    squidHabitat.append(drifter);
     return { element: squid, frames: squidFrames[spec.kind] };
   });
   let squidFrame = 0;
@@ -1366,15 +1375,31 @@
     bubble.style.setProperty("--drift", (i % 2 ? -28 : 32) + "px");
     sea.append(bubble);
   }
-  for (let i = 0; i < 2; i++) {
-    const fish = document.createElement("span");
-    fish.className = "seaFish";
-    fish.style.setProperty("--y", (35 + i * 38) + "%");
-    fish.style.setProperty("--scale", i ? ".7" : "1");
-    fish.style.setProperty("--duration", (32 + i * 13) + "s");
-    fish.style.setProperty("--delay", (-12 - i * 21) + "s");
-    sea.append(fish);
-  }
+  const nautilusFrames = [1, 2, 3, 4, 5, 6].map(number => `nautilus-frame-${number}.png`);
+  const nautiluses = [
+    { y: "29%", size: "104px", duration: "43s", delay: "-19s" },
+    { y: "71%", size: "77px", duration: "57s", delay: "-39s" }
+  ].map(spec => {
+    const drifter = document.createElement("span");
+    drifter.className = "nautilusDrifter";
+    drifter.style.setProperty("--nautilus-y", spec.y);
+    drifter.style.setProperty("--nautilus-size", spec.size);
+    drifter.style.setProperty("--nautilus-duration", spec.duration);
+    drifter.style.setProperty("--nautilus-delay", spec.delay);
+    const image = document.createElement("img");
+    image.src = nautilusFrames[0];
+    image.alt = "";
+    image.addEventListener("error", () => { drifter.hidden = true; });
+    drifter.append(image);
+    sea.append(drifter);
+    return image;
+  });
+  let nautilusFrame = 0;
+  setInterval(() => {
+    if (site.dataset.wallpaper !== "underwater" || site.dataset.theme !== "dark" || reducedMotion.matches) return;
+    nautilusFrame = (nautilusFrame + 1) % nautilusFrames.length;
+    nautiluses.forEach(image => { if (!image.parentElement.hidden) image.src = nautilusFrames[nautilusFrame]; });
+  }, 180);
 
   site.addEventListener("click", event => {
     if (site.dataset.wallpaper !== "underwater" || reducedMotion.matches) return;

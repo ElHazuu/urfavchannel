@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="site-build" content="underwater-heart-ring-20260927">
+  <meta name="site-build" content="underwater-heart-ornament-20260927">
   <title>Our Sayang ♡</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -363,14 +363,24 @@
     #mainWebsite:not([data-wallpaper="original"]) { --scene-accent: #ffd2ea; --scene-surface: #251a2b; }
     #mainWebsite[data-wallpaper="underwater"] { --scene-accent: #8de6ef; --scene-surface: #123e5e; --scene-bg: linear-gradient(#176686, #145376 40%, #123e68 75%, #0e2a4f); }
     #mainWebsite[data-wallpaper="underwater"] .welcomeOrbit {
-      border-color: color-mix(in srgb, var(--scene-accent) 68%, transparent);
-      box-shadow: 0 0 65px color-mix(in srgb, var(--scene-accent) 30%, transparent),
-                  inset 0 0 70px color-mix(in srgb, var(--scene-accent) 23%, transparent);
+      border-color: color-mix(in srgb, var(--scene-accent) 88%, transparent);
+      box-shadow: 0 0 65px color-mix(in srgb, var(--scene-accent) 38%, transparent),
+                  inset 0 0 70px color-mix(in srgb, var(--scene-accent) 28%, transparent);
     }
     #mainWebsite[data-wallpaper="underwater"] .welcomeOrbit:hover {
-      box-shadow: 0 0 85px color-mix(in srgb, var(--scene-accent) 52%, transparent),
-                  inset 0 0 80px color-mix(in srgb, var(--scene-accent) 33%, transparent);
+      box-shadow: 0 0 85px color-mix(in srgb, var(--scene-accent) 60%, transparent),
+                  inset 0 0 80px color-mix(in srgb, var(--scene-accent) 40%, transparent);
     }
+    #mainWebsite[data-wallpaper="underwater"] .welcomeOrbit::before {
+      color: var(--scene-accent);
+      text-shadow: 0 0 45px color-mix(in srgb, var(--scene-accent) 65%, transparent);
+    }
+    #mainWebsite[data-wallpaper="underwater"] .orbitStar::before {
+      color: #c7fbff;
+      text-shadow: 0 0 16px var(--scene-accent);
+    }
+    #mainWebsite[data-wallpaper="underwater"] .welcomeOrbit::after { color: #dcfbff; }
+    #mainWebsite[data-wallpaper="underwater"] .welcomeGlow { background: #79e6f638; }
     .underseaBackdrop { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"] .underseaBackdrop { display: block; }
     #mainWebsite[data-wallpaper="underwater"] .welcomeSection,

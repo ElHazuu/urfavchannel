@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="site-build" content="underwater-deep-ocean-20260927">
+  <meta name="site-build" content="underwater-anchored-squid-20260927">
   <title>Our Sayang ♡</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -401,6 +401,8 @@
     #mainWebsite[data-wallpaper="underwater"] .welcomeGlow { background: #79e6f638; }
     .underseaBackdrop { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"] .underseaBackdrop { display: block; }
+    .squidHabitat { display: none; position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .squidHabitat { display: block; }
     #mainWebsite[data-wallpaper="underwater"] .welcomeSection,
     #mainWebsite[data-wallpaper="underwater"] .contentSection,
     #mainWebsite[data-wallpaper="underwater"] .storySection,
@@ -414,10 +416,10 @@
       animation: seaShimmer 9s ease-in-out infinite alternate; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::before { opacity: .12; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .underseaBackdrop::after { opacity: .12; }
-    .glowSquid { display: none; position: absolute; z-index: 2; left: -150px; top: var(--squid-y); width: var(--squid-size); height: auto; opacity: .84; object-fit: contain; filter: drop-shadow(0 0 13px #55e5f8a6) drop-shadow(0 0 32px #4abbdc66); animation: squidDrift var(--squid-duration) linear infinite; animation-delay: var(--squid-delay); }
+    .glowSquid { display: none; position: absolute; left: var(--squid-x); top: var(--squid-y); width: var(--squid-size); height: auto; opacity: .84; object-fit: contain; filter: drop-shadow(0 0 13px #55e5f8a6) drop-shadow(0 0 32px #4abbdc66); animation: squidHover var(--squid-duration) ease-in-out infinite alternate; animation-delay: var(--squid-delay); }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .glowSquid { display: block; }
     #mainWebsite .glowSquid[hidden] { display: none; }
-    @keyframes squidDrift { from { left: -180px; transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-36px) rotate(4deg); } to { left: calc(100% + 180px); transform: translateY(8px) rotate(-3deg); } }
+    @keyframes squidHover { from { transform: translateY(-9px) rotate(-3deg); } to { transform: translateY(9px) rotate(3deg); } }
     @keyframes seaRays { to { transform: skewX(-9deg) translateX(4%); opacity: .58; } }
     @keyframes seaShimmer { to { opacity: .55; transform: translateY(10px); } }
     .seaBubble { position: absolute; z-index: 1; left: var(--x); bottom: -35px; width: var(--size); aspect-ratio: 1;
@@ -463,7 +465,6 @@
     @media (prefers-reduced-motion: reduce) {
       .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaFish, .seaPearl, .glowSquid { animation: none !important; }
       .seaFish { display: none; }
-      .glowSquid { left: 65% !important; }
       #mainWebsite[data-wallpaper="underwater"] .galleryChase,
       #mainWebsite[data-wallpaper="underwater"] .galleryChase > img,
       #mainWebsite[data-wallpaper="underwater"] .chickenWrap { animation: none !important; }
@@ -513,6 +514,7 @@
 
   <main id="mainWebsite">
     <div class="underseaBackdrop" id="underseaBackdrop" aria-hidden="true"></div>
+    <div class="squidHabitat" id="squidHabitat" aria-hidden="true"></div>
     <div class="themeTools">
       <button class="themeButton" id="themeButton" type="button" aria-label="Choose page colors" aria-expanded="false" aria-controls="themePanel">🎨</button>
       <div class="themePanel" id="themePanel" hidden>
@@ -1298,6 +1300,7 @@
 (() => {
   const site = document.getElementById("mainWebsite");
   const sea = document.getElementById("underseaBackdrop");
+  const squidHabitat = document.getElementById("squidHabitat");
   const pearl = document.getElementById("seaPearl");
   const message = document.getElementById("seaPearlMessage");
   const close = document.getElementById("closeSeaPearl");
@@ -1308,20 +1311,21 @@
     adult: [1, 2, 3, 4].map(number => `adult-glow-squid-frame-${number}.png`)
   };
   const squids = [
-    { kind: "baby", y: "19%", size: "75px", duration: "32s", delay: "-11s" },
-    { kind: "adult", y: "53%", size: "125px", duration: "44s", delay: "-24s" },
-    { kind: "baby", y: "77%", size: "62px", duration: "38s", delay: "-31s" }
+    { kind: "baby", x: "76%", y: "12%", size: "75px", duration: "3.8s", delay: "-1s" },
+    { kind: "adult", x: "10%", y: "49%", size: "125px", duration: "5.2s", delay: "-2s" },
+    { kind: "baby", x: "78%", y: "80%", size: "62px", duration: "4.4s", delay: "-3s" }
   ].map(spec => {
     const squid = document.createElement("img");
     squid.className = "glowSquid";
     squid.alt = "";
     squid.src = squidFrames[spec.kind][0];
+    squid.style.setProperty("--squid-x", spec.x);
     squid.style.setProperty("--squid-y", spec.y);
     squid.style.setProperty("--squid-size", spec.size);
     squid.style.setProperty("--squid-duration", spec.duration);
     squid.style.setProperty("--squid-delay", spec.delay);
     squid.addEventListener("error", () => { squid.hidden = true; });
-    sea.append(squid);
+    squidHabitat.append(squid);
     return { element: squid, frames: squidFrames[spec.kind] };
   });
   let squidFrame = 0;

@@ -435,14 +435,12 @@
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .squidDrifter { display: block; }
     #mainWebsite .squidDrifter[hidden], #mainWebsite .nautilusDrifter[hidden] { display: none; }
     .glowSquid { position: relative; width: 100%; height: auto; object-fit: contain; animation: squidPulse 3.4s ease-in-out infinite alternate; animation-delay: var(--squid-glow-delay); }
-    .squidSpark { position: absolute; left: 74%; top: 23%; width: 3px; height: 3px; border-radius: 50%; background: #d7ffff; box-shadow: 0 0 7px 3px #68eeff, -30px 30px 0 -1px #b9ffff; animation: squidSparkle 2.3s ease-in-out infinite alternate; animation-delay: var(--squid-glow-delay); }
     #mainWebsite .glowSquid[hidden] { display: none; }
     @keyframes squidRoam { 0% { left: -200px; transform: translateY(0) rotate(-5deg); } 25% { transform: translateY(-28px) rotate(3deg); } 50% { transform: translateY(18px) rotate(-3deg); } 75% { transform: translateY(-20px) rotate(4deg); } 100% { left: calc(100% + 200px); transform: translateY(10px) rotate(-4deg); } }
     @keyframes squidPulse {
       from { filter: brightness(1.1) saturate(1.2) drop-shadow(0 0 5px #8cfaff) drop-shadow(0 0 13px #37d6ed9c); }
       to { filter: brightness(1.7) saturate(1.3) drop-shadow(0 0 8px #d4ffff) drop-shadow(0 0 22px #78f6fff0) drop-shadow(0 0 32px #28c5e799); }
     }
-    @keyframes squidSparkle { to { opacity: .2; transform: translate(6px, -4px) scale(.6); } }
     @keyframes seaRays { to { transform: skewX(-9deg) translateX(4%); opacity: .58; } }
     @keyframes seaShimmer { to { opacity: .55; transform: translateY(10px); } }
     .seaBubble { position: absolute; z-index: 1; left: var(--x); bottom: var(--bubble-bottom); width: var(--size); aspect-ratio: 1;
@@ -457,6 +455,10 @@
     .nautilusDrifter::after { content: ""; position: absolute; left: -22px; top: 40%; width: 20px; height: 20px; border: 1px solid #8be6ed70; border-radius: 50%; box-shadow: -17px 9px 0 -6px #8be6ed80; animation: nautilusWake 1.5s ease-out infinite; }
     .nautilusDrifter img { display: block; width: 100%; height: auto; transform: scaleX(-1); filter: brightness(.7) drop-shadow(0 0 5px #60c9d35c); animation: nautilusPulse 2.8s ease-in-out infinite alternate; }
     .nautilusDrifter img[hidden] { display: none; }
+    .zombieNautilus { display: none; position: absolute; z-index: 1; left: -150px; top: 50%; width: 67px; opacity: .58; filter: brightness(.6) drop-shadow(0 0 8px #55bba466); pointer-events: none; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .zombieNautilus.active { display: block; animation: zombieNautilusCross 18s linear forwards; }
+    .zombieNautilus img { display: block; width: 100%; height: auto; transform: scaleX(-1); }
+    @keyframes zombieNautilusCross { 0% { left: -150px; transform: translateY(4px) rotate(-3deg); } 50% { transform: translateY(-16px) rotate(3deg); } 100% { left: calc(100% + 150px); transform: translateY(3px) rotate(-3deg); } }
     @keyframes nautilusRoam { 0% { left: -150px; transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-24px) rotate(4deg); } 100% { left: calc(100% + 150px); transform: translateY(9px) rotate(-4deg); } }
     @keyframes nautilusWake { to { opacity: 0; transform: translate(-22px, 14px) scale(1.4); } }
     @keyframes nautilusPulse { to { filter: brightness(.85) drop-shadow(0 0 9px #70d9dc8a); } }
@@ -487,7 +489,8 @@
     #mainWebsite[data-wallpaper="underwater"] .videoCard { background: #123e5eed; color: #f4fdff; }
     #mainWebsite[data-wallpaper="underwater"] .cardText p { color: #d3f4f8; }
     @media (prefers-reduced-motion: reduce) {
-      .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaPearl, .squidDrifter, .glowSquid, .squidSpark, .nautilusDrifter, .nautilusDrifter::after, .nautilusDrifter img { animation: none !important; }
+      .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaPearl, .squidDrifter, .glowSquid, .nautilusDrifter, .nautilusDrifter::after, .nautilusDrifter img, .zombieNautilus { animation: none !important; }
+      #mainWebsite .zombieNautilus { display: none !important; }
       #mainWebsite[data-wallpaper="underwater"] .galleryChase,
       #mainWebsite[data-wallpaper="underwater"] .galleryChase > img,
       #mainWebsite[data-wallpaper="underwater"] .chickenWrap { animation: none !important; }
@@ -1370,9 +1373,6 @@
     drifter.style.setProperty("--squid-glow-delay", spec.glowDelay);
     squid.addEventListener("error", () => { drifter.hidden = true; });
     drifter.append(squid);
-    const spark = document.createElement("span");
-    spark.className = "squidSpark";
-    drifter.append(spark);
     squidHabitat.append(drifter);
     return { element: squid, frames: squidFrames[spec.kind] };
   });
@@ -1420,6 +1420,62 @@
     nautilusFrame = (nautilusFrame + 1) % nautilusFrames.length;
     nautiluses.forEach(image => { if (!image.parentElement.hidden) image.src = nautilusFrames[nautilusFrame]; });
   }, 180);
+
+  // A single Zombie Nautilus crosses occasionally. Only filenames that actually load are used.
+  const zombie = document.createElement("span");
+  zombie.className = "zombieNautilus";
+  const zombieImage = document.createElement("img");
+  zombieImage.alt = "";
+  zombie.append(zombieImage);
+  nautilusHabitat.append(zombie);
+  const zombieFramePatterns = [
+    [1, 2, 3, 4, 5, 6].map(n => `zombie-frame-${n}.png`),
+    [1, 2, 3, 4, 5, 6].map(n => `Zombie-frame-${n}.png`),
+    [1, 2, 3, 4, 5, 6].map(n => `Zombie-${n}.png`),
+    ["Zombie.png", ...[1, 2, 3, 4, 5].map(n => `Zombie(${n}).png`)],
+    ["Zombie.png", ...[2, 3, 4, 5, 6].map(n => `Zombie${n}.png`)]
+  ];
+  const canLoadZombieFrame = src => new Promise(resolve => {
+    const test = new Image();
+    test.onload = () => resolve(true);
+    test.onerror = () => resolve(false);
+    test.src = src;
+  });
+  let zombieFrames = [];
+  (async () => {
+    for (const pattern of zombieFramePatterns) {
+      const found = await Promise.all(pattern.map(canLoadZombieFrame));
+      const available = pattern.filter((_, index) => found[index]);
+      if (available.length > 1) { zombieFrames = available; break; }
+    }
+    if (!zombieFrames.length && await canLoadZombieFrame("Zombie.png")) zombieFrames = ["Zombie.png"];
+    if (zombieFrames.length) scheduleZombie();
+  })();
+  function scheduleZombie() {
+    setTimeout(() => {
+      if (site.dataset.wallpaper !== "underwater" || site.dataset.theme !== "dark" || reducedMotion.matches) {
+        scheduleZombie();
+        return;
+      }
+      const siteBounds = site.getBoundingClientRect();
+      const pageY = -siteBounds.top + innerHeight * (.25 + Math.random() * .5);
+      zombie.style.top = Math.max(20, Math.min(site.clientHeight - 90, pageY)) + "px";
+      zombieImage.src = zombieFrames[0];
+      zombie.classList.remove("active");
+      void zombie.offsetWidth;
+      zombie.classList.add("active");
+      let frame = 0;
+      const frameTimer = setInterval(() => {
+        frame = (frame + 1) % zombieFrames.length;
+        zombieImage.src = zombieFrames[frame];
+      }, 210);
+      setTimeout(() => {
+        clearInterval(frameTimer);
+        zombie.classList.remove("active");
+        scheduleZombie();
+      }, 18000);
+    }, 35000 + Math.random() * 50000);
+  }
 
   site.addEventListener("click", event => {
     if (site.dataset.wallpaper !== "underwater" || reducedMotion.matches) return;

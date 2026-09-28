@@ -670,6 +670,7 @@
     .onlineList strong { display: block; margin-bottom: 3px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
     .onlinePerson { display: block; overflow-wrap: anywhere; }
     .onlineDot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 50%; background: #66e6a2; box-shadow: 0 0 7px #66e6a2; }
+    .onlinePerson.offline .onlineDot { background: #a7a4ad; box-shadow: none; }
     #mainWebsite[data-wallpaper="underwater"] .onlineList { border-color: var(--scene-accent); }
     .accountDialog[hidden], .accountSignedOut[hidden], .accountSignedIn[hidden] { display: none; }
     .accountDialog { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 18px; background: #100918dc; backdrop-filter: blur(10px); }
@@ -1910,7 +1911,16 @@
         }
       }
       onlinePeople.replaceChildren();
+      const elhazuuOnline = [...people.values()].some(name => name.toLowerCase() === "elhazuu");
+      const elhazuuRow = document.createElement("span");
+      elhazuuRow.className = `onlinePerson${elhazuuOnline ? "" : " offline"}`;
+      const elhazuuDot = document.createElement("span");
+      elhazuuDot.className = "onlineDot";
+      elhazuuDot.setAttribute("aria-hidden", "true");
+      elhazuuRow.append(elhazuuDot, document.createTextNode(`ElHazuu is ${elhazuuOnline ? "online" : "Offline"}`));
+      onlinePeople.append(elhazuuRow);
       for (const name of people.values()) {
+        if (name.toLowerCase() === "elhazuu") continue;
         const row = document.createElement("span");
         row.className = "onlinePerson";
         const dot = document.createElement("span");
@@ -1919,7 +1929,6 @@
         row.append(dot, document.createTextNode(`${name} is online`));
         onlinePeople.append(row);
       }
-      if (!people.size) onlinePeople.textContent = "Connecting…";
     }
     function updatePresence() {
       const user = presenceActive ? accountUser : null;

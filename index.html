@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v39">
+<meta name="site-build" content="cinta-kita-v40">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -967,6 +967,8 @@
     #mainWebsite .messageReactions button { padding: 2px 7px; min-width: 34px; border-radius: 999px; background: color-mix(in srgb, var(--message-accent) 12%, var(--message-surface)); font-size: 13px; }
     #mainWebsite .messageReactions button[aria-pressed="true"] { background: color-mix(in srgb, var(--message-accent) 55%, var(--message-surface)); border-color: var(--message-accent); }
     #mainWebsite .messagePanel { width: min(720px, calc(100vw - 36px)); height: min(820px, calc(100dvh - 104px)); padding: 24px; border-radius: 24px; }
+    #mainWebsite .messagePanel { animation: none; transform: scale(1); transform-origin: bottom right; transition: transform .32s cubic-bezier(.2,.8,.2,1), box-shadow .32s ease; }
+    #mainWebsite .messagePanel.chatCompact { transform: scale(.78); box-shadow: 0 13px 38px #0008; }
     #mainWebsite .messagePanelHead { padding-bottom: 8px; border-bottom: 1px solid var(--message-border); }
     #mainWebsite .messagePeople { padding: 13px 10px; border: 1px solid var(--message-border); border-radius: 15px; background: color-mix(in srgb, var(--message-accent) 7%, var(--message-surface)); }
     #mainWebsite .messageHistory { min-height: 180px; padding: 17px; border-radius: 16px; }
@@ -974,8 +976,13 @@
     #mainWebsite .messageComposer { padding-top: 8px; border-top: 1px solid var(--message-border); }
     @media (max-width: 520px) {
       #mainWebsite .messagePanel { right: 10px; bottom: 68px; width: calc(100vw - 20px); height: calc(100dvh - 84px); padding: 14px; }
+      #mainWebsite .messagePanel.chatCompact { transform: scale(.88); }
       #mainWebsite .messageHistory { min-height: 120px; padding: 12px; }
       #mainWebsite .messageBubble { max-width: 94%; }
+    }
+    @media (hover: none), (prefers-reduced-motion: reduce) {
+      #mainWebsite .messagePanel.chatCompact { transform: none; }
+      #mainWebsite .messagePanel { transition: none; }
     }
 </style>
 </head>
@@ -3133,6 +3140,30 @@
     }
     let messageLastInteraction = Date.now();
     function noteMessageInteraction() { messageLastInteraction = Date.now(); }
+    let messagePointerInside = false;
+    let messageCompactTimer = null;
+    function messageTypingFocused() {
+      return messagePanel.contains(document.activeElement) &&
+        document.activeElement.matches('textarea, input:not([type="button"]), [contenteditable="true"]');
+    }
+    function updateMessageSize() {
+      if (messagePanel.hidden) return;
+      messagePanel.classList.toggle("chatCompact", !messagePointerInside && !messageTypingFocused());
+    }
+    messagePanel.addEventListener("pointerenter", event => {
+      if (event.pointerType === "touch") return;
+      clearTimeout(messageCompactTimer);
+      messagePointerInside = true;
+      noteMessageInteraction();
+      updateMessageSize();
+    });
+    messagePanel.addEventListener("pointerleave", event => {
+      if (event.pointerType === "touch") return;
+      messagePointerInside = false;
+      messageCompactTimer = setTimeout(updateMessageSize, 160);
+    });
+    messagePanel.addEventListener("focusin", updateMessageSize);
+    messagePanel.addEventListener("focusout", () => setTimeout(updateMessageSize, 0));
     for (const type of ["pointerdown", "keydown", "input", "wheel", "touchstart", "scroll"]) {
       messagePanel.addEventListener(type, noteMessageInteraction, { passive: true });
     }
@@ -3147,12 +3178,15 @@
     }, 5000);
     function openMessages() {
       noteMessageInteraction();
+      clearTimeout(messageCompactTimer);
+      messagePanel.classList.remove("chatCompact");
       messagePanel.hidden = false;
       messageDock.setAttribute("aria-expanded", "true");
       messageToast.hidden = true;
       loadMessages().then(() => (messagePeople.querySelector(".messagePerson") || messageClose).focus());
+      messageCompactTimer = setTimeout(updateMessageSize, 850);
     }
-    function closeMessages(restoreFocus = true) { messagePanel.hidden = true; messageDock.setAttribute("aria-expanded", "false"); if (restoreFocus) messageDock.focus(); }
+    function closeMessages(restoreFocus = true) { clearTimeout(messageCompactTimer); messagePanel.hidden = true; messagePanel.classList.remove("chatCompact"); messagePointerInside = false; messageDock.setAttribute("aria-expanded", "false"); if (restoreFocus) messageDock.focus(); }
     messageOpen.addEventListener("click", openMessages);
     messageDock.addEventListener("click", () => messagePanel.hidden ? openMessages() : closeMessages());
     messageClose.addEventListener("click", () => closeMessages());

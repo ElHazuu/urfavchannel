@@ -183,6 +183,22 @@
     @keyframes bellRing { 0%, 70%, 100% { transform: rotate(0); } 75% { transform: rotate(-12deg); } 80% { transform: rotate(12deg); } 85% { transform: rotate(-8deg); } 90% { transform: rotate(8deg); } }
     .notificationHint { position: fixed; z-index: 44; top: 67px; right: 18px; padding: 10px 14px; border: 1px solid #ffc6e188; border-radius: 12px; background: #321b3cf0; color: #fff0f8; font-size: 12px; box-shadow: 0 8px 22px #0005; }
     .notificationHint[hidden] { display: none; }
+    .notificationCount { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 12px; background: #ff639d; color: white; font: 700 11px/18px "DM Sans", Arial, sans-serif; }
+    .notificationCount[hidden], .notificationPanel[hidden], .notificationForm[hidden] { display: none; }
+    .notificationPanel { position: fixed; z-index: 48; top: 66px; right: 18px; width: min(380px, calc(100vw - 36px)); max-height: min(75vh, 600px); overflow-y: auto; padding: 18px; border: 1px solid var(--theme-line); border-radius: 18px; background: var(--theme-surface); color: var(--theme-text); box-shadow: 0 20px 55px #0008; }
+    .notificationPanelHead { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .notificationPanelHead h2 { margin: 0; font: 600 30px "Cormorant Garamond", Georgia, serif; }
+    .notificationPanel button { padding: 7px 10px; border: 1px solid var(--theme-line); border-radius: 9px; background: #fff1f8; color: #302035; cursor: pointer; }
+    .notificationEntry { padding: 14px 0; border-bottom: 1px solid var(--theme-line); }
+    .notificationEntry strong { display: block; overflow-wrap: anywhere; }
+    .notificationEntry p { margin: 6px 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.5; }
+    .notificationEntry small { color: var(--theme-muted); }
+    .notificationForm { margin: 15px 0; padding: 14px; border: 1px solid var(--theme-line); border-radius: 12px; }
+    .notificationForm label { display: block; margin: 9px 0 5px; font-size: 12px; }
+    .notificationForm input, .notificationForm textarea { width: 100%; padding: 9px; border: 1px solid var(--theme-line); border-radius: 8px; background: #fff; color: #251a2b; font: inherit; }
+    .notificationForm textarea { min-height: 74px; resize: vertical; }
+    .notificationFeedback { min-height: 1em; font-size: 12px; }
+    #mainWebsite[data-wallpaper="underwater"] .notificationPanel { background: var(--scene-surface); color: white; border-color: var(--scene-accent); }
 
     .welcomeSection { position: relative; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; overflow: hidden; padding: 130px max(8vw, 25px) 105px; background: radial-gradient(circle at 79% 52%, #7d4a7455, transparent 26%), radial-gradient(circle at 14% 87%, #a6407844, transparent 34%), linear-gradient(145deg, #150e1d, #25152a 62%, #110d18); }
     .welcomeSection::before { content: ""; position: absolute; inset: 0; opacity: .37; pointer-events: none; background-image: radial-gradient(#ffd7ee 1px, transparent 2px), radial-gradient(#ba9eff 1px, transparent 2px); background-size: 120px 130px, 190px 170px; background-position: 20px 38px, 85px 75px; }
@@ -787,7 +803,18 @@
         <button id="backToIntro" type="button">↶ Back to our cats</button>
       </nav>
     </div>
-    <button class="notificationBell" id="notificationBell" type="button" aria-label="See new video">🔔</button>
+    <button class="notificationBell" id="notificationBell" type="button" aria-label="Open updates" aria-controls="notificationPanel" aria-expanded="false">🔔<span class="notificationCount" id="notificationCount" hidden></span></button>
+    <div class="notificationPanel" id="notificationPanel" aria-label="Updates" hidden>
+      <div class="notificationPanelHead"><h2>Our updates ♡</h2><button id="notificationClose" type="button" aria-label="Close updates">×</button></div>
+      <form class="notificationForm" id="notificationForm" hidden>
+        <strong>Post an update</strong>
+        <label for="notificationTitleInput">Title</label><input id="notificationTitleInput" maxlength="120" required>
+        <label for="notificationBodyInput">Message</label><textarea id="notificationBodyInput" maxlength="1000" required></textarea>
+        <button id="notificationPost" type="submit">Share update ♡</button>
+      </form>
+      <p class="notificationFeedback" id="notificationFeedback" role="status"></p>
+      <div id="notificationList"></div>
+    </div>
     <button class="seaPearl" id="seaPearl" type="button" aria-label="Open a secret message in the pearl"><span>OPEN ME</span></button>
     <div class="seaPearlMessage" id="seaPearlMessage" role="dialog" aria-modal="true" aria-label="Message in a pearl" hidden>
       <div class="seaPearlCard"><span class="pearlIcon" aria-hidden="true">✧</span>
@@ -795,7 +822,7 @@
         <button id="closeSeaPearl" type="button">Close the pearl</button>
       </div>
     </div>
-    <span class="notificationHint" id="notificationHint" hidden>New video is waiting ♡</span>
+    <span class="notificationHint" id="notificationHint" hidden>New updates are waiting ♡</span>
     <section class="welcomeSection" id="home" data-wallpaper="original">
       <span class="originalShootingStar" aria-hidden="true"></span>
       <div class="welcomeGlow"></div><button class="welcomeOrbit" id="heartMomentButton" type="button" aria-label="See our cats' little moment"><span class="orbitStar" aria-hidden="true"></span></button>
@@ -1113,23 +1140,6 @@
       wallpaperButton.setAttribute("aria-expanded", "false");
     });
 
-    // Adding or changing a video link brings back the bell for returning visitors.
-    let latestVideo = [...document.querySelectorAll("#videos .videoEmbed")].map(video => video.getAttribute("src")).join("|");
-    let seenVideo = "";
-    try { seenVideo = localStorage.getItem("ourLoveSeenVideo") || ""; } catch (error) {}
-    window.updateLatestVideoNotice = videoKey => {
-      latestVideo = videoKey;
-      notificationBell.classList.toggle("new", !!latestVideo && latestVideo !== seenVideo);
-      notificationHint.hidden = !latestVideo || latestVideo === seenVideo;
-    };
-    window.updateLatestVideoNotice(latestVideo);
-    notificationBell.addEventListener("click", () => {
-      notificationBell.classList.remove("new");
-      notificationHint.hidden = true;
-      try { localStorage.setItem("ourLoveSeenVideo", latestVideo); } catch (error) {}
-      seenVideo = latestVideo;
-      document.getElementById("videos").scrollIntoView({ behavior: "smooth" });
-    });
     function closeMenu() { menuZone.classList.remove("open"); menuHandle.setAttribute("aria-expanded", "false"); }
     function openMenu() { menuZone.classList.add("open"); menuHandle.setAttribute("aria-expanded", "true"); }
     menuHandle.addEventListener("pointermove", event => { if (event.pointerType === "mouse") openMenu(); });
@@ -1956,6 +1966,147 @@
     let videoAccessGeneration = 0;
     let renderedPublishedSignature = null;
     let renderedManagerSignature = null;
+    const updatesBell = document.getElementById("notificationBell");
+    const updatesHint = document.getElementById("notificationHint");
+    const updatesCount = document.getElementById("notificationCount");
+    const updatesPanel = document.getElementById("notificationPanel");
+    const updatesClose = document.getElementById("notificationClose");
+    const updatesList = document.getElementById("notificationList");
+    const updatesForm = document.getElementById("notificationForm");
+    const updatesTitle = document.getElementById("notificationTitleInput");
+    const updatesBody = document.getElementById("notificationBodyInput");
+    const updatesPost = document.getElementById("notificationPost");
+    const updatesFeedback = document.getElementById("notificationFeedback");
+    let notificationRows = [];
+    let notificationReadIds = new Set();
+    let notificationChannel = null;
+    let notificationUserId = null;
+    let notificationGeneration = 0;
+    function renderNotifications() {
+      const unread = notificationRows.filter(item => !notificationReadIds.has(item.id)).length;
+      updatesBell.classList.toggle("new", unread > 0);
+      updatesHint.hidden = !unread;
+      updatesCount.hidden = !unread;
+      updatesCount.textContent = unread > 9 ? "9+" : String(unread);
+      updatesList.replaceChildren();
+      if (!notificationRows.length) { updatesList.textContent = "No updates yet ♡"; return; }
+      for (const item of notificationRows) {
+        const entry = document.createElement("article");
+        entry.className = "notificationEntry";
+        const title = document.createElement("strong");
+        title.textContent = `${notificationReadIds.has(item.id) ? "" : "● "}${item.title}`;
+        const body = document.createElement("p");
+        body.textContent = item.body || "";
+        const date = document.createElement("small");
+        date.textContent = new Date(item.created_at).toLocaleString();
+        entry.append(title, body, date);
+        if (item.kind === "video" && item.video_id) {
+          const watch = document.createElement("button");
+          watch.type = "button"; watch.textContent = "Watch video ↗";
+          watch.addEventListener("click", () => {
+            updatesPanel.hidden = true;
+            updatesBell.setAttribute("aria-expanded", "false");
+            const target = [...videoGrid.querySelectorAll("[data-video-id]")].find(card => card.dataset.videoId === item.video_id);
+            (target || document.getElementById("videos")).scrollIntoView({ behavior: "smooth", block: "center" });
+          });
+          entry.append(watch);
+        }
+        if (videoOwner) {
+          const remove = document.createElement("button");
+          remove.type = "button"; remove.textContent = "Remove notice";
+          remove.addEventListener("click", async () => {
+            if (!confirm(`Remove “${item.title}” from updates?`)) return;
+            remove.disabled = true;
+            const { error } = await accountClient.from("site_notifications").delete().eq("id", item.id);
+            updatesFeedback.textContent = error ? error.message : "Notice removed";
+            if (!error) await loadNotifications();
+            remove.disabled = false;
+          });
+          entry.append(remove);
+        }
+        updatesList.append(entry);
+      }
+    }
+    async function markNotificationsRead() {
+      if (!accountClient || !accountUser) return;
+      const unread = notificationRows.filter(item => !notificationReadIds.has(item.id));
+      if (!unread.length) return;
+      const userId = accountUser.id;
+      const { error } = await accountClient.from("site_notification_reads")
+        .insert(unread.map(item => ({ user_id: userId, notification_id: item.id })));
+      if (error || accountUser?.id !== userId) return;
+      unread.forEach(item => notificationReadIds.add(item.id));
+      renderNotifications();
+    }
+    async function loadNotifications() {
+      if (!accountClient || !accountUser) return;
+      const userId = accountUser.id;
+      const [notices, reads] = await Promise.all([
+        accountClient.from("site_notifications").select("id,kind,title,body,video_id,created_at").order("created_at", { ascending: false }).limit(50),
+        accountClient.from("site_notification_reads").select("notification_id").eq("user_id", userId)
+      ]);
+      if (accountUser?.id !== userId) return;
+      if (notices.error || reads.error) { updatesFeedback.textContent = "Updates are unavailable. Check the Supabase notification setup."; return; }
+      updatesFeedback.textContent = "";
+      notificationRows = notices.data || [];
+      notificationReadIds = new Set((reads.data || []).map(item => item.notification_id));
+      updatesForm.hidden = !videoOwner;
+      renderNotifications();
+      if (!updatesPanel.hidden) markNotificationsRead();
+    }
+    function syncNotifications() {
+      const user = accountUser;
+      if (!accountClient || !user) {
+        notificationGeneration++;
+        if (notificationChannel) accountClient?.removeChannel(notificationChannel);
+        notificationChannel = null;
+        notificationUserId = null;
+        notificationRows = [];
+        notificationReadIds = new Set();
+        updatesPanel.hidden = true;
+        updatesForm.hidden = true;
+        updatesBell.setAttribute("aria-expanded", "false");
+        updatesBell.classList.remove("new");
+        updatesHint.hidden = true;
+        updatesCount.hidden = true;
+        return;
+      }
+      if (notificationChannel && notificationUserId === user.id) { loadNotifications(); return; }
+      if (notificationChannel) accountClient.removeChannel(notificationChannel);
+      const generation = ++notificationGeneration;
+      notificationUserId = user.id;
+      const channel = accountClient.channel("cinta-kita-notifications");
+      notificationChannel = channel;
+      channel.on("postgres_changes", { event: "*", schema: "public", table: "site_notifications" }, () => {
+        if (generation === notificationGeneration) loadNotifications();
+      });
+      channel.subscribe(status => {
+        if (generation === notificationGeneration && status === "SUBSCRIBED") loadNotifications();
+      });
+      loadNotifications();
+    }
+    updatesBell.addEventListener("click", () => {
+      updatesPanel.hidden = !updatesPanel.hidden;
+      updatesBell.setAttribute("aria-expanded", String(!updatesPanel.hidden));
+      if (!updatesPanel.hidden) loadNotifications();
+    });
+    updatesClose.addEventListener("click", () => { updatesPanel.hidden = true; updatesBell.setAttribute("aria-expanded", "false"); updatesBell.focus(); });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && !updatesPanel.hidden) { updatesPanel.hidden = true; updatesBell.setAttribute("aria-expanded", "false"); }
+    });
+    updatesForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!videoOwner || !accountClient || !accountUser) return;
+      updatesPost.disabled = true;
+      const { error } = await accountClient.from("site_notifications").insert({
+        kind: "text", title: updatesTitle.value.trim(), body: updatesBody.value.trim(), created_by: accountUser.id
+      });
+      updatesPost.disabled = false;
+      updatesFeedback.textContent = error ? error.message : "Update shared ♡";
+      if (!error) { updatesForm.reset(); await loadNotifications(); }
+    });
+    window.addEventListener("focus", () => { if (accountUser) loadNotifications(); });
+    setInterval(() => { if (accountUser && !document.hidden) loadNotifications(); }, 60000);
     function youtubeIdFromLink(value) {
       try {
         const url = new URL(value.trim());
@@ -1985,6 +2136,7 @@
       published.forEach((video, index) => {
         const card = document.createElement("div");
         card.className = "videoCard featured";
+        card.dataset.videoId = video.id;
         const player = document.createElement("iframe");
         player.className = "videoEmbed";
         player.src = `https://www.youtube-nocookie.com/embed/${video.youtube_id}`;
@@ -2011,7 +2163,6 @@
         empty.textContent = "Our next video is coming soon ♡";
         videoGrid.append(empty);
       }
-      window.updateLatestVideoNotice?.(published[0]?.id || "");
       }
       const managerSignature = JSON.stringify([videoOwner, videoRows.map(video => [video.id, video.title, video.youtube_id, video.description, video.published])]);
       if (managerSignature === renderedManagerSignature) return;
@@ -2091,6 +2242,8 @@
       videoOwner = !error && !!data;
       videoManageToggle.hidden = !videoOwner;
       if (!videoOwner) videoManager.hidden = true;
+      updatesForm.hidden = !videoOwner;
+      renderNotifications();
       await loadVideos();
     }
     videoManageToggle.addEventListener("click", () => {
@@ -2204,6 +2357,7 @@
       accountButton.textContent = user ? `♡ ${username || "Account"}` : "♡ Sign in";
       updatePresence();
       setTimeout(syncVideoAccess, 0);
+      setTimeout(syncNotifications, 0);
     }
     function setAccountMode(mode) {
       accountMode = mode;

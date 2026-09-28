@@ -769,6 +769,42 @@
     .messageStatus { min-height: 1.1em; margin: 5px 0 0; font-size: 12px; }
     @media (max-width: 520px) { .messagePanel { bottom: 74px; height: min(680px, calc(100dvh - 90px)); padding: 14px; } .messageDock { right: 15px; bottom: 14px; } .messageBubble { max-width: 95%; } }
     @media (prefers-reduced-motion: reduce) { .messagePanel { animation: none; } .messageDock { transition: none; } }
+    /* Chat colors follow the selected wallpaper, mode, and custom accent. */
+    #mainWebsite {
+      --message-surface: var(--theme-surface); --message-ink: var(--theme-text);
+      --message-border: var(--theme-line); --message-accent: var(--theme-accent);
+      --message-field: var(--theme-bg);
+    }
+    #mainWebsite[data-wallpaper="underwater"] {
+      --message-surface: var(--scene-surface); --message-ink: #f4fdff;
+      --message-border: var(--scene-accent); --message-accent: var(--scene-accent);
+      --message-field: color-mix(in srgb, var(--scene-surface) 78%, #001421);
+    }
+    #mainWebsite .messageDock, #mainWebsite .messageMenuButton {
+      background: color-mix(in srgb, var(--message-accent) 16%, var(--message-surface));
+      color: var(--message-ink); border-color: var(--message-border);
+    }
+    #mainWebsite .messageDockIcon { background: color-mix(in srgb, var(--message-accent) 35%, transparent); }
+    #mainWebsite .messageBadge { background: color-mix(in srgb, var(--message-accent) 68%, var(--message-surface)); color: var(--message-ink); border: 1px solid var(--message-border); }
+    #mainWebsite .messageDock:hover, #mainWebsite .messageDock:focus-visible {
+      box-shadow: 0 17px 34px #0007, 0 0 30px var(--message-accent);
+    }
+    #mainWebsite .messagePanel { background: var(--message-surface); color: var(--message-ink); border-color: var(--message-border); }
+    #mainWebsite .messagePanel button { background: color-mix(in srgb, var(--message-accent) 32%, var(--message-surface)); color: var(--message-ink); border-color: var(--message-border); }
+    #mainWebsite .messagePanel button:hover, #mainWebsite .messagePanel button:focus-visible { background: color-mix(in srgb, var(--message-accent) 55%, var(--message-surface)); }
+    #mainWebsite .messageDrawTools button[aria-pressed="true"] { background: color-mix(in srgb, var(--message-accent) 67%, var(--message-surface)); }
+    #mainWebsite .messagePanel select, #mainWebsite .messagePanel textarea { background: var(--message-field); color: var(--message-ink); border-color: var(--message-border); }
+    #mainWebsite .messagePanel input { accent-color: var(--message-accent); }
+    #mainWebsite .messagePanel select option { background: var(--message-surface); color: var(--message-ink); }
+    #mainWebsite .messageHistory { border-color: var(--message-border); background: color-mix(in srgb, var(--message-accent) 5%, var(--message-field)); }
+    #mainWebsite .messageBubble { background: color-mix(in srgb, var(--message-accent) 27%, var(--message-surface)); color: var(--message-ink); }
+    #mainWebsite .messageBubble.mine { background: color-mix(in srgb, var(--message-accent) 48%, var(--message-surface)); }
+    #mainWebsite .messageBubble .messageMeta { display: flex; justify-content: flex-end; gap: 5px; margin: 5px 0 0; font-size: 11px; opacity: .82; }
+    #mainWebsite .messageBubble .messageEditActions { display: flex; gap: 7px; margin-top: 7px; }
+    #mainWebsite .messageBubble .messageEditButton { display: block; margin: 4px 0 0 auto; padding: 3px 7px; font-size: 11px; }
+    #mainWebsite .messageBubble textarea { min-height: 72px; width: min(360px, 65vw); resize: vertical; }
+    #mainWebsite .messageCanvas { border-color: var(--message-border); }
+    #mainWebsite .messageToast { border-color: var(--message-border); background: var(--message-surface); color: var(--message-ink); }
     .messageToast { position: fixed; z-index: 81; right: 18px; bottom: 90px; width: min(320px, calc(100vw - 36px)); padding: 13px; border: 1px solid #ffb9d7; border-radius: 13px; background: #38213ef5; color: white; box-shadow: 0 10px 32px #0008; cursor: pointer; }
 </style>
 </head>
@@ -2448,6 +2484,18 @@
     const messageStatus = document.getElementById("messageStatus");
     const messageSend = document.getElementById("messageSend");
     const messageToast = document.getElementById("messageToast");
+    let editingMessageId = null;
+    let editingMessageDraft = "";
+    function messageTimeAgo(value) {
+      const seconds = Math.max(0, Math.floor((Date.now() - new Date(value).getTime()) / 1000));
+      if (seconds < 60) return "just now";
+      if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+      if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+      if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+      if (seconds < 2592000) return `${Math.floor(seconds / 604800)}w ago`;
+      if (seconds < 31536000) return `${Math.floor(seconds / 2592000)}mo ago`;
+      return `${Math.floor(seconds / 31536000)}y ago`;
+    }
     let messageRows = [];
     let messageNames = new Map();
     let messageMode = "text";
@@ -2564,15 +2612,67 @@
           avatar.setAttribute("aria-hidden", "true");
           byline.append(avatar);
         }
-        byline.append(document.createTextNode(`${senderName} · ${new Date(item.created_at).toLocaleString()}`));
+        byline.append(document.createTextNode(senderName));
         bubble.append(byline);
         if (item.kind === "drawing") {
           const img = document.createElement("img");
           img.alt = "Hand-drawn message";
           img.src = item.drawing_data;
           bubble.append(img);
+        } else if (editingMessageId === item.id) {
+          const editor = document.createElement("textarea");
+          editor.maxLength = 2000;
+          editor.setAttribute("aria-label", "Edit your message");
+          editor.value = editingMessageDraft;
+          editor.addEventListener("input", () => { editingMessageDraft = editor.value; });
+          const actions = document.createElement("div");
+          actions.className = "messageEditActions";
+          const save = document.createElement("button");
+          save.type = "button"; save.textContent = "Save";
+          editor.addEventListener("keydown", event => {
+            if (event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
+              event.preventDefault();
+              if (!save.disabled) save.click();
+            }
+          });
+          save.addEventListener("click", async () => {
+            const body = editingMessageDraft.trim();
+            if (!body) { messageStatus.textContent = "A message cannot be empty."; return; }
+            if (!accountClient || !accountUser || accountUser.id !== item.sender_id) return;
+            save.disabled = true;
+            const { error } = await accountClient.from("site_messages").update({ body }).eq("id", item.id).eq("sender_id", accountUser.id);
+            save.disabled = false;
+            messageStatus.textContent = error ? error.message : "Message edited ♡";
+            if (!error) { editingMessageId = null; editingMessageDraft = ""; await loadMessages(); }
+          });
+          const cancel = document.createElement("button");
+          cancel.type = "button"; cancel.textContent = "Cancel";
+          cancel.addEventListener("click", () => { editingMessageId = null; editingMessageDraft = ""; renderMessages(); });
+          actions.append(save, cancel);
+          bubble.append(editor, actions);
         } else {
           bubble.append(document.createTextNode(item.body));
+        }
+        const meta = document.createElement("small");
+        meta.className = "messageMeta";
+        const age = document.createElement("span");
+        age.className = "messageAge";
+        age.dataset.sentAt = item.created_at;
+        age.title = new Date(item.created_at).toLocaleString();
+        age.textContent = messageTimeAgo(item.created_at);
+        meta.append(age);
+        if (item.edited_at) meta.append(document.createTextNode(" · Edited"));
+        if (item.sender_id === userId) meta.append(document.createTextNode(` · ${item.read_at ? "Read" : "Sent"}`));
+        bubble.append(meta);
+        if (item.sender_id === userId && item.kind === "text" && editingMessageId !== item.id) {
+          const edit = document.createElement("button");
+          edit.type = "button"; edit.className = "messageEditButton"; edit.textContent = "Edit";
+          edit.setAttribute("aria-label", "Edit your message");
+          edit.addEventListener("click", () => {
+            editingMessageId = item.id; editingMessageDraft = item.body; renderMessages();
+            messageHistory.querySelector('textarea[aria-label="Edit your message"]')?.focus();
+          });
+          bubble.append(edit);
         }
         messageHistory.append(bubble);
       }
@@ -2595,7 +2695,7 @@
       const generation = messageGeneration;
       const [profiles, messages, unreadCount] = await Promise.all([
         accountClient.from("site_profiles").select("id,username").not("username", "is", null),
-        accountClient.from("site_messages").select("id,sender_id,recipient_id,kind,body,drawing_data,created_at,read_at").order("created_at", { ascending: false }).limit(150),
+        accountClient.from("site_messages").select("id,sender_id,recipient_id,kind,body,drawing_data,created_at,read_at,edited_at").order("created_at", { ascending: false }).limit(150),
         accountClient.from("site_messages").select("id", { count: "exact", head: true }).eq("recipient_id", userId).is("read_at", null)
       ]);
       if (generation !== messageGeneration || accountUser?.id !== userId) return;
@@ -2630,7 +2730,7 @@
         ++messageGeneration;
         if (messageChannel) accountClient?.removeChannel(messageChannel);
         messageChannel = null; messageUserId = null; messageLoaded = false;
-        messageRows = []; messageNames = new Map(); messageUnreadCount = 0; seenIncoming.clear();
+        messageRows = []; messageNames = new Map(); messageUnreadCount = 0; editingMessageId = null; editingMessageDraft = ""; seenIncoming.clear();
         messageOpen.hidden = true; messageDock.hidden = true; messagePanel.hidden = true; messageToast.hidden = true;
         messageBadge.hidden = true;
         return;
@@ -2646,6 +2746,8 @@
       messageChannel = channel;
       channel.on("postgres_changes", { event: "INSERT", schema: "public", table: "site_messages", filter: `recipient_id=eq.${user.id}` }, loadMessages);
       channel.on("postgres_changes", { event: "INSERT", schema: "public", table: "site_messages", filter: `sender_id=eq.${user.id}` }, loadMessages);
+      channel.on("postgres_changes", { event: "UPDATE", schema: "public", table: "site_messages", filter: `sender_id=eq.${user.id}` }, loadMessages);
+      channel.on("postgres_changes", { event: "UPDATE", schema: "public", table: "site_messages", filter: `recipient_id=eq.${user.id}` }, loadMessages);
       channel.subscribe(status => { if (status === "SUBSCRIBED" && accountUser?.id === user.id) loadMessages(); });
       loadMessages();
     }
@@ -2661,7 +2763,17 @@
     messageDock.addEventListener("click", () => messagePanel.hidden ? openMessages() : closeMessages());
     messageClose.addEventListener("click", closeMessages);
     messageToast.addEventListener("click", openMessages);
-    messageRecipient.addEventListener("change", () => { renderMessages(); markConversationRead(); });
+    messageRecipient.addEventListener("change", () => { editingMessageId = null; editingMessageDraft = ""; renderMessages(); markConversationRead(); });
+    messageText.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
+        event.preventDefault();
+        if (!messageSend.disabled) messageForm.requestSubmit();
+      }
+    });
+    setInterval(() => {
+      if (messagePanel.hidden) return;
+      messageHistory.querySelectorAll(".messageAge").forEach(age => { age.textContent = messageTimeAgo(age.dataset.sentAt); });
+    }, 60000);
     document.getElementById("messageTextTab").addEventListener("click", () => {
       messageMode = "text"; messageText.hidden = false; messageCanvas.hidden = true; messageDrawTools.hidden = true;
     });

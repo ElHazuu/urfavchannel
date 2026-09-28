@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v38">
+<meta name="site-build" content="cinta-kita-v39">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -966,6 +966,17 @@
     .messageReactions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
     #mainWebsite .messageReactions button { padding: 2px 7px; min-width: 34px; border-radius: 999px; background: color-mix(in srgb, var(--message-accent) 12%, var(--message-surface)); font-size: 13px; }
     #mainWebsite .messageReactions button[aria-pressed="true"] { background: color-mix(in srgb, var(--message-accent) 55%, var(--message-surface)); border-color: var(--message-accent); }
+    #mainWebsite .messagePanel { width: min(720px, calc(100vw - 36px)); height: min(820px, calc(100dvh - 104px)); padding: 24px; border-radius: 24px; }
+    #mainWebsite .messagePanelHead { padding-bottom: 8px; border-bottom: 1px solid var(--message-border); }
+    #mainWebsite .messagePeople { padding: 13px 10px; border: 1px solid var(--message-border); border-radius: 15px; background: color-mix(in srgb, var(--message-accent) 7%, var(--message-surface)); }
+    #mainWebsite .messageHistory { min-height: 180px; padding: 17px; border-radius: 16px; }
+    #mainWebsite .messageBubble { max-width: 84%; padding: 10px 14px; border-radius: 16px; }
+    #mainWebsite .messageComposer { padding-top: 8px; border-top: 1px solid var(--message-border); }
+    @media (max-width: 520px) {
+      #mainWebsite .messagePanel { right: 10px; bottom: 68px; width: calc(100vw - 20px); height: calc(100dvh - 84px); padding: 14px; }
+      #mainWebsite .messageHistory { min-height: 120px; padding: 12px; }
+      #mainWebsite .messageBubble { max-width: 94%; }
+    }
 </style>
 </head>
 <body>
@@ -3059,7 +3070,10 @@
       renderOnlinePeople();
       const selected = messageRecipient.value;
       messageRecipient.replaceChildren();
-      for (const [id, name] of [...messageNames].filter(([id]) => id !== userId).sort((a, b) => a[1].localeCompare(b[1]))) {
+      const realOwnerId = "7a5e0845-24be-4ac0-b881-6aff2a8332f5";
+      for (const [id, name] of [...messageNames].filter(([id, name]) =>
+        id !== userId && (!/^elha+zu+$/i.test(name.trim()) || id === realOwnerId)
+      ).sort((a, b) => a[1].localeCompare(b[1]))) {
         const option = document.createElement("option");
         option.value = id; option.textContent = name;
         messageRecipient.append(option);

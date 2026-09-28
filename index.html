@@ -311,6 +311,24 @@
     .videoCard:hover { transform: translateY(-6px); box-shadow: 0 24px 55px #0006; }
     .videoPreview { display: grid; place-items: center; aspect-ratio: 16 / 9; background: radial-gradient(circle at 50% 50%, #f9b2d245, transparent 34%), linear-gradient(135deg, #34203d, #77526d); color: #ffe1ef; font: 400 86px "Cormorant Garamond", Georgia, serif; }
     .videoEmbed { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; }
+    .videoEmpty { width: min(570px, 100%); padding: 35px; border: 1px solid var(--theme-line); border-radius: 22px; text-align: center; }
+    .videoStatus { min-height: 1.4em; margin: 0 0 18px; color: var(--theme-muted); font-size: 13px; }
+    .videoManageToggle { margin: 0 0 18px; padding: 11px 18px; border: 1px solid var(--theme-line); border-radius: 999px; background: var(--theme-surface); color: var(--theme-text); cursor: pointer; }
+    .videoManager { width: min(850px, 100%); margin: 0 auto 28px; padding: 22px; border: 1px solid var(--theme-line); border-radius: 20px; background: var(--theme-surface); color: var(--theme-text); }
+    .videoManager[hidden], .videoManageToggle[hidden] { display: none; }
+    .videoManager h3 { margin: 0 0 8px; font: 500 34px "Cormorant Garamond", Georgia, serif; }
+    .videoManager label { display: block; margin: 14px 0 6px; font-size: 13px; font-weight: 700; }
+    .videoManager input:not([type="checkbox"]), .videoManager textarea { width: 100%; padding: 11px 13px; border: 1px solid var(--theme-line); border-radius: 9px; background: #fff; color: #251a2b; font: inherit; }
+    .videoManager textarea { min-height: 80px; resize: vertical; }
+    .videoManager .videoPublishLabel { display: flex; align-items: center; gap: 9px; }
+    .videoManager button { margin: 8px 7px 0 0; padding: 9px 13px; border: 1px solid var(--theme-line); border-radius: 9px; background: #fff1f8; color: #322031; cursor: pointer; }
+    .videoManager button:disabled { opacity: .6; cursor: wait; }
+    .videoManageList { margin-top: 20px; border-top: 1px solid var(--theme-line); }
+    .videoManageRow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--theme-line); font-size: 13px; }
+    .videoManageRow strong { overflow-wrap: anywhere; }
+    #mainWebsite[data-wallpaper="underwater"] .videoManager,
+    #mainWebsite[data-wallpaper="underwater"] .videoManageToggle { background: var(--scene-surface); color: white; border-color: var(--scene-accent); }
+    #mainWebsite[data-wallpaper="underwater"] .videoEmpty { border-color: var(--scene-accent); }
     .cardText { padding: 22px 25px 28px; }
     .cardText span { color: #e9aac7; font-size: 10px; font-weight: 700; letter-spacing: .19em; }
     .cardText h3 { margin: 10px 0 5px; font: 500 36px/1.1 "Cormorant Garamond", Georgia, serif; }
@@ -791,7 +809,22 @@
       <div class="sectionHeading">
         <div><p class="eyebrow">01 / Videos</p><h2>Videos</h2></div>
       </div>
-      <div class="videoGrid">
+      <button class="videoManageToggle" id="videoManageToggle" type="button" hidden>✦ Manage videos</button>
+      <div class="videoManager" id="videoManager" hidden>
+        <h3>Your video studio ♡</h3>
+        <p>Add a YouTube link and choose whether to publish it now or save it as a draft.</p>
+        <form id="videoForm">
+          <label for="videoTitleInput">Title</label><input id="videoTitleInput" maxlength="120" required>
+          <label for="videoUrlInput">YouTube link</label><input id="videoUrlInput" type="url" placeholder="https://www.youtube.com/watch?v=..." required>
+          <label for="videoDescriptionInput">Description</label><textarea id="videoDescriptionInput" maxlength="500"></textarea>
+          <label class="videoPublishLabel"><input id="videoPublishedInput" type="checkbox" checked> Publish now</label>
+          <button id="videoSaveButton" type="submit">Add video</button><button id="videoCancelEdit" type="button" hidden>Cancel edit</button>
+        </form>
+        <p class="videoStatus" id="videoEditorStatus" role="status"></p>
+        <div class="videoManageList" id="videoManageList"></div>
+      </div>
+      <p class="videoStatus" id="videoStatus" role="status"></p>
+      <div class="videoGrid" id="videoGrid">
         <div class="videoCard featured"><iframe class="videoEmbed" src="https://www.youtube-nocookie.com/embed/NKo4wzEY5I8" title="Our first video" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><div class="cardText"><span>VIDEO 01</span><h3>Our first video</h3><p>Press play to watch it here ♡</p></div></div>
         <div class="videoCard comingSoon"><div class="videoPreview">✦</div><div class="cardText"><span>COMING SOON</span></div></div>
       </div>
@@ -1081,17 +1114,20 @@
     });
 
     // Adding or changing a video link brings back the bell for returning visitors.
-    const latestVideo = [...document.querySelectorAll("#videos .videoEmbed")].map(video => video.getAttribute("src")).join("|");
+    let latestVideo = [...document.querySelectorAll("#videos .videoEmbed")].map(video => video.getAttribute("src")).join("|");
     let seenVideo = "";
     try { seenVideo = localStorage.getItem("ourLoveSeenVideo") || ""; } catch (error) {}
-    if (latestVideo && latestVideo !== seenVideo) {
-      notificationBell.classList.add("new");
-      notificationHint.hidden = false;
-    }
+    window.updateLatestVideoNotice = videoKey => {
+      latestVideo = videoKey;
+      notificationBell.classList.toggle("new", !!latestVideo && latestVideo !== seenVideo);
+      notificationHint.hidden = !latestVideo || latestVideo === seenVideo;
+    };
+    window.updateLatestVideoNotice(latestVideo);
     notificationBell.addEventListener("click", () => {
       notificationBell.classList.remove("new");
       notificationHint.hidden = true;
       try { localStorage.setItem("ourLoveSeenVideo", latestVideo); } catch (error) {}
+      seenVideo = latestVideo;
       document.getElementById("videos").scrollIntoView({ behavior: "smooth" });
     });
     function closeMenu() { menuZone.classList.remove("open"); menuHandle.setAttribute("aria-expanded", "false"); }
@@ -1901,6 +1937,176 @@
     let accountUser = null;
     let accountReturnFocus = accountButton;
     let accountMode = "create";
+    const videoGrid = document.getElementById("videoGrid");
+    const videoStatus = document.getElementById("videoStatus");
+    const videoManageToggle = document.getElementById("videoManageToggle");
+    const videoManager = document.getElementById("videoManager");
+    const videoForm = document.getElementById("videoForm");
+    const videoTitleInput = document.getElementById("videoTitleInput");
+    const videoUrlInput = document.getElementById("videoUrlInput");
+    const videoDescriptionInput = document.getElementById("videoDescriptionInput");
+    const videoPublishedInput = document.getElementById("videoPublishedInput");
+    const videoSaveButton = document.getElementById("videoSaveButton");
+    const videoCancelEdit = document.getElementById("videoCancelEdit");
+    const videoEditorStatus = document.getElementById("videoEditorStatus");
+    const videoManageList = document.getElementById("videoManageList");
+    let videoOwner = false;
+    let videoRows = [];
+    let editingVideoId = null;
+    let videoAccessGeneration = 0;
+    function youtubeIdFromLink(value) {
+      try {
+        const url = new URL(value.trim());
+        if (url.protocol !== "https:") return null;
+        const host = url.hostname.toLowerCase();
+        let id = null;
+        if (host === "youtu.be" || host === "www.youtu.be") id = url.pathname.split("/")[1];
+        else if (["youtube.com", "www.youtube.com", "m.youtube.com", "www.youtube-nocookie.com", "youtube-nocookie.com"].includes(host)) {
+          id = url.pathname === "/watch" ? url.searchParams.get("v") : url.pathname.match(/^\/(?:embed|shorts|live)\/([^/]+)/)?.[1];
+        }
+        return /^[A-Za-z0-9_-]{11}$/.test(id || "") ? id : null;
+      } catch (_error) { return null; }
+    }
+    function resetVideoEditor() {
+      videoForm.reset();
+      videoPublishedInput.checked = true;
+      editingVideoId = null;
+      videoSaveButton.textContent = "Add video";
+      videoCancelEdit.hidden = true;
+    }
+    function renderVideos() {
+      const published = videoRows.filter(video => video.published);
+      videoGrid.replaceChildren();
+      published.forEach((video, index) => {
+        const card = document.createElement("div");
+        card.className = "videoCard featured";
+        const player = document.createElement("iframe");
+        player.className = "videoEmbed";
+        player.src = `https://www.youtube-nocookie.com/embed/${video.youtube_id}`;
+        player.title = video.title;
+        player.loading = "lazy";
+        player.referrerPolicy = "strict-origin-when-cross-origin";
+        player.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        player.allowFullscreen = true;
+        const textBox = document.createElement("div");
+        textBox.className = "cardText";
+        const number = document.createElement("span");
+        number.textContent = `VIDEO ${String(index + 1).padStart(2, "0")}`;
+        const title = document.createElement("h3");
+        title.textContent = video.title;
+        const description = document.createElement("p");
+        description.textContent = video.description || "Press play to watch it here ♡";
+        textBox.append(number, title, description);
+        card.append(player, textBox);
+        videoGrid.append(card);
+      });
+      if (!published.length) {
+        const empty = document.createElement("div");
+        empty.className = "videoEmpty";
+        empty.textContent = "Our next video is coming soon ♡";
+        videoGrid.append(empty);
+      }
+      window.updateLatestVideoNotice?.(published[0]?.id || "");
+      videoManageList.replaceChildren();
+      if (!videoOwner) return;
+      for (const video of videoRows) {
+        const row = document.createElement("div");
+        row.className = "videoManageRow";
+        const name = document.createElement("strong");
+        name.textContent = `${video.title} · ${video.published ? "Published" : "Draft"}`;
+        const actions = document.createElement("div");
+        const edit = document.createElement("button");
+        edit.type = "button"; edit.textContent = "Edit";
+        edit.addEventListener("click", () => {
+          editingVideoId = video.id;
+          videoTitleInput.value = video.title;
+          videoUrlInput.value = `https://www.youtube.com/watch?v=${video.youtube_id}`;
+          videoDescriptionInput.value = video.description || "";
+          videoPublishedInput.checked = video.published;
+          videoSaveButton.textContent = "Save changes";
+          videoCancelEdit.hidden = false;
+          videoManager.hidden = false;
+          videoTitleInput.focus();
+        });
+        const toggle = document.createElement("button");
+        toggle.type = "button"; toggle.textContent = video.published ? "Unpublish" : "Publish";
+        toggle.addEventListener("click", async () => {
+          toggle.disabled = true;
+          const { error } = await accountClient.from("site_videos").update({ published: !video.published }).eq("id", video.id);
+          videoEditorStatus.textContent = error ? error.message : "Video updated ♡";
+          if (!error) await loadVideos();
+          toggle.disabled = false;
+        });
+        const remove = document.createElement("button");
+        remove.type = "button"; remove.textContent = "Delete";
+        remove.addEventListener("click", async () => {
+          if (!confirm(`Delete “${video.title}”?`)) return;
+          remove.disabled = true;
+          const { error } = await accountClient.from("site_videos").delete().eq("id", video.id);
+          videoEditorStatus.textContent = error ? error.message : "Video deleted";
+          if (!error) { if (editingVideoId === video.id) resetVideoEditor(); await loadVideos(); }
+          remove.disabled = false;
+        });
+        actions.append(edit, toggle, remove);
+        row.append(name, actions);
+        videoManageList.append(row);
+      }
+    }
+    async function loadVideos() {
+      if (!accountClient || !accountUser) return;
+      const requestedUserId = accountUser.id;
+      const { data, error } = await accountClient.from("site_videos")
+        .select("id,youtube_id,title,description,published,created_at")
+        .order("created_at", { ascending: false });
+      if (accountUser?.id !== requestedUserId) return;
+      if (error) { videoStatus.textContent = "Videos could not load yet. Check the video setup in Supabase."; return; }
+      videoStatus.textContent = "";
+      videoRows = data || [];
+      renderVideos();
+    }
+    async function syncVideoAccess() {
+      const generation = ++videoAccessGeneration;
+      const user = accountUser;
+      if (!accountClient || !user) {
+        videoOwner = false;
+        videoManageToggle.hidden = true;
+        videoManager.hidden = true;
+        videoRows = [];
+        resetVideoEditor();
+        return;
+      }
+      const { data, error } = await accountClient.from("site_video_owners").select("id").eq("id", user.id).maybeSingle();
+      if (generation !== videoAccessGeneration) return;
+      videoOwner = !error && !!data;
+      videoManageToggle.hidden = !videoOwner;
+      if (!videoOwner) videoManager.hidden = true;
+      await loadVideos();
+    }
+    videoManageToggle.addEventListener("click", () => {
+      if (!videoOwner) return;
+      videoManager.hidden = !videoManager.hidden;
+      if (!videoManager.hidden) videoManager.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    videoCancelEdit.addEventListener("click", resetVideoEditor);
+    videoForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!videoOwner || !accountClient || !accountUser) return;
+      const youtubeId = youtubeIdFromLink(videoUrlInput.value);
+      if (!youtubeId) { videoEditorStatus.textContent = "Paste a valid YouTube video link."; videoUrlInput.focus(); return; }
+      const payload = { youtube_id: youtubeId, title: videoTitleInput.value.trim(),
+        description: videoDescriptionInput.value.trim(), published: videoPublishedInput.checked };
+      if (!payload.title) return;
+      videoSaveButton.disabled = true;
+      videoEditorStatus.textContent = "Saving…";
+      const { error } = editingVideoId
+        ? await accountClient.from("site_videos").update(payload).eq("id", editingVideoId)
+        : await accountClient.from("site_videos").insert({ ...payload, created_by: accountUser.id });
+      videoSaveButton.disabled = false;
+      videoEditorStatus.textContent = error ? error.message : "Saved ♡";
+      if (!error) { resetVideoEditor(); await loadVideos(); }
+    });
+    window.addEventListener("focus", () => { if (accountUser) loadVideos(); });
+    setInterval(() => { if (accountUser && !document.hidden) loadVideos(); }, 30000);
     let presenceChannel = null;
     let presenceUserId = null;
     let presenceActive = false;
@@ -1986,6 +2192,7 @@
       accountEditUsername.value = username;
       accountButton.textContent = user ? `♡ ${username || "Account"}` : "♡ Sign in";
       updatePresence();
+      setTimeout(syncVideoAccess, 0);
     }
     function setAccountMode(mode) {
       accountMode = mode;

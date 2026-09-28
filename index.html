@@ -724,11 +724,16 @@
     .accountFeedback { min-height: 1.5em; margin: 14px 0 0; font-size: 14px; }
     .accountEmail { overflow-wrap: anywhere; font-weight: 700; }
 
-    .accountModeTabs { display: flex; gap: 8px; margin: 18px 0; }
-    .accountModeTabs button, .accountLink { border: 1px solid #ffcae288; border-radius: 999px; padding: 9px 13px; background: transparent; color: #fff4fa; cursor: pointer; }
-    .accountModeTabs button[aria-selected="true"] { background: #ffb5d9; color: #2e1b2d; font-weight: 700; }
+    .accountLink { border: 1px solid #ffcae288; border-radius: 999px; padding: 9px 13px; background: transparent; color: #fff4fa; cursor: pointer; }
     .accountLink { display: block; margin-top: 12px; border: 0; padding-left: 0; text-decoration: underline; }
-    .accountRecovery[hidden], .accountConfirmPassword[hidden], .accountUsernameField[hidden] { display: none; }
+    .accountRecovery[hidden] { display: none; }
+    #mainWebsite.accessLocked { filter: blur(11px); pointer-events: none; user-select: none; }
+    .siteLockOverlay { position: fixed; inset: 0; z-index: 110; display: grid; place-items: center; padding: 18px; background: #1009188a; color: #fff3fa; text-align: center; }
+    .siteLockOverlay[hidden] { display: none; }
+    .siteLockCard { max-width: 390px; padding: 26px; border: 1px solid #ffd2e7; border-radius: 22px; background: #291831ed; box-shadow: 0 18px 45px #0009; }
+    .siteLockCard h2 { margin: 0 0 8px; font: 600 36px "Cormorant Garamond", Georgia, serif; }
+    .siteLockCard p { line-height: 1.5; }
+    .siteLockCard button { padding: 12px 22px; border: 1px solid #ffe5f0; border-radius: 12px; background: #ffcee6; color: #33192b; cursor: pointer; font: 700 14px "DM Sans", Arial, sans-serif; }
     .messageDock { position: fixed; z-index: 79; right: 18px; bottom: 20px; display: flex; align-items: center; gap: 10px; padding: 7px 15px 7px 9px; min-height: 50px; border: 1px solid var(--theme-accent); border-radius: 999px; background: color-mix(in srgb, var(--theme-accent) 20%, var(--theme-surface)); color: var(--theme-text); box-shadow: 0 7px 25px #0006, 0 0 20px color-mix(in srgb, var(--theme-accent) 35%, transparent); backdrop-filter: blur(12px); cursor: pointer; transform: translateY(var(--message-y, 0px)); transition: transform .2s ease, box-shadow .25s ease; font-weight: 700; letter-spacing: .06em; }
     .messageDock:hover, .messageDock:focus-visible { transform: translateY(calc(var(--message-y, 0px) - 11px)); box-shadow: 0 17px 34px #0007, 0 0 30px var(--theme-accent); }
     .messageDock[hidden] { display: none; }
@@ -958,31 +963,22 @@
     </div>
   </main>
 
+  <div class="siteLockOverlay" id="siteLockOverlay" hidden>
+    <div class="siteLockCard"><h2>Our world is for us ♡</h2><p>Sign in to enter and use the website.</p><button id="siteLockSignIn" type="button">Sign in</button></div>
+  </div>
   <div class="accountDialog" id="accountDialog" role="dialog" aria-modal="true" aria-labelledby="accountTitle" hidden>
     <div class="accountCard">
       <button class="accountClose" id="accountClose" type="button" aria-label="Close account window">×</button>
       <h2 id="accountTitle">Your account ♡</h2>
       <div class="accountSignedOut" id="accountSignedOut">
-        <div class="accountModeTabs" role="tablist" aria-label="Account action">
-          <button id="accountCreateTab" type="button" role="tab" aria-selected="true">Create account</button>
-          <button id="accountSignInTab" type="button" role="tab" aria-selected="false">Sign in</button>
-        </div>
         <form id="accountForm">
-          <div class="accountUsernameField" id="accountUsernameField">
-            <label for="accountUsernameInput">Username</label>
-            <input id="accountUsernameInput" name="username" type="text" autocomplete="nickname" minlength="2" maxlength="24" pattern="[A-Za-z0-9_]+" title="Use 2–24 letters, numbers, or underscores" required>
-          </div>
           <label for="accountEmailInput">Email address</label>
           <input id="accountEmailInput" name="email" type="email" autocomplete="email" required>
           <label for="accountPasswordInput">Password</label>
-          <input id="accountPasswordInput" name="password" type="password" autocomplete="new-password" minlength="6" required>
-          <div class="accountConfirmPassword" id="accountConfirmPassword">
-            <label for="accountConfirmInput">Confirm password</label>
-            <input id="accountConfirmInput" type="password" autocomplete="new-password" minlength="6" required>
-          </div>
-          <button class="accountAction" id="accountSend" type="submit">Create account</button>
+          <input id="accountPasswordInput" name="password" type="password" autocomplete="current-password" minlength="6" required>
+          <button class="accountAction" id="accountSend" type="submit">Sign in</button>
         </form>
-        <button class="accountLink" id="accountForgot" type="button" hidden>Forgot password?</button>
+        <button class="accountLink" id="accountForgot" type="button">Forgot password?</button>
       </div>
       <div class="accountRecovery" id="accountRecovery" hidden>
         <p>Choose a new password for your account.</p>
@@ -1971,6 +1967,8 @@
     const ACCOUNT_SUPABASE_URL = "https://djhhwdjgokzofkaemrpf.supabase.co";
     const ACCOUNT_SUPABASE_KEY = "sb_publishable_74Fr4c8T4OIKBgXED-sgsg_iUPBviG0";
     const accountButton = document.getElementById("accountButton");
+    const siteLockOverlay = document.getElementById("siteLockOverlay");
+    const siteLockSignIn = document.getElementById("siteLockSignIn");
     const onlineList = document.getElementById("onlineList");
     const onlinePeople = document.getElementById("onlinePeople");
     const accountDialog = document.getElementById("accountDialog");
@@ -1978,8 +1976,6 @@
     const accountClose = document.getElementById("accountClose");
     const accountForm = document.getElementById("accountForm");
     const accountEmailInput = document.getElementById("accountEmailInput");
-    const accountUsernameField = document.getElementById("accountUsernameField");
-    const accountUsernameInput = document.getElementById("accountUsernameInput");
     const accountUsernameForm = document.getElementById("accountUsernameForm");
     const accountEditUsername = document.getElementById("accountEditUsername");
     const accountSaveUsername = document.getElementById("accountSaveUsername");
@@ -1989,11 +1985,7 @@
     const accountSignedIn = document.getElementById("accountSignedIn");
     const accountEmail = document.getElementById("accountEmail");
     const accountSignOut = document.getElementById("accountSignOut");
-    const accountCreateTab = document.getElementById("accountCreateTab");
-    const accountSignInTab = document.getElementById("accountSignInTab");
     const accountPasswordInput = document.getElementById("accountPasswordInput");
-    const accountConfirmPassword = document.getElementById("accountConfirmPassword");
-    const accountConfirmInput = document.getElementById("accountConfirmInput");
     const accountForgot = document.getElementById("accountForgot");
     const accountRecovery = document.getElementById("accountRecovery");
     const accountRecoveryForm = document.getElementById("accountRecoveryForm");
@@ -2003,7 +1995,6 @@
     let accountClient = null;
     let accountUser = null;
     let accountReturnFocus = accountButton;
-    let accountMode = "create";
     const videoGrid = document.getElementById("videoGrid");
     const videoStatus = document.getElementById("videoStatus");
     const videoManageToggle = document.getElementById("videoManageToggle");
@@ -2503,6 +2494,31 @@
     let messageUserId = null;
     let messageGeneration = 0;
     let messageLoaded = false;
+    let messageUnreadCount = 0;
+    let messageAudio = null;
+    function playIncomingMessageSound() {
+      try {
+        messageAudio = messageAudio || new (window.AudioContext || window.webkitAudioContext)();
+        if (messageAudio.state === "suspended") messageAudio.resume();
+        const now = messageAudio.currentTime;
+        [660, 880].forEach((frequency, index) => {
+          const oscillator = messageAudio.createOscillator();
+          const gain = messageAudio.createGain();
+          oscillator.type = "sine";
+          oscillator.frequency.value = frequency;
+          gain.gain.setValueAtTime(.001, now + index * .12);
+          gain.gain.exponentialRampToValueAtTime(.11, now + index * .12 + .025);
+          gain.gain.exponentialRampToValueAtTime(.001, now + index * .12 + .22);
+          oscillator.connect(gain); gain.connect(messageAudio.destination);
+          oscillator.start(now + index * .12); oscillator.stop(now + index * .12 + .23);
+        });
+      } catch (_error) { /* Sound may wait for the first browser interaction. */ }
+    }
+    // Browsers allow audio after a visitor interacts with the page.
+    document.addEventListener("pointerdown", () => {
+      if (!accountUser || messageAudio) return;
+      try { messageAudio = new (window.AudioContext || window.webkitAudioContext)(); messageAudio.resume(); } catch (_error) {}
+    }, { passive: true });
     let toastTimer = null;
     const seenIncoming = new Set();
     function clearMessageCanvas() {
@@ -2520,10 +2536,9 @@
     }
     function renderMessages() {
       const userId = accountUser?.id;
-      const unread = messageRows.filter(item => item.recipient_id === userId && !item.read_at);
-      messageBadge.hidden = !unread.length;
-      messageDockBadge.hidden = !unread.length;
-      messageBadge.textContent = messageDockBadge.textContent = String(unread.length);
+      messageBadge.hidden = !messageUnreadCount;
+      messageDockBadge.hidden = !messageUnreadCount;
+      messageBadge.textContent = messageDockBadge.textContent = messageUnreadCount > 99 ? "99+" : String(messageUnreadCount);
       const stayScrolled = messageHistory.scrollTop + messageHistory.clientHeight >= messageHistory.scrollHeight - 36;
       const previousScroll = messageHistory.scrollTop;
       messageHistory.replaceChildren();
@@ -2571,18 +2586,20 @@
       const { error } = await accountClient.from("site_messages").update({ read_at: new Date().toISOString() }).in("id", ids).eq("recipient_id", userId);
       if (error || accountUser?.id !== userId) return;
       messageRows.forEach(item => { if (ids.includes(item.id)) item.read_at = new Date().toISOString(); });
+      messageUnreadCount = Math.max(0, messageUnreadCount - ids.length);
       renderMessages();
     }
     async function loadMessages() {
       if (!accountClient || !accountUser) return;
       const userId = accountUser.id;
       const generation = messageGeneration;
-      const [profiles, messages] = await Promise.all([
+      const [profiles, messages, unreadCount] = await Promise.all([
         accountClient.from("site_profiles").select("id,username").not("username", "is", null),
-        accountClient.from("site_messages").select("id,sender_id,recipient_id,kind,body,drawing_data,created_at,read_at").order("created_at", { ascending: false }).limit(150)
+        accountClient.from("site_messages").select("id,sender_id,recipient_id,kind,body,drawing_data,created_at,read_at").order("created_at", { ascending: false }).limit(150),
+        accountClient.from("site_messages").select("id", { count: "exact", head: true }).eq("recipient_id", userId).is("read_at", null)
       ]);
       if (generation !== messageGeneration || accountUser?.id !== userId) return;
-      if (profiles.error || messages.error) { messageStatus.textContent = "Messages are unavailable. Run the messages SQL setup in Supabase."; return; }
+      if (profiles.error || messages.error || unreadCount.error) { messageStatus.textContent = "Messages are unavailable. Run the messages SQL setup in Supabase."; return; }
       messageStatus.textContent = "";
       messageNames = new Map(profiles.data.map(person => [person.id, person.username]));
       const selected = messageRecipient.value;
@@ -2597,9 +2614,13 @@
       const newlySeen = incoming.filter(item => !seenIncoming.has(item.id));
       incoming.forEach(item => seenIncoming.add(item.id));
       messageRows = messages.data.reverse();
+      messageUnreadCount = unreadCount.count || 0;
       renderMessages();
       // On first visit, show the most recent message left while this account was away.
-      if (newlySeen.length) showMessageToast(newlySeen[0]);
+      if (newlySeen.length) {
+        showMessageToast(newlySeen[0]);
+        if (messageLoaded) playIncomingMessageSound();
+      }
       messageLoaded = true;
       if (!messagePanel.hidden) markConversationRead();
     }
@@ -2609,7 +2630,7 @@
         ++messageGeneration;
         if (messageChannel) accountClient?.removeChannel(messageChannel);
         messageChannel = null; messageUserId = null; messageLoaded = false;
-        messageRows = []; messageNames = new Map(); seenIncoming.clear();
+        messageRows = []; messageNames = new Map(); messageUnreadCount = 0; seenIncoming.clear();
         messageOpen.hidden = true; messageDock.hidden = true; messagePanel.hidden = true; messageToast.hidden = true;
         messageBadge.hidden = true;
         return;
@@ -2717,6 +2738,14 @@
     window.addEventListener("focus", () => { if (accountUser) loadMessages(); });
     setInterval(() => { if (accountUser && !document.hidden) loadMessages(); }, 45000);
     document.addEventListener("keydown", event => { if (event.key === "Escape" && !messagePanel.hidden) closeMessages(); });
+    function syncSiteLock() {
+      const locked = !accountUser;
+      mainWebsite.classList.toggle("accessLocked", locked);
+      mainWebsite.inert = locked;
+      siteLockOverlay.hidden = !locked || !mainWebsite.classList.contains("show");
+    }
+    new MutationObserver(syncSiteLock).observe(mainWebsite, { attributes: true, attributeFilter: ["class"] });
+    siteLockSignIn.addEventListener("click", () => openAccount(siteLockSignIn));
     function showAccountUser(user) {
       accountUser = user;
       accountSignedIn.hidden = !user;
@@ -2725,38 +2754,23 @@
       accountEmail.textContent = username || "Your account";
       accountEditUsername.value = username;
       accountButton.textContent = user ? `♡ ${username || "Account"}` : "♡ Sign in";
+      syncSiteLock();
       updatePresence();
       setTimeout(syncVideoAccess, 0);
       setTimeout(syncNotifications, 0);
       setTimeout(syncMessages, 0);
     }
-    function setAccountMode(mode) {
-      accountMode = mode;
-      const creating = mode === "create";
-      accountCreateTab.setAttribute("aria-selected", String(creating));
-      accountSignInTab.setAttribute("aria-selected", String(!creating));
-      accountConfirmPassword.hidden = !creating;
-      accountConfirmInput.required = creating;
-      accountUsernameField.hidden = !creating;
-      accountUsernameInput.required = creating;
-      accountPasswordInput.autocomplete = creating ? "new-password" : "current-password";
-      accountSend.textContent = creating ? "Create account" : "Sign in";
-      accountForgot.hidden = creating;
-      accountFeedback.textContent = "";
-    }
-    accountCreateTab.addEventListener("click", () => setAccountMode("create"));
-    accountSignInTab.addEventListener("click", () => setAccountMode("signin"));
-    function closeAccount() { accountDialog.hidden = true; accountPasswordInput.value = ""; accountConfirmInput.value = ""; accountReturnFocus.focus(); }
+    syncSiteLock();
+    function closeAccount() { accountDialog.hidden = true; accountPasswordInput.value = ""; accountReturnFocus.focus(); }
     function openAccount(trigger, fromIntro = false) {
       accountReturnFocus = trigger;
-      accountTitle.textContent = fromIntro ? "Come with us ♡" : "Your account ♡";
+      accountTitle.textContent = "Sign in ♡";
       accountDialog.hidden = false;
-      setAccountMode(fromIntro ? "create" : "signin");
       accountRecovery.hidden = true;
       accountSignedOut.hidden = !!accountUser;
       accountFeedback.textContent = !accountClient
         ? "Sign-in is unavailable right now. Please try again shortly."
-        : fromIntro ? "Create an account, or choose Sign in if you already have one." : "";
+        : fromIntro ? "Sign in with your existing account to enter ♡" : "";
       (accountUser ? accountSignOut : accountEmailInput).focus();
     }
     window.requestOurWorldEntry = (enterWebsite, trigger) => {
@@ -2769,8 +2783,17 @@
     document.addEventListener("keydown", event => { if (event.key === "Escape" && !accountDialog.hidden) closeAccount(); });
     if (accountConfigured && window.supabase?.createClient) {
       accountClient = window.supabase.createClient(ACCOUNT_SUPABASE_URL, ACCOUNT_SUPABASE_KEY);
+      let authGeneration = 0;
       accountClient.auth.onAuthStateChange((event, session) => {
-        showAccountUser(session?.user || null);
+        const generation = ++authGeneration;
+        if (event === "INITIAL_SESSION" && session?.user) {
+          // Check a saved session with Supabase before opening the main page.
+          setTimeout(() => {
+            accountClient.auth.getUser().then(({ data, error }) => {
+              if (generation === authGeneration) showAccountUser(error ? null : data.user);
+            }).catch(() => { if (generation === authGeneration) showAccountUser(null); });
+          }, 0);
+        } else showAccountUser(session?.user || null);
         if (event === "PASSWORD_RECOVERY") {
           accountReturnFocus = document.getElementById("introText");
           accountDialog.hidden = false;
@@ -2781,40 +2804,27 @@
           accountNewPassword.focus();
         }
       });
-      accountClient.auth.getSession().then(({ data, error }) => {
-        if (error) accountFeedback.textContent = "Could not check your session. Please try again.";
-        else showAccountUser(data.session?.user || null);
-      });
     }
     accountForm.addEventListener("submit", async event => {
       event.preventDefault();
       if (!accountClient) { accountFeedback.textContent = "Sign-in is unavailable right now."; return; }
-      if (accountMode === "create" && accountPasswordInput.value !== accountConfirmInput.value) {
-        accountFeedback.textContent = "The passwords do not match.";
-        accountConfirmInput.focus();
-        return;
-      }
       accountSend.disabled = true;
-      accountFeedback.textContent = accountMode === "create" ? "Creating your account…" : "Signing in…";
+      accountFeedback.textContent = "Signing in…";
       try {
         const email = accountEmailInput.value.trim();
         const password = accountPasswordInput.value;
-        const { data, error } = accountMode === "create"
-          ? await accountClient.auth.signUp({ email, password, options: { emailRedirectTo: location.href.split(/[?#]/)[0], data: { username: accountUsernameInput.value.trim() } } })
-          : await accountClient.auth.signInWithPassword({ email, password });
+        const { data, error } = await accountClient.auth.signInWithPassword({ email, password });
         if (error) accountFeedback.textContent = error.message;
-        else if (accountMode === "create" && !data.session) {
-          accountPasswordInput.value = ""; accountConfirmInput.value = "";
-          accountFeedback.textContent = "Account created. Check your email to confirm it, then sign in ♡";
-        }
         else {
           accountPasswordInput.value = "";
-          accountConfirmInput.value = "";
           accountFeedback.textContent = "You’re signed in ♡";
           showAccountUser(data.user);
           if (accountReturnFocus.id === "introText" || accountReturnFocus.id === "catButton") {
             accountDialog.hidden = true;
             accountReturnFocus.click();
+          } else if (accountReturnFocus === siteLockSignIn) {
+            accountDialog.hidden = true;
+            accountButton.focus();
           }
         }
       } catch (_error) { accountFeedback.textContent = "Could not connect. Please try again."; }
@@ -2851,6 +2861,10 @@
       const { error } = await accountClient.auth.signOut();
       accountSignOut.disabled = false;
       accountFeedback.textContent = error ? error.message : "Signed out ♡";
+      if (!error) {
+        accountDialog.hidden = true;
+        if (mainWebsite.classList.contains("show")) backButton.click();
+      }
     });
   </script>
 </body>

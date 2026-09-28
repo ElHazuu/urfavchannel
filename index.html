@@ -237,6 +237,9 @@
     }
     .sittingKitten:focus-visible { outline: 2px solid #ffe5f2; border-radius: 14px; }
     .sittingKitten img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .kittenHeart { position: absolute; top: -15px; right: -9px; color: #ff7caf; font-size: 21px; text-shadow: 0 0 5px #290e24; opacity: 0; pointer-events: none; }
+    .kittenHeart.fly { animation: kittenHeartFly 1s ease-out forwards; }
+    @keyframes kittenHeartFly { 0% { opacity: 0; transform: translateY(8px) scale(.6); } 22% { opacity: 1; } 100% { opacity: 0; transform: translateY(-28px) scale(1.2); } }
     @keyframes kittenAppear { from { opacity: 0; transform: translateY(15px) scale(.85); } to { opacity: 1; transform: translateY(0) scale(1); } }
     @media (prefers-reduced-motion: reduce) { .sittingKitten { animation: none; } }
     .storyCard { position: relative; display: block; width: 100%; min-height: 350px; padding: 0; overflow: hidden; border: 1px solid #ffcade66; border-radius: 24px; background: radial-gradient(circle at 50% 28%, #a3679555, #38243d 70%); color: #fff4fa; cursor: pointer; box-shadow: 0 20px 42px #0004; transition: transform .3s, box-shadow .3s; }
@@ -766,8 +769,9 @@
             <img src="OurWorld.png" onerror="this.onerror=null;this.src='Our World.jpg'" alt="Our World" loading="lazy">
             <span class="storyNote"><strong>Our World ♡</strong><span>Our first time playing Minecraft together</span></span>
           </button>
-          <button class="sittingKitten" id="sittingKitten" type="button" aria-label="Watch our cats kiss" hidden>
+          <button class="sittingKitten" id="sittingKitten" type="button" aria-label="Give the Siamese kitten a kiss" hidden>
             <img id="kittenIdlePicture" alt="">
+            <span class="kittenHeart" id="kittenHeart" aria-hidden="true">♥</span>
           </button>
         </div>
         <button class="storyCard" type="button" aria-label="My Sayang. Show a love phrase">
@@ -824,12 +828,13 @@
     const ourWorldCard = document.getElementById("ourWorldCard");
     const sittingKitten = document.getElementById("sittingKitten");
     const kittenIdlePicture = document.getElementById("kittenIdlePicture");
+    const kittenHeart = document.getElementById("kittenHeart");
     // Keep the twelve transparent PNG frames beside index.html.
     const siameseIdleFrames = [1, 2, 3, 4, 3, 2].map(number => `siamese-kitten-frame-${String(number).padStart(2, "0")}.png`);
-    let siameseIdleIndex = 0;
+    let siameseIdleIndex = 0, kittenReacting = false, kittenReactionTimer;
     kittenIdlePicture.src = siameseIdleFrames[0];
     setInterval(() => {
-      if (sittingKitten.hidden || document.hidden || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (sittingKitten.hidden || kittenReacting || document.hidden || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       siameseIdleIndex = (siameseIdleIndex + 1) % siameseIdleFrames.length;
       kittenIdlePicture.src = siameseIdleFrames[siameseIdleIndex];
     }, 380);
@@ -879,7 +884,21 @@
     function closeKiss() { clearInterval(kissTimer); kissScene.hidden = true; kissReturnFocus.focus(); }
     function openKiss(trigger) { kissReturnFocus = trigger; kissScene.hidden = false; playKiss(); kissClose.focus(); }
     heartMomentButton.addEventListener("click", () => openKiss(heartMomentButton));
-    sittingKitten.addEventListener("click", event => { event.stopPropagation(); openKiss(sittingKitten); });
+    sittingKitten.addEventListener("click", event => {
+      event.stopPropagation();
+      clearTimeout(kittenReactionTimer);
+      kittenReacting = true;
+      kittenIdlePicture.src = "siamese-kiss.png";
+      kittenHeart.classList.remove("fly");
+      void kittenHeart.offsetWidth;
+      kittenHeart.classList.add("fly");
+      kittenReactionTimer = setTimeout(() => {
+        kittenReacting = false;
+        siameseIdleIndex = 0;
+        kittenIdlePicture.src = siameseIdleFrames[0];
+        kittenHeart.classList.remove("fly");
+      }, 1100);
+    });
     kissReplay.addEventListener("click", playKiss);
     kissClose.addEventListener("click", closeKiss);
     kissScene.addEventListener("click", event => { if (event.target === kissScene) closeKiss(); });
@@ -941,6 +960,7 @@
       welcomeSection.dataset.wallpaper = name;
       mainWebsite.dataset.wallpaper = name;
       sittingKitten.hidden = name !== "original" || !ourWorldCard.classList.contains("show-note");
+      if (sittingKitten.hidden) { clearTimeout(kittenReactionTimer); kittenReacting = false; kittenHeart.classList.remove("fly"); kittenIdlePicture.src = siameseIdleFrames[0]; }
       let wallpaperTheme = name === "underwater" ? "light" : savedTheme;
       try { if (name === "underwater") wallpaperTheme = localStorage.getItem("ourSayangUnderwaterTheme") || "light"; } catch (error) {}
       setTheme(wallpaperTheme, false);
@@ -1006,6 +1026,7 @@
       if (card === ourWorldCard) {
         galleryChaseLane.classList.toggle("active", showing);
         sittingKitten.hidden = !showing || mainWebsite.dataset.wallpaper !== "original";
+        clearTimeout(kittenReactionTimer); kittenReacting = false; kittenHeart.classList.remove("fly");
         siameseIdleIndex = 0;
         kittenIdlePicture.src = siameseIdleFrames[0];
         const underwater = mainWebsite.dataset.wallpaper === "underwater";

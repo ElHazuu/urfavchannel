@@ -705,7 +705,9 @@
     .onlineList { margin: 8px 14px 12px; padding: 12px 14px; border: 1px solid var(--theme-line); border-radius: 12px; background: #ffffff0c; color: var(--theme-text); font-size: 13px; line-height: 1.7; }
     .onlineList[hidden] { display: none; }
     .onlineList strong { display: block; margin-bottom: 3px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
-    .onlinePerson { display: block; overflow-wrap: anywhere; }
+    .onlinePerson { display: flex; align-items: center; gap: 8px; min-height: 32px; overflow-wrap: anywhere; }
+    .onlineCatIcon { width: 32px; height: 32px; flex: none; object-fit: contain; }
+    .onlinePerson.offline .onlineCatIcon { filter: brightness(.55) saturate(.65); opacity: .86; }
     .onlineDot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 50%; background: #66e6a2; box-shadow: 0 0 7px #66e6a2; }
     .onlinePerson.offline .onlineDot { background: #a7a4ad; box-shadow: none; }
     #mainWebsite[data-wallpaper="underwater"] .onlineList { border-color: var(--scene-accent); }
@@ -2292,10 +2294,16 @@
         const isOnline = onlineIds.has(id);
         const row = document.createElement("span");
         row.className = `onlinePerson${isOnline ? "" : " offline"}`;
-        const dot = document.createElement("span");
-        dot.className = "onlineDot";
-        dot.setAttribute("aria-hidden", "true");
-        row.append(dot, document.createTextNode(`${name} is ${isOnline ? "online" : "Offline"}`));
+        const username = name.trim().toLowerCase();
+        const catColor = /^elha+zu+$/.test(username) ? "grey" : username === "urfavnay" ? "beige" : null;
+        const icon = document.createElement(catColor ? "img" : "span");
+        icon.className = catColor ? "onlineCatIcon" : "onlineDot";
+        icon.setAttribute("aria-hidden", "true");
+        if (catColor) {
+          icon.src = `${catColor}-${isOnline ? "online" : "offline"}.png`;
+          icon.alt = "";
+        }
+        row.append(icon, document.createTextNode(`${name} is ${isOnline ? "online" : "Offline"}`));
         onlinePeople.append(row);
       }
       if (!registeredPeople.size) onlinePeople.textContent = "No registered usernames yet";

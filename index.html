@@ -411,6 +411,11 @@
     #mainWebsite:not([data-wallpaper="original"]) { --scene-accent: #ffd2ea; --scene-surface: #251a2b; }
     #mainWebsite[data-wallpaper="underwater"] { --scene-accent: #8de6ef; --scene-surface: #155b78; --scene-bg: linear-gradient(#237c9e, #176686 42%, #145376 76%, #123e68); }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] { --scene-accent: #78dbe9; --scene-surface: #06111c; --scene-bg: linear-gradient(#01060c 0%, #01040a 55%, #000204 100%); }
+    #mainWebsite[data-wallpaper="underwater"] #backToIntro,
+    #mainWebsite[data-wallpaper="underwater"] .themeMode { background: var(--scene-accent); border-color: var(--scene-accent); color: #082c3d; }
+    #mainWebsite[data-wallpaper="underwater"] #backToIntro:hover,
+    #mainWebsite[data-wallpaper="underwater"] .themeMode:hover { background: #c7f7fa; }
+    #mainWebsite[data-wallpaper="underwater"] .themeMode[aria-checked="true"]::after { background: #11627b; }
     #mainWebsite[data-wallpaper="underwater"] { background: var(--scene-bg); background-attachment: fixed; }
     #mainWebsite[data-wallpaper="underwater"] .welcomeOrbit {
       border-color: color-mix(in srgb, var(--scene-accent) 88%, transparent);

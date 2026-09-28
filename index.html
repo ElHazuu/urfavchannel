@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v34">
+<meta name="site-build" content="cinta-kita-v35">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -968,6 +968,19 @@
     .accountDialog { background: color-mix(in srgb, var(--account-surface, #251a2b) 80%, transparent); }
     .siteLockOverlay { background: color-mix(in srgb, var(--overlay-surface, #251a2b) 65%, transparent); }
     .profileBio:empty { display: none; }
+    .messageBubble .avatarRing img { display: block; width: 100%; height: 100%; max-height: none; border-radius: 0; background: transparent; object-fit: contain; }
+    .messageBubble .avatarRing { width: 38px; height: 38px; background: color-mix(in srgb, var(--avatar-accent) 12%, var(--message-surface)); }
+    .messagePerson .avatarRing { width: 52px; height: 52px; background: color-mix(in srgb, var(--avatar-accent) 12%, var(--message-surface)); }
+    #mainWebsite .messagePanelHead .messageCloseButton { display: grid; place-items: center; width: 39px; height: 39px; padding: 0; border-radius: 50%; background: color-mix(in srgb, var(--message-accent) 23%, var(--message-surface)); color: var(--message-ink); }
+    .messageCloseButton svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .messagePeopleHead { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; color: var(--message-ink); font-size: 12px; }
+    .messagePeopleHead button { font-size: 12px; }
+    .messagePersonHide { position: absolute; top: 2px; left: -2px; width: 22px; height: 22px; padding: 0 !important; border-radius: 50% !important; background: var(--message-surface) !important; font-size: 13px; }
+    .messageHiddenContacts[hidden] { display: none; }
+    .messageHiddenContacts { display: flex; flex-wrap: wrap; gap: 7px; padding: 7px 0 11px; border-bottom: 1px solid var(--message-border); }
+    .messageReactions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+    #mainWebsite .messageReactions button { padding: 2px 7px; min-width: 34px; border-radius: 999px; background: color-mix(in srgb, var(--message-accent) 12%, var(--message-surface)); font-size: 13px; }
+    #mainWebsite .messageReactions button[aria-pressed="true"] { background: color-mix(in srgb, var(--message-accent) 55%, var(--message-surface)); border-color: var(--message-accent); }
 </style>
 </head>
 <body>
@@ -1059,8 +1072,10 @@
     </div>
     <button class="messageDock" id="messageDock" type="button" aria-label="Open messages" aria-controls="messagePanel" aria-expanded="false" hidden><span class="messageDockIcon" aria-hidden="true">✉</span><span>MESSAGES ♡</span><span class="messageBadge" id="messageDockBadge" hidden></span></button>
     <section class="messagePanel" id="messagePanel" aria-label="Private messages" hidden>
-      <div class="messagePanelHead"><h2>Our messages ♡</h2><button id="messageClose" type="button" aria-label="Close messages">×</button></div>
+      <div class="messagePanelHead"><h2>Our messages ♡</h2><button class="messageCloseButton" id="messageClose" type="button" aria-label="Close messages" title="Close messages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg></button></div>
+      <div class="messagePeopleHead"><span>Chats</span><button id="messageHiddenToggle" type="button" aria-expanded="false" aria-controls="messageHiddenContacts">Hidden contacts</button></div>
       <div class="messagePeople" id="messagePeople" role="group" aria-label="Choose who to message"></div>
+      <div class="messageHiddenContacts" id="messageHiddenContacts" hidden></div>
       <select id="messageRecipient" aria-label="Current message recipient" hidden></select>
       <div class="messageHistory" id="messageHistory" aria-live="polite"></div>
       <form class="messageComposer" id="messageForm">
@@ -2766,6 +2781,8 @@
     const messageClose = document.getElementById("messageClose");
     const messageRecipient = document.getElementById("messageRecipient");
     const messagePeople = document.getElementById("messagePeople");
+    const messageHiddenToggle = document.getElementById("messageHiddenToggle");
+    const messageHiddenContacts = document.getElementById("messageHiddenContacts");
     const messageHistory = document.getElementById("messageHistory");
     const messageForm = document.getElementById("messageForm");
     const messageText = document.getElementById("messageText");
@@ -2792,6 +2809,18 @@
     }
     let messageRows = [];
     let messageNames = new Map();
+    let hiddenChatContacts = new Set();
+    let messageReactions = new Map();
+    let reactionsReady = false;
+    let reactionSignature = "";
+    function readHiddenChatContacts(id) {
+      try { const saved = JSON.parse(localStorage.getItem(`cintaKitaHiddenChats:${id}`) || "[]"); return new Set(Array.isArray(saved) ? saved.filter(value => typeof value === "string") : []); }
+      catch (_error) { return new Set(); }
+    }
+    function saveHiddenChatContacts() {
+      if (!accountUser) return;
+      try { localStorage.setItem(`cintaKitaHiddenChats:${accountUser.id}`, JSON.stringify([...hiddenChatContacts])); } catch (_error) {}
+    }
     let messageMode = "text";
     let messageDrawn = false;
     let messagePainting = false;
@@ -2875,6 +2904,36 @@
       messageToast.hidden = false;
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => { messageToast.hidden = true; }, 6500);
+    }
+    async function loadMessageReactions() {
+      if (!accountClient || !accountUser || !messageRows.length) { messageReactions = new Map(); return; }
+      const userId = accountUser.id;
+      const { data, error } = await accountClient.from("site_message_reactions")
+        .select("message_id,user_id,reaction").in("message_id", messageRows.map(item => item.id));
+      if (accountUser?.id !== userId) return;
+      if (error) { reactionsReady = false; return; }
+      const nextSignature = data.map(item => `${item.message_id}:${item.user_id}:${item.reaction}`).sort().join("|");
+      const changed = !reactionsReady || nextSignature !== reactionSignature;
+      reactionsReady = true;
+      reactionSignature = nextSignature;
+      messageReactions = new Map();
+      for (const item of data) {
+        if (!messageReactions.has(item.message_id)) messageReactions.set(item.message_id, []);
+        messageReactions.get(item.message_id).push(item);
+      }
+      if (changed && !messagePanel.hidden) renderMessages();
+    }
+    async function toggleMessageReaction(item, reaction, button) {
+      if (!accountUser || !reactionsReady) return;
+      button.disabled = true;
+      const current = messageReactions.get(item.id)?.find(entry => entry.user_id === accountUser.id);
+      const query = current?.reaction === reaction
+        ? accountClient.from("site_message_reactions").delete().eq("message_id", item.id).eq("user_id", accountUser.id)
+        : accountClient.from("site_message_reactions").upsert({ message_id: item.id, user_id: accountUser.id, reaction }, { onConflict: "message_id,user_id" });
+      const { error } = await query;
+      if (error) { button.disabled = false; messageStatus.textContent = error.message; return; }
+      messageStatus.textContent = "";
+      await loadMessageReactions();
     }
     function renderMessages() {
       const userId = accountUser?.id;
@@ -2966,6 +3025,20 @@
           });
           bubble.append(edit);
         }
+        if (reactionsReady) {
+          const reactions = document.createElement("div"); reactions.className = "messageReactions";
+          const chosen = messageReactions.get(item.id) || [];
+          for (const [kind, symbol, label] of [["heart","♥","Love"],["like","👍","Like"],["dislike","👎","Dislike"]]) {
+            const button = document.createElement("button"); button.type = "button";
+            const count = chosen.filter(entry => entry.reaction === kind).length;
+            button.textContent = `${symbol}${count ? ` ${count}` : ""}`;
+            button.setAttribute("aria-label", `${label} reaction${count ? `, ${count}` : ""}`);
+            button.setAttribute("aria-pressed", String(chosen.some(entry => entry.user_id === userId && entry.reaction === kind)));
+            button.addEventListener("click", () => toggleMessageReaction(item, kind, button));
+            reactions.append(button);
+          }
+          bubble.append(reactions);
+        }
         messageHistory.append(bubble);
       }
       messageHistory.scrollTop = stayScrolled ? messageHistory.scrollHeight : previousScroll;
@@ -3003,7 +3076,9 @@
         option.value = id; option.textContent = name;
         messageRecipient.append(option);
       }
-      if (messageNames.has(selected) && selected !== userId) messageRecipient.value = selected;
+      const available = [...messageRecipient.options].filter(option => !hiddenChatContacts.has(option.value));
+      if (messageNames.has(selected) && selected !== userId && !hiddenChatContacts.has(selected)) messageRecipient.value = selected;
+      else messageRecipient.value = available[0]?.value || "";
       renderMessagePeople();
       const incoming = messages.data.filter(item => item.recipient_id === userId && !item.read_at);
       const newlySeen = incoming.filter(item => !seenIncoming.has(item.id));
@@ -3011,6 +3086,7 @@
       messageRows = messages.data.reverse();
       messageUnreadCount = unreadCount.count || 0;
       renderMessages();
+      loadMessageReactions();
       // On first visit, show the most recent message left while this account was away.
       if (newlySeen.length) {
         showMessageToast(newlySeen[0]);
@@ -3025,7 +3101,8 @@
         ++messageGeneration;
         if (messageChannel) accountClient?.removeChannel(messageChannel);
         messageChannel = null; messageUserId = null; messageLoaded = false;
-        messageRows = []; messageNames = new Map(); messageUnreadCount = 0; editingMessageId = null; editingMessageDraft = ""; seenIncoming.clear();
+        messageRows = []; messageNames = new Map(); messageReactions = new Map(); reactionsReady = false; reactionSignature = "";
+        messageUnreadCount = 0; editingMessageId = null; editingMessageDraft = ""; seenIncoming.clear();
         messageOpen.hidden = true; messageDock.hidden = true; messagePanel.hidden = true; messageToast.hidden = true;
         messageBadge.hidden = true;
         return;
@@ -3035,6 +3112,7 @@
       if (messageChannel) accountClient.removeChannel(messageChannel);
       ++messageGeneration;
       messageUserId = user.id;
+      hiddenChatContacts = readHiddenChatContacts(user.id);
       messageLoaded = false;
       seenIncoming.clear();
       const channel = accountClient.channel(`cinta-kita-messages-${user.id}`);
@@ -3043,6 +3121,7 @@
       channel.on("postgres_changes", { event: "INSERT", schema: "public", table: "site_messages", filter: `sender_id=eq.${user.id}` }, loadMessages);
       channel.on("postgres_changes", { event: "UPDATE", schema: "public", table: "site_messages", filter: `sender_id=eq.${user.id}` }, loadMessages);
       channel.on("postgres_changes", { event: "UPDATE", schema: "public", table: "site_messages", filter: `recipient_id=eq.${user.id}` }, loadMessages);
+      channel.on("postgres_changes", { event: "*", schema: "public", table: "site_message_reactions" }, loadMessageReactions);
       channel.on("postgres_changes", { event: "UPDATE", schema: "public", table: "site_profiles" }, () => {
         loadMessages();
         if (presenceActive) loadRegisteredPeople(presenceGeneration);
@@ -3062,9 +3141,25 @@
     messageClose.addEventListener("click", closeMessages);
     messageToast.addEventListener("click", openMessages);
     messageRecipient.addEventListener("change", () => { editingMessageId = null; editingMessageDraft = ""; renderMessages(); markConversationRead(); });
+    messageHiddenToggle.addEventListener("click", () => {
+      messageHiddenContacts.hidden = !messageHiddenContacts.hidden;
+      messageHiddenToggle.setAttribute("aria-expanded", String(!messageHiddenContacts.hidden));
+      renderMessagePeople();
+    });
     function renderMessagePeople() {
       messagePeople.replaceChildren();
+      messageHiddenContacts.replaceChildren();
       for (const option of messageRecipient.options) {
+        if (hiddenChatContacts.has(option.value)) {
+          const restore = document.createElement("button"); restore.type = "button";
+          restore.textContent = `Show ${option.textContent}`;
+          restore.addEventListener("click", () => {
+            hiddenChatContacts.delete(option.value); saveHiddenChatContacts();
+            messageRecipient.value = option.value; messageRecipient.dispatchEvent(new Event("change")); renderMessagePeople();
+          });
+          messageHiddenContacts.append(restore);
+          continue;
+        }
         const wrap = document.createElement("div"); wrap.className = "messagePersonWrap";
         const choose = document.createElement("button"); choose.type = "button"; choose.className = "messagePerson";
         choose.setAttribute("aria-label", `Message ${option.textContent}`);
@@ -3075,9 +3170,22 @@
         const info = document.createElement("button"); info.type = "button"; info.className = "messagePersonInfo"; info.textContent = "i";
         info.setAttribute("aria-label", `View ${option.textContent}'s profile`);
         info.addEventListener("click", () => openProfile(option.value, false, info));
-        wrap.append(choose, info); messagePeople.append(wrap);
+        const hide = document.createElement("button"); hide.type = "button"; hide.className = "messagePersonHide"; hide.textContent = "−";
+        hide.setAttribute("aria-label", `Hide ${option.textContent} from chats`);
+        hide.title = "Hide this chat icon";
+        hide.addEventListener("click", () => {
+          hiddenChatContacts.add(option.value); saveHiddenChatContacts();
+          if (messageRecipient.value === option.value) {
+            messageRecipient.value = [...messageRecipient.options].find(item => !hiddenChatContacts.has(item.value))?.value || "";
+            messageRecipient.dispatchEvent(new Event("change"));
+          }
+          renderMessagePeople();
+        });
+        wrap.append(choose, info, hide); messagePeople.append(wrap);
       }
-      if (!messageRecipient.options.length) messagePeople.textContent = "No other profiles yet ♡";
+      if (!messagePeople.children.length) messagePeople.textContent = messageRecipient.options.length ? "All chat icons are hidden. Use Hidden contacts to bring one back." : "No other profiles yet ♡";
+      if (!messageHiddenContacts.children.length) messageHiddenContacts.textContent = "No hidden contacts";
+      messageHiddenToggle.textContent = `Hidden contacts${hiddenChatContacts.size ? ` (${hiddenChatContacts.size})` : ""}`;
     }
     messageText.addEventListener("keydown", event => {
       if (event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {

@@ -230,8 +230,8 @@
     #ourWorldCard:hover, #ourWorldCard:focus-visible { transform: none; }
     .sittingKitten[hidden] { display: none; }
     .sittingKitten {
-      position: absolute; z-index: 6; left: 68%; bottom: calc(100% - 12px);
-      width: clamp(92px, 10vw, 122px); aspect-ratio: 1;
+      position: absolute; z-index: 6; left: 70%; bottom: calc(100% - 8px);
+      width: clamp(64px, 6vw, 78px); aspect-ratio: 1;
       pointer-events: none; filter: drop-shadow(0 6px 5px #0008);
       animation: kittenAppear .3s ease-out both;
     }
@@ -824,14 +824,14 @@
     const sittingKitten = document.getElementById("sittingKitten");
     const kittenIdlePicture = document.getElementById("kittenIdlePicture");
     // Keep the twelve transparent PNG frames beside index.html.
-    const siameseIdleFrames = Array.from({ length: 12 }, (_, index) => `siamese-kitten-frame-${String(index + 1).padStart(2, "0")}.png`);
+    const siameseIdleFrames = [1, 2, 3, 4, 3, 2].map(number => `siamese-kitten-frame-${String(number).padStart(2, "0")}.png`);
     let siameseIdleIndex = 0;
     kittenIdlePicture.src = siameseIdleFrames[0];
     setInterval(() => {
       if (sittingKitten.hidden || document.hidden || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       siameseIdleIndex = (siameseIdleIndex + 1) % siameseIdleFrames.length;
       kittenIdlePicture.src = siameseIdleFrames[siameseIdleIndex];
-    }, 180);
+    }, 380);
     const heartMomentButton = document.getElementById("heartMomentButton");
     const kissScene = document.getElementById("kissScene");
     const kissPicture = document.getElementById("kissPicture");

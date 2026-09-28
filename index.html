@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v43">
+<meta name="site-build" content="cinta-kita-v44">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -518,7 +518,7 @@
     #mainWebsite[data-wallpaper="underwater"] .monumentHabitat { display: block; }
     .coralTower { display: none; position: absolute; left: 0; bottom: -5px; z-index: 0; width: clamp(300px, 47vw, 720px); height: auto; pointer-events: none; filter: drop-shadow(0 15px 18px #000b) drop-shadow(0 0 13px #43cad854); }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .coralTower { display: block; }
-    .whaleCrossing { display: none; position: fixed; left: 0; top: 27vh; z-index: 0; width: min(88vw, 1160px); pointer-events: none; will-change: transform; animation: whaleCrossScreen 39s linear infinite; }
+    .whaleCrossing { display: none; position: absolute; left: 0; top: 27vh; z-index: 0; width: min(88vw, 1160px); pointer-events: none; will-change: transform; animation: whaleCrossScreen 39s linear infinite; }
     .whaleCrossing img { display: block; width: 100%; height: auto; filter: drop-shadow(0 16px 32px #000a) drop-shadow(0 0 20px #9d91c244); animation: whaleGlide 5.2s ease-in-out infinite alternate; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .whaleCrossing { display: block; }
     @keyframes whaleCrossScreen { from { transform: translateX(calc(100vw + 4px)); } to { transform: translateX(calc(-100% - 4px)); } }
@@ -1040,7 +1040,7 @@
     <div class="berserkBackdrop" aria-hidden="true"><video id="berserkWallpaperVideo" muted loop playsinline preload="none"><source src="berserk.1920x1080.mp4" type="video/mp4"></video></div>
     <div class="underseaBackdrop" id="underseaBackdrop" aria-hidden="true"></div>
     <img class="coralTower" src="Tower of Coral.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
-    <div class="whaleCrossing" aria-hidden="true"><img id="minecraftWhale" src="minecraft-whale-frame-1.png" alt="" decoding="async"></div>
+    <div class="whaleCrossing" aria-hidden="true"><img src="minecraft-whale-frame-1.png" alt=""></div>
     <div class="monumentHabitat" aria-hidden="true">
       <svg class="oceanMonument" viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
@@ -3775,25 +3775,6 @@
       window.addEventListener("focus", checkVersion);
       setTimeout(checkVersion, 12000);
       setInterval(() => { checkVersion(); maybeReload(); }, 60000);
-    })();
-  </script>
-  <script>
-    (() => {
-      const whale = document.getElementById("minecraftWhale");
-      const frames = ["minecraft-whale-frame-1.png"];
-      for (let number = 2; number <= 6; number++) {
-        const filename = `minecraft-whale-frame-${number}.png`;
-        const probe = new Image();
-        probe.onload = () => { if (probe.naturalWidth) frames.push(filename); };
-        probe.src = filename;
-      }
-      let frame = 0;
-      setInterval(() => {
-        const scene = document.getElementById("mainWebsite");
-        if (document.hidden || scene.dataset.wallpaper !== "underwater" || scene.dataset.theme !== "dark" || frames.length < 2) return;
-        frame = (frame + 1) % frames.length;
-        whale.src = frames[frame];
-      }, 320);
     })();
   </script>
 </body>

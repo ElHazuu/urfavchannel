@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v47">
+<meta name="site-build" content="cinta-kita-v48">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1050,6 +1050,43 @@
       #mainWebsite .messagePanel.chatCompact { transform: none; }
       #mainWebsite .messagePanel { transition: none; }
     }
+    /* Taskbar: approach to expand, click to open a drawer. */
+    #mainWebsite .menuZone { z-index: 60; }
+    #mainWebsite .menuTaskbar { pointer-events: auto; display: grid; grid-template-columns: 1fr 1fr 1.25fr 1fr 1fr; align-items: stretch; width: min(550px, calc(100vw - 28px)); min-height: 49px; padding: 0 10px 4px; border: 1px solid var(--ui-line); border-top: 0; border-radius: 0 0 18px 18px; background: color-mix(in srgb, var(--ui-surface) 94%, transparent); color: var(--ui-ink); box-shadow: 0 12px 34px #0007; transform: translateY(-6px); transition: width .28s, min-height .28s, transform .28s, box-shadow .28s; }
+    #mainWebsite .menuZone.near .menuTaskbar, #mainWebsite .menuZone.open .menuTaskbar { width: min(790px, calc(100vw - 28px)); min-height: 71px; transform: translateY(0); box-shadow: 0 17px 42px #0008, 0 0 20px color-mix(in srgb, var(--ui-accent) 28%, transparent); }
+    #mainWebsite .menuTaskbar button { pointer-events: auto; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 0; margin: 0; padding: 4px 5px; border: 0; border-radius: 9px; background: transparent; color: var(--ui-ink); font: 700 10px/1.1 "DM Sans", Arial, sans-serif; letter-spacing: .09em; cursor: pointer; transition: background .2s, color .2s; }
+    #mainWebsite .menuTaskbar button:hover, #mainWebsite .menuTaskbar button:focus-visible, #mainWebsite .menuTaskbar button[aria-expanded="true"] { background: color-mix(in srgb, var(--ui-accent) 23%, transparent); color: var(--ui-accent); }
+    #mainWebsite .menuTaskbar .taskbarGlyph { font: 23px/1 Arial, sans-serif; color: var(--ui-accent); }
+    #mainWebsite .menuTaskbar .taskbarLabel { display: block; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .25s, opacity .25s; }
+    #mainWebsite .menuZone.near .taskbarLabel, #mainWebsite .menuZone.open .taskbarLabel { max-height: 15px; opacity: 1; }
+    #mainWebsite .taskbarProfileIcon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: color-mix(in srgb, var(--ui-accent) 16%, var(--ui-surface)); color: var(--ui-accent); }
+    #mainWebsite .taskbarProfileIcon .avatarRing { width: 44px; height: 44px; padding: 2px; font-size: 29px; }
+    #mainWebsite .taskbarProfileName { display: none; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #mainWebsite .menuZone.near .taskbarProfileName, #mainWebsite .menuZone.open .taskbarProfileName { display: block; }
+    #mainWebsite .taskbarCount { position: absolute; top: 2px; left: calc(50% + 11px); min-width: 17px; height: 17px; padding: 2px 4px; border-radius: 99px; background: var(--ui-accent); color: var(--ui-surface); font: 700 10px/13px Arial, sans-serif; }
+    #mainWebsite .taskbarCount[hidden] { display: none; }
+    #mainWebsite .siteMenu, #mainWebsite .activityPanel { pointer-events: none; width: min(790px, calc(100vw - 28px)); max-height: min(76vh, 680px); overflow-y: auto; padding: 22px; border: 1px solid var(--ui-line); border-top: 0; border-radius: 0 0 20px 20px; background: color-mix(in srgb, var(--ui-surface) 96%, transparent); color: var(--ui-ink); box-shadow: 0 24px 60px #0009; backdrop-filter: blur(14px); }
+    #mainWebsite .menuZone.open .siteMenu { pointer-events: auto; }
+    #mainWebsite .menuLinks { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    #mainWebsite .menuLinks a { flex-wrap: wrap; }
+    #mainWebsite .activityPanel { pointer-events: auto; }
+    #mainWebsite .activityPanel[hidden] { display: none; }
+    #mainWebsite .activityPanelHead { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--ui-line); }
+    #mainWebsite .activityPanelHead small { color: var(--ui-accent); font-size: 10px; font-weight: 700; letter-spacing: .2em; }
+    #mainWebsite .activityPanelHead h2 { margin: 3px 0 0; font: 600 35px/1 "Cormorant Garamond", Georgia, serif; }
+    #mainWebsite .activityPanelHead button { width: 34px; height: 34px; border: 1px solid var(--ui-line); border-radius: 9px; background: transparent; color: var(--ui-ink); font-size: 23px; cursor: pointer; }
+    #mainWebsite .activitySummary { margin: 13px 0; color: var(--ui-accent); font-size: 12px; }
+    #mainWebsite .activityPanel .onlineList { margin: 0; padding: 0; border: 0; background: transparent; color: var(--ui-ink); }
+    #mainWebsite .activityPanel #onlinePeople { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    #mainWebsite .activityPanel .onlinePerson { min-width: 0; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--ui-accent) 32%, transparent); border-radius: 12px; background: color-mix(in srgb, var(--ui-accent) 8%, var(--ui-surface)); }
+    #mainWebsite .activityPanel .onlinePerson.offline { opacity: .72; }
+    #mainWebsite .activityPanel .onlineProfileLink { flex: none; margin-left: auto; border-color: var(--ui-line); color: var(--ui-ink); }
+    #mainWebsite .notificationBell, #mainWebsite .notificationHint, #mainWebsite .messageDock { display: none !important; }
+    #mainWebsite .notificationPanel { top: 77px; left: 50%; right: auto; transform: translateX(-50%); width: min(790px, calc(100vw - 28px)); max-height: min(76vh, 680px); padding: 22px; border-radius: 0 0 20px 20px; }
+    .profileCustomize { display: block; width: 100%; margin: 12px 0; padding: 11px 15px; border: 1px solid var(--profile-accent); border-radius: 10px; background: color-mix(in srgb, var(--profile-accent) 28%, var(--profile-surface)); color: var(--profile-ink); font-weight: 700; cursor: pointer; }
+    .profileCustomize[hidden] { display: none; }
+    @media (max-width: 620px) { #mainWebsite .menuTaskbar, #mainWebsite .menuZone.near .menuTaskbar, #mainWebsite .menuZone.open .menuTaskbar { width: calc(100vw - 14px); min-height: 59px; transform: none; padding: 0 2px 4px; } #mainWebsite .menuTaskbar .taskbarLabel, #mainWebsite .taskbarProfileName { display: none !important; } #mainWebsite .menuLinks, #mainWebsite .activityPanel #onlinePeople { grid-template-columns: 1fr; } #mainWebsite .siteMenu, #mainWebsite .activityPanel { width: calc(100vw - 14px); padding: 14px; } }
+    @media (prefers-reduced-motion: reduce) { #mainWebsite .menuTaskbar, #mainWebsite .menuTaskbar button { transition: none; } }
 </style>
 </head>
 <body>
@@ -1127,7 +1164,13 @@
       </div>
     </div>
     <div class="menuZone" id="menuZone">
-      <button class="menuHandle" id="menuHandle" type="button" aria-expanded="false" aria-controls="siteMenu">✦ CINTA KITA <span>MENU ↓</span></button>
+      <div class="menuTaskbar" id="menuTaskbar" role="toolbar" aria-label="Site taskbar">
+        <button class="taskbarAction menuHandle" id="menuHandle" type="button" aria-expanded="false" aria-controls="siteMenu" aria-label="Open menu"><span class="taskbarGlyph" aria-hidden="true">☰</span><span class="taskbarLabel">Menu</span></button>
+        <button class="taskbarAction" id="activityToggle" type="button" aria-expanded="false" aria-controls="activityPanel" aria-label="Open activity"><span class="taskbarGlyph" aria-hidden="true">◉</span><span class="taskbarLabel">Activity</span></button>
+        <button class="taskbarProfile" id="taskbarProfile" type="button" aria-label="Open my profile" aria-haspopup="dialog"><span class="taskbarProfileIcon" id="taskbarProfileIcon" aria-hidden="true">♡</span><span class="taskbarProfileName" id="taskbarProfileName">Profile</span></button>
+        <button class="taskbarAction" id="taskbarMessages" type="button" aria-label="Open messages" aria-controls="messagePanel" aria-expanded="false"><span class="taskbarGlyph" aria-hidden="true">✉</span><span class="taskbarLabel">Messages</span><span class="taskbarCount" id="taskbarMessagesCount" hidden></span></button>
+        <button class="taskbarAction" id="taskbarUpdates" type="button" aria-label="Open updates" aria-controls="notificationPanel" aria-expanded="false"><span class="taskbarGlyph" aria-hidden="true">♢</span><span class="taskbarLabel">Updates</span><span class="taskbarCount" id="taskbarUpdatesCount" hidden></span></button>
+      </div>
       <nav class="siteMenu" id="siteMenu" aria-label="Main menu">
         <div class="menuPanelHead"><strong>Cinta Kita ♡</strong><small>THE MENU</small></div>
         <div class="menuLinks">
@@ -1137,9 +1180,13 @@
         </div>
         <button class="accountMenuButton" id="accountButton" type="button" aria-haspopup="dialog">♡ Sign in</button>
         <button class="messageMenuButton" id="messageOpen" type="button" hidden>✉ Messages <span class="messageBadge" id="messageBadge" hidden></span></button>
-        <div class="onlineList" id="onlineList" aria-live="polite" hidden><strong>Here with us ♡</strong><div id="onlinePeople"></div></div>
         <button id="backToIntro" type="button">↶ Back to our cats</button>
       </nav>
+      <section class="activityPanel" id="activityPanel" aria-label="Activity" hidden>
+        <div class="activityPanelHead"><div><small>LIVE PRESENCE</small><h2>Activity</h2></div><button id="activityClose" type="button" aria-label="Close activity">×</button></div>
+        <p class="activitySummary" id="activitySummary">See who is here.</p>
+        <div class="onlineList" id="onlineList" aria-live="polite" hidden><div id="onlinePeople"></div></div>
+      </section>
     </div>
     <button class="notificationBell" id="notificationBell" type="button" aria-label="Open updates" aria-controls="notificationPanel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17h14c-2-2-2-3-2-7a5 5 0 0 0-10 0c0 4 0 5-2 7Z"/><path d="M10 20h4"/></svg><span class="notificationCount" id="notificationCount" hidden></span></button>
     <div class="notificationPanel" id="notificationPanel" aria-label="Updates" hidden>
@@ -1296,6 +1343,7 @@
       </div>
       <div class="profileBody">
         <p class="profileBio" id="profileBio"></p>
+        <button class="profileCustomize" id="profileCustomize" type="button" hidden>Customize profile</button>
         <div class="profileSettings" id="profileSettings" hidden>
           <form id="accountUsernameForm">
             <label for="accountEditUsername">Username</label>
@@ -1510,6 +1558,12 @@
       if (name === "berserk") {
         if (location.hash !== "#home") history.replaceState(history.state, "", `${location.pathname}${location.search}#home`);
         window.scrollTo(0, 0);
+        menuZone.classList.remove("open", "near");
+        document.getElementById("menuHandle").setAttribute("aria-expanded", "false");
+        document.getElementById("activityPanel").hidden = true;
+        document.getElementById("activityToggle").setAttribute("aria-expanded", "false");
+        document.getElementById("notificationPanel").hidden = true;
+        document.getElementById("messagePanel").hidden = true;
       }
       syncBerserkWallpaper();
       sittingKitten.hidden = name !== "original" || !ourWorldCard.classList.contains("show-note");
@@ -1550,13 +1604,50 @@
       wallpaperButton.setAttribute("aria-expanded", "false");
     });
 
+    const activityPanel = document.getElementById("activityPanel");
+    const activityToggle = document.getElementById("activityToggle");
+    const taskbarProfile = document.getElementById("taskbarProfile");
     function closeMenu() { menuZone.classList.remove("open"); menuHandle.setAttribute("aria-expanded", "false"); }
-    function openMenu() { menuZone.classList.add("open"); menuHandle.setAttribute("aria-expanded", "true"); }
-    menuHandle.addEventListener("pointermove", event => { if (event.pointerType === "mouse") openMenu(); });
-    menuZone.addEventListener("pointerleave", event => { if (event.pointerType === "mouse") closeMenu(); });
+    function closeActivity() { activityPanel.hidden = true; activityToggle.setAttribute("aria-expanded", "false"); }
+    function openMenu() { closeActivity(); menuZone.classList.add("open", "near"); menuHandle.setAttribute("aria-expanded", "true"); }
     menuHandle.addEventListener("click", () => menuZone.classList.contains("open") ? closeMenu() : openMenu());
-    document.addEventListener("pointerdown", event => { if (!menuZone.contains(event.target)) closeMenu(); });
-    document.addEventListener("keydown", event => { if (event.key === "Escape") closeMenu(); });
+    activityToggle.addEventListener("click", () => {
+      if (!activityPanel.hidden) { closeActivity(); return; }
+      closeMenu(); activityPanel.hidden = false; menuZone.classList.add("near"); activityToggle.setAttribute("aria-expanded", "true"); renderOnlinePeople();
+    });
+    document.getElementById("activityClose").addEventListener("click", closeActivity);
+    taskbarProfile.addEventListener("click", () => {
+      closeMenu(); closeActivity();
+      if (accountUser) openProfile(accountUser.id, false, taskbarProfile);
+      else openAccount(taskbarProfile);
+    });
+    document.getElementById("taskbarMessages").addEventListener("click", () => {
+      closeMenu(); closeActivity();
+      const dock = document.getElementById("messageDock");
+      if (accountUser) { if (!dock.hidden) dock.click(); else openMessages(); }
+      else openAccount(document.getElementById("taskbarMessages"));
+    });
+    document.getElementById("taskbarUpdates").addEventListener("click", () => {
+      closeMenu(); closeActivity(); document.getElementById("notificationBell").click();
+    });
+    const taskbarUpdatesCount = document.getElementById("taskbarUpdatesCount");
+    const taskbarMessagesCount = document.getElementById("taskbarMessagesCount");
+    function syncTaskbarCounts() {
+      const updates = document.getElementById("notificationCount"), messages = document.getElementById("messageDockBadge");
+      taskbarUpdatesCount.hidden = updates.hidden; taskbarUpdatesCount.textContent = updates.textContent;
+      taskbarMessagesCount.hidden = messages.hidden; taskbarMessagesCount.textContent = messages.textContent;
+    }
+    for (const id of ["notificationCount", "messageDockBadge"]) {
+      new MutationObserver(syncTaskbarCounts).observe(document.getElementById(id), { attributes: true, childList: true, characterData: true, subtree: true });
+    }
+    syncTaskbarCounts();
+    document.addEventListener("pointermove", event => {
+      if (event.pointerType !== "mouse" || menuZone.classList.contains("open") || !activityPanel.hidden) return;
+      menuZone.classList.toggle("near", event.clientY < 145 && Math.abs(event.clientX - innerWidth / 2) < 455);
+    }, { passive: true });
+    menuZone.addEventListener("pointerleave", event => { if (event.pointerType === "mouse" && !menuZone.classList.contains("open") && activityPanel.hidden) menuZone.classList.remove("near"); });
+    document.addEventListener("pointerdown", event => { if (!menuZone.contains(event.target)) { closeMenu(); closeActivity(); menuZone.classList.remove("near"); } });
+    document.addEventListener("keydown", event => { if (event.key === "Escape") { closeMenu(); closeActivity(); } });
     document.querySelectorAll("#siteMenu a").forEach(link => link.addEventListener("click", () => {
       menuZone.classList.remove("open");
       menuHandle.setAttribute("aria-expanded", "false");
@@ -2520,11 +2611,12 @@
     updatesBell.addEventListener("click", () => {
       updatesPanel.hidden = !updatesPanel.hidden;
       updatesBell.setAttribute("aria-expanded", String(!updatesPanel.hidden));
+      document.getElementById("taskbarUpdates").setAttribute("aria-expanded", String(!updatesPanel.hidden));
       if (!updatesPanel.hidden) loadNotifications();
     });
-    updatesClose.addEventListener("click", () => { updatesPanel.hidden = true; updatesBell.setAttribute("aria-expanded", "false"); updatesBell.focus(); });
+    updatesClose.addEventListener("click", () => { updatesPanel.hidden = true; updatesBell.setAttribute("aria-expanded", "false"); document.getElementById("taskbarUpdates").setAttribute("aria-expanded", "false"); document.getElementById("taskbarUpdates").focus(); });
     document.addEventListener("keydown", event => {
-      if (event.key === "Escape" && !updatesPanel.hidden) { updatesPanel.hidden = true; updatesBell.setAttribute("aria-expanded", "false"); }
+      if (event.key === "Escape" && !updatesPanel.hidden) { updatesPanel.hidden = true; updatesBell.setAttribute("aria-expanded", "false"); document.getElementById("taskbarUpdates").setAttribute("aria-expanded", "false"); }
     });
     updatesForm.addEventListener("submit", async event => {
       event.preventDefault();
@@ -2753,6 +2845,15 @@
       else icon.textContent = "♡";
       return icon;
     }
+    function updateTaskbarProfile() {
+      const icon = document.getElementById("taskbarProfileIcon");
+      const nameLabel = document.getElementById("taskbarProfileName");
+      if (!accountUser) { icon.textContent = "♡"; nameLabel.textContent = "Sign in"; taskbarProfile.setAttribute("aria-label", "Sign in"); return; }
+      const name = registeredPeople.get(accountUser.id) || accountUser.user_metadata?.username || "Profile";
+      icon.replaceChildren(createAvatar(accountUser.id, name));
+      nameLabel.textContent = name;
+      taskbarProfile.setAttribute("aria-label", `Open ${name}'s profile`);
+    }
     async function loadActivity() {
       if (!accountClient || !accountUser) return;
       const { data, error } = await accountClient.from("site_profile_activity").select("id,last_seen_at,idle_since");
@@ -2780,6 +2881,7 @@
       const ownerId = "7a5e0845-24be-4ac0-b881-6aff2a8332f5";
       const ownerRegistered = registeredPeople.has(ownerId);
       let visiblePeople = 0;
+      let onlineCount = 0, idleCount = 0, offlineCount = 0;
       for (const [id, name] of [...registeredPeople].sort((a, b) => a[1].localeCompare(b[1]))) {
         const isOnline = onlineIds.has(id);
         const username = name.trim().toLowerCase();
@@ -2794,18 +2896,21 @@
         const idle = onlineNow && ((seen?.idle_since && Date.now() - new Date(seen.idle_since).getTime() >= 0) || (id === accountUser?.id && Date.now() - lastSiteInteraction >= 90000));
         row.className = `onlinePerson${onlineNow ? idle ? " idle" : "" : " offline"}`;
         const status = onlineNow ? idle ? "idle" : "online" : `Offline${lastSeen ? ` · last seen ${messageTimeAgo(seen.last_seen_at)}` : ""}`;
+        if (!onlineNow) offlineCount++; else if (idle) idleCount++; else onlineCount++;
         row.append(createAvatar(id, name, onlineNow), document.createTextNode(`${name} is ${status}`));
         const view = document.createElement("button");
         view.className = "onlineProfileLink";
         view.type = "button";
         view.textContent = "Profile ↗";
         view.setAttribute("aria-label", `View ${name}'s profile`);
-        view.addEventListener("click", () => openProfile(id, false, view));
+        view.addEventListener("click", () => { closeActivity(); openProfile(id, false, activityToggle); });
         row.append(view);
         onlinePeople.append(row);
         visiblePeople++;
       }
       if (!visiblePeople) onlinePeople.textContent = registeredPeople.size ? "No one here right now ♡" : "No registered usernames yet";
+      document.getElementById("activitySummary").textContent = `${onlineCount} online · ${idleCount} idle · ${offlineCount} offline`;
+      updateTaskbarProfile();
     }
     async function loadRegisteredPeople(generation) {
       const { data, error } = await fetchSiteProfiles();
@@ -3290,11 +3395,12 @@
       messagePanel.classList.remove("chatCompact");
       messagePanel.hidden = false;
       messageDock.setAttribute("aria-expanded", "true");
+      document.getElementById("taskbarMessages").setAttribute("aria-expanded", "true");
       messageToast.hidden = true;
       loadMessages().then(() => (messagePeople.querySelector(".messagePerson") || messageClose).focus());
       messageCompactTimer = setTimeout(updateMessageSize, 850);
     }
-    function closeMessages(restoreFocus = true) { clearTimeout(messageCompactTimer); messagePanel.hidden = true; messagePanel.classList.remove("chatCompact"); messagePointerInside = false; messageDock.setAttribute("aria-expanded", "false"); if (restoreFocus) messageDock.focus(); }
+    function closeMessages(restoreFocus = true) { clearTimeout(messageCompactTimer); messagePanel.hidden = true; messagePanel.classList.remove("chatCompact"); messagePointerInside = false; messageDock.setAttribute("aria-expanded", "false"); document.getElementById("taskbarMessages").setAttribute("aria-expanded", "false"); if (restoreFocus) document.getElementById("taskbarMessages").focus(); }
     messageOpen.addEventListener("click", openMessages);
     messageDock.addEventListener("click", () => messagePanel.hidden ? openMessages() : closeMessages());
     messageClose.addEventListener("click", () => closeMessages());
@@ -3507,7 +3613,8 @@
         avatar.append(img);
       } else avatar.textContent = "♡";
       const own = profileViewedId === accountUser?.id;
-      document.getElementById("profileSettings").hidden = !own;
+      document.getElementById("profileCustomize").hidden = !own || !profileForm.hidden;
+      document.getElementById("profileSettings").hidden = !own || profileForm.hidden;
       accountSignOut.hidden = !own;
       if (!own) profileForm.hidden = true;
       if (!profileSchemaReady && own) profileFeedback.textContent = "Profile editing needs the one-time profile SQL setup.";
@@ -3534,8 +3641,9 @@
       syncAccountPalette();
       profileDialog.hidden = false;
       renderProfileView();
-      if (id === accountUser.id && profileSchemaReady) { fillProfileForm(); profileForm.hidden = false; renderProfileView(); document.getElementById("profileDisplayName").focus(); }
-      else document.getElementById("profileClose").focus();
+      if (edit && id === accountUser.id && profileSchemaReady) {
+        fillProfileForm(); profileForm.hidden = false; renderProfileView(); document.getElementById("profileDisplayName").focus();
+      } else document.getElementById("profileClose").focus();
     }
     function closeProfile() {
       profileDialog.hidden = true;
@@ -3545,7 +3653,12 @@
       if (profileReturnFocus?.isConnected) profileReturnFocus.focus();
     }
     document.getElementById("profileClose").addEventListener("click", closeProfile);
-    document.getElementById("profileCancel").addEventListener("click", () => { fillProfileForm(); profileDirty = false; profileFeedback.textContent = "Changes discarded"; renderProfileView(); });
+    document.getElementById("profileCustomize").addEventListener("click", () => {
+      if (profileViewedId !== accountUser?.id) return;
+      if (!profileSchemaReady) { profileFeedback.textContent = "Profile editing needs the one-time profile SQL setup."; return; }
+      fillProfileForm(); profileForm.hidden = false; renderProfileView(); document.getElementById("profileDisplayName").focus();
+    });
+    document.getElementById("profileCancel").addEventListener("click", () => { fillProfileForm(); profileForm.hidden = true; profileDirty = false; profileFeedback.textContent = "Changes discarded"; renderProfileView(); });
     profileDialog.addEventListener("click", event => { if (event.target === profileDialog) closeProfile(); });
     document.addEventListener("keydown", event => { if (event.key === "Escape" && !profileDialog.hidden) closeProfile(); });
     profileForm.addEventListener("input", () => { profileDirty = true; renderProfileView(); });
@@ -3574,6 +3687,7 @@
       profileRecords.set(accountUser.id, data);
       profileDirty = false;
       profileFeedback.textContent = "Profile saved ♡";
+      profileForm.hidden = true;
       renderProfileView(); renderOnlinePeople(); renderMessages(); renderMessagePeople();
     });
     syncAccountPalette();
@@ -3585,6 +3699,7 @@
       accountEmail.textContent = username || "Your account";
       accountEditUsername.value = username;
       accountButton.textContent = user ? `My Profile · ${username || "Account"}` : "♡ Sign in";
+      updateTaskbarProfile();
       if (!user && !profileDialog.hidden) closeProfile();
       if (user) {
         try {
@@ -3771,7 +3886,7 @@
       }
       function safeToReload() {
         if (!pendingBuild || hasUnsentWork() || !document.getElementById("introMusic").paused || videoVisited) return false;
-        if (!document.getElementById("messagePanel").hidden || !document.getElementById("notificationPanel").hidden) return false;
+        if (!document.getElementById("messagePanel").hidden || !document.getElementById("notificationPanel").hidden || !document.getElementById("activityPanel").hidden || document.getElementById("menuZone").classList.contains("open")) return false;
         if (videoSection.querySelector("iframe") && onScreen(videoSection)) return false;
         if (document.hidden) return Date.now() - hiddenSince > 30000;
         // Keep the visible cats, animals, and video player uninterrupted.
@@ -3856,6 +3971,30 @@
       }
       setTimeout(maybeShowWhale, 90000 + Math.random() * 90000);
     })();
+  </script>
+  <script>
+    document.querySelector(".berserkSteamLink").addEventListener("click", () => {
+      try {
+        const Audio = window.AudioContext || window.webkitAudioContext;
+        if (!Audio) return;
+        const ctx = new Audio();
+        ctx.resume().catch(() => {});
+        const at = ctx.currentTime;
+        const rumble = ctx.createOscillator(), low = ctx.createBiquadFilter(), rumbleGain = ctx.createGain();
+        rumble.type = "sawtooth"; rumble.frequency.setValueAtTime(88, at); rumble.frequency.exponentialRampToValueAtTime(48, at + .62);
+        low.type = "lowpass"; low.frequency.value = 190;
+        rumbleGain.gain.setValueAtTime(.0001, at); rumbleGain.gain.exponentialRampToValueAtTime(.065, at + .035); rumbleGain.gain.exponentialRampToValueAtTime(.0001, at + .68);
+        rumble.connect(low); low.connect(rumbleGain); rumbleGain.connect(ctx.destination);
+        rumble.start(at); rumble.stop(at + .69);
+        [330, 461, 697].forEach((pitch, index) => {
+          const tone = ctx.createOscillator(), gain = ctx.createGain();
+          tone.type = "sine"; tone.frequency.setValueAtTime(pitch, at); tone.frequency.exponentialRampToValueAtTime(pitch * .75, at + .38);
+          gain.gain.setValueAtTime(.0001, at + index * .018); gain.gain.exponentialRampToValueAtTime(.026 / (index + 1), at + .04 + index * .018); gain.gain.exponentialRampToValueAtTime(.0001, at + .49);
+          tone.connect(gain); gain.connect(ctx.destination); tone.start(at + index * .018); tone.stop(at + .5);
+        });
+        setTimeout(() => ctx.close().catch(() => {}), 1100);
+      } catch (_error) { /* Some browsers block audio until interaction. */ }
+    });
   </script>
 </body>
 </html>

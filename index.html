@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v46">
+<meta name="site-build" content="cinta-kita-v47">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -451,18 +451,18 @@
     #mainWebsite:not([data-wallpaper="original"]) { --scene-accent: #ffd2ea; --scene-surface: #251a2b; }
     #mainWebsite[data-wallpaper="underwater"] { --scene-accent: #8de6ef; --scene-surface: #155b78; --scene-bg: linear-gradient(#237c9e, #176686 42%, #145376 76%, #123e68); }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] { --scene-accent: #78dbe9; --scene-surface: #06111c; --scene-bg: linear-gradient(#01060c 0%, #01040a 55%, #000204 100%); }
-    #mainWebsite[data-wallpaper="berserk"] { --scene-accent: #e8b987; --scene-surface: #241b21; --scene-bg: linear-gradient(#161015, #21141b); background: var(--scene-bg); color: #fff4ed; }
-    #mainWebsite[data-wallpaper="berserk"][data-theme="light"] { --scene-accent: #f3cda5; --scene-surface: #423039; --scene-bg: linear-gradient(#392630, #271b25); }
+    #mainWebsite[data-wallpaper="berserk"] { --scene-accent: #d83a39; --scene-surface: #100a0d; --scene-bg: #080608; background: var(--scene-bg); color: #f9eded; }
+    #mainWebsite[data-wallpaper="berserk"][data-theme="light"] { --scene-accent: #d83a39; --scene-surface: #100a0d; --scene-bg: #080608; }
     .berserkBackdrop { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: #161015; }
     .berserkBackdrop video { width: 100%; height: 100%; object-fit: cover; object-position: center; }
     #mainWebsite[data-wallpaper="berserk"] .berserkBackdrop { display: block; }
     .berserkFrame, .berserkEmbers { display: none; position: fixed; inset: 0; z-index: 1; pointer-events: none; }
     #mainWebsite[data-wallpaper="berserk"] .berserkFrame,
     #mainWebsite[data-wallpaper="berserk"] .berserkEmbers { display: block; }
-    .berserkFrame::before, .berserkFrame::after { content: ""; position: absolute; width: clamp(40px, 8vw, 105px); height: clamp(40px, 8vw, 105px); border-color: #8b2e2bab; border-style: solid; }
+    .berserkFrame::before, .berserkFrame::after { content: ""; position: absolute; width: clamp(40px, 8vw, 105px); height: clamp(40px, 8vw, 105px); border-color: #c53030a8; border-style: solid; }
     .berserkFrame::before { top: clamp(17px, 3vw, 48px); left: clamp(17px, 3vw, 48px); border-width: 1px 0 0 1px; }
     .berserkFrame::after { right: clamp(17px, 3vw, 48px); bottom: clamp(17px, 3vw, 48px); border-width: 0 1px 1px 0; }
-    .berserkEmbers { opacity: .48; background-image: radial-gradient(circle, #cf5a37 1px, transparent 2px), radial-gradient(circle, #a83b28 1px, transparent 2px); background-size: 223px 271px, 347px 309px; background-position: 17px 60px, 127px 190px; animation: berserkEmberDrift 23s linear infinite alternate; }
+    .berserkEmbers { opacity: .4; background-image: radial-gradient(circle, #df3835 1px, transparent 2px), radial-gradient(circle, #a72227 1px, transparent 2px); background-size: 223px 271px, 347px 309px; background-position: 17px 60px, 127px 190px; animation: berserkEmberDrift 23s linear infinite alternate; }
     @keyframes berserkEmberDrift { to { transform: translate3d(8px, -35px, 0); opacity: .25; } }
     #mainWebsite[data-wallpaper="berserk"] .welcomeSection { min-height: 100svh; padding: 0; background: transparent !important; }
     #mainWebsite[data-wallpaper="berserk"] .welcomeSection::before,
@@ -470,20 +470,33 @@
     #mainWebsite[data-wallpaper="berserk"] .contentSection,
     #mainWebsite[data-wallpaper="berserk"] .storySection,
     #mainWebsite[data-wallpaper="berserk"] footer,
-    #mainWebsite[data-wallpaper="berserk"] .spotifyLink { display: none !important; }
-    #mainWebsite[data-wallpaper="berserk"] .menuHandle { width: 46px; height: 44px; padding: 0; justify-content: center; font-size: 0; border: 1px solid #8b3b39; border-top: 0; border-radius: 0 0 5px 5px; background: #151015ed; }
-    #mainWebsite[data-wallpaper="berserk"] .menuHandle::before { content: "☰"; font-size: 19px; color: #d5a08c; }
-    #mainWebsite[data-wallpaper="berserk"] .menuHandle span { display: none; }
-    #mainWebsite[data-wallpaper="berserk"] .themeButton,
+    #mainWebsite[data-wallpaper="berserk"] .spotifyLink,
+    #mainWebsite[data-wallpaper="berserk"] .menuZone,
     #mainWebsite[data-wallpaper="berserk"] .notificationBell,
-    #mainWebsite[data-wallpaper="berserk"] .messageDock { border-radius: 5px; background: #151015ec; border-color: #8b3b39; color: #d5a08c; }
+    #mainWebsite[data-wallpaper="berserk"] .notificationPanel,
+    #mainWebsite[data-wallpaper="berserk"] .notificationHint,
+    #mainWebsite[data-wallpaper="berserk"] .messageDock,
+    #mainWebsite[data-wallpaper="berserk"] .messagePanel,
+    #mainWebsite[data-wallpaper="berserk"] .messageToast,
+    #mainWebsite[data-wallpaper="berserk"] .themeTools { display: none !important; }
+    body:has(#mainWebsite[data-wallpaper="berserk"].show) .siteUpdateNotice { display: none !important; }
+    #mainWebsite[data-wallpaper="berserk"] .wallpaperTools { left: clamp(18px, 3vw, 48px); }
+    #mainWebsite[data-wallpaper="berserk"] .wallpaperTools .themeButton { width: 46px; height: 46px; border-radius: 3px; background: #100a0de8; border-color: #c53030; color: #f05955; box-shadow: 0 0 16px #b51b2033; }
     #mainWebsite[data-wallpaper="berserk"] .wallpaperPanel,
-    #mainWebsite[data-wallpaper="berserk"] .themePanel,
-    #mainWebsite[data-wallpaper="berserk"] .siteMenu { border-radius: 5px; background: #171116f5; border-color: #8b3b39; }
-    #mainWebsite[data-wallpaper="berserk"] .wallpaperPanel p,
-    #mainWebsite[data-wallpaper="berserk"] .themePanel p { display: none; }
-    #mainWebsite[data-wallpaper="berserk"] .messageDock { width: 48px; min-width: 48px; padding: 0; justify-content: center; }
-    #mainWebsite[data-wallpaper="berserk"] .messageDock > span:nth-child(2) { display: none; }
+    #mainWebsite[data-wallpaper="berserk"] .wallpaperChoices button { border-radius: 3px; background: #140a0dec; border-color: #702327; color: #f0d2d2; }
+    #mainWebsite[data-wallpaper="berserk"] .wallpaperPanel { border-radius: 3px; background: #100a0df6; border-color: #b52a2f; color: #f0d2d2; }
+    #mainWebsite[data-wallpaper="berserk"] .wallpaperPanel p { display: none; }
+    #mainWebsite[data-wallpaper="berserk"] .wallpaperChoices button[aria-pressed="true"] { border-color: #e74645; background: #5b171b; }
+    .berserkIdentity { display: none; }
+    #mainWebsite[data-wallpaper="berserk"] .berserkIdentity { display: block; position: fixed; z-index: 2; right: clamp(25px, 6vw, 115px); top: 50%; transform: translateY(-40%); width: min(360px, 32vw); padding: 30px 28px 30px 31px; border-left: 2px solid #d12b30; background: linear-gradient(90deg, #090608e8, #090608b0 80%, transparent); color: #f5eeee; box-shadow: -20px 12px 50px #05020455; }
+    .berserkIdentityMark { display: block; width: 38px; height: 3px; margin-bottom: 24px; background: #eb3c3d; box-shadow: 0 0 12px #eb3c3d; }
+    .berserkIdentity small { color: #d65a58; font: 700 10px/1.5 "DM Sans", Arial, sans-serif; letter-spacing: .28em; }
+    .berserkIdentity h1 { margin: 9px 0 29px; color: #fff5f3; font: 700 clamp(35px, 4vw, 64px)/.95 "Cormorant Garamond", Georgia, serif; letter-spacing: .065em; text-shadow: 0 3px 14px #000; }
+    .berserkSteamLink { display: inline-flex; gap: 13px; align-items: center; min-height: 54px; padding: 11px 16px; border: 1px solid #c33338; color: #fff4f3; background: #a5232bd4; text-decoration: none; font: 700 11px "DM Sans", Arial, sans-serif; letter-spacing: .14em; transition: transform .2s, background .2s, box-shadow .2s; }
+    .berserkSteamLink:hover, .berserkSteamLink:focus-visible { transform: translateY(-3px); background: #c3353c; box-shadow: 0 7px 25px #c3232d70; }
+    .berserkSteamLink svg { width: 24px; height: 24px; fill: currentColor; }
+    .berserkSteamLink .berserkArrow { font-size: 17px; margin-left: 4px; }
+    @media (max-width: 700px) { #mainWebsite[data-wallpaper="berserk"] .berserkBackdrop video { object-position: 35% center; } #mainWebsite[data-wallpaper="berserk"] .berserkIdentity { top: auto; bottom: 42px; right: 22px; transform: none; width: min(310px, calc(100vw - 44px)); padding: 17px 18px 18px 20px; } .berserkIdentityMark { margin-bottom: 12px; } .berserkIdentity h1 { margin-bottom: 16px; font-size: 39px; } }
     @media (prefers-reduced-motion: reduce) { .berserkEmbers { animation: none; } }
     #mainWebsite[data-wallpaper="underwater"] #backToIntro,
     #mainWebsite[data-wallpaper="underwater"] .themeMode { background: var(--scene-accent); border-color: var(--scene-accent); color: #082c3d; }
@@ -1057,6 +1070,15 @@
   <main id="mainWebsite">
     <div class="berserkBackdrop" aria-hidden="true"><video id="berserkWallpaperVideo" muted loop playsinline preload="none"><source src="berserk.1920x1080.mp4" type="video/mp4"></video></div>
     <div class="berserkEmbers" aria-hidden="true"></div><div class="berserkFrame" aria-hidden="true"></div>
+    <div class="berserkIdentity">
+      <span class="berserkIdentityMark" aria-hidden="true"></span>
+      <small>BLACK SWORDSMAN / 01</small>
+      <h1>ELHAZUU</h1>
+      <a class="berserkSteamLink" href="https://steamcommunity.com/id/ElHazuu/" target="_blank" rel="noopener noreferrer" aria-label="Open ElHazuu's Steam profile in a new tab">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="17" cy="7" r="3.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="17" cy="7" r="1.4"/><circle cx="6.5" cy="17.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="m8.3 15.9 5.6-6.1M4 15.7l-1.7-1.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>STEAM PROFILE</span><span class="berserkArrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
     <div class="underseaBackdrop" id="underseaBackdrop" aria-hidden="true"></div>
     <img class="coralTower" src="Tower of Coral.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
     <div class="whaleCrossing" aria-hidden="true"><img src="minecraft-whale-frame-1.png" alt=""></div>
@@ -2957,6 +2979,7 @@
     let messageUnreadCount = 0;
     let messageAudio = null;
     function playIncomingMessageSound() {
+      if (mainWebsite.dataset.wallpaper === "berserk") return;
       try {
         messageAudio = messageAudio || new (window.AudioContext || window.webkitAudioContext)();
         if (messageAudio.state === "suspended") messageAudio.resume();
@@ -2988,6 +3011,7 @@
     }
     clearMessageCanvas();
     function showMessageToast(item) {
+      if (mainWebsite.dataset.wallpaper === "berserk") return;
       const sender = messageNames.get(item.sender_id) || "Someone";
       messageToast.textContent = `${sender} sent you ${item.kind === "drawing" ? "a drawing 🎨" : "a message ✉"} · Open messages`;
       messageToast.hidden = false;
@@ -3711,6 +3735,7 @@
         window.addEventListener(type, () => { lastInteraction = Date.now(); if (type !== "scroll") hadGesture = true; }, { passive: true });
       }
       function playUpdateChime() {
+        if (document.getElementById("mainWebsite").dataset.wallpaper === "berserk") return;
         if (!hadGesture) return;
         try {
           const Audio = window.AudioContext || window.webkitAudioContext;

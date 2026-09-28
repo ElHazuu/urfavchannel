@@ -729,6 +729,28 @@
     .accountModeTabs button[aria-selected="true"] { background: #ffb5d9; color: #2e1b2d; font-weight: 700; }
     .accountLink { display: block; margin-top: 12px; border: 0; padding-left: 0; text-decoration: underline; }
     .accountRecovery[hidden], .accountConfirmPassword[hidden], .accountUsernameField[hidden] { display: none; }
+    .messageMenuButton { display: block; width: calc(100% - 28px); margin: 7px 14px; padding: 11px 14px; border: 1px solid var(--theme-line); border-radius: 12px; background: var(--theme-surface); color: var(--theme-text); text-align: left; cursor: pointer; }
+    .messageMenuButton[hidden], .messagePanel[hidden], .messageToast[hidden], .messageDrawTools[hidden] { display: none; }
+    .messageBadge { float: right; min-width: 19px; padding: 1px 5px; border-radius: 12px; background: #ed6da5; color: white; text-align: center; font-size: 11px; }
+    .messageBadge[hidden] { display: none; }
+    .messagePanel { position: fixed; z-index: 80; right: 18px; bottom: 18px; width: min(420px, calc(100vw - 36px)); max-height: min(78vh, 650px); display: flex; flex-direction: column; padding: 17px; border: 1px solid var(--theme-line); border-radius: 20px; background: var(--theme-surface); color: var(--theme-text); box-shadow: 0 20px 65px #0009; }
+    .messagePanelHead { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .messagePanelHead h2 { margin: 0; font: 600 32px "Cormorant Garamond", Georgia, serif; }
+    .messagePanel button { cursor: pointer; padding: 7px 11px; border: 1px solid var(--theme-line); border-radius: 10px; background: #ffe6f1; color: #35203b; }
+    .messagePanel label { display: block; margin: 9px 0 5px; font-size: 12px; }
+    .messagePanel select, .messagePanel textarea { width: 100%; padding: 9px; border: 1px solid var(--theme-line); border-radius: 9px; background: white; color: #251a2b; font: inherit; }
+    .messageHistory { min-height: 90px; max-height: 245px; overflow-y: auto; margin: 11px 0; padding: 9px; border: 1px solid var(--theme-line); border-radius: 10px; }
+    .messageBubble { max-width: 90%; width: fit-content; margin: 7px 0; padding: 8px 11px; border-radius: 12px; background: #ffe0f0; color: #332038; overflow-wrap: anywhere; white-space: pre-wrap; font-size: 13px; }
+    .messageBubble.mine { margin-left: auto; background: #dcd5fa; }
+    .messageBubble small { display: block; margin-bottom: 3px; opacity: .72; }
+    .messageBubble img { display: block; max-width: 100%; max-height: 180px; border-radius: 6px; background: white; }
+    .messageComposer textarea { min-height: 64px; max-height: 110px; resize: vertical; }
+    .messageTabs, .messageDrawTools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 8px 0; }
+    .messageCanvas { width: 100%; height: auto; aspect-ratio: 400 / 210; display: block; border: 1px solid #b18aa7; border-radius: 9px; background: white; touch-action: none; }
+    .messageCanvas[hidden], .messageComposer textarea[hidden] { display: none; }
+    .messageSend { margin-top: 9px; }
+    .messageStatus { min-height: 1.1em; margin: 5px 0 0; font-size: 12px; }
+    .messageToast { position: fixed; z-index: 81; right: 18px; bottom: 90px; width: min(320px, calc(100vw - 36px)); padding: 13px; border: 1px solid #ffb9d7; border-radius: 13px; background: #38213ef5; color: white; box-shadow: 0 10px 32px #0008; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -801,6 +823,7 @@
           <a href="#story"><small>03</small>Our Story<span>↗</span></a>
         </div>
         <button class="accountMenuButton" id="accountButton" type="button" aria-haspopup="dialog">♡ Sign in</button>
+        <button class="messageMenuButton" id="messageOpen" type="button" hidden>✉ Messages ♡ <span class="messageBadge" id="messageBadge" hidden></span></button>
         <div class="onlineList" id="onlineList" aria-live="polite" hidden><strong>Here with us ♡</strong><div id="onlinePeople"></div></div>
         <button id="backToIntro" type="button">↶ Back to our cats</button>
       </nav>
@@ -817,6 +840,20 @@
       <p class="notificationFeedback" id="notificationFeedback" role="status"></p>
       <div id="notificationList"></div>
     </div>
+    <section class="messagePanel" id="messagePanel" aria-label="Private messages" hidden>
+      <div class="messagePanelHead"><h2>Our messages ♡</h2><button id="messageClose" type="button" aria-label="Close messages">×</button></div>
+      <label for="messageRecipient">Send to</label><select id="messageRecipient"></select>
+      <div class="messageHistory" id="messageHistory" aria-live="polite"></div>
+      <form class="messageComposer" id="messageForm">
+        <div class="messageTabs"><button type="button" id="messageTextTab">Write ✎</button><button type="button" id="messageDrawTab">Paint ♡</button></div>
+        <textarea id="messageText" maxlength="2000" placeholder="Write a little message…" aria-label="Write a message"></textarea>
+        <canvas class="messageCanvas" id="messageCanvas" width="400" height="210" aria-label="Draw a message" hidden></canvas>
+        <div class="messageDrawTools" id="messageDrawTools" hidden><label for="messageColor">Color</label><input id="messageColor" type="color" value="#dc6094"><button type="button" id="messageClear">Clear drawing</button></div>
+        <button class="messageSend" id="messageSend" type="submit">Send ♡</button>
+      </form>
+      <p class="messageStatus" id="messageStatus" role="status"></p>
+    </section>
+    <button class="messageToast" id="messageToast" type="button" hidden></button>
     <button class="seaPearl" id="seaPearl" type="button" aria-label="Open a secret message in the pearl"><span>OPEN ME</span></button>
     <div class="seaPearlMessage" id="seaPearlMessage" role="dialog" aria-modal="true" aria-label="Message in a pearl" hidden>
       <div class="seaPearlCard"><span class="pearlIcon" aria-hidden="true">✧</span>
@@ -2355,6 +2392,200 @@
       });
     }
     window.setOurWorldPresenceActive = active => { presenceActive = active; updatePresence(); };
+    // Private messages stay in Supabase; Realtime makes new ones appear without a refresh.
+    const messageOpen = document.getElementById("messageOpen");
+    const messageBadge = document.getElementById("messageBadge");
+    const messagePanel = document.getElementById("messagePanel");
+    const messageClose = document.getElementById("messageClose");
+    const messageRecipient = document.getElementById("messageRecipient");
+    const messageHistory = document.getElementById("messageHistory");
+    const messageForm = document.getElementById("messageForm");
+    const messageText = document.getElementById("messageText");
+    const messageCanvas = document.getElementById("messageCanvas");
+    const messageCtx = messageCanvas.getContext("2d");
+    const messageDrawTools = document.getElementById("messageDrawTools");
+    const messageColor = document.getElementById("messageColor");
+    const messageStatus = document.getElementById("messageStatus");
+    const messageSend = document.getElementById("messageSend");
+    const messageToast = document.getElementById("messageToast");
+    let messageRows = [];
+    let messageNames = new Map();
+    let messageMode = "text";
+    let messageDrawn = false;
+    let messagePainting = false;
+    let messageChannel = null;
+    let messageUserId = null;
+    let messageGeneration = 0;
+    let messageLoaded = false;
+    let toastTimer = null;
+    const seenIncoming = new Set();
+    function clearMessageCanvas() {
+      messageCtx.fillStyle = "#ffffff";
+      messageCtx.fillRect(0, 0, messageCanvas.width, messageCanvas.height);
+      messageDrawn = false;
+    }
+    clearMessageCanvas();
+    function showMessageToast(item) {
+      const sender = messageNames.get(item.sender_id) || "Someone";
+      messageToast.textContent = `${sender} sent you ${item.kind === "drawing" ? "a drawing 🎨" : "a message ✉"} · Open messages`;
+      messageToast.hidden = false;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { messageToast.hidden = true; }, 6500);
+    }
+    function renderMessages() {
+      const userId = accountUser?.id;
+      const unread = messageRows.filter(item => item.recipient_id === userId && !item.read_at);
+      messageBadge.hidden = !unread.length;
+      messageBadge.textContent = String(unread.length);
+      messageHistory.replaceChildren();
+      const recipient = messageRecipient.value;
+      if (!recipient) { messageHistory.textContent = "Choose a registered person to start ♡"; return; }
+      const conversation = messageRows.filter(item =>
+        (item.sender_id === userId && item.recipient_id === recipient) ||
+        (item.recipient_id === userId && item.sender_id === recipient));
+      if (!conversation.length) { messageHistory.textContent = "No messages yet. Say hello ♡"; return; }
+      for (const item of conversation) {
+        const bubble = document.createElement("div");
+        bubble.className = `messageBubble${item.sender_id === userId ? " mine" : ""}`;
+        const byline = document.createElement("small");
+        byline.textContent = `${item.sender_id === userId ? "You" : messageNames.get(item.sender_id) || "Someone"} · ${new Date(item.created_at).toLocaleString()}`;
+        bubble.append(byline);
+        if (item.kind === "drawing") {
+          const img = document.createElement("img");
+          img.alt = "Hand-drawn message";
+          img.src = item.drawing_data;
+          bubble.append(img);
+        } else {
+          bubble.append(document.createTextNode(item.body));
+        }
+        messageHistory.append(bubble);
+      }
+      messageHistory.scrollTop = messageHistory.scrollHeight;
+    }
+    async function markConversationRead() {
+      if (!accountUser || messagePanel.hidden || !messageRecipient.value) return;
+      const userId = accountUser.id;
+      const ids = messageRows.filter(item => item.recipient_id === userId && item.sender_id === messageRecipient.value && !item.read_at).map(item => item.id);
+      if (!ids.length) return;
+      const { error } = await accountClient.from("site_messages").update({ read_at: new Date().toISOString() }).in("id", ids).eq("recipient_id", userId);
+      if (error || accountUser?.id !== userId) return;
+      messageRows.forEach(item => { if (ids.includes(item.id)) item.read_at = new Date().toISOString(); });
+      renderMessages();
+    }
+    async function loadMessages() {
+      if (!accountClient || !accountUser) return;
+      const userId = accountUser.id;
+      const generation = messageGeneration;
+      const [profiles, messages] = await Promise.all([
+        accountClient.from("site_profiles").select("id,username").not("username", "is", null),
+        accountClient.from("site_messages").select("id,sender_id,recipient_id,kind,body,drawing_data,created_at,read_at").order("created_at", { ascending: false }).limit(150)
+      ]);
+      if (generation !== messageGeneration || accountUser?.id !== userId) return;
+      if (profiles.error || messages.error) { messageStatus.textContent = "Messages are unavailable. Run the messages SQL setup in Supabase."; return; }
+      messageStatus.textContent = "";
+      messageNames = new Map(profiles.data.map(person => [person.id, person.username]));
+      const selected = messageRecipient.value;
+      messageRecipient.replaceChildren();
+      for (const [id, name] of [...messageNames].filter(([id]) => id !== userId).sort((a, b) => a[1].localeCompare(b[1]))) {
+        const option = document.createElement("option");
+        option.value = id; option.textContent = name;
+        messageRecipient.append(option);
+      }
+      if (messageNames.has(selected) && selected !== userId) messageRecipient.value = selected;
+      const incoming = messages.data.filter(item => item.recipient_id === userId && !item.read_at);
+      const newlySeen = incoming.filter(item => !seenIncoming.has(item.id));
+      incoming.forEach(item => seenIncoming.add(item.id));
+      messageRows = messages.data.reverse();
+      renderMessages();
+      // On first visit, show the most recent message left while this account was away.
+      if (newlySeen.length) showMessageToast(newlySeen[0]);
+      messageLoaded = true;
+      if (!messagePanel.hidden) markConversationRead();
+    }
+    function syncMessages() {
+      const user = accountUser;
+      if (!accountClient || !user) {
+        ++messageGeneration;
+        if (messageChannel) accountClient?.removeChannel(messageChannel);
+        messageChannel = null; messageUserId = null; messageLoaded = false;
+        messageRows = []; messageNames = new Map(); seenIncoming.clear();
+        messageOpen.hidden = true; messagePanel.hidden = true; messageToast.hidden = true;
+        messageBadge.hidden = true;
+        return;
+      }
+      messageOpen.hidden = false;
+      if (messageChannel && messageUserId === user.id) { if (!messageLoaded) loadMessages(); return; }
+      if (messageChannel) accountClient.removeChannel(messageChannel);
+      ++messageGeneration;
+      messageUserId = user.id;
+      messageLoaded = false;
+      seenIncoming.clear();
+      const channel = accountClient.channel(`cinta-kita-messages-${user.id}`);
+      messageChannel = channel;
+      channel.on("postgres_changes", { event: "INSERT", schema: "public", table: "site_messages", filter: `recipient_id=eq.${user.id}` }, loadMessages);
+      channel.on("postgres_changes", { event: "INSERT", schema: "public", table: "site_messages", filter: `sender_id=eq.${user.id}` }, loadMessages);
+      channel.subscribe(status => { if (status === "SUBSCRIBED" && accountUser?.id === user.id) loadMessages(); });
+      loadMessages();
+    }
+    messageOpen.addEventListener("click", () => {
+      messagePanel.hidden = false;
+      messageToast.hidden = true;
+      loadMessages();
+      messagePanel.querySelector("h2").focus?.();
+    });
+    messageClose.addEventListener("click", () => { messagePanel.hidden = true; messageOpen.focus(); });
+    messageToast.addEventListener("click", () => { messageOpen.click(); });
+    messageRecipient.addEventListener("change", () => { renderMessages(); markConversationRead(); });
+    document.getElementById("messageTextTab").addEventListener("click", () => {
+      messageMode = "text"; messageText.hidden = false; messageCanvas.hidden = true; messageDrawTools.hidden = true;
+    });
+    document.getElementById("messageDrawTab").addEventListener("click", () => {
+      messageMode = "drawing"; messageText.hidden = true; messageCanvas.hidden = false; messageDrawTools.hidden = false;
+    });
+    document.getElementById("messageClear").addEventListener("click", clearMessageCanvas);
+    function canvasPoint(event) {
+      const box = messageCanvas.getBoundingClientRect();
+      return { x: (event.clientX - box.left) * messageCanvas.width / box.width,
+        y: (event.clientY - box.top) * messageCanvas.height / box.height };
+    }
+    messageCanvas.addEventListener("pointerdown", event => {
+      event.preventDefault(); messageCanvas.setPointerCapture(event.pointerId);
+      const point = canvasPoint(event);
+      messageCtx.beginPath(); messageCtx.moveTo(point.x, point.y);
+      messageCtx.fillStyle = messageColor.value;
+      messageCtx.beginPath(); messageCtx.arc(point.x, point.y, 2.5, 0, Math.PI * 2); messageCtx.fill();
+      messageCtx.beginPath(); messageCtx.moveTo(point.x, point.y);
+      messagePainting = true; messageDrawn = true;
+    });
+    messageCanvas.addEventListener("pointermove", event => {
+      if (!messagePainting) return;
+      event.preventDefault();
+      const point = canvasPoint(event);
+      messageCtx.lineWidth = 5; messageCtx.lineCap = "round"; messageCtx.lineJoin = "round";
+      messageCtx.strokeStyle = messageColor.value;
+      messageCtx.lineTo(point.x, point.y); messageCtx.stroke();
+    });
+    for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) messageCanvas.addEventListener(type, () => { messagePainting = false; });
+    messageForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!accountClient || !accountUser || !messageRecipient.value) { messageStatus.textContent = "Choose someone to message first."; return; }
+      const body = messageText.value.trim();
+      if (messageMode === "text" && !body) { messageStatus.textContent = "Write a message first ♡"; return; }
+      if (messageMode === "drawing" && !messageDrawn) { messageStatus.textContent = "Paint something first ♡"; return; }
+      const drawing = messageMode === "drawing" ? messageCanvas.toDataURL("image/jpeg", .78) : null;
+      if (drawing && drawing.length > 180000) { messageStatus.textContent = "That drawing is too large. Try a simpler one."; return; }
+      messageSend.disabled = true;
+      const { error } = await accountClient.from("site_messages").insert({
+        sender_id: accountUser.id, recipient_id: messageRecipient.value, kind: messageMode,
+        body: messageMode === "text" ? body : "", drawing_data: drawing
+      });
+      messageSend.disabled = false;
+      messageStatus.textContent = error ? error.message : "Sent ♡";
+      if (!error) { messageText.value = ""; clearMessageCanvas(); loadMessages(); }
+    });
+    window.addEventListener("focus", () => { if (accountUser) loadMessages(); });
+    setInterval(() => { if (accountUser && !document.hidden) loadMessages(); }, 45000);
+    document.addEventListener("keydown", event => { if (event.key === "Escape" && !messagePanel.hidden) messagePanel.hidden = true; });
     function showAccountUser(user) {
       accountUser = user;
       accountSignedIn.hidden = !user;
@@ -2366,6 +2597,7 @@
       updatePresence();
       setTimeout(syncVideoAccess, 0);
       setTimeout(syncNotifications, 0);
+      setTimeout(syncMessages, 0);
     }
     function setAccountMode(mode) {
       accountMode = mode;

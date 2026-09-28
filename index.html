@@ -656,6 +656,22 @@
     }
     @media (prefers-reduced-motion: reduce) { .spotifyLink { transition: none; } }
     @media (max-width: 650px) { .wallpaperTools { left: 68px; } .wallpaperPanel { left: -52px; } }
+
+    /* Account sign-in */
+    .accountMenuButton { width: calc(100% - 28px); margin: 8px 14px 6px; padding: 12px 15px; border: 1px solid #ffcae288; border-radius: 12px; background: #ffcfeb24; color: #fff4fa; text-align: left; cursor: pointer; }
+    .accountMenuButton:hover, .accountMenuButton:focus-visible { background: #ffcfeb38; }
+    .accountDialog[hidden], .accountSignedOut[hidden], .accountSignedIn[hidden] { display: none; }
+    .accountDialog { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 18px; background: #100918dc; backdrop-filter: blur(10px); }
+    .accountCard { position: relative; width: min(420px, 100%); padding: 29px; border: 1px solid #ffcadea6; border-radius: 25px; background: linear-gradient(150deg, #3a2343, #21162c); box-shadow: 0 24px 75px #0009; color: #fff4fa; }
+    .accountCard h2 { margin: 0 35px 8px 0; font: 600 42px/1 "Cormorant Garamond", Georgia, serif; }
+    .accountCard p { line-height: 1.55; color: #f5dae9; }
+    .accountClose { position: absolute; top: 16px; right: 17px; width: 35px; height: 35px; border: 0; border-radius: 50%; background: #ffffff1e; color: white; cursor: pointer; }
+    .accountCard label { display: block; margin: 19px 0 7px; font-weight: 700; }
+    .accountCard input { width: 100%; padding: 13px 14px; border: 1px solid #ffe0ef96; border-radius: 12px; background: #fffafc; color: #291b2b; font: inherit; }
+    .accountAction { margin-top: 15px; padding: 12px 18px; border: 0; border-radius: 999px; background: #ffb5d9; color: #2e1b2d; font-weight: 700; cursor: pointer; }
+    .accountAction:disabled { opacity: .6; cursor: wait; }
+    .accountFeedback { min-height: 1.5em; margin: 14px 0 0; font-size: 14px; }
+    .accountEmail { overflow-wrap: anywhere; font-weight: 700; }
 </style>
 </head>
 <body>

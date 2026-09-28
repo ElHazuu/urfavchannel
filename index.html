@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v45">
+<meta name="site-build" content="cinta-kita-v46">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -456,34 +456,35 @@
     .berserkBackdrop { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: #161015; }
     .berserkBackdrop video { width: 100%; height: 100%; object-fit: cover; object-position: center; }
     #mainWebsite[data-wallpaper="berserk"] .berserkBackdrop { display: block; }
-    #mainWebsite[data-wallpaper="berserk"] .welcomeSection,
+    .berserkFrame, .berserkEmbers { display: none; position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+    #mainWebsite[data-wallpaper="berserk"] .berserkFrame,
+    #mainWebsite[data-wallpaper="berserk"] .berserkEmbers { display: block; }
+    .berserkFrame::before, .berserkFrame::after { content: ""; position: absolute; width: clamp(40px, 8vw, 105px); height: clamp(40px, 8vw, 105px); border-color: #8b2e2bab; border-style: solid; }
+    .berserkFrame::before { top: clamp(17px, 3vw, 48px); left: clamp(17px, 3vw, 48px); border-width: 1px 0 0 1px; }
+    .berserkFrame::after { right: clamp(17px, 3vw, 48px); bottom: clamp(17px, 3vw, 48px); border-width: 0 1px 1px 0; }
+    .berserkEmbers { opacity: .48; background-image: radial-gradient(circle, #cf5a37 1px, transparent 2px), radial-gradient(circle, #a83b28 1px, transparent 2px); background-size: 223px 271px, 347px 309px; background-position: 17px 60px, 127px 190px; animation: berserkEmberDrift 23s linear infinite alternate; }
+    @keyframes berserkEmberDrift { to { transform: translate3d(8px, -35px, 0); opacity: .25; } }
+    #mainWebsite[data-wallpaper="berserk"] .welcomeSection { min-height: 100svh; padding: 0; background: transparent !important; }
+    #mainWebsite[data-wallpaper="berserk"] .welcomeSection::before,
+    #mainWebsite[data-wallpaper="berserk"] .welcomeSection > * { display: none !important; }
     #mainWebsite[data-wallpaper="berserk"] .contentSection,
     #mainWebsite[data-wallpaper="berserk"] .storySection,
-    #mainWebsite[data-wallpaper="berserk"] footer { position: relative; z-index: 1; }
-    #mainWebsite[data-wallpaper="berserk"] .heroLine,
-    #mainWebsite[data-wallpaper="berserk"] .eyebrow,
-    #mainWebsite[data-wallpaper="berserk"] .heroSubtitle,
-    #mainWebsite[data-wallpaper="berserk"] .scrollNote { color: #f4ddd0; text-shadow: 0 2px 12px #10080f; }
-    #mainWebsite[data-wallpaper="berserk"] .welcomeSection h1 { text-shadow: 0 4px 22px #10080f; }
-    .berserkHome { display: none; }
-    #mainWebsite[data-wallpaper="berserk"] .welcomeSection { min-height: 100svh; padding: clamp(120px, 13vh, 180px) clamp(28px, 7vw, 130px) 90px; }
-    #mainWebsite[data-wallpaper="berserk"] .welcomeSection::before,
-    #mainWebsite[data-wallpaper="berserk"] .welcomeSection > :not(.berserkHome) { display: none; }
-    #mainWebsite[data-wallpaper="berserk"] .berserkHome { display: grid; position: relative; z-index: 2; width: min(1320px, 100%); margin: auto; grid-template-columns: minmax(0, 1.4fr) minmax(220px, .6fr); align-items: end; gap: clamp(30px, 8vw, 150px); color: #fff6ee; }
-    .berserkKicker { display: flex; align-items: center; gap: 17px; margin: 0 0 30px; color: #f3cda5; font: 700 11px/1.4 "DM Sans", Arial, sans-serif; letter-spacing: .32em; text-transform: uppercase; text-shadow: 0 2px 12px #090607; }
-    .berserkKicker::before { content: ""; width: 48px; height: 1px; background: currentColor; }
-    #mainWebsite[data-wallpaper="berserk"] .berserkTitle { margin: 0; max-width: 920px; color: #fff9f3; font: 600 clamp(62px, 8.4vw, 144px)/.83 "Cormorant Garamond", Georgia, serif; letter-spacing: -.055em; text-shadow: 0 3px 4px #090607, 0 12px 35px #090607; }
-    .berserkTitle em { display: block; margin: .12em 0 0 .24em; color: #edc79d; font-weight: 400; font-style: italic; }
-    .berserkIntroduction { max-width: 510px; margin: 35px 0 32px; color: #fff5ee; font-size: clamp(15px, 1.3vw, 19px); line-height: 1.7; text-shadow: 0 2px 8px #090607, 0 0 23px #090607; }
-    .berserkActions { display: flex; flex-wrap: wrap; gap: 13px; }
-    .berserkActions a { display: inline-flex; align-items: center; justify-content: center; min-height: 49px; padding: 12px 22px; border: 1px solid #eed0ac; color: #fff7ee; background: #190f15db; text-decoration: none; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; transition: transform .2s, background .2s; }
-    .berserkActions a:first-child { color: #1d1416; background: #eed0ac; }
-    .berserkActions a:hover, .berserkActions a:focus-visible { transform: translateY(-3px); background: #7e4b46; color: white; }
-    .berserkSide { justify-self: end; max-width: 280px; padding: 24px 0 8px 22px; border-left: 1px solid #edc79da3; text-shadow: 0 2px 12px #090607; }
-    .berserkSide small { color: #edc79d; font: 700 10px "DM Sans", Arial, sans-serif; letter-spacing: .3em; }
-    .berserkSide strong { display: block; margin: 14px 0 10px; font: 500 clamp(26px, 3vw, 42px)/1 "Cormorant Garamond", Georgia, serif; }
-    .berserkSide p { margin: 0; color: #fff4e7; font-size: 13px; line-height: 1.6; }
-    @media (max-width: 760px) { #mainWebsite[data-wallpaper="berserk"] .berserkHome { grid-template-columns: 1fr; gap: 55px; } .berserkSide { justify-self: start; } #mainWebsite[data-wallpaper="berserk"] .berserkTitle { font-size: clamp(58px, 13vw, 100px); } }
+    #mainWebsite[data-wallpaper="berserk"] footer,
+    #mainWebsite[data-wallpaper="berserk"] .spotifyLink { display: none !important; }
+    #mainWebsite[data-wallpaper="berserk"] .menuHandle { width: 46px; height: 44px; padding: 0; justify-content: center; font-size: 0; border: 1px solid #8b3b39; border-top: 0; border-radius: 0 0 5px 5px; background: #151015ed; }
+    #mainWebsite[data-wallpaper="berserk"] .menuHandle::before { content: "☰"; font-size: 19px; color: #d5a08c; }
+    #mainWebsite[data-wallpaper="berserk"] .menuHandle span { display: none; }
+    #mainWebsite[data-wallpaper="berserk"] .themeButton,
+    #mainWebsite[data-wallpaper="berserk"] .notificationBell,
+    #mainWebsite[data-wallpaper="berserk"] .messageDock { border-radius: 5px; background: #151015ec; border-color: #8b3b39; color: #d5a08c; }
+    #mainWebsite[data-wallpaper="berserk"] .wallpaperPanel,
+    #mainWebsite[data-wallpaper="berserk"] .themePanel,
+    #mainWebsite[data-wallpaper="berserk"] .siteMenu { border-radius: 5px; background: #171116f5; border-color: #8b3b39; }
+    #mainWebsite[data-wallpaper="berserk"] .wallpaperPanel p,
+    #mainWebsite[data-wallpaper="berserk"] .themePanel p { display: none; }
+    #mainWebsite[data-wallpaper="berserk"] .messageDock { width: 48px; min-width: 48px; padding: 0; justify-content: center; }
+    #mainWebsite[data-wallpaper="berserk"] .messageDock > span:nth-child(2) { display: none; }
+    @media (prefers-reduced-motion: reduce) { .berserkEmbers { animation: none; } }
     #mainWebsite[data-wallpaper="underwater"] #backToIntro,
     #mainWebsite[data-wallpaper="underwater"] .themeMode { background: var(--scene-accent); border-color: var(--scene-accent); color: #082c3d; }
     #mainWebsite[data-wallpaper="underwater"] #backToIntro:hover,
@@ -1055,6 +1056,7 @@
 
   <main id="mainWebsite">
     <div class="berserkBackdrop" aria-hidden="true"><video id="berserkWallpaperVideo" muted loop playsinline preload="none"><source src="berserk.1920x1080.mp4" type="video/mp4"></video></div>
+    <div class="berserkEmbers" aria-hidden="true"></div><div class="berserkFrame" aria-hidden="true"></div>
     <div class="underseaBackdrop" id="underseaBackdrop" aria-hidden="true"></div>
     <img class="coralTower" src="Tower of Coral.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
     <div class="whaleCrossing" aria-hidden="true"><img src="minecraft-whale-frame-1.png" alt=""></div>
@@ -1159,15 +1161,6 @@
       <h1>Welcome to<br><span>Our World.</span></h1>
       <p class="heroSubtitle">A place for you to watch my videos and, whenever you visit, remember that I love you more.</p>
       <a class="scrollNote" href="#videos">SCROLL TO SEE MY LATEST VIDEOS ↓</a>
-      <div class="berserkHome">
-        <div class="berserkLead">
-          <p class="berserkKicker">Cinta Kita · The Struggler</p>
-          <h1 class="berserkTitle">Through<br>the dark.<em>Together.</em></h1>
-          <p class="berserkIntroduction">Every road has its shadows. This is our place to keep going, find each other, and remember the light ahead.</p>
-          <div class="berserkActions"><a href="#videos">Watch the videos ↗</a><a href="#story">Our story ↗</a></div>
-        </div>
-        <div class="berserkSide"><small>01 / THE JOURNEY</small><strong>Still moving forward.</strong><p>One day, one memory, one step at a time.</p></div>
-      </div>
     </section>
     <section class="contentSection" id="videos">
       <div class="sectionHeading">
@@ -1492,6 +1485,10 @@
       if (!wallpaperNames.includes(name)) name = "original";
       welcomeSection.dataset.wallpaper = name;
       mainWebsite.dataset.wallpaper = name;
+      if (name === "berserk") {
+        if (location.hash !== "#home") history.replaceState(history.state, "", `${location.pathname}${location.search}#home`);
+        window.scrollTo(0, 0);
+      }
       syncBerserkWallpaper();
       sittingKitten.hidden = name !== "original" || !ourWorldCard.classList.contains("show-note");
       if (sittingKitten.hidden) { clearTimeout(kittenReactionTimer); kittenReacting = false; kittenHeart.classList.remove("fly"); kittenIdlePicture.src = siameseIdleFrames[0]; }

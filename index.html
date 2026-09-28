@@ -665,6 +665,12 @@
     /* Account sign-in */
     .accountMenuButton { width: calc(100% - 28px); margin: 8px 14px 6px; padding: 12px 15px; border: 1px solid #ffcae288; border-radius: 12px; background: #ffcfeb24; color: #fff4fa; text-align: left; cursor: pointer; }
     .accountMenuButton:hover, .accountMenuButton:focus-visible { background: #ffcfeb38; }
+    .onlineList { margin: 8px 14px 12px; padding: 12px 14px; border: 1px solid var(--theme-line); border-radius: 12px; background: #ffffff0c; color: var(--theme-text); font-size: 13px; line-height: 1.7; }
+    .onlineList[hidden] { display: none; }
+    .onlineList strong { display: block; margin-bottom: 3px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+    .onlinePerson { display: block; overflow-wrap: anywhere; }
+    .onlineDot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 50%; background: #66e6a2; box-shadow: 0 0 7px #66e6a2; }
+    #mainWebsite[data-wallpaper="underwater"] .onlineList { border-color: var(--scene-accent); }
     .accountDialog[hidden], .accountSignedOut[hidden], .accountSignedIn[hidden] { display: none; }
     .accountDialog { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 18px; background: #100918dc; backdrop-filter: blur(10px); }
     .accountCard { position: relative; width: min(420px, 100%); padding: 29px; border: 1px solid #ffcadea6; border-radius: 25px; background: linear-gradient(150deg, #3a2343, #21162c); box-shadow: 0 24px 75px #0009; color: #fff4fa; }
@@ -755,6 +761,7 @@
           <a href="#story"><small>03</small>Our Story<span>↗</span></a>
         </div>
         <button class="accountMenuButton" id="accountButton" type="button" aria-haspopup="dialog">♡ Sign in</button>
+        <div class="onlineList" id="onlineList" aria-live="polite" hidden><strong>Here with us ♡</strong><div id="onlinePeople"></div></div>
         <button id="backToIntro" type="button">↶ Back to our cats</button>
       </nav>
     </div>
@@ -1345,7 +1352,7 @@
         });
       });
       later(3850, id, () => { intro.style.opacity = "0"; mainWebsite.classList.add("show"); });
-      later(4850, id, () => { intro.style.display = "none"; screen = "website"; });
+      later(4850, id, () => { intro.style.display = "none"; screen = "website"; window.setOurWorldPresenceActive?.(true); });
     }
     function requestEntry(event) {
       if (window.requestOurWorldEntry) window.requestOurWorldEntry(enterWebsite, event.currentTarget);
@@ -1353,6 +1360,7 @@
     catButton.addEventListener("click", requestEntry);
     introText.addEventListener("click", requestEntry);
     backButton.addEventListener("click", () => {
+      window.setOurWorldPresenceActive?.(false);
       ++transitionId;
       screen = "intro";
       introMusic.pause(); introMusic.currentTime = 0;
@@ -1856,6 +1864,8 @@
     const ACCOUNT_SUPABASE_URL = "https://djhhwdjgokzofkaemrpf.supabase.co";
     const ACCOUNT_SUPABASE_KEY = "sb_publishable_74Fr4c8T4OIKBgXED-sgsg_iUPBviG0";
     const accountButton = document.getElementById("accountButton");
+    const onlineList = document.getElementById("onlineList");
+    const onlinePeople = document.getElementById("onlinePeople");
     const accountDialog = document.getElementById("accountDialog");
     const accountTitle = document.getElementById("accountTitle");
     const accountClose = document.getElementById("accountClose");
@@ -1887,6 +1897,60 @@
     let accountUser = null;
     let accountReturnFocus = accountButton;
     let accountMode = "create";
+    let presenceChannel = null;
+    let presenceUserId = null;
+    let presenceActive = false;
+    let presenceGeneration = 0;
+    function renderOnlinePeople() {
+      if (!presenceChannel) return;
+      const people = new Map();
+      for (const connections of Object.values(presenceChannel.presenceState())) {
+        for (const person of connections) {
+          if (person.user_id && !people.has(person.user_id)) people.set(person.user_id, person.username || "Someone");
+        }
+      }
+      onlinePeople.replaceChildren();
+      for (const name of people.values()) {
+        const row = document.createElement("span");
+        row.className = "onlinePerson";
+        const dot = document.createElement("span");
+        dot.className = "onlineDot";
+        dot.setAttribute("aria-hidden", "true");
+        row.append(dot, document.createTextNode(`${name} is online`));
+        onlinePeople.append(row);
+      }
+      if (!people.size) onlinePeople.textContent = "Connecting…";
+    }
+    function updatePresence() {
+      const user = presenceActive ? accountUser : null;
+      if (!accountClient || !user) {
+        presenceGeneration++;
+        if (presenceChannel) accountClient?.removeChannel(presenceChannel);
+        presenceChannel = null;
+        presenceUserId = null;
+        onlineList.hidden = true;
+        onlinePeople.replaceChildren();
+        return;
+      }
+      onlineList.hidden = false;
+      if (presenceChannel && presenceUserId === user.id) {
+        if (presenceChannel.state === "joined") presenceChannel.track({ user_id: user.id, username: user.user_metadata?.username || "Someone" });
+        return;
+      }
+      if (presenceChannel) accountClient.removeChannel(presenceChannel);
+      const generation = ++presenceGeneration;
+      presenceUserId = user.id;
+      const channel = accountClient.channel("sayang-kita-online", { config: { presence: { key: user.id } } });
+      presenceChannel = channel;
+      onlinePeople.textContent = "Connecting…";
+      channel.on("presence", { event: "sync" }, () => { if (generation === presenceGeneration) renderOnlinePeople(); });
+      channel.subscribe(status => {
+        if (generation !== presenceGeneration) return;
+        if (status === "SUBSCRIBED") channel.track({ user_id: accountUser.id, username: accountUser.user_metadata?.username || "Someone" });
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") onlinePeople.textContent = "Online status unavailable";
+      });
+    }
+    window.setOurWorldPresenceActive = active => { presenceActive = active; updatePresence(); };
     function showAccountUser(user) {
       accountUser = user;
       accountSignedIn.hidden = !user;
@@ -1895,6 +1959,7 @@
       accountEmail.textContent = username || "Your account";
       accountEditUsername.value = username;
       accountButton.textContent = user ? `♡ ${username || "Account"}` : "♡ Sign in";
+      updatePresence();
     }
     function setAccountMode(mode) {
       accountMode = mode;

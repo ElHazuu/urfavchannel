@@ -729,27 +729,39 @@
     .accountModeTabs button[aria-selected="true"] { background: #ffb5d9; color: #2e1b2d; font-weight: 700; }
     .accountLink { display: block; margin-top: 12px; border: 0; padding-left: 0; text-decoration: underline; }
     .accountRecovery[hidden], .accountConfirmPassword[hidden], .accountUsernameField[hidden] { display: none; }
+    .messageDock { position: fixed; z-index: 79; right: 18px; bottom: 20px; display: flex; align-items: center; gap: 10px; padding: 7px 15px 7px 9px; min-height: 50px; border: 1px solid var(--theme-accent); border-radius: 999px; background: color-mix(in srgb, var(--theme-accent) 20%, var(--theme-surface)); color: var(--theme-text); box-shadow: 0 7px 25px #0006, 0 0 20px color-mix(in srgb, var(--theme-accent) 35%, transparent); backdrop-filter: blur(12px); cursor: pointer; transform: translateY(0); transition: transform .25s ease, box-shadow .25s ease; font-weight: 700; letter-spacing: .06em; }
+    .messageDock:hover, .messageDock:focus-visible { transform: translateY(-11px); box-shadow: 0 17px 34px #0007, 0 0 30px var(--theme-accent); }
+    .messageDock[hidden] { display: none; }
+    .messageDockIcon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: color-mix(in srgb, var(--theme-accent) 36%, transparent); font-size: 20px; }
+    .messageDock .messageBadge { float: none; }
     .messageMenuButton { display: block; width: calc(100% - 28px); margin: 7px 14px; padding: 11px 14px; border: 1px solid var(--theme-line); border-radius: 12px; background: var(--theme-surface); color: var(--theme-text); text-align: left; cursor: pointer; }
     .messageMenuButton[hidden], .messagePanel[hidden], .messageToast[hidden], .messageDrawTools[hidden] { display: none; }
     .messageBadge { float: right; min-width: 19px; padding: 1px 5px; border-radius: 12px; background: #ed6da5; color: white; text-align: center; font-size: 11px; }
     .messageBadge[hidden] { display: none; }
-    .messagePanel { position: fixed; z-index: 80; right: 18px; bottom: 18px; width: min(420px, calc(100vw - 36px)); max-height: min(78vh, 650px); display: flex; flex-direction: column; padding: 17px; border: 1px solid var(--theme-line); border-radius: 20px; background: var(--theme-surface); color: var(--theme-text); box-shadow: 0 20px 65px #0009; }
+    .messagePanel { position: fixed; z-index: 80; right: 18px; bottom: 82px; width: min(600px, calc(100vw - 36px)); height: min(730px, calc(100dvh - 108px)); min-height: min(390px, calc(100dvh - 108px)); display: flex; flex-direction: column; padding: 22px; border: 1px solid var(--theme-line); border-radius: 22px; background: var(--theme-surface); color: var(--theme-text); box-shadow: 0 20px 65px #0009; overflow-y: auto; animation: messageRise .3s ease-out both; }
+    @keyframes messageRise { from { opacity: .7; transform: translateY(38px); } to { opacity: 1; transform: translateY(0); } }
     .messagePanelHead { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
     .messagePanelHead h2 { margin: 0; font: 600 32px "Cormorant Garamond", Georgia, serif; }
     .messagePanel button { cursor: pointer; padding: 7px 11px; border: 1px solid var(--theme-line); border-radius: 10px; background: #ffe6f1; color: #35203b; }
     .messagePanel label { display: block; margin: 9px 0 5px; font-size: 12px; }
     .messagePanel select, .messagePanel textarea { width: 100%; padding: 9px; border: 1px solid var(--theme-line); border-radius: 9px; background: white; color: #251a2b; font: inherit; }
-    .messageHistory { min-height: 90px; max-height: 245px; overflow-y: auto; margin: 11px 0; padding: 9px; border: 1px solid var(--theme-line); border-radius: 10px; }
-    .messageBubble { max-width: 90%; width: fit-content; margin: 7px 0; padding: 8px 11px; border-radius: 12px; background: #ffe0f0; color: #332038; overflow-wrap: anywhere; white-space: pre-wrap; font-size: 13px; }
+    .messageHistory { flex: 1 1 auto; min-height: 110px; overflow-y: auto; margin: 12px 0; padding: 13px; border: 1px solid var(--theme-line); border-radius: 12px; overscroll-behavior: contain; }
+    .messageBubble { max-width: 90%; width: fit-content; margin: 7px 0; padding: 8px 11px; border-radius: 12px; background: #ffe0f0; color: #332038; overflow-wrap: anywhere; white-space: pre-wrap; font-size: 15px; line-height: 1.5; }
     .messageBubble.mine { margin-left: auto; background: #dcd5fa; }
     .messageBubble small { display: block; margin-bottom: 3px; opacity: .72; }
-    .messageBubble img { display: block; max-width: 100%; max-height: 180px; border-radius: 6px; background: white; }
+    .messageBubble img { display: block; max-width: 100%; max-height: 270px; border-radius: 6px; background: white; }
     .messageComposer textarea { min-height: 64px; max-height: 110px; resize: vertical; }
-    .messageTabs, .messageDrawTools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 8px 0; }
+    .messageTabs, .messageDrawTools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 7px 0; }
+    .messageDrawTools button[aria-pressed="true"] { background: #d58caf; color: #281429; border-color: #9c5980; }
+    .messageDrawTools label { margin: 0; }
+    .messageDrawTools input[type="range"] { width: 80px; }
+    .messageToolsRow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
     .messageCanvas { width: 100%; height: auto; aspect-ratio: 400 / 210; display: block; border: 1px solid #b18aa7; border-radius: 9px; background: white; touch-action: none; }
     .messageCanvas[hidden], .messageComposer textarea[hidden] { display: none; }
     .messageSend { margin-top: 9px; }
     .messageStatus { min-height: 1.1em; margin: 5px 0 0; font-size: 12px; }
+    @media (max-width: 520px) { .messagePanel { bottom: 74px; height: min(680px, calc(100dvh - 90px)); padding: 14px; } .messageDock { right: 15px; bottom: 14px; } .messageBubble { max-width: 95%; } }
+    @media (prefers-reduced-motion: reduce) { .messagePanel { animation: none; } .messageDock { transition: none; } }
     .messageToast { position: fixed; z-index: 81; right: 18px; bottom: 90px; width: min(320px, calc(100vw - 36px)); padding: 13px; border: 1px solid #ffb9d7; border-radius: 13px; background: #38213ef5; color: white; box-shadow: 0 10px 32px #0008; cursor: pointer; }
 </style>
 </head>
@@ -840,6 +852,7 @@
       <p class="notificationFeedback" id="notificationFeedback" role="status"></p>
       <div id="notificationList"></div>
     </div>
+    <button class="messageDock" id="messageDock" type="button" aria-label="Open messages" aria-controls="messagePanel" aria-expanded="false" hidden><span class="messageDockIcon" aria-hidden="true">✉</span><span>MESSAGES ♡</span><span class="messageBadge" id="messageDockBadge" hidden></span></button>
     <section class="messagePanel" id="messagePanel" aria-label="Private messages" hidden>
       <div class="messagePanelHead"><h2>Our messages ♡</h2><button id="messageClose" type="button" aria-label="Close messages">×</button></div>
       <label for="messageRecipient">Send to</label><select id="messageRecipient"></select>
@@ -848,7 +861,10 @@
         <div class="messageTabs"><button type="button" id="messageTextTab">Write ✎</button><button type="button" id="messageDrawTab">Paint ♡</button></div>
         <textarea id="messageText" maxlength="2000" placeholder="Write a little message…" aria-label="Write a message"></textarea>
         <canvas class="messageCanvas" id="messageCanvas" width="400" height="210" aria-label="Draw a message" hidden></canvas>
-        <div class="messageDrawTools" id="messageDrawTools" hidden><label for="messageColor">Color</label><input id="messageColor" type="color" value="#dc6094"><button type="button" id="messageClear">Clear drawing</button></div>
+        <div class="messageDrawTools" id="messageDrawTools" hidden>
+          <div class="messageToolsRow" role="group" aria-label="Paint tools"><button type="button" data-paint-tool="brush" aria-pressed="true">Brush</button><button type="button" data-paint-tool="marker" aria-pressed="false">Marker</button><button type="button" data-paint-tool="eraser" aria-pressed="false">Eraser</button><button type="button" data-paint-tool="fill" aria-pressed="false">Fill ▣</button></div>
+          <div class="messageToolsRow"><label for="messageColor">Color</label><input id="messageColor" type="color" value="#dc6094"><label for="messageBrushSize">Size</label><input id="messageBrushSize" type="range" min="2" max="28" value="5"><button type="button" id="messageUndo">Undo</button><button type="button" id="messageClear">Clear</button></div>
+        </div>
         <button class="messageSend" id="messageSend" type="submit">Send ♡</button>
       </form>
       <p class="messageStatus" id="messageStatus" role="status"></p>
@@ -2394,6 +2410,8 @@
     window.setOurWorldPresenceActive = active => { presenceActive = active; updatePresence(); };
     // Private messages stay in Supabase; Realtime makes new ones appear without a refresh.
     const messageOpen = document.getElementById("messageOpen");
+    const messageDock = document.getElementById("messageDock");
+    const messageDockBadge = document.getElementById("messageDockBadge");
     const messageBadge = document.getElementById("messageBadge");
     const messagePanel = document.getElementById("messagePanel");
     const messageClose = document.getElementById("messageClose");
@@ -2405,6 +2423,8 @@
     const messageCtx = messageCanvas.getContext("2d");
     const messageDrawTools = document.getElementById("messageDrawTools");
     const messageColor = document.getElementById("messageColor");
+    const messageBrushSize = document.getElementById("messageBrushSize");
+    const messageUndo = document.getElementById("messageUndo");
     const messageStatus = document.getElementById("messageStatus");
     const messageSend = document.getElementById("messageSend");
     const messageToast = document.getElementById("messageToast");
@@ -2413,6 +2433,43 @@
     let messageMode = "text";
     let messageDrawn = false;
     let messagePainting = false;
+    let paintTool = "brush";
+    let paintUndo = [];
+    function savePaintUndo() {
+      paintUndo.push({ image: messageCtx.getImageData(0, 0, messageCanvas.width, messageCanvas.height), drawn: messageDrawn });
+      if (paintUndo.length > 12) paintUndo.shift();
+      messageUndo.disabled = false;
+    }
+    function fillPaint(x, y) {
+      const w = messageCanvas.width, h = messageCanvas.height;
+      const image = messageCtx.getImageData(0, 0, w, h);
+      const data = image.data;
+      const px = Math.max(0, Math.min(w - 1, Math.floor(x)));
+      const py = Math.max(0, Math.min(h - 1, Math.floor(y)));
+      const origin = (py * w + px) * 4;
+      const target = [data[origin], data[origin + 1], data[origin + 2], data[origin + 3]];
+      const color = messageColor.value;
+      const fill = [1, 3, 5].map(i => parseInt(color.slice(i, i + 2), 16));
+      if (target.slice(0, 3).every((value, i) => Math.abs(value - fill[i]) < 8)) return false;
+      const visited = new Uint8Array(w * h);
+      const queue = new Int32Array(w * h);
+      let head = 0, tail = 0;
+      queue[tail++] = py * w + px;
+      visited[py * w + px] = 1;
+      while (head < tail) {
+        const pos = queue[head++], offset = pos * 4;
+        if (Math.abs(data[offset] - target[0]) > 12 || Math.abs(data[offset + 1] - target[1]) > 12 || Math.abs(data[offset + 2] - target[2]) > 12 || Math.abs(data[offset + 3] - target[3]) > 12) continue;
+        data[offset] = fill[0]; data[offset + 1] = fill[1]; data[offset + 2] = fill[2]; data[offset + 3] = 255;
+        const neighbors = [pos - 1, pos + 1, pos - w, pos + w];
+        for (let i = 0; i < 4; i++) {
+          const next = neighbors[i];
+          if (next < 0 || next >= w * h || (i === 0 && pos % w === 0) || (i === 1 && pos % w === w - 1) || visited[next]) continue;
+          visited[next] = 1; queue[tail++] = next;
+        }
+      }
+      messageCtx.putImageData(image, 0, 0);
+      return true;
+    }
     let messageChannel = null;
     let messageUserId = null;
     let messageGeneration = 0;
@@ -2436,7 +2493,10 @@
       const userId = accountUser?.id;
       const unread = messageRows.filter(item => item.recipient_id === userId && !item.read_at);
       messageBadge.hidden = !unread.length;
-      messageBadge.textContent = String(unread.length);
+      messageDockBadge.hidden = !unread.length;
+      messageBadge.textContent = messageDockBadge.textContent = String(unread.length);
+      const stayScrolled = messageHistory.scrollTop + messageHistory.clientHeight >= messageHistory.scrollHeight - 36;
+      const previousScroll = messageHistory.scrollTop;
       messageHistory.replaceChildren();
       const recipient = messageRecipient.value;
       if (!recipient) { messageHistory.textContent = "Choose a registered person to start ♡"; return; }
@@ -2460,7 +2520,7 @@
         }
         messageHistory.append(bubble);
       }
-      messageHistory.scrollTop = messageHistory.scrollHeight;
+      messageHistory.scrollTop = stayScrolled ? messageHistory.scrollHeight : previousScroll;
     }
     async function markConversationRead() {
       if (!accountUser || messagePanel.hidden || !messageRecipient.value) return;
@@ -2509,11 +2569,11 @@
         if (messageChannel) accountClient?.removeChannel(messageChannel);
         messageChannel = null; messageUserId = null; messageLoaded = false;
         messageRows = []; messageNames = new Map(); seenIncoming.clear();
-        messageOpen.hidden = true; messagePanel.hidden = true; messageToast.hidden = true;
+        messageOpen.hidden = true; messageDock.hidden = true; messagePanel.hidden = true; messageToast.hidden = true;
         messageBadge.hidden = true;
         return;
       }
-      messageOpen.hidden = false;
+      messageOpen.hidden = false; messageDock.hidden = false;
       if (messageChannel && messageUserId === user.id) { if (!messageLoaded) loadMessages(); return; }
       if (messageChannel) accountClient.removeChannel(messageChannel);
       ++messageGeneration;
@@ -2527,14 +2587,18 @@
       channel.subscribe(status => { if (status === "SUBSCRIBED" && accountUser?.id === user.id) loadMessages(); });
       loadMessages();
     }
-    messageOpen.addEventListener("click", () => {
+    function openMessages() {
       messagePanel.hidden = false;
+      messageDock.setAttribute("aria-expanded", "true");
       messageToast.hidden = true;
       loadMessages();
-      messagePanel.querySelector("h2").focus?.();
-    });
-    messageClose.addEventListener("click", () => { messagePanel.hidden = true; messageOpen.focus(); });
-    messageToast.addEventListener("click", () => { messageOpen.click(); });
+      messageRecipient.focus();
+    }
+    function closeMessages() { messagePanel.hidden = true; messageDock.setAttribute("aria-expanded", "false"); messageDock.focus(); }
+    messageOpen.addEventListener("click", openMessages);
+    messageDock.addEventListener("click", () => messagePanel.hidden ? openMessages() : closeMessages());
+    messageClose.addEventListener("click", closeMessages);
+    messageToast.addEventListener("click", openMessages);
     messageRecipient.addEventListener("change", () => { renderMessages(); markConversationRead(); });
     document.getElementById("messageTextTab").addEventListener("click", () => {
       messageMode = "text"; messageText.hidden = false; messageCanvas.hidden = true; messageDrawTools.hidden = true;
@@ -2542,28 +2606,54 @@
     document.getElementById("messageDrawTab").addEventListener("click", () => {
       messageMode = "drawing"; messageText.hidden = true; messageCanvas.hidden = false; messageDrawTools.hidden = false;
     });
-    document.getElementById("messageClear").addEventListener("click", clearMessageCanvas);
+    messageDrawTools.querySelectorAll("[data-paint-tool]").forEach(button => button.addEventListener("click", () => {
+      paintTool = button.dataset.paintTool;
+      messageDrawTools.querySelectorAll("[data-paint-tool]").forEach(tool => tool.setAttribute("aria-pressed", String(tool === button)));
+      messageCanvas.style.cursor = paintTool === "fill" ? "cell" : "crosshair";
+    }));
+    messageUndo.disabled = true;
+    messageUndo.addEventListener("click", () => {
+      const previous = paintUndo.pop();
+      if (!previous) return;
+      messageCtx.putImageData(previous.image, 0, 0);
+      messageDrawn = previous.drawn;
+      messageUndo.disabled = !paintUndo.length;
+    });
+    document.getElementById("messageClear").addEventListener("click", () => { savePaintUndo(); clearMessageCanvas(); });
     function canvasPoint(event) {
       const box = messageCanvas.getBoundingClientRect();
       return { x: (event.clientX - box.left) * messageCanvas.width / box.width,
         y: (event.clientY - box.top) * messageCanvas.height / box.height };
     }
     messageCanvas.addEventListener("pointerdown", event => {
-      event.preventDefault(); messageCanvas.setPointerCapture(event.pointerId);
+      event.preventDefault();
       const point = canvasPoint(event);
+      if (paintTool === "fill") {
+        savePaintUndo();
+        if (fillPaint(point.x, point.y)) messageDrawn = true;
+        else { paintUndo.pop(); messageUndo.disabled = !paintUndo.length; }
+        return;
+      }
+      savePaintUndo();
+      messageCanvas.setPointerCapture(event.pointerId);
+      const size = Number(messageBrushSize.value);
+      messageCtx.globalAlpha = paintTool === "marker" ? .35 : 1;
+      messageCtx.fillStyle = paintTool === "eraser" ? "#ffffff" : messageColor.value;
+      messageCtx.beginPath(); messageCtx.arc(point.x, point.y, size / 2, 0, Math.PI * 2); messageCtx.fill();
       messageCtx.beginPath(); messageCtx.moveTo(point.x, point.y);
-      messageCtx.fillStyle = messageColor.value;
-      messageCtx.beginPath(); messageCtx.arc(point.x, point.y, 2.5, 0, Math.PI * 2); messageCtx.fill();
-      messageCtx.beginPath(); messageCtx.moveTo(point.x, point.y);
+      messageCtx.globalAlpha = 1;
       messagePainting = true; messageDrawn = true;
     });
     messageCanvas.addEventListener("pointermove", event => {
       if (!messagePainting) return;
       event.preventDefault();
       const point = canvasPoint(event);
-      messageCtx.lineWidth = 5; messageCtx.lineCap = "round"; messageCtx.lineJoin = "round";
-      messageCtx.strokeStyle = messageColor.value;
+      messageCtx.lineWidth = Number(messageBrushSize.value);
+      messageCtx.lineCap = "round"; messageCtx.lineJoin = "round";
+      messageCtx.strokeStyle = paintTool === "eraser" ? "#ffffff" : messageColor.value;
+      messageCtx.globalAlpha = paintTool === "marker" ? .35 : 1;
       messageCtx.lineTo(point.x, point.y); messageCtx.stroke();
+      messageCtx.globalAlpha = 1;
     });
     for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) messageCanvas.addEventListener(type, () => { messagePainting = false; });
     messageForm.addEventListener("submit", async event => {
@@ -2581,11 +2671,11 @@
       });
       messageSend.disabled = false;
       messageStatus.textContent = error ? error.message : "Sent ♡";
-      if (!error) { messageText.value = ""; clearMessageCanvas(); loadMessages(); }
+      if (!error) { messageText.value = ""; clearMessageCanvas(); paintUndo = []; messageUndo.disabled = true; loadMessages(); }
     });
     window.addEventListener("focus", () => { if (accountUser) loadMessages(); });
     setInterval(() => { if (accountUser && !document.hidden) loadMessages(); }, 45000);
-    document.addEventListener("keydown", event => { if (event.key === "Escape" && !messagePanel.hidden) messagePanel.hidden = true; });
+    document.addEventListener("keydown", event => { if (event.key === "Escape" && !messagePanel.hidden) closeMessages(); });
     function showAccountUser(user) {
       accountUser = user;
       accountSignedIn.hidden = !user;

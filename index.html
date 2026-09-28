@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v37">
+<meta name="site-build" content="cinta-kita-v38">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -552,30 +552,10 @@
       border: 1px solid #d7ffffb8; border-radius: 50%; background: radial-gradient(circle at 30% 25%, #fff9, transparent 35%);
       pointer-events: none; animation: seaClickRise 1.8s ease-out forwards; }
     @keyframes seaClickRise { to { opacity: 0; transform: translate(var(--drift), -150px) scale(1.5); } }
-    .seaPearl { display: none; position: fixed; z-index: 44; right: 26px; bottom: 25px; width: 68px; height: 57px;
-      border: 1px solid #b7faffba; border-radius: 58% 58% 48% 48%; background: linear-gradient(160deg, #75d9e5, #187692);
-      color: #fff; cursor: pointer; box-shadow: 0 7px 22px #052d4b9c, inset 0 -8px 0 #0e4c77;
-      animation: pearlFloat 3.6s ease-in-out infinite alternate; }
-    .seaPearl::before { content: ""; position: absolute; left: 21px; top: 5px; width: 25px; height: 25px; border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, white, #dcfaff 52%, #8dcbd9); box-shadow: 0 0 17px #dbffff; }
-    .seaPearl span { position: relative; top: 14px; font: 700 9px "DM Sans", Arial, sans-serif; letter-spacing: .06em; }
-    #mainWebsite[data-wallpaper="underwater"] .seaPearl { display: block; }
-    .seaPearl:hover { filter: brightness(1.2); }
-    .seaPearl:focus-visible { outline: 3px solid white; outline-offset: 4px; }
-    @keyframes pearlFloat { to { transform: translateY(-7px); } }
-    .seaPearlMessage[hidden] { display: none; }
-    .seaPearlMessage { position: fixed; inset: 0; z-index: 89; display: grid; place-items: center; padding: 22px;
-      background: #052a49cb; backdrop-filter: blur(7px); }
-    .seaPearlCard { width: min(460px, 100%); padding: 42px 30px 28px; border: 1px solid #b4f8ffb8; border-radius: 28px;
-      background: radial-gradient(circle at 50% 0%, #69ced683, transparent 65%), #103c5c; color: #f4ffff;
-      text-align: center; box-shadow: 0 25px 85px #001b32c9, 0 0 42px #a0efff57; }
-    .seaPearlCard .pearlIcon { display: block; margin-bottom: 12px; font-size: 37px; text-shadow: 0 0 18px #c9ffff; }
-    .seaPearlCard p { font: 500 clamp(29px, 5vw, 42px)/1.15 "Cormorant Garamond", Georgia, serif; }
-    .seaPearlCard button { padding: 10px 24px; border: 1px solid #a9f5ff; border-radius: 50px; background: #c5f7f5; color: #114259; cursor: pointer; }
     #mainWebsite[data-wallpaper="underwater"] .videoCard { background: #123e5eed; color: #f4fdff; }
     #mainWebsite[data-wallpaper="underwater"] .cardText p { color: #d3f4f8; }
     @media (prefers-reduced-motion: reduce) {
-      .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .seaPearl, .squidDrifter, .glowSquid, .squidFamilyDrifter, .squidFamilyDrifter::before, .squidFamilyDrifter::after, .squidFamilyDrifter img, .nautilusDrifter, .nautilusDrifter::after, .nautilusDrifter img, .zombieNautilus { animation: none !important; }
+      .underseaBackdrop::before, .underseaBackdrop::after, .seaBubble, .squidDrifter, .glowSquid, .squidFamilyDrifter, .squidFamilyDrifter::before, .squidFamilyDrifter::after, .squidFamilyDrifter img, .nautilusDrifter, .nautilusDrifter::after, .nautilusDrifter img, .zombieNautilus { animation: none !important; }
       .squidFamilyDrifter { left: 18%; }
       #mainWebsite .zombieNautilus { display: none !important; }
       #mainWebsite[data-wallpaper="underwater"] .galleryChase,
@@ -1096,13 +1076,6 @@
       <p class="messageStatus" id="messageStatus" role="status"></p>
     </section>
     <button class="messageToast" id="messageToast" type="button" hidden></button>
-    <button class="seaPearl" id="seaPearl" type="button" aria-label="Open a secret message in the pearl"><span>OPEN ME</span></button>
-    <div class="seaPearlMessage" id="seaPearlMessage" role="dialog" aria-modal="true" aria-label="Message in a pearl" hidden>
-      <div class="seaPearlCard"><span class="pearlIcon" aria-hidden="true">✧</span>
-        <p>Even in the deepest ocean, I would always find my way back to you. ♡</p>
-        <button id="closeSeaPearl" type="button">Close the pearl</button>
-      </div>
-    </div>
     <span class="notificationHint" id="notificationHint" hidden>New updates are waiting ♡</span>
     <section class="welcomeSection" id="home" data-wallpaper="original">
       <span class="originalShootingStar" aria-hidden="true"></span>
@@ -2085,9 +2058,6 @@
   const squidHabitat = document.getElementById("squidHabitat");
   const squidFamilyHabitat = document.getElementById("squidFamilyHabitat");
   const nautilusHabitat = document.getElementById("nautilusHabitat");
-  const pearl = document.getElementById("seaPearl");
-  const message = document.getElementById("seaPearlMessage");
-  const close = document.getElementById("closeSeaPearl");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   // The 36 original frames are packed into one looping image to keep this file smaller.
@@ -2246,13 +2216,6 @@
     }
   });
 
-  function closeMessage() { message.hidden = true; pearl.focus(); }
-  pearl.addEventListener("click", () => { message.hidden = false; close.focus(); });
-  close.addEventListener("click", closeMessage);
-  message.addEventListener("click", event => { if (event.target === message) closeMessage(); });
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && !message.hidden) closeMessage();
-  });
 })();
 </script>
 

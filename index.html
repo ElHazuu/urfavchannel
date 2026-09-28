@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v35">
+<meta name="site-build" content="cinta-kita-v36">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1712,6 +1712,18 @@
       later(3850, id, () => { intro.style.opacity = "0"; mainWebsite.classList.add("show"); });
       later(4850, id, () => { intro.style.display = "none"; screen = "website"; window.setOurWorldPresenceActive?.(true); });
     }
+    window.resumeOurWorldAfterUpdate = () => {
+      if (screen === "website") return;
+      ++transitionId;
+      stopDance();
+      introMusic.pause();
+      intro.classList.remove("loving", "breezy");
+      intro.style.display = "none";
+      mainWebsite.classList.add("show");
+      screen = "website";
+      window.scrollTo(0, 0);
+      window.setOurWorldPresenceActive?.(true);
+    };
     function requestEntry(event) {
       if (window.requestOurWorldEntry) window.requestOurWorldEntry(enterWebsite, event.currentTarget);
     }
@@ -3069,6 +3081,7 @@
       messageNames = new Map(profiles.data.map(person => [person.id, person.username]));
       profileRecords = new Map(profiles.data.map(person => [person.id, person]));
       refreshProfileView();
+      renderOnlinePeople();
       const selected = messageRecipient.value;
       messageRecipient.replaceChildren();
       for (const [id, name] of [...messageNames].filter(([id]) => id !== userId).sort((a, b) => a[1].localeCompare(b[1]))) {
@@ -3129,16 +3142,31 @@
       channel.subscribe(status => { if (status === "SUBSCRIBED" && accountUser?.id === user.id) loadMessages(); });
       loadMessages();
     }
+    let messageLastInteraction = Date.now();
+    function noteMessageInteraction() { messageLastInteraction = Date.now(); }
+    for (const type of ["pointerdown", "keydown", "input", "wheel", "touchstart", "scroll"]) {
+      messagePanel.addEventListener(type, noteMessageInteraction, { passive: true });
+    }
+    let lastMessagePointerSample = 0;
+    messagePanel.addEventListener("pointermove", event => {
+      if (event.pointerType === "mouse" && Date.now() - lastMessagePointerSample >= 1000) {
+        lastMessagePointerSample = Date.now(); noteMessageInteraction();
+      }
+    }, { passive: true });
+    setInterval(() => {
+      if (!messagePanel.hidden && Date.now() - messageLastInteraction >= 60000) closeMessages(false);
+    }, 5000);
     function openMessages() {
+      noteMessageInteraction();
       messagePanel.hidden = false;
       messageDock.setAttribute("aria-expanded", "true");
       messageToast.hidden = true;
       loadMessages().then(() => (messagePeople.querySelector(".messagePerson") || messageClose).focus());
     }
-    function closeMessages() { messagePanel.hidden = true; messageDock.setAttribute("aria-expanded", "false"); messageDock.focus(); }
+    function closeMessages(restoreFocus = true) { messagePanel.hidden = true; messageDock.setAttribute("aria-expanded", "false"); if (restoreFocus) messageDock.focus(); }
     messageOpen.addEventListener("click", openMessages);
     messageDock.addEventListener("click", () => messagePanel.hidden ? openMessages() : closeMessages());
-    messageClose.addEventListener("click", closeMessages);
+    messageClose.addEventListener("click", () => closeMessages());
     messageToast.addEventListener("click", openMessages);
     messageRecipient.addEventListener("change", () => { editingMessageId = null; editingMessageDraft = ""; renderMessages(); markConversationRead(); });
     messageHiddenToggle.addEventListener("click", () => {
@@ -3427,6 +3455,15 @@
       accountEditUsername.value = username;
       accountButton.textContent = user ? `✦ My Profile · ${username || "Account"}` : "♡ Sign in";
       if (!user && !profileDialog.hidden) closeProfile();
+      if (user) {
+        try {
+          const resumedAt = Number(sessionStorage.getItem("cintaKitaResumeAfterUpdate"));
+          if (resumedAt && Date.now() - resumedAt < 10 * 60 * 1000) {
+            sessionStorage.removeItem("cintaKitaResumeAfterUpdate");
+            window.resumeOurWorldAfterUpdate?.();
+          } else if (resumedAt) sessionStorage.removeItem("cintaKitaResumeAfterUpdate");
+        } catch (_error) {}
+      }
       syncSiteLock();
       updatePresence();
       setTimeout(syncVideoAccess, 0);
@@ -3588,6 +3625,10 @@
       function openNewVersion() {
         const destination = new URL(location.href);
         destination.searchParams.set("site-update", pendingBuild);
+        if (document.getElementById("intro").style.display === "none") {
+          try { sessionStorage.setItem("cintaKitaResumeAfterUpdate", String(Date.now())); } catch (_error) {}
+          destination.hash = "home";
+        }
         location.replace(destination.href);
       }
       function maybeReload() { if (safeToReload()) openNewVersion(); }

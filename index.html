@@ -677,7 +677,7 @@
     .accountModeTabs button, .accountLink { border: 1px solid #ffcae288; border-radius: 999px; padding: 9px 13px; background: transparent; color: #fff4fa; cursor: pointer; }
     .accountModeTabs button[aria-selected="true"] { background: #ffb5d9; color: #2e1b2d; font-weight: 700; }
     .accountLink { display: block; margin-top: 12px; border: 0; padding-left: 0; text-decoration: underline; }
-    .accountRecovery[hidden], .accountConfirmPassword[hidden] { display: none; }
+    .accountRecovery[hidden], .accountConfirmPassword[hidden], .accountUsernameField[hidden] { display: none; }
 </style>
 </head>
 <body>
@@ -835,6 +835,10 @@
           <button id="accountSignInTab" type="button" role="tab" aria-selected="false">Sign in</button>
         </div>
         <form id="accountForm">
+          <div class="accountUsernameField" id="accountUsernameField">
+            <label for="accountUsernameInput">Username</label>
+            <input id="accountUsernameInput" name="username" type="text" autocomplete="nickname" minlength="2" maxlength="24" pattern="[A-Za-z0-9_]+" title="Use 2–24 letters, numbers, or underscores" required>
+          </div>
           <label for="accountEmailInput">Email address</label>
           <input id="accountEmailInput" name="email" type="email" autocomplete="email" required>
           <label for="accountPasswordInput">Password</label>
@@ -857,6 +861,11 @@
       </div>
       <div class="accountSignedIn" id="accountSignedIn" hidden>
         <p>Signed in as <span class="accountEmail" id="accountEmail"></span></p>
+        <form id="accountUsernameForm">
+          <label for="accountEditUsername">Username</label>
+          <input id="accountEditUsername" type="text" autocomplete="nickname" minlength="2" maxlength="24" pattern="[A-Za-z0-9_]+" title="Use 2–24 letters, numbers, or underscores" required>
+          <button class="accountAction" id="accountSaveUsername" type="submit">Save username</button>
+        </form>
         <button class="accountAction" id="accountSignOut" type="button">Sign out</button>
       </div>
       <p class="accountFeedback" id="accountFeedback" role="status" aria-live="polite"></p>
@@ -1847,6 +1856,11 @@
     const accountClose = document.getElementById("accountClose");
     const accountForm = document.getElementById("accountForm");
     const accountEmailInput = document.getElementById("accountEmailInput");
+    const accountUsernameField = document.getElementById("accountUsernameField");
+    const accountUsernameInput = document.getElementById("accountUsernameInput");
+    const accountUsernameForm = document.getElementById("accountUsernameForm");
+    const accountEditUsername = document.getElementById("accountEditUsername");
+    const accountSaveUsername = document.getElementById("accountSaveUsername");
     const accountSend = document.getElementById("accountSend");
     const accountFeedback = document.getElementById("accountFeedback");
     const accountSignedOut = document.getElementById("accountSignedOut");
@@ -1872,8 +1886,10 @@
       accountUser = user;
       accountSignedIn.hidden = !user;
       accountSignedOut.hidden = !!user;
-      accountEmail.textContent = user?.email || "";
-      accountButton.textContent = user ? `♡ ${user.email}` : "♡ Sign in";
+      const username = user?.user_metadata?.username || "";
+      accountEmail.textContent = username || "Your account";
+      accountEditUsername.value = username;
+      accountButton.textContent = user ? `♡ ${username || "Account"}` : "♡ Sign in";
     }
     function setAccountMode(mode) {
       accountMode = mode;
@@ -1882,6 +1898,8 @@
       accountSignInTab.setAttribute("aria-selected", String(!creating));
       accountConfirmPassword.hidden = !creating;
       accountConfirmInput.required = creating;
+      accountUsernameField.hidden = !creating;
+      accountUsernameInput.required = creating;
       accountPasswordInput.autocomplete = creating ? "new-password" : "current-password";
       accountSend.textContent = creating ? "Create account" : "Sign in";
       accountForgot.hidden = creating;
@@ -1943,7 +1961,7 @@
         const email = accountEmailInput.value.trim();
         const password = accountPasswordInput.value;
         const { data, error } = accountMode === "create"
-          ? await accountClient.auth.signUp({ email, password, options: { emailRedirectTo: location.href.split(/[?#]/)[0] } })
+          ? await accountClient.auth.signUp({ email, password, options: { emailRedirectTo: location.href.split(/[?#]/)[0], data: { username: accountUsernameInput.value.trim() } } })
           : await accountClient.auth.signInWithPassword({ email, password });
         if (error) accountFeedback.textContent = error.message;
         else if (accountMode === "create" && !data.session) {
@@ -1970,6 +1988,15 @@
         redirectTo: location.href.split(/[?#]/)[0]
       });
       accountFeedback.textContent = error ? error.message : "Check your email for a password reset link ♡";
+    });
+    accountUsernameForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!accountClient || !accountUser) return;
+      accountSaveUsername.disabled = true;
+      const { data, error } = await accountClient.auth.updateUser({ data: { username: accountEditUsername.value.trim() } });
+      accountSaveUsername.disabled = false;
+      accountFeedback.textContent = error ? error.message : "Username saved ♡";
+      if (!error) showAccountUser(data.user);
     });
     accountRecoveryForm.addEventListener("submit", async event => {
       event.preventDefault();

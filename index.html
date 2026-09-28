@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v40">
+<meta name="site-build" content="cinta-kita-v41">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -500,6 +500,9 @@
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .nautilusHabitat { display: block; }
     .monumentHabitat { display: none; position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"] .monumentHabitat { display: block; }
+    .coralTower { display: none; position: fixed; left: clamp(0px, 2vw, 32px); bottom: -5px; z-index: 0; width: clamp(150px, 24vw, 340px); max-height: 55vh; object-fit: contain; object-position: bottom left; pointer-events: none; filter: drop-shadow(0 15px 18px #000b) drop-shadow(0 0 13px #43cad854); }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .coralTower { display: block; }
+    @media (max-width: 600px) { .coralTower { width: min(40vw, 210px); max-height: 36vh; left: 0; } }
     .oceanMonument { position: absolute; top: 44%; left: 50%; width: min(82vw, 700px); height: auto; transform: translateX(-50%); opacity: .38; filter: drop-shadow(0 25px 38px #0529449c); }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .oceanMonument { opacity: .075; filter: brightness(.38); }
     .monumentLantern { fill: #b7faff; filter: drop-shadow(0 0 8px #83f5ff); }
@@ -1003,6 +1006,7 @@
 
   <main id="mainWebsite">
     <div class="underseaBackdrop" id="underseaBackdrop" aria-hidden="true"></div>
+    <img class="coralTower" src="Tower of Coral.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
     <div class="monumentHabitat" aria-hidden="true">
       <svg class="oceanMonument" viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>

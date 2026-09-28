@@ -729,8 +729,8 @@
     .accountModeTabs button[aria-selected="true"] { background: #ffb5d9; color: #2e1b2d; font-weight: 700; }
     .accountLink { display: block; margin-top: 12px; border: 0; padding-left: 0; text-decoration: underline; }
     .accountRecovery[hidden], .accountConfirmPassword[hidden], .accountUsernameField[hidden] { display: none; }
-    .messageDock { position: fixed; z-index: 79; right: 18px; bottom: 20px; display: flex; align-items: center; gap: 10px; padding: 7px 15px 7px 9px; min-height: 50px; border: 1px solid var(--theme-accent); border-radius: 999px; background: color-mix(in srgb, var(--theme-accent) 20%, var(--theme-surface)); color: var(--theme-text); box-shadow: 0 7px 25px #0006, 0 0 20px color-mix(in srgb, var(--theme-accent) 35%, transparent); backdrop-filter: blur(12px); cursor: pointer; transform: translateY(0); transition: transform .25s ease, box-shadow .25s ease; font-weight: 700; letter-spacing: .06em; }
-    .messageDock:hover, .messageDock:focus-visible { transform: translateY(-11px); box-shadow: 0 17px 34px #0007, 0 0 30px var(--theme-accent); }
+    .messageDock { position: fixed; z-index: 79; right: 18px; bottom: 20px; display: flex; align-items: center; gap: 10px; padding: 7px 15px 7px 9px; min-height: 50px; border: 1px solid var(--theme-accent); border-radius: 999px; background: color-mix(in srgb, var(--theme-accent) 20%, var(--theme-surface)); color: var(--theme-text); box-shadow: 0 7px 25px #0006, 0 0 20px color-mix(in srgb, var(--theme-accent) 35%, transparent); backdrop-filter: blur(12px); cursor: pointer; transform: translateY(var(--message-y, 0px)); transition: transform .2s ease, box-shadow .25s ease; font-weight: 700; letter-spacing: .06em; }
+    .messageDock:hover, .messageDock:focus-visible { transform: translateY(calc(var(--message-y, 0px) - 11px)); box-shadow: 0 17px 34px #0007, 0 0 30px var(--theme-accent); }
     .messageDock[hidden] { display: none; }
     .messageDockIcon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: color-mix(in srgb, var(--theme-accent) 36%, transparent); font-size: 20px; }
     .messageDock .messageBadge { float: none; }
@@ -750,6 +750,8 @@
     .messageBubble.mine { margin-left: auto; background: #dcd5fa; }
     .messageBubble small { display: block; margin-bottom: 3px; opacity: .72; }
     .messageBubble img { display: block; max-width: 100%; max-height: 270px; border-radius: 6px; background: white; }
+    .messageBubble .messageByline { display: flex; align-items: center; gap: 7px; min-height: 31px; }
+    .messageBubble .messageAvatar { width: 30px; height: 30px; flex: none; object-fit: contain; background: transparent; border-radius: 50%; }
     .messageComposer textarea { min-height: 64px; max-height: 110px; resize: vertical; }
     .messageTabs, .messageDrawTools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 7px 0; }
     .messageDrawTools button[aria-pressed="true"] { background: #d58caf; color: #281429; border-color: #9c5980; }
@@ -2412,6 +2414,26 @@
     const messageOpen = document.getElementById("messageOpen");
     const messageDock = document.getElementById("messageDock");
     const messageDockBadge = document.getElementById("messageDockBadge");
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      let lastMessageScrollY = window.scrollY, messageOffset = 0, messageVelocity = 0, messageSpringFrame = 0;
+      function messageSpringStep() {
+        messageVelocity = (messageVelocity - messageOffset * .16) * .78;
+        messageOffset += messageVelocity;
+        messageDock.style.setProperty("--message-y", `${messageOffset.toFixed(2)}px`);
+        if (Math.abs(messageOffset) < .1 && Math.abs(messageVelocity) < .1) {
+          messageDock.style.setProperty("--message-y", "0px");
+          messageOffset = messageVelocity = messageSpringFrame = 0;
+          return;
+        }
+        messageSpringFrame = requestAnimationFrame(messageSpringStep);
+      }
+      window.addEventListener("scroll", () => {
+        const y = window.scrollY;
+        messageVelocity = Math.max(-18, Math.min(18, messageVelocity + (y - lastMessageScrollY) * .14));
+        lastMessageScrollY = y;
+        if (!messageSpringFrame) messageSpringFrame = requestAnimationFrame(messageSpringStep);
+      }, { passive: true });
+    }
     const messageBadge = document.getElementById("messageBadge");
     const messagePanel = document.getElementById("messagePanel");
     const messageClose = document.getElementById("messageClose");
@@ -2508,7 +2530,19 @@
         const bubble = document.createElement("div");
         bubble.className = `messageBubble${item.sender_id === userId ? " mine" : ""}`;
         const byline = document.createElement("small");
-        byline.textContent = `${item.sender_id === userId ? "You" : messageNames.get(item.sender_id) || "Someone"} · ${new Date(item.created_at).toLocaleString()}`;
+        byline.className = "messageByline";
+        const senderName = messageNames.get(item.sender_id) || (item.sender_id === userId ? accountUser?.user_metadata?.username : "Someone") || "Someone";
+        const catColor = item.sender_id === "7a5e0845-24be-4ac0-b881-6aff2a8332f5" || /^elha+zu+$/.test(senderName.toLowerCase())
+          ? "grey" : senderName.toLowerCase() === "urfavnay" ? "beige" : null;
+        if (catColor) {
+          const avatar = document.createElement("img");
+          avatar.className = "messageAvatar";
+          avatar.src = `${catColor}-online.png`;
+          avatar.alt = "";
+          avatar.setAttribute("aria-hidden", "true");
+          byline.append(avatar);
+        }
+        byline.append(document.createTextNode(`${senderName} · ${new Date(item.created_at).toLocaleString()}`));
         bubble.append(byline);
         if (item.kind === "drawing") {
           const img = document.createElement("img");

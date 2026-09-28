@@ -1902,41 +1902,50 @@
     let presenceUserId = null;
     let presenceActive = false;
     let presenceGeneration = 0;
+    let registeredPeople = new Map();
+    let profilesLoaded = false;
+    let profileRefreshTimer = null;
     function renderOnlinePeople() {
       if (!presenceChannel) return;
-      const people = new Map();
+      if (!profilesLoaded) { onlinePeople.textContent = "Loading accounts…"; return; }
+      const onlineIds = new Set();
       for (const connections of Object.values(presenceChannel.presenceState())) {
         for (const person of connections) {
-          if (person.user_id && !people.has(person.user_id)) people.set(person.user_id, person.username || "Someone");
+          if (person.user_id) onlineIds.add(person.user_id);
         }
       }
       onlinePeople.replaceChildren();
-      const elhazuuOnline = [...people.values()].some(name => name.toLowerCase() === "elhazuu");
-      const elhazuuRow = document.createElement("span");
-      elhazuuRow.className = `onlinePerson${elhazuuOnline ? "" : " offline"}`;
-      const elhazuuDot = document.createElement("span");
-      elhazuuDot.className = "onlineDot";
-      elhazuuDot.setAttribute("aria-hidden", "true");
-      elhazuuRow.append(elhazuuDot, document.createTextNode(`ElHazuu is ${elhazuuOnline ? "online" : "Offline"}`));
-      onlinePeople.append(elhazuuRow);
-      for (const name of people.values()) {
-        if (name.toLowerCase() === "elhazuu") continue;
+      for (const [id, name] of [...registeredPeople].sort((a, b) => a[1].localeCompare(b[1]))) {
+        const isOnline = onlineIds.has(id);
         const row = document.createElement("span");
-        row.className = "onlinePerson";
+        row.className = `onlinePerson${isOnline ? "" : " offline"}`;
         const dot = document.createElement("span");
         dot.className = "onlineDot";
         dot.setAttribute("aria-hidden", "true");
-        row.append(dot, document.createTextNode(`${name} is online`));
+        row.append(dot, document.createTextNode(`${name} is ${isOnline ? "online" : "Offline"}`));
         onlinePeople.append(row);
       }
+      if (!registeredPeople.size) onlinePeople.textContent = "No registered usernames yet";
+    }
+    async function loadRegisteredPeople(generation) {
+      const { data, error } = await accountClient.from("site_profiles").select("id,username");
+      if (generation !== presenceGeneration) return;
+      if (error) { onlinePeople.textContent = "Registered accounts unavailable"; return; }
+      registeredPeople = new Map(data.filter(person => person.username).map(person => [person.id, person.username]));
+      profilesLoaded = true;
+      renderOnlinePeople();
     }
     function updatePresence() {
       const user = presenceActive ? accountUser : null;
       if (!accountClient || !user) {
         presenceGeneration++;
+        clearInterval(profileRefreshTimer);
+        profileRefreshTimer = null;
         if (presenceChannel) accountClient?.removeChannel(presenceChannel);
         presenceChannel = null;
         presenceUserId = null;
+        registeredPeople = new Map();
+        profilesLoaded = false;
         onlineList.hidden = true;
         onlinePeople.replaceChildren();
         return;
@@ -1944,14 +1953,19 @@
       onlineList.hidden = false;
       if (presenceChannel && presenceUserId === user.id) {
         if (presenceChannel.state === "joined") presenceChannel.track({ user_id: user.id, username: user.user_metadata?.username || "Someone" });
+        loadRegisteredPeople(presenceGeneration);
         return;
       }
       if (presenceChannel) accountClient.removeChannel(presenceChannel);
+      clearInterval(profileRefreshTimer);
       const generation = ++presenceGeneration;
       presenceUserId = user.id;
       const channel = accountClient.channel("sayang-kita-online", { config: { presence: { key: user.id } } });
       presenceChannel = channel;
-      onlinePeople.textContent = "Connecting…";
+      profilesLoaded = false;
+      onlinePeople.textContent = "Loading accounts…";
+      loadRegisteredPeople(generation);
+      profileRefreshTimer = setInterval(() => loadRegisteredPeople(generation), 30000);
       channel.on("presence", { event: "sync" }, () => { if (generation === presenceGeneration) renderOnlinePeople(); });
       channel.subscribe(status => {
         if (generation !== presenceGeneration) return;

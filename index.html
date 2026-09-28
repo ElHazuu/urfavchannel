@@ -1954,6 +1954,8 @@
     let videoRows = [];
     let editingVideoId = null;
     let videoAccessGeneration = 0;
+    let renderedPublishedSignature = null;
+    let renderedManagerSignature = null;
     function youtubeIdFromLink(value) {
       try {
         const url = new URL(value.trim());
@@ -1976,6 +1978,9 @@
     }
     function renderVideos() {
       const published = videoRows.filter(video => video.published);
+      const publishedSignature = JSON.stringify(published.map(video => [video.id, video.youtube_id, video.title, video.description]));
+      if (publishedSignature !== renderedPublishedSignature) {
+      renderedPublishedSignature = publishedSignature;
       videoGrid.replaceChildren();
       published.forEach((video, index) => {
         const card = document.createElement("div");
@@ -2007,6 +2012,10 @@
         videoGrid.append(empty);
       }
       window.updateLatestVideoNotice?.(published[0]?.id || "");
+      }
+      const managerSignature = JSON.stringify([videoOwner, videoRows.map(video => [video.id, video.title, video.youtube_id, video.description, video.published])]);
+      if (managerSignature === renderedManagerSignature) return;
+      renderedManagerSignature = managerSignature;
       videoManageList.replaceChildren();
       if (!videoOwner) return;
       for (const video of videoRows) {
@@ -2072,6 +2081,8 @@
         videoManageToggle.hidden = true;
         videoManager.hidden = true;
         videoRows = [];
+        renderedPublishedSignature = null;
+        renderedManagerSignature = null;
         resetVideoEditor();
         return;
       }

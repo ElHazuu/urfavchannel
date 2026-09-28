@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v32">
+<meta name="site-build" content="cinta-kita-v33">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -947,6 +947,24 @@
     #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .videoManageToggle { color: #f4fdff; }
     .siteUpdateNotice, .siteLockCard { background: var(--overlay-surface, #251a2b); color: var(--overlay-ink, #fbf3f8); border-color: var(--overlay-accent, #d987b6); }
     .siteUpdateNotice button, .siteLockCard button { background: color-mix(in srgb, var(--overlay-accent, #d987b6) 45%, var(--overlay-surface, #251a2b)); color: var(--overlay-ink, #fbf3f8); border-color: var(--overlay-accent, #d987b6); }
+    .avatarRing { --avatar-accent: var(--message-accent, var(--profile-accent, #d987b6)); display: inline-grid; flex: none; place-items: center; width: 45px; height: 45px; padding: 3px; overflow: visible; border: 2px solid var(--avatar-accent); border-radius: 50%; background: color-mix(in srgb, var(--avatar-accent) 18%, var(--ui-surface, var(--profile-surface, #251a2b))); color: var(--avatar-accent); font: 31px/1 Georgia, serif; }
+    .avatarRing img { width: 100%; height: 100%; object-fit: contain; }
+    .avatarRing.frame-double { border: 4px double var(--avatar-accent); padding: 1px; }
+    .avatarRing.frame-glow { box-shadow: 0 0 0 2px color-mix(in srgb, var(--avatar-accent) 40%, transparent), 0 0 17px var(--avatar-accent); }
+    .avatarRing.frame-scallop { border-style: dotted; border-width: 4px; }
+    .avatarRing.frame-square { border-radius: 14px; }
+    .messagePeople { display: flex; gap: 12px; overflow-x: auto; padding: 12px 1px 14px; border-bottom: 1px solid var(--message-border); }
+    .messagePersonWrap { position: relative; flex: 0 0 76px; }
+    .messagePerson { display: grid; width: 76px; justify-items: center; gap: 3px; min-width: 76px; padding: 6px 4px; border: 1px solid transparent !important; border-radius: 12px; background: transparent !important; color: var(--message-ink) !important; }
+    .messagePerson[aria-pressed="true"] { border-color: var(--message-accent) !important; background: color-mix(in srgb, var(--message-accent) 17%, var(--message-surface)) !important; }
+    .messagePersonName { max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+    .messagePersonInfo { position: absolute; top: 3px; right: 0; width: 22px; height: 22px; padding: 0 !important; border-radius: 50% !important; background: var(--message-surface) !important; font-size: 12px; }
+    .messageBubble .avatarRing { width: 32px; height: 32px; padding: 1px; font-size: 21px; }
+    .onlinePerson .avatarRing { width: 32px; height: 32px; padding: 1px; font-size: 21px; }
+    .onlinePerson.offline .avatarRing { filter: brightness(.56) saturate(.65); }
+    .onlinePerson.idle .avatarRing { filter: brightness(.8) saturate(.8); }
+    .profileAvatar.avatarRing { --avatar-accent: var(--profile-accent); width: 86px; height: 86px; padding: 4px; font-size: 55px; }
+    .profileBio:empty { display: none; }
 </style>
 </head>
 <body>
@@ -1039,14 +1057,15 @@
     <button class="messageDock" id="messageDock" type="button" aria-label="Open messages" aria-controls="messagePanel" aria-expanded="false" hidden><span class="messageDockIcon" aria-hidden="true">✉</span><span>MESSAGES ♡</span><span class="messageBadge" id="messageDockBadge" hidden></span></button>
     <section class="messagePanel" id="messagePanel" aria-label="Private messages" hidden>
       <div class="messagePanelHead"><h2>Our messages ♡</h2><button id="messageClose" type="button" aria-label="Close messages">×</button></div>
-      <label for="messageRecipient">Send to</label><select id="messageRecipient"></select>
+      <div class="messagePeople" id="messagePeople" role="group" aria-label="Choose who to message"></div>
+      <select id="messageRecipient" aria-label="Current message recipient" hidden></select>
       <div class="messageHistory" id="messageHistory" aria-live="polite"></div>
       <form class="messageComposer" id="messageForm">
         <div class="messageTabs"><button type="button" id="messageTextTab">Write ✎</button><button type="button" id="messageDrawTab">Paint ♡</button></div>
         <textarea id="messageText" maxlength="2000" placeholder="Write a little message…" aria-label="Write a message"></textarea>
         <canvas class="messageCanvas" id="messageCanvas" width="400" height="210" aria-label="Draw a message" hidden></canvas>
         <div class="messageDrawTools" id="messageDrawTools" hidden>
-          <div class="messageToolsRow" role="group" aria-label="Paint tools"><button type="button" data-paint-tool="brush" aria-pressed="true">Brush</button><button type="button" data-paint-tool="marker" aria-pressed="false">Marker</button><button type="button" data-paint-tool="eraser" aria-pressed="false">Eraser</button><button type="button" data-paint-tool="fill" aria-pressed="false">Fill ▣</button></div>
+          <div class="messageToolsRow" role="group" aria-label="Paint tools"><button type="button" data-paint-tool="brush" aria-pressed="true">Brush · fine</button><button type="button" data-paint-tool="marker" aria-pressed="false">Marker · wide</button><button type="button" data-paint-tool="eraser" aria-pressed="false">Eraser</button><button type="button" data-paint-tool="fill" aria-pressed="false">Fill ▣</button></div>
           <div class="messageToolsRow"><label for="messageColor">Color</label><input id="messageColor" type="color" value="#dc6094"><label for="messageBrushSize">Size</label><input id="messageBrushSize" type="range" min="2" max="28" value="5"><button type="button" id="messageUndo">Undo</button><button type="button" id="messageClear">Clear</button></div>
         </div>
         <button class="messageSend" id="messageSend" type="submit">Send ♡</button>
@@ -1176,14 +1195,13 @@
     <div class="profileCard">
       <button class="profileClose" id="profileClose" type="button" aria-label="Close profile">×</button>
       <div class="profileHero">
-        <div class="profileAvatar" id="profileAvatar" aria-hidden="true">♡</div>
+        <div class="profileAvatar avatarRing" id="profileAvatar" aria-hidden="true">♡</div>
         <small id="profileUsername">@username</small>
         <h2 id="profileTitle">Our profile ♡</h2>
         <p id="profileStatusLine"></p>
       </div>
       <div class="profileBody">
         <p class="profileBio" id="profileBio"></p>
-        <button class="profileEdit" id="profileEdit" type="button" hidden>Edit my profile</button>
         <div class="profileSettings" id="profileSettings" hidden>
           <form id="accountUsernameForm">
             <label for="accountEditUsername">Username</label>
@@ -1201,7 +1219,15 @@
             <label><input type="radio" name="profileAvatarStyle" value="beige"> Beige cat</label>
             <label><input type="radio" name="profileAvatarStyle" value="heart"> Heart ♡</label>
           </div></fieldset>
+          <fieldset><legend>Avatar frame</legend><div class="profileChoices">
+            <label><input type="radio" name="profileAvatarFrame" value="simple" checked> Simple</label>
+            <label><input type="radio" name="profileAvatarFrame" value="double"> Double</label>
+            <label><input type="radio" name="profileAvatarFrame" value="glow"> Glow</label>
+            <label><input type="radio" name="profileAvatarFrame" value="scallop"> Petals</label>
+            <label><input type="radio" name="profileAvatarFrame" value="square"> Rounded</label>
+          </div></fieldset>
           <label for="profileColor">Profile color</label><input id="profileColor" type="color" value="#d987b6">
+          <p class="profileHint">The preview above updates while you edit. Save to show it to others.</p>
           <p class="profileHint">Your profile is visible to signed-in visitors. Your email stays private.</p>
           <button id="profileSave" type="submit">Save profile ♡</button>
           <button id="profileCancel" type="button">Cancel</button>
@@ -2555,7 +2581,7 @@
     let registeredPeople = new Map();
     let profileRecords = new Map();
     let profileSchemaReady = false;
-    const profileFields = "id,username,display_name,bio,status_line,avatar_style,accent_color";
+    const profileFields = "id,username,display_name,bio,status_line,avatar_style,accent_color,avatar_frame";
     async function fetchSiteProfiles() {
       const full = await accountClient.from("site_profiles").select(profileFields);
       if (!full.error) { profileSchemaReady = true; return full; }
@@ -2564,6 +2590,38 @@
     }
     let profilesLoaded = false;
     let profileRefreshTimer = null;
+    let activityRows = new Map();
+    let activityAvailable = false;
+    let activityRefreshTimer = null;
+    let lastSiteInteraction = Date.now();
+    for (const type of ["pointerdown", "keydown", "scroll", "touchstart"]) window.addEventListener(type, () => { lastSiteInteraction = Date.now(); }, { passive: true });
+    function sceneAvatarColor() { return getComputedStyle(mainWebsite).getPropertyValue("--ui-accent").trim() || "#d987b6"; }
+    function createAvatar(id, name, online = true) {
+      const profile = profileRecords.get(id) || {};
+      const color = profileAvatarColor(profile, name);
+      const icon = document.createElement("span");
+      const frame = ["double", "glow", "scallop", "square"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple";
+      icon.className = `avatarRing frame-${frame}`;
+      icon.style.setProperty("--avatar-accent", profileAccent(profile) || sceneAvatarColor());
+      icon.setAttribute("aria-hidden", "true");
+      if (color) { const img = document.createElement("img"); img.src = `${color}-${online ? "online" : "offline"}.png`; img.alt = ""; icon.append(img); }
+      else icon.textContent = profile.avatar_style === "heart" ? "♡" : "✦";
+      return icon;
+    }
+    async function loadActivity() {
+      if (!accountClient || !accountUser) return;
+      const { data, error } = await accountClient.from("site_profile_activity").select("id,last_seen_at,idle_since");
+      if (error) { activityAvailable = false; return; }
+      activityAvailable = true;
+      activityRows = new Map(data.map(item => [item.id, item]));
+      renderOnlinePeople();
+    }
+    async function reportActivity() {
+      if (!accountClient || !accountUser || !presenceActive) return;
+      const idleSince = Date.now() - lastSiteInteraction >= 90000 ? new Date(lastSiteInteraction + 90000).toISOString() : null;
+      const { error } = await accountClient.from("site_profile_activity").upsert({ id: accountUser.id, last_seen_at: new Date().toISOString(), idle_since: idleSince });
+      if (!error) { activityAvailable = true; activityRows.set(accountUser.id, { id: accountUser.id, last_seen_at: new Date().toISOString(), idle_since: idleSince }); renderOnlinePeople(); }
+    }
     function renderOnlinePeople() {
       if (!presenceChannel) return;
       if (!profilesLoaded) { onlinePeople.textContent = "Loading accounts…"; return; }
@@ -2581,23 +2639,17 @@
         const isOnline = onlineIds.has(id);
         const username = name.trim().toLowerCase();
         const isElHazuuu = /^elha+zu+$/.test(username);
-        // Keep the real owner's account; omit extra lookalike accounts and the unwanted offline row.
-        if (isElHazuuu && ((ownerRegistered && id !== ownerId) || !isOnline)) continue;
+        // Keep the real owner's account; omit extra lookalike accounts.
+        if (isElHazuuu && ownerRegistered && id !== ownerId) continue;
         const row = document.createElement("span");
         row.className = `onlinePerson${isOnline ? "" : " offline"}`;
-        const profile = profileRecords.get(id);
-        const chosenAvatar = profile?.avatar_style || "auto";
-        const catColor = chosenAvatar === "grey" || chosenAvatar === "beige" ? chosenAvatar
-          : chosenAvatar === "heart" ? null : /^elha+zu+$/.test(username) ? "grey" : username === "urfavnay" ? "beige" : null;
-        const icon = document.createElement(catColor ? "img" : "span");
-        icon.className = catColor ? "onlineCatIcon" : chosenAvatar === "heart" ? "onlineCatIcon onlineHeart" : "onlineDot";
-        icon.setAttribute("aria-hidden", "true");
-        if (catColor) {
-          icon.src = `${catColor}-${isOnline ? "online" : "offline"}.png`;
-          icon.alt = "";
-        }
-        if (chosenAvatar === "heart") icon.textContent = "♡";
-        row.append(icon, document.createTextNode(`${name} is ${isOnline ? "online" : "Offline"}`));
+        const seen = activityRows.get(id);
+        const lastSeen = seen?.last_seen_at ? new Date(seen.last_seen_at).getTime() : 0;
+        const onlineNow = isOnline && (!activityAvailable || !lastSeen || Date.now() - lastSeen < 85000);
+        const idle = onlineNow && ((seen?.idle_since && Date.now() - new Date(seen.idle_since).getTime() >= 0) || (id === accountUser?.id && Date.now() - lastSiteInteraction >= 90000));
+        row.className = `onlinePerson${onlineNow ? idle ? " idle" : "" : " offline"}`;
+        const status = onlineNow ? idle ? "idle" : "online" : `Offline${lastSeen ? ` · last seen ${messageTimeAgo(seen.last_seen_at)}` : ""}`;
+        row.append(createAvatar(id, name, onlineNow), document.createTextNode(`${name} is ${status}`));
         const view = document.createElement("button");
         view.className = "onlineProfileLink";
         view.type = "button";
@@ -2626,6 +2678,8 @@
         presenceGeneration++;
         clearInterval(profileRefreshTimer);
         profileRefreshTimer = null;
+        clearInterval(activityRefreshTimer);
+        activityRefreshTimer = null;
         if (presenceChannel) accountClient?.removeChannel(presenceChannel);
         presenceChannel = null;
         presenceUserId = null;
@@ -2651,14 +2705,19 @@
       onlinePeople.textContent = "Loading accounts…";
       loadRegisteredPeople(generation);
       profileRefreshTimer = setInterval(() => loadRegisteredPeople(generation), 30000);
+      loadActivity(); reportActivity();
+      activityRefreshTimer = setInterval(() => { reportActivity(); loadActivity(); }, 25000);
       channel.on("presence", { event: "sync" }, () => { if (generation === presenceGeneration) renderOnlinePeople(); });
+      channel.on("postgres_changes", { event: "*", schema: "public", table: "site_profile_activity" }, () => { if (generation === presenceGeneration) loadActivity(); });
       channel.subscribe(status => {
         if (generation !== presenceGeneration) return;
         if (status === "SUBSCRIBED") channel.track({ user_id: accountUser.id, username: accountUser.user_metadata?.username || "Someone" });
-        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") onlinePeople.textContent = "Online status unavailable";
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") renderOnlinePeople();
       });
     }
     window.setOurWorldPresenceActive = active => { presenceActive = active; updatePresence(); };
+    document.addEventListener("visibilitychange", () => { if (document.hidden) reportActivity(); else { lastSiteInteraction = Date.now(); reportActivity(); } });
+    window.addEventListener("pagehide", reportActivity);
     // Private messages stay in Supabase; Realtime makes new ones appear without a refresh.
     const messageOpen = document.getElementById("messageOpen");
     const messageDock = document.getElementById("messageDock");
@@ -2687,6 +2746,7 @@
     const messagePanel = document.getElementById("messagePanel");
     const messageClose = document.getElementById("messageClose");
     const messageRecipient = document.getElementById("messageRecipient");
+    const messagePeople = document.getElementById("messagePeople");
     const messageHistory = document.getElementById("messageHistory");
     const messageForm = document.getElementById("messageForm");
     const messageText = document.getElementById("messageText");
@@ -2817,27 +2877,7 @@
         const byline = document.createElement("small");
         byline.className = "messageByline";
         const senderName = messageNames.get(item.sender_id) || (item.sender_id === userId ? accountUser?.user_metadata?.username : "Someone") || "Someone";
-        const senderProfile = profileRecords.get(item.sender_id);
-        const avatarChoice = senderProfile?.avatar_style || "auto";
-        const catColor = avatarChoice === "grey" || avatarChoice === "beige" ? avatarChoice
-          : avatarChoice === "heart" ? null
-          : item.sender_id === "7a5e0845-24be-4ac0-b881-6aff2a8332f5" || /^elha+zu+$/.test(senderName.toLowerCase())
-            ? "grey" : senderName.toLowerCase() === "urfavnay" ? "beige" : null;
-        if (catColor) {
-          const avatar = document.createElement("img");
-          avatar.className = "messageAvatar";
-          avatar.src = `${catColor}-online.png`;
-          avatar.alt = "";
-          avatar.setAttribute("aria-hidden", "true");
-          byline.append(avatar);
-        }
-        if (avatarChoice === "heart") {
-          const heart = document.createElement("span");
-          heart.className = "messageHeartAvatar";
-          heart.textContent = "♡";
-          heart.setAttribute("aria-hidden", "true");
-          byline.append(heart);
-        }
+        byline.append(createAvatar(item.sender_id, senderName, true));
         byline.append(document.createTextNode(senderName));
         byline.title = `View ${senderName}'s profile`;
         byline.tabIndex = 0;
@@ -2945,6 +2985,7 @@
         messageRecipient.append(option);
       }
       if (messageNames.has(selected) && selected !== userId) messageRecipient.value = selected;
+      renderMessagePeople();
       const incoming = messages.data.filter(item => item.recipient_id === userId && !item.read_at);
       const newlySeen = incoming.filter(item => !seenIncoming.has(item.id));
       incoming.forEach(item => seenIncoming.add(item.id));
@@ -2994,8 +3035,7 @@
       messagePanel.hidden = false;
       messageDock.setAttribute("aria-expanded", "true");
       messageToast.hidden = true;
-      loadMessages();
-      messageRecipient.focus();
+      loadMessages().then(() => (messagePeople.querySelector(".messagePerson") || messageClose).focus());
     }
     function closeMessages() { messagePanel.hidden = true; messageDock.setAttribute("aria-expanded", "false"); messageDock.focus(); }
     messageOpen.addEventListener("click", openMessages);
@@ -3003,6 +3043,23 @@
     messageClose.addEventListener("click", closeMessages);
     messageToast.addEventListener("click", openMessages);
     messageRecipient.addEventListener("change", () => { editingMessageId = null; editingMessageDraft = ""; renderMessages(); markConversationRead(); });
+    function renderMessagePeople() {
+      messagePeople.replaceChildren();
+      for (const option of messageRecipient.options) {
+        const wrap = document.createElement("div"); wrap.className = "messagePersonWrap";
+        const choose = document.createElement("button"); choose.type = "button"; choose.className = "messagePerson";
+        choose.setAttribute("aria-label", `Message ${option.textContent}`);
+        choose.setAttribute("aria-pressed", String(messageRecipient.value === option.value));
+        const name = document.createElement("span"); name.className = "messagePersonName"; name.textContent = option.textContent;
+        choose.append(createAvatar(option.value, option.textContent), name);
+        choose.addEventListener("click", () => { messageRecipient.value = option.value; messageRecipient.dispatchEvent(new Event("change")); renderMessagePeople(); });
+        const info = document.createElement("button"); info.type = "button"; info.className = "messagePersonInfo"; info.textContent = "i";
+        info.setAttribute("aria-label", `View ${option.textContent}'s profile`);
+        info.addEventListener("click", () => openProfile(option.value, false, info));
+        wrap.append(choose, info); messagePeople.append(wrap);
+      }
+      if (!messageRecipient.options.length) messagePeople.textContent = "No other profiles yet ♡";
+    }
     messageText.addEventListener("keydown", event => {
       if (event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
         event.preventDefault();
@@ -3050,9 +3107,9 @@
       savePaintUndo();
       messageCanvas.setPointerCapture(event.pointerId);
       const size = Number(messageBrushSize.value);
-      messageCtx.globalAlpha = paintTool === "marker" ? .35 : 1;
+      messageCtx.globalAlpha = paintTool === "marker" ? .22 : 1;
       messageCtx.fillStyle = paintTool === "eraser" ? "#ffffff" : messageColor.value;
-      messageCtx.beginPath(); messageCtx.arc(point.x, point.y, size / 2, 0, Math.PI * 2); messageCtx.fill();
+      messageCtx.beginPath(); messageCtx.arc(point.x, point.y, size * (paintTool === "marker" ? 1.5 : .5), 0, Math.PI * 2); messageCtx.fill();
       messageCtx.beginPath(); messageCtx.moveTo(point.x, point.y);
       messageCtx.globalAlpha = 1;
       messagePainting = true; messageDrawn = true;
@@ -3061,10 +3118,10 @@
       if (!messagePainting) return;
       event.preventDefault();
       const point = canvasPoint(event);
-      messageCtx.lineWidth = Number(messageBrushSize.value);
+      messageCtx.lineWidth = Number(messageBrushSize.value) * (paintTool === "marker" ? 3 : 1);
       messageCtx.lineCap = "round"; messageCtx.lineJoin = "round";
       messageCtx.strokeStyle = paintTool === "eraser" ? "#ffffff" : messageColor.value;
-      messageCtx.globalAlpha = paintTool === "marker" ? .35 : 1;
+      messageCtx.globalAlpha = paintTool === "marker" ? .22 : 1;
       messageCtx.lineTo(point.x, point.y); messageCtx.stroke();
       messageCtx.globalAlpha = 1;
     });
@@ -3120,7 +3177,6 @@
     siteLockSignIn.addEventListener("click", () => openAccount(siteLockSignIn));
     const profileDialog = document.getElementById("profileDialog");
     const profileForm = document.getElementById("profileForm");
-    const profileEdit = document.getElementById("profileEdit");
     const profileFeedback = document.getElementById("profileFeedback");
     let profileViewedId = null;
     let profileReturnFocus = null;
@@ -3137,7 +3193,16 @@
     }
     function renderProfileView() {
       if (!profileViewedId || profileDialog.hidden) return;
-      const profile = profileRecords.get(profileViewedId) || {};
+      const savedProfile = profileRecords.get(profileViewedId) || {};
+      const draft = profileViewedId === accountUser?.id && !profileForm.hidden;
+      const profile = draft ? { ...savedProfile,
+        display_name: document.getElementById("profileDisplayName").value.trim(),
+        status_line: document.getElementById("profileStatusInput").value.trim(),
+        bio: document.getElementById("profileBioInput").value.trim(),
+        avatar_style: profileForm.querySelector('input[name="profileAvatarStyle"]:checked')?.value || "auto",
+        avatar_frame: profileForm.querySelector('input[name="profileAvatarFrame"]:checked')?.value || "simple",
+        accent_color: document.getElementById("profileColor").value
+      } : savedProfile;
       const name = profile.username || registeredPeople.get(profileViewedId) || (profileViewedId === accountUser?.id ? accountUser.user_metadata?.username : "") || "Friend";
       const color = profileAccent(profile);
       const sceneAccent = getComputedStyle(accountDialog).getPropertyValue("--account-accent").trim();
@@ -3145,9 +3210,10 @@
       document.getElementById("profileUsername").textContent = `@${name}`;
       document.getElementById("profileTitle").textContent = profile.display_name || name;
       document.getElementById("profileStatusLine").textContent = profile.status_line || "Here with us ♡";
-      document.getElementById("profileBio").textContent = profile.bio || "A little corner of our world ♡";
+      document.getElementById("profileBio").textContent = profile.bio || "";
       const avatar = document.getElementById("profileAvatar");
       avatar.replaceChildren();
+      avatar.className = `profileAvatar avatarRing frame-${["double","glow","scallop","square"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple"}`;
       const cat = profileAvatarColor(profile, name);
       if (cat) {
         const img = document.createElement("img"); img.src = `${cat}-online.png`; img.alt = ""; avatar.append(img);
@@ -3155,7 +3221,6 @@
       const own = profileViewedId === accountUser?.id;
       document.getElementById("profileSettings").hidden = !own;
       accountSignOut.hidden = !own;
-      profileEdit.hidden = !own || !profileSchemaReady || !profileForm.hidden;
       if (!own) profileForm.hidden = true;
       if (!profileSchemaReady && own) profileFeedback.textContent = "Profile editing needs the one-time profile SQL setup.";
     }
@@ -3167,6 +3232,7 @@
       document.getElementById("profileBioInput").value = profile.bio || "";
       const choice = profileForm.querySelector(`input[name="profileAvatarStyle"][value="${["auto","grey","beige","heart"].includes(profile.avatar_style) ? profile.avatar_style : "auto"}"]`);
       choice.checked = true;
+      profileForm.querySelector(`input[name="profileAvatarFrame"][value="${["simple","double","glow","scallop","square"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple"}"]`).checked = true;
       document.getElementById("profileColor").value = profileAccent(profile) || getComputedStyle(accountDialog).getPropertyValue("--account-accent").trim() || "#d987b6";
       profileDirty = false;
     }
@@ -3180,7 +3246,7 @@
       syncAccountPalette();
       profileDialog.hidden = false;
       renderProfileView();
-      if (edit && profileSchemaReady && id === accountUser.id) profileEdit.click();
+      if (id === accountUser.id && profileSchemaReady) { fillProfileForm(); profileForm.hidden = false; renderProfileView(); document.getElementById("profileDisplayName").focus(); }
       else document.getElementById("profileClose").focus();
     }
     function closeProfile() {
@@ -3191,16 +3257,11 @@
       if (profileReturnFocus?.isConnected) profileReturnFocus.focus();
     }
     document.getElementById("profileClose").addEventListener("click", closeProfile);
-    document.getElementById("profileCancel").addEventListener("click", () => { profileForm.hidden = true; profileDirty = false; profileFeedback.textContent = ""; renderProfileView(); profileEdit.focus(); });
+    document.getElementById("profileCancel").addEventListener("click", () => { fillProfileForm(); profileDirty = false; profileFeedback.textContent = "Changes discarded"; renderProfileView(); });
     profileDialog.addEventListener("click", event => { if (event.target === profileDialog) closeProfile(); });
     document.addEventListener("keydown", event => { if (event.key === "Escape" && !profileDialog.hidden) closeProfile(); });
-    profileEdit.addEventListener("click", () => {
-      if (!accountUser || profileViewedId !== accountUser.id || !profileSchemaReady) return;
-      fillProfileForm(); profileForm.hidden = false;
-      profileEdit.hidden = true;
-      document.getElementById("profileDisplayName").focus();
-    });
-    profileForm.addEventListener("input", () => { profileDirty = true; });
+    profileForm.addEventListener("input", () => { profileDirty = true; renderProfileView(); });
+    profileForm.addEventListener("change", () => { profileDirty = true; renderProfileView(); });
     profileForm.addEventListener("submit", async event => {
       event.preventDefault();
       if (!accountClient || !accountUser || profileViewedId !== accountUser.id || !profileSchemaReady) return;
@@ -3209,7 +3270,8 @@
         status_line: document.getElementById("profileStatusInput").value.trim(),
         bio: document.getElementById("profileBioInput").value.trim(),
         avatar_style: profileForm.querySelector('input[name="profileAvatarStyle"]:checked').value,
-        accent_color: document.getElementById("profileColor").value
+        accent_color: document.getElementById("profileColor").value,
+        avatar_frame: profileForm.querySelector('input[name="profileAvatarFrame"]:checked').value
       };
       const save = document.getElementById("profileSave");
       save.disabled = true; profileFeedback.textContent = "Saving…";
@@ -3217,9 +3279,9 @@
       save.disabled = false;
       if (error) { profileFeedback.textContent = error.message; return; }
       profileRecords.set(accountUser.id, data);
-      profileDirty = false; profileForm.hidden = true;
+      profileDirty = false;
       profileFeedback.textContent = "Profile saved ♡";
-      renderProfileView(); renderOnlinePeople(); renderMessages();
+      renderProfileView(); renderOnlinePeople(); renderMessages(); renderMessagePeople();
     });
     syncAccountPalette();
     function showAccountUser(user) {

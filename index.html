@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v42">
+<meta name="site-build" content="cinta-kita-v43">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -451,6 +451,22 @@
     #mainWebsite:not([data-wallpaper="original"]) { --scene-accent: #ffd2ea; --scene-surface: #251a2b; }
     #mainWebsite[data-wallpaper="underwater"] { --scene-accent: #8de6ef; --scene-surface: #155b78; --scene-bg: linear-gradient(#237c9e, #176686 42%, #145376 76%, #123e68); }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] { --scene-accent: #78dbe9; --scene-surface: #06111c; --scene-bg: linear-gradient(#01060c 0%, #01040a 55%, #000204 100%); }
+    #mainWebsite[data-wallpaper="berserk"] { --scene-accent: #e8b987; --scene-surface: #241b21; --scene-bg: linear-gradient(#161015, #21141b); background: var(--scene-bg); color: #fff4ed; }
+    #mainWebsite[data-wallpaper="berserk"][data-theme="light"] { --scene-accent: #f3cda5; --scene-surface: #423039; --scene-bg: linear-gradient(#392630, #271b25); }
+    .berserkBackdrop { display: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: #161015; }
+    .berserkBackdrop video { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    .berserkBackdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #100c12a8, #160e17a0 42%, #100b13cf); }
+    #mainWebsite[data-wallpaper="berserk"][data-theme="light"] .berserkBackdrop::after { background: linear-gradient(180deg, #24141b75, #26151d72 42%, #1e121bbe); }
+    #mainWebsite[data-wallpaper="berserk"] .berserkBackdrop { display: block; }
+    #mainWebsite[data-wallpaper="berserk"] .welcomeSection,
+    #mainWebsite[data-wallpaper="berserk"] .contentSection,
+    #mainWebsite[data-wallpaper="berserk"] .storySection,
+    #mainWebsite[data-wallpaper="berserk"] footer { position: relative; z-index: 1; }
+    #mainWebsite[data-wallpaper="berserk"] .heroLine,
+    #mainWebsite[data-wallpaper="berserk"] .eyebrow,
+    #mainWebsite[data-wallpaper="berserk"] .heroSubtitle,
+    #mainWebsite[data-wallpaper="berserk"] .scrollNote { color: #f4ddd0; text-shadow: 0 2px 12px #10080f; }
+    #mainWebsite[data-wallpaper="berserk"] .welcomeSection h1 { text-shadow: 0 4px 22px #10080f; }
     #mainWebsite[data-wallpaper="underwater"] #backToIntro,
     #mainWebsite[data-wallpaper="underwater"] .themeMode { background: var(--scene-accent); border-color: var(--scene-accent); color: #082c3d; }
     #mainWebsite[data-wallpaper="underwater"] #backToIntro:hover,
@@ -784,6 +800,7 @@
       --message-border: var(--scene-accent); --message-accent: var(--scene-accent);
       --message-field: color-mix(in srgb, var(--scene-surface) 78%, #001421);
     }
+    #mainWebsite[data-wallpaper="berserk"] { --message-surface: var(--scene-surface); --message-ink: #fff4ed; --message-border: var(--scene-accent); --message-accent: var(--scene-accent); --message-field: #1b1419; }
     #mainWebsite .messageDock, #mainWebsite .messageMenuButton {
       background: color-mix(in srgb, var(--message-accent) 16%, var(--message-surface));
       color: var(--message-ink); border-color: var(--message-border);
@@ -823,6 +840,7 @@
     #mainWebsite .onlineList { background: color-mix(in srgb, var(--theme-accent) 8%, var(--theme-surface)); color: var(--theme-text); }
     #mainWebsite .storyNote { background: linear-gradient(transparent, color-mix(in srgb, var(--theme-accent) 20%, var(--theme-surface)) 55%); color: var(--theme-text); }
     #mainWebsite[data-wallpaper="underwater"] { --menu-detail: var(--scene-accent); }
+    #mainWebsite[data-wallpaper="berserk"] { --menu-detail: var(--scene-accent); }
     #mainWebsite[data-wallpaper="underwater"] .siteMenu,
     #mainWebsite[data-wallpaper="underwater"] .menuHandle { color: #f4fdff; }
     #mainWebsite[data-wallpaper="underwater"] .menuPanelHead strong,
@@ -884,6 +902,7 @@
     /* The scene opened by Tap the Heart uses the active wallpaper palette. */
     #mainWebsite .kissScene { --kiss-accent: var(--theme-accent); --kiss-surface: var(--theme-surface); --kiss-ink: var(--theme-text); background: color-mix(in srgb, var(--theme-bg) 83%, transparent); }
     #mainWebsite[data-wallpaper="underwater"] .kissScene { --kiss-accent: var(--scene-accent); --kiss-surface: var(--scene-surface); --kiss-ink: #f4fdff; background: #031927d9; }
+    #mainWebsite[data-wallpaper="berserk"] .kissScene { --kiss-accent: var(--scene-accent); --kiss-surface: var(--scene-surface); --kiss-ink: #fff4ed; background: #110c12e8; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .kissScene { background: #010509e8; }
     #mainWebsite .kissCard { border-color: color-mix(in srgb, var(--kiss-accent) 65%, transparent); background: radial-gradient(circle at 50% 34%, color-mix(in srgb, var(--kiss-accent) 27%, transparent), transparent 55%), var(--kiss-surface); color: var(--kiss-ink); box-shadow: 0 30px 100px #000a, 0 0 45px color-mix(in srgb, var(--kiss-accent) 32%, transparent); }
     #mainWebsite .kissCard::before, #mainWebsite .kissHeart { color: var(--kiss-accent); }
@@ -896,6 +915,13 @@
     /* Shared colors for navigation, controls, content cards, and open panels. */
     #mainWebsite { --ui-accent: var(--theme-accent); --ui-surface: var(--theme-surface); --ui-ink: var(--theme-text); --ui-field: var(--theme-bg); --ui-line: var(--theme-line); }
     #mainWebsite[data-wallpaper="underwater"] { --ui-accent: var(--scene-accent); --ui-surface: var(--scene-surface); --ui-ink: #f4fdff; --ui-field: color-mix(in srgb, var(--scene-surface) 78%, #001421); --ui-line: var(--scene-accent); }
+    #mainWebsite[data-wallpaper="berserk"] { --ui-accent: var(--scene-accent); --ui-surface: var(--scene-surface); --ui-ink: #fff4ed; --ui-field: #1b1419; --ui-line: var(--scene-accent); }
+    #mainWebsite[data-wallpaper="berserk"] .siteMenu,
+    #mainWebsite[data-wallpaper="berserk"] .menuHandle,
+    #mainWebsite[data-wallpaper="berserk"] .menuLinks a,
+    #mainWebsite[data-wallpaper="berserk"] .onlineList { color: #fff4ed; }
+    #mainWebsite[data-wallpaper="berserk"] .accountMenuButton,
+    #mainWebsite[data-wallpaper="berserk"] .onlineList { background: color-mix(in srgb, var(--scene-accent) 12%, var(--scene-surface)); border-color: var(--scene-accent); color: #fff4ed; }
     #mainWebsite .themeButton, #mainWebsite .wallpaperPanel, #mainWebsite .themePanel,
     #mainWebsite .notificationBell, #mainWebsite .notificationHint, #mainWebsite .notificationPanel,
     #mainWebsite .videoManager, #mainWebsite .videoManageToggle {
@@ -1011,6 +1037,7 @@
   </div>
 
   <main id="mainWebsite">
+    <div class="berserkBackdrop" aria-hidden="true"><video id="berserkWallpaperVideo" muted loop playsinline preload="none"><source src="berserk.1920x1080.mp4" type="video/mp4"></video></div>
     <div class="underseaBackdrop" id="underseaBackdrop" aria-hidden="true"></div>
     <img class="coralTower" src="Tower of Coral.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
     <div class="whaleCrossing" aria-hidden="true"><img id="minecraftWhale" src="minecraft-whale-frame-1.png" alt="" decoding="async"></div>
@@ -1054,6 +1081,7 @@
         <div class="wallpaperChoices">
           <button type="button" data-wallpaper="original">♡ Original</button>
           <button type="button" data-wallpaper="underwater">≋ Underwater</button>
+          <button type="button" data-wallpaper="berserk">⚔ Berserk</button>
         </div>
       </div>
     </div>
@@ -1385,8 +1413,8 @@
       }
       themeMode.textContent = chosen === "light" ? "☼ Light Mode" : "☾ Dark Mode";
       themeMode.setAttribute("aria-checked", String(chosen === "light"));
-      if (save && mainWebsite.dataset.wallpaper !== "underwater") savedTheme = chosen;
-      if (save) try { localStorage.setItem(mainWebsite.dataset.wallpaper === "underwater" ? "ourSayangUnderwaterTheme" : "ourSayangTheme", chosen); } catch (error) {}
+      if (save && mainWebsite.dataset.wallpaper === "original") savedTheme = chosen;
+      if (save) try { localStorage.setItem(mainWebsite.dataset.wallpaper === "underwater" ? "ourSayangUnderwaterTheme" : mainWebsite.dataset.wallpaper === "berserk" ? "ourSayangBerserkTheme" : "ourSayangTheme", chosen); } catch (error) {}
     }
     function setColor(color) {
       if (!/^#[0-9a-fA-F]{6}$/.test(color)) return;
@@ -1415,15 +1443,26 @@
     const wallpaperButton = document.getElementById("wallpaperButton");
     const wallpaperPanel = document.getElementById("wallpaperPanel");
     const welcomeSection = document.querySelector(".welcomeSection");
-    const wallpaperNames = ["original", "underwater"];
+    const wallpaperNames = ["original", "underwater", "berserk"];
+    const berserkWallpaperVideo = document.getElementById("berserkWallpaperVideo");
+    function syncBerserkWallpaper() {
+      if (mainWebsite.dataset.wallpaper === "berserk" && !document.hidden) {
+        berserkWallpaperVideo.play().catch(() => {});
+      } else berserkWallpaperVideo.pause();
+    }
+    document.addEventListener("visibilitychange", syncBerserkWallpaper);
     function setWallpaper(name) {
       if (!wallpaperNames.includes(name)) name = "original";
       welcomeSection.dataset.wallpaper = name;
       mainWebsite.dataset.wallpaper = name;
+      syncBerserkWallpaper();
       sittingKitten.hidden = name !== "original" || !ourWorldCard.classList.contains("show-note");
       if (sittingKitten.hidden) { clearTimeout(kittenReactionTimer); kittenReacting = false; kittenHeart.classList.remove("fly"); kittenIdlePicture.src = siameseIdleFrames[0]; }
-      let wallpaperTheme = name === "underwater" ? "light" : savedTheme;
-      try { if (name === "underwater") wallpaperTheme = localStorage.getItem("ourSayangUnderwaterTheme") || "light"; } catch (error) {}
+      let wallpaperTheme = name === "underwater" ? "light" : name === "berserk" ? "dark" : savedTheme;
+      try {
+        if (name === "underwater") wallpaperTheme = localStorage.getItem("ourSayangUnderwaterTheme") || "light";
+        if (name === "berserk") wallpaperTheme = localStorage.getItem("ourSayangBerserkTheme") || "dark";
+      } catch (error) {}
       setTheme(wallpaperTheme, false);
       galleryRunFrame = 0;
       chickenFrame = 0;
@@ -3344,21 +3383,21 @@
     new MutationObserver(syncSiteLock).observe(mainWebsite, { attributes: true, attributeFilter: ["class"] });
     function syncAccountPalette() {
       const styles = getComputedStyle(mainWebsite);
-      const underwater = mainWebsite.dataset.wallpaper === "underwater";
-      const surface = styles.getPropertyValue(underwater ? "--scene-surface" : "--theme-surface").trim();
-      const accent = styles.getPropertyValue(underwater ? "--scene-accent" : "--theme-accent").trim();
+      const sceneWallpaper = mainWebsite.dataset.wallpaper === "underwater" || mainWebsite.dataset.wallpaper === "berserk";
+      const surface = styles.getPropertyValue(sceneWallpaper ? "--scene-surface" : "--theme-surface").trim();
+      const accent = styles.getPropertyValue(sceneWallpaper ? "--scene-accent" : "--theme-accent").trim();
       document.documentElement.style.setProperty("--overlay-surface", surface || "#251a2b");
       document.documentElement.style.setProperty("--overlay-accent", accent || "#d987b6");
-      document.documentElement.style.setProperty("--overlay-ink", underwater ? "#f4fdff" : styles.getPropertyValue("--theme-text").trim());
+      document.documentElement.style.setProperty("--overlay-ink", sceneWallpaper ? "#fff4ed" : styles.getPropertyValue("--theme-text").trim());
       accountDialog.style.setProperty("--account-surface", surface || "#251a2b");
       accountDialog.style.setProperty("--account-accent", accent || "#d987b6");
-      accountDialog.style.setProperty("--account-ink", underwater ? "#f4fdff" : styles.getPropertyValue("--theme-text").trim());
-      accountDialog.style.setProperty("--account-field", underwater
-        ? `color-mix(in srgb, ${surface} 78%, #001421)`
+      accountDialog.style.setProperty("--account-ink", sceneWallpaper ? "#fff4ed" : styles.getPropertyValue("--theme-text").trim());
+      accountDialog.style.setProperty("--account-field", sceneWallpaper
+        ? `color-mix(in srgb, ${surface} 78%, #100d14)`
         : styles.getPropertyValue("--theme-bg").trim());
-      const ink = underwater && mainWebsite.dataset.theme !== "light" ? "#f4fdff" : styles.getPropertyValue("--theme-text").trim();
+      const ink = sceneWallpaper ? "#fff4ed" : styles.getPropertyValue("--theme-text").trim();
       profileDialog.style.setProperty("--profile-surface", surface || "#251a2b");
-      profileDialog.style.setProperty("--profile-field", underwater ? `color-mix(in srgb, ${surface} 78%, #001421)` : styles.getPropertyValue("--theme-bg").trim());
+      profileDialog.style.setProperty("--profile-field", sceneWallpaper ? `color-mix(in srgb, ${surface} 78%, #100d14)` : styles.getPropertyValue("--theme-bg").trim());
       profileDialog.style.setProperty("--profile-ink", ink || "#fbf3f8");
       if (!profileRecords.get(profileViewedId)?.accent_color) profileDialog.style.setProperty("--profile-accent", accent || "#d987b6");
     }

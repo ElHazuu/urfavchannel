@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="site-build" content="underwater-roaming-squid-20260927">
+  <meta name="site-build" content="cinta-kita-v28">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -728,6 +728,9 @@
     .accountLink { display: block; margin-top: 12px; border: 0; padding-left: 0; text-decoration: underline; }
     .accountRecovery[hidden] { display: none; }
     #mainWebsite.accessLocked { filter: blur(11px); pointer-events: none; user-select: none; }
+    .siteUpdateNotice { position: fixed; z-index: 105; left: 50%; bottom: 24px; transform: translateX(-50%); width: min(380px, calc(100vw - 28px)); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 13px; border: 1px solid #ffc6df; border-radius: 16px; background: #2c1b34f2; color: #fff0f8; box-shadow: 0 12px 32px #0008; font-size: 13px; }
+    .siteUpdateNotice[hidden] { display: none; }
+    .siteUpdateNotice button { flex: none; padding: 8px 12px; border: 1px solid #ffd2e6; border-radius: 10px; background: #ffc9e4; color: #2c1727; cursor: pointer; font-weight: 700; }
     .siteLockOverlay { position: fixed; inset: 0; z-index: 110; display: grid; place-items: center; padding: 18px; background: #1009188a; color: #fff3fa; text-align: center; }
     .siteLockOverlay[hidden] { display: none; }
     .siteLockCard { max-width: 390px; padding: 26px; border: 1px solid #ffd2e7; border-radius: 22px; background: #291831ed; box-shadow: 0 18px 45px #0009; }
@@ -999,6 +1002,7 @@
     </div>
   </main>
 
+  <div class="siteUpdateNotice" id="siteUpdateNotice" role="status" aria-live="polite" hidden><span id="siteUpdateText">A new version is ready ♡</span><button id="siteUpdateNow" type="button">Update now</button></div>
   <div class="siteLockOverlay" id="siteLockOverlay" hidden>
     <div class="siteLockCard"><h2>Our world is for us ♡</h2><p>Sign in to enter and use the website.</p><button id="siteLockSignIn" type="button">Sign in</button></div>
   </div>
@@ -2978,6 +2982,100 @@
         if (mainWebsite.classList.contains("show")) backButton.click();
       }
     });
+  </script>
+  <script>
+    (() => {
+      // Increase the site-build meta value whenever index.html is released.
+      // Checks only download the page in the background; they never redraw the current page.
+      const currentBuild = document.querySelector('meta[name="site-build"]')?.content;
+      const currentBuildNumber = Number(currentBuild?.match(/-v(\d+)$/)?.[1] || 0);
+      const notice = document.getElementById("siteUpdateNotice");
+      const noticeText = document.getElementById("siteUpdateText");
+      const updateButton = document.getElementById("siteUpdateNow");
+      const videoSection = document.getElementById("videos");
+      const storySection = document.getElementById("story");
+      let pendingBuild = null;
+      let checking = false;
+      let knownValidator = null;
+      let lastInteraction = Date.now();
+      let videoVisited = false;
+      let hiddenSince = document.hidden ? Date.now() : 0;
+      for (const type of ["pointerdown", "keydown", "scroll"]) {
+        window.addEventListener(type, () => { lastInteraction = Date.now(); }, { passive: true });
+      }
+      function onScreen(element) {
+        if (!element) return false;
+        const box = element.getBoundingClientRect();
+        return box.bottom > 0 && box.top < innerHeight;
+      }
+      function hasUnsentWork() {
+        const draft = document.getElementById("messageText")?.value.trim();
+        const announcement = document.getElementById("notificationTitleInput")?.value.trim() || document.getElementById("notificationBodyInput")?.value.trim();
+        const videoForm = document.getElementById("videoForm");
+        const videoDraft = videoForm && [...videoForm.querySelectorAll('input:not([type="checkbox"]), textarea')].some(field => field.value.trim());
+        return !!(draft || announcement || videoDraft || messageDrawn || editingMessageId || !document.getElementById("accountDialog").hidden);
+      }
+      function safeToReload() {
+        if (!pendingBuild || hasUnsentWork() || !document.getElementById("introMusic").paused || videoVisited) return false;
+        if (!document.getElementById("messagePanel").hidden || !document.getElementById("notificationPanel").hidden) return false;
+        if (videoSection.querySelector("iframe") && onScreen(videoSection)) return false;
+        if (document.hidden) return Date.now() - hiddenSince > 30000;
+        // Keep the visible cats, animals, and video player uninterrupted.
+        if (document.getElementById("intro").style.display !== "none") return false;
+        if (document.getElementById("mainWebsite").dataset.wallpaper === "underwater") return false;
+        if (onScreen(videoSection) || onScreen(storySection) || !document.getElementById("sittingKitten").hidden) return false;
+        return Date.now() - lastInteraction > 180000;
+      }
+      function openNewVersion() {
+        const destination = new URL(location.href);
+        destination.searchParams.set("site-update", pendingBuild);
+        location.replace(destination.href);
+      }
+      function maybeReload() { if (safeToReload()) openNewVersion(); }
+      async function checkVersion() {
+        if (checking || pendingBuild || !currentBuild) return;
+        checking = true;
+        try {
+          const url = new URL(location.pathname, location.origin);
+          if (knownValidator) {
+            const head = await fetch(url.href, { method: "HEAD", cache: "no-store" });
+            const validator = head.headers.get("etag") || head.headers.get("last-modified");
+            if (head.ok && validator && validator === knownValidator) return;
+          }
+          const response = await fetch(url.href, { cache: "no-store" });
+          if (!response.ok) return;
+          const html = await response.text();
+          const deployedBuild = html.match(/<meta\s+name=["']site-build["']\s+content=["']([^"']+)["']/i)?.[1];
+          knownValidator = response.headers.get("etag") || response.headers.get("last-modified");
+          const deployedBuildNumber = Number(deployedBuild?.match(/-v(\d+)$/)?.[1] || 0);
+          if (deployedBuildNumber > currentBuildNumber) {
+            pendingBuild = deployedBuild;
+            notice.hidden = false;
+            maybeReload();
+          }
+        } catch (_error) { /* Try again on the next check. */ }
+        finally { checking = false; }
+      }
+      updateButton.addEventListener("click", () => {
+        if (hasUnsentWork()) {
+          noticeText.textContent = "Send or save your work before updating ♡";
+          return;
+        }
+        openNewVersion();
+      });
+      videoSection.addEventListener("pointerdown", () => { if (videoSection.querySelector("iframe")) videoVisited = true; }, true);
+      window.addEventListener("scroll", () => {
+        if (document.getElementById("intro").style.display === "none" && onScreen(videoSection) && videoSection.querySelector("iframe")) videoVisited = true;
+      }, { passive: true });
+      document.addEventListener("visibilitychange", () => {
+        hiddenSince = document.hidden ? Date.now() : 0;
+        if (!document.hidden) checkVersion();
+        else maybeReload();
+      });
+      window.addEventListener("focus", checkVersion);
+      setTimeout(checkVersion, 12000);
+      setInterval(() => { checkVersion(); maybeReload(); }, 60000);
+    })();
   </script>
 </body>
 </html>

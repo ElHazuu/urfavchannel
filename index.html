@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v33">
+<meta name="site-build" content="cinta-kita-v34">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -855,13 +855,14 @@
     #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeOrbit::after { color: #0b5369; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .welcomeOrbit::before { text-shadow: 0 0 12px color-mix(in srgb, var(--scene-accent) 48%, transparent); }
     .profileDialog[hidden], .profileForm[hidden], .profileEdit[hidden], .profileSettings[hidden], .profileSignOut[hidden] { display: none; }
-    .profileDialog { position: fixed; inset: 0; z-index: 125; display: grid; place-items: center; padding: 16px; background: #100918dc; backdrop-filter: blur(12px); --profile-surface: #251a2b; --profile-field: #140e1d; --profile-ink: #fbf3f8; --profile-accent: #d987b6; }
+    .profileDialog { position: fixed; inset: 0; z-index: 125; display: grid; place-items: center; padding: 16px; background: color-mix(in srgb, var(--profile-surface, #251a2b) 80%, transparent); backdrop-filter: blur(12px); --profile-surface: #251a2b; --profile-field: #140e1d; --profile-ink: #fbf3f8; --profile-accent: #d987b6; }
     .profileCard { position: relative; width: min(540px, 100%); max-height: min(88dvh, 770px); overflow-y: auto; border: 1px solid color-mix(in srgb, var(--profile-accent) 55%, var(--profile-ink)); border-radius: 24px; background: var(--profile-surface); color: var(--profile-ink); box-shadow: 0 25px 75px #000a; }
-    .profileHero { padding: 30px 24px 22px; text-align: center; background: radial-gradient(circle at 50% 12%, color-mix(in srgb, var(--profile-accent) 30%, transparent), transparent 70%); }
-    .profileAvatar { display: grid; place-items: center; width: 86px; height: 86px; margin: 0 auto 11px; border: 2px solid var(--profile-accent); border-radius: 50%; background: color-mix(in srgb, var(--profile-accent) 18%, var(--profile-surface)); font: 55px/1 Georgia, serif; box-shadow: 0 0 22px color-mix(in srgb, var(--profile-accent) 36%, transparent); }
-    .profileAvatar img { width: 76px; height: 76px; object-fit: contain; }
-    .profileHero small { color: color-mix(in srgb, var(--profile-accent) 38%, var(--profile-ink)); font-size: 12px; }
+    .profileHero { display: flex; flex-direction: column; align-items: center; padding: 30px 24px 22px; text-align: center; background: radial-gradient(circle at 50% 12%, color-mix(in srgb, var(--profile-accent) 30%, transparent), transparent 70%); }
+    .profileAvatar { display: grid; place-items: center; width: 94px; height: 94px; margin: 0 auto 7px; border: 2px solid var(--profile-accent); border-radius: 50%; background: color-mix(in srgb, var(--profile-accent) 18%, var(--profile-surface)); font: 55px/1 Georgia, serif; box-shadow: 0 0 22px color-mix(in srgb, var(--profile-accent) 36%, transparent); }
+    .profileAvatar img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .profileHero small { display: block; width: 100%; color: color-mix(in srgb, var(--profile-accent) 38%, var(--profile-ink)); font-size: 13px; text-align: center; overflow-wrap: anywhere; }
     .profileHero h2 { margin: 7px 0 5px; font: 600 40px/1.05 "Cormorant Garamond", Georgia, serif; overflow-wrap: anywhere; }
+    .profileHero h2:empty, .profileHero p:empty { display: none; }
     .profileHero p { margin: 4px 0 0; font-size: 13px; }
     .profileBody { padding: 0 24px 24px; }
     .profileBio { min-height: 1.5em; margin: 0 0 15px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
@@ -953,17 +954,19 @@
     .avatarRing.frame-glow { box-shadow: 0 0 0 2px color-mix(in srgb, var(--avatar-accent) 40%, transparent), 0 0 17px var(--avatar-accent); }
     .avatarRing.frame-scallop { border-style: dotted; border-width: 4px; }
     .avatarRing.frame-square { border-radius: 14px; }
-    .messagePeople { display: flex; gap: 12px; overflow-x: auto; padding: 12px 1px 14px; border-bottom: 1px solid var(--message-border); }
-    .messagePersonWrap { position: relative; flex: 0 0 76px; }
-    .messagePerson { display: grid; width: 76px; justify-items: center; gap: 3px; min-width: 76px; padding: 6px 4px; border: 1px solid transparent !important; border-radius: 12px; background: transparent !important; color: var(--message-ink) !important; }
+    .messagePeople { display: flex; flex-wrap: wrap; gap: 12px; overflow: visible; padding: 12px 1px 14px; border-bottom: 1px solid var(--message-border); }
+    .messagePersonWrap { position: relative; flex: 0 0 86px; width: 86px; text-align: center; }
+    .messagePerson { display: flex; flex-direction: column; align-items: center; width: 86px; min-height: 78px; gap: 5px; padding: 6px 4px; border: 1px solid transparent !important; border-radius: 12px; background: transparent !important; color: var(--message-ink) !important; }
     .messagePerson[aria-pressed="true"] { border-color: var(--message-accent) !important; background: color-mix(in srgb, var(--message-accent) 17%, var(--message-surface)) !important; }
-    .messagePersonName { max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+    .messagePersonName { display: block; width: 78px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; font-size: 11px; }
     .messagePersonInfo { position: absolute; top: 3px; right: 0; width: 22px; height: 22px; padding: 0 !important; border-radius: 50% !important; background: var(--message-surface) !important; font-size: 12px; }
     .messageBubble .avatarRing { width: 32px; height: 32px; padding: 1px; font-size: 21px; }
     .onlinePerson .avatarRing { width: 32px; height: 32px; padding: 1px; font-size: 21px; }
     .onlinePerson.offline .avatarRing { filter: brightness(.56) saturate(.65); }
     .onlinePerson.idle .avatarRing { filter: brightness(.8) saturate(.8); }
-    .profileAvatar.avatarRing { --avatar-accent: var(--profile-accent); width: 86px; height: 86px; padding: 4px; font-size: 55px; }
+    .profileAvatar.avatarRing { --avatar-accent: var(--profile-accent); width: 94px; height: 94px; padding: 5px; font-size: 55px; }
+    .accountDialog { background: color-mix(in srgb, var(--account-surface, #251a2b) 80%, transparent); }
+    .siteLockOverlay { background: color-mix(in srgb, var(--overlay-surface, #251a2b) 65%, transparent); }
     .profileBio:empty { display: none; }
 </style>
 </head>
@@ -1191,7 +1194,7 @@
       <p class="accountFeedback" id="accountFeedback" role="status" aria-live="polite"></p>
     </div>
   </div>
-  <div class="profileDialog" id="profileDialog" role="dialog" aria-modal="true" aria-labelledby="profileTitle" hidden>
+  <div class="profileDialog" id="profileDialog" role="dialog" aria-modal="true" aria-labelledby="profileUsername" hidden>
     <div class="profileCard">
       <button class="profileClose" id="profileClose" type="button" aria-label="Close profile">×</button>
       <div class="profileHero">
@@ -1214,7 +1217,7 @@
           <label for="profileStatusInput">Little status</label><input id="profileStatusInput" type="text" maxlength="60" placeholder="Here with you ♡">
           <label for="profileBioInput">About you</label><textarea id="profileBioInput" maxlength="240" placeholder="A little bit about you…"></textarea>
           <fieldset><legend>Profile picture</legend><div class="profileChoices">
-            <label><input type="radio" name="profileAvatarStyle" value="auto" checked> Our cat</label>
+            <label><input type="radio" name="profileAvatarStyle" value="auto" checked> Default</label>
             <label><input type="radio" name="profileAvatarStyle" value="grey"> Grey cat</label>
             <label><input type="radio" name="profileAvatarStyle" value="beige"> Beige cat</label>
             <label><input type="radio" name="profileAvatarStyle" value="heart"> Heart ♡</label>
@@ -2594,18 +2597,34 @@
     let activityAvailable = false;
     let activityRefreshTimer = null;
     let lastSiteInteraction = Date.now();
-    for (const type of ["pointerdown", "keydown", "scroll", "touchstart"]) window.addEventListener(type, () => { lastSiteInteraction = Date.now(); }, { passive: true });
+    function noteSiteInteraction() {
+      const wasIdle = Date.now() - lastSiteInteraction >= 90000;
+      lastSiteInteraction = Date.now();
+      if (wasIdle && presenceActive && accountUser) {
+        const previous = activityRows.get(accountUser.id);
+        activityRows.set(accountUser.id, { ...previous, id: accountUser.id, idle_since: null });
+        renderOnlinePeople();
+        reportActivity();
+      }
+    }
+    for (const type of ["pointerdown", "keydown", "scroll", "touchstart"]) window.addEventListener(type, noteSiteInteraction, { passive: true });
+    let lastMouseActivitySample = 0;
+    window.addEventListener("pointermove", event => {
+      if (event.pointerType !== "mouse" || Date.now() - lastMouseActivitySample < 1000) return;
+      lastMouseActivitySample = Date.now();
+      noteSiteInteraction();
+    }, { passive: true });
     function sceneAvatarColor() { return getComputedStyle(mainWebsite).getPropertyValue("--ui-accent").trim() || "#d987b6"; }
     function createAvatar(id, name, online = true) {
       const profile = profileRecords.get(id) || {};
-      const color = profileAvatarColor(profile, name);
+      const color = profileAvatarColor(profile, name, id);
       const icon = document.createElement("span");
       const frame = ["double", "glow", "scallop", "square"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple";
       icon.className = `avatarRing frame-${frame}`;
       icon.style.setProperty("--avatar-accent", profileAccent(profile) || sceneAvatarColor());
       icon.setAttribute("aria-hidden", "true");
-      if (color) { const img = document.createElement("img"); img.src = `${color}-${online ? "online" : "offline"}.png`; img.alt = ""; icon.append(img); }
-      else icon.textContent = profile.avatar_style === "heart" ? "♡" : "✦";
+      if (color) { const img = document.createElement("img"); img.src = `${color}-${online ? "online" : "offline"}.png`; img.alt = ""; img.onerror = () => { img.remove(); icon.textContent = "♡"; }; icon.append(img); }
+      else icon.textContent = "♡";
       return icon;
     }
     async function loadActivity() {
@@ -3185,11 +3204,11 @@
       const value = profile?.accent_color;
       return /^#[\da-f]{6}$/i.test(value || "") && value.toLowerCase() !== "#d987b6" ? value : null;
     }
-    function profileAvatarColor(profile, name) {
+    function profileAvatarColor(profile, name, id = null) {
       const chosen = profile?.avatar_style || "auto";
       if (chosen === "heart") return null;
       if (chosen === "grey" || chosen === "beige") return chosen;
-      return /^elha+zu+$/i.test(name) ? "grey" : name.toLowerCase() === "urfavnay" ? "beige" : null;
+      return id === "7a5e0845-24be-4ac0-b881-6aff2a8332f5" || /^elha+zu+$/i.test(name) ? "grey" : name.toLowerCase() === "urfavnay" ? "beige" : null;
     }
     function renderProfileView() {
       if (!profileViewedId || profileDialog.hidden) return;
@@ -3208,15 +3227,17 @@
       const sceneAccent = getComputedStyle(accountDialog).getPropertyValue("--account-accent").trim();
       profileDialog.style.setProperty("--profile-accent", color || sceneAccent || "#d987b6");
       document.getElementById("profileUsername").textContent = `@${name}`;
-      document.getElementById("profileTitle").textContent = profile.display_name || name;
-      document.getElementById("profileStatusLine").textContent = profile.status_line || "Here with us ♡";
+      document.getElementById("profileTitle").textContent = profile.display_name || "";
+      document.getElementById("profileStatusLine").textContent = profile.status_line || "";
       document.getElementById("profileBio").textContent = profile.bio || "";
       const avatar = document.getElementById("profileAvatar");
       avatar.replaceChildren();
       avatar.className = `profileAvatar avatarRing frame-${["double","glow","scallop","square"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple"}`;
-      const cat = profileAvatarColor(profile, name);
+      const cat = profileAvatarColor(profile, name, profileViewedId);
       if (cat) {
-        const img = document.createElement("img"); img.src = `${cat}-online.png`; img.alt = ""; avatar.append(img);
+        const img = document.createElement("img"); img.src = `${cat}-online.png`; img.alt = "";
+        img.onerror = () => { img.remove(); avatar.textContent = "♡"; };
+        avatar.append(img);
       } else avatar.textContent = "♡";
       const own = profileViewedId === accountUser?.id;
       document.getElementById("profileSettings").hidden = !own;
@@ -3277,7 +3298,12 @@
       save.disabled = true; profileFeedback.textContent = "Saving…";
       const { data, error } = await accountClient.from("site_profiles").update(payload).eq("id", accountUser.id).select(profileFields).single();
       save.disabled = false;
-      if (error) { profileFeedback.textContent = error.message; return; }
+      if (error) {
+        profileFeedback.textContent = error.code === "42501" || /permission denied|row.level.security/i.test(error.message || "")
+          ? "Profile save was denied. Run the profile save repair SQL in Supabase, then try again."
+          : error.message;
+        return;
+      }
       profileRecords.set(accountUser.id, data);
       profileDirty = false;
       profileFeedback.textContent = "Profile saved ♡";

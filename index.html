@@ -672,6 +672,12 @@
     .accountAction:disabled { opacity: .6; cursor: wait; }
     .accountFeedback { min-height: 1.5em; margin: 14px 0 0; font-size: 14px; }
     .accountEmail { overflow-wrap: anywhere; font-weight: 700; }
+
+    .accountModeTabs { display: flex; gap: 8px; margin: 18px 0; }
+    .accountModeTabs button, .accountLink { border: 1px solid #ffcae288; border-radius: 999px; padding: 9px 13px; background: transparent; color: #fff4fa; cursor: pointer; }
+    .accountModeTabs button[aria-selected="true"] { background: #ffb5d9; color: #2e1b2d; font-weight: 700; }
+    .accountLink { display: block; margin-top: 12px; border: 0; padding-left: 0; text-decoration: underline; }
+    .accountRecovery[hidden], .accountConfirmPassword[hidden] { display: none; }
 </style>
 </head>
 <body>
@@ -824,11 +830,29 @@
       <button class="accountClose" id="accountClose" type="button" aria-label="Close account window">×</button>
       <h2 id="accountTitle">Your account ♡</h2>
       <div class="accountSignedOut" id="accountSignedOut">
-        <p>Enter your email and we’ll send you a sign-in link. No password needed.</p>
+        <div class="accountModeTabs" role="tablist" aria-label="Account action">
+          <button id="accountCreateTab" type="button" role="tab" aria-selected="true">Create account</button>
+          <button id="accountSignInTab" type="button" role="tab" aria-selected="false">Sign in</button>
+        </div>
         <form id="accountForm">
           <label for="accountEmailInput">Email address</label>
           <input id="accountEmailInput" name="email" type="email" autocomplete="email" required>
-          <button class="accountAction" id="accountSend" type="submit">Send sign-in link</button>
+          <label for="accountPasswordInput">Password</label>
+          <input id="accountPasswordInput" name="password" type="password" autocomplete="new-password" minlength="6" required>
+          <div class="accountConfirmPassword" id="accountConfirmPassword">
+            <label for="accountConfirmInput">Confirm password</label>
+            <input id="accountConfirmInput" type="password" autocomplete="new-password" minlength="6" required>
+          </div>
+          <button class="accountAction" id="accountSend" type="submit">Create account</button>
+        </form>
+        <button class="accountLink" id="accountForgot" type="button" hidden>Forgot password?</button>
+      </div>
+      <div class="accountRecovery" id="accountRecovery" hidden>
+        <p>Choose a new password for your account.</p>
+        <form id="accountRecoveryForm">
+          <label for="accountNewPassword">New password</label>
+          <input id="accountNewPassword" type="password" autocomplete="new-password" minlength="6" required>
+          <button class="accountAction" type="submit">Save new password</button>
         </form>
       </div>
       <div class="accountSignedIn" id="accountSignedIn" hidden>
@@ -1829,11 +1853,21 @@
     const accountSignedIn = document.getElementById("accountSignedIn");
     const accountEmail = document.getElementById("accountEmail");
     const accountSignOut = document.getElementById("accountSignOut");
+    const accountCreateTab = document.getElementById("accountCreateTab");
+    const accountSignInTab = document.getElementById("accountSignInTab");
+    const accountPasswordInput = document.getElementById("accountPasswordInput");
+    const accountConfirmPassword = document.getElementById("accountConfirmPassword");
+    const accountConfirmInput = document.getElementById("accountConfirmInput");
+    const accountForgot = document.getElementById("accountForgot");
+    const accountRecovery = document.getElementById("accountRecovery");
+    const accountRecoveryForm = document.getElementById("accountRecoveryForm");
+    const accountNewPassword = document.getElementById("accountNewPassword");
     const accountConfigured = ACCOUNT_SUPABASE_URL.startsWith("https://") &&
       !ACCOUNT_SUPABASE_URL.includes("PASTE_") && !ACCOUNT_SUPABASE_KEY.includes("PASTE_");
     let accountClient = null;
     let accountUser = null;
     let accountReturnFocus = accountButton;
+    let accountMode = "create";
     function showAccountUser(user) {
       accountUser = user;
       accountSignedIn.hidden = !user;
@@ -1841,14 +1875,31 @@
       accountEmail.textContent = user?.email || "";
       accountButton.textContent = user ? `♡ ${user.email}` : "♡ Sign in";
     }
-    function closeAccount() { accountDialog.hidden = true; accountReturnFocus.focus(); }
+    function setAccountMode(mode) {
+      accountMode = mode;
+      const creating = mode === "create";
+      accountCreateTab.setAttribute("aria-selected", String(creating));
+      accountSignInTab.setAttribute("aria-selected", String(!creating));
+      accountConfirmPassword.hidden = !creating;
+      accountConfirmInput.required = creating;
+      accountPasswordInput.autocomplete = creating ? "new-password" : "current-password";
+      accountSend.textContent = creating ? "Create account" : "Sign in";
+      accountForgot.hidden = creating;
+      accountFeedback.textContent = "";
+    }
+    accountCreateTab.addEventListener("click", () => setAccountMode("create"));
+    accountSignInTab.addEventListener("click", () => setAccountMode("signin"));
+    function closeAccount() { accountDialog.hidden = true; accountPasswordInput.value = ""; accountConfirmInput.value = ""; accountReturnFocus.focus(); }
     function openAccount(trigger, fromIntro = false) {
       accountReturnFocus = trigger;
       accountTitle.textContent = fromIntro ? "Come with us ♡" : "Your account ♡";
       accountDialog.hidden = false;
+      setAccountMode(fromIntro ? "create" : "signin");
+      accountRecovery.hidden = true;
+      accountSignedOut.hidden = !!accountUser;
       accountFeedback.textContent = !accountClient
         ? "Sign-in is unavailable right now. Please try again shortly."
-        : fromIntro ? "Sign in, then tap Come with us again ♡" : "";
+        : fromIntro ? "Create an account, or choose Sign in if you already have one." : "";
       (accountUser ? accountSignOut : accountEmailInput).focus();
     }
     window.requestOurWorldEntry = (enterWebsite, trigger) => {
@@ -1861,7 +1912,18 @@
     document.addEventListener("keydown", event => { if (event.key === "Escape" && !accountDialog.hidden) closeAccount(); });
     if (accountConfigured && window.supabase?.createClient) {
       accountClient = window.supabase.createClient(ACCOUNT_SUPABASE_URL, ACCOUNT_SUPABASE_KEY);
-      accountClient.auth.onAuthStateChange((_event, session) => showAccountUser(session?.user || null));
+      accountClient.auth.onAuthStateChange((event, session) => {
+        showAccountUser(session?.user || null);
+        if (event === "PASSWORD_RECOVERY") {
+          accountReturnFocus = document.getElementById("introText");
+          accountDialog.hidden = false;
+          accountSignedOut.hidden = true;
+          accountSignedIn.hidden = true;
+          accountRecovery.hidden = false;
+          accountFeedback.textContent = "";
+          accountNewPassword.focus();
+        }
+      });
       accountClient.auth.getSession().then(({ data, error }) => {
         if (error) accountFeedback.textContent = "Could not check your session. Please try again.";
         else showAccountUser(data.session?.user || null);
@@ -1869,18 +1931,53 @@
     }
     accountForm.addEventListener("submit", async event => {
       event.preventDefault();
-      if (!accountClient) { accountFeedback.textContent = "Account sign-in needs to be connected first."; return; }
+      if (!accountClient) { accountFeedback.textContent = "Sign-in is unavailable right now."; return; }
+      if (accountMode === "create" && accountPasswordInput.value !== accountConfirmInput.value) {
+        accountFeedback.textContent = "The passwords do not match.";
+        accountConfirmInput.focus();
+        return;
+      }
       accountSend.disabled = true;
-      accountFeedback.textContent = "Sending your link…";
+      accountFeedback.textContent = accountMode === "create" ? "Creating your account…" : "Signing in…";
       try {
-        const { error } = await accountClient.auth.signInWithOtp({
-          email: accountEmailInput.value.trim(),
-          options: { emailRedirectTo: location.href.split(/[?#]/)[0], shouldCreateUser: true }
-        });
-        accountFeedback.textContent = error ? error.message : "Check your email for the sign-in link ♡";
-      } catch (_error) {
-        accountFeedback.textContent = "Could not send the link. Please try again.";
-      } finally { accountSend.disabled = false; }
+        const email = accountEmailInput.value.trim();
+        const password = accountPasswordInput.value;
+        const { data, error } = accountMode === "create"
+          ? await accountClient.auth.signUp({ email, password, options: { emailRedirectTo: location.href.split(/[?#]/)[0] } })
+          : await accountClient.auth.signInWithPassword({ email, password });
+        if (error) accountFeedback.textContent = error.message;
+        else if (accountMode === "create" && !data.session) {
+          accountPasswordInput.value = ""; accountConfirmInput.value = "";
+          accountFeedback.textContent = "Account created. Check your email to confirm it, then sign in ♡";
+        }
+        else {
+          accountPasswordInput.value = "";
+          accountConfirmInput.value = "";
+          accountFeedback.textContent = "You’re signed in ♡";
+          showAccountUser(data.user);
+          if (accountReturnFocus.id === "introText" || accountReturnFocus.id === "catButton") {
+            accountDialog.hidden = true;
+            accountReturnFocus.click();
+          }
+        }
+      } catch (_error) { accountFeedback.textContent = "Could not connect. Please try again."; }
+      finally { accountSend.disabled = false; }
+    });
+    accountForgot.addEventListener("click", async () => {
+      if (!accountClient || !accountEmailInput.reportValidity()) return;
+      accountFeedback.textContent = "Sending a reset link…";
+      const { error } = await accountClient.auth.resetPasswordForEmail(accountEmailInput.value.trim(), {
+        redirectTo: location.href.split(/[?#]/)[0]
+      });
+      accountFeedback.textContent = error ? error.message : "Check your email for a password reset link ♡";
+    });
+    accountRecoveryForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!accountClient) return;
+      const { error } = await accountClient.auth.updateUser({ password: accountNewPassword.value });
+      accountNewPassword.value = "";
+      accountFeedback.textContent = error ? error.message : "Password updated. You’re signed in ♡";
+      if (!error) { accountRecovery.hidden = true; showAccountUser((await accountClient.auth.getUser()).data.user); }
     });
     accountSignOut.addEventListener("click", async () => {
       if (!accountClient) return;

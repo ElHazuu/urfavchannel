@@ -2345,11 +2345,17 @@
         }
       }
       onlinePeople.replaceChildren();
+      const ownerId = "7a5e0845-24be-4ac0-b881-6aff2a8332f5";
+      const ownerRegistered = registeredPeople.has(ownerId);
+      let visiblePeople = 0;
       for (const [id, name] of [...registeredPeople].sort((a, b) => a[1].localeCompare(b[1]))) {
         const isOnline = onlineIds.has(id);
+        const username = name.trim().toLowerCase();
+        const isElHazuuu = /^elha+zu+$/.test(username);
+        // Keep the real owner's account; omit extra lookalike accounts and the unwanted offline row.
+        if (isElHazuuu && ((ownerRegistered && id !== ownerId) || !isOnline)) continue;
         const row = document.createElement("span");
         row.className = `onlinePerson${isOnline ? "" : " offline"}`;
-        const username = name.trim().toLowerCase();
         const catColor = /^elha+zu+$/.test(username) ? "grey" : username === "urfavnay" ? "beige" : null;
         const icon = document.createElement(catColor ? "img" : "span");
         icon.className = catColor ? "onlineCatIcon" : "onlineDot";
@@ -2360,8 +2366,9 @@
         }
         row.append(icon, document.createTextNode(`${name} is ${isOnline ? "online" : "Offline"}`));
         onlinePeople.append(row);
+        visiblePeople++;
       }
-      if (!registeredPeople.size) onlinePeople.textContent = "No registered usernames yet";
+      if (!visiblePeople) onlinePeople.textContent = registeredPeople.size ? "No one here right now ♡" : "No registered usernames yet";
     }
     async function loadRegisteredPeople(generation) {
       const { data, error } = await accountClient.from("site_profiles").select("id,username");

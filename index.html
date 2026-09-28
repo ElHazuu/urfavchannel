@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v31">
+<meta name="site-build" content="cinta-kita-v32">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -854,7 +854,7 @@
     #mainWebsite[data-wallpaper="underwater"] .welcomeOrbit::after { color: var(--scene-accent); }
     #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeOrbit::after { color: #0b5369; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .welcomeOrbit::before { text-shadow: 0 0 12px color-mix(in srgb, var(--scene-accent) 48%, transparent); }
-    .profileMenuButton[hidden], .profileDialog[hidden], .profileForm[hidden], .profileEdit[hidden] { display: none; }
+    .profileDialog[hidden], .profileForm[hidden], .profileEdit[hidden], .profileSettings[hidden], .profileSignOut[hidden] { display: none; }
     .profileDialog { position: fixed; inset: 0; z-index: 125; display: grid; place-items: center; padding: 16px; background: #100918dc; backdrop-filter: blur(12px); --profile-surface: #251a2b; --profile-field: #140e1d; --profile-ink: #fbf3f8; --profile-accent: #d987b6; }
     .profileCard { position: relative; width: min(540px, 100%); max-height: min(88dvh, 770px); overflow-y: auto; border: 1px solid color-mix(in srgb, var(--profile-accent) 55%, var(--profile-ink)); border-radius: 24px; background: var(--profile-surface); color: var(--profile-ink); box-shadow: 0 25px 75px #000a; }
     .profileHero { padding: 30px 24px 22px; text-align: center; background: radial-gradient(circle at 50% 12%, color-mix(in srgb, var(--profile-accent) 30%, transparent), transparent 70%); }
@@ -871,6 +871,10 @@
     .profileForm { border-top: 1px solid color-mix(in srgb, var(--profile-accent) 38%, transparent); padding-top: 14px; }
     .profileForm label, .profileForm legend { display: block; margin: 13px 0 5px; font-size: 13px; font-weight: 700; }
     .profileForm input[type="text"], .profileForm textarea { width: 100%; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--profile-accent) 55%, var(--profile-ink)); border-radius: 9px; background: var(--profile-field); color: var(--profile-ink); font: inherit; }
+    .profileSettings { margin: 14px 0; padding: 12px 0; border-top: 1px solid color-mix(in srgb, var(--profile-accent) 38%, transparent); }
+    .profileSettings label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 700; }
+    .profileSettings input { width: 100%; margin-bottom: 9px; padding: 10px 12px; border: 1px solid var(--profile-accent); border-radius: 9px; background: var(--profile-field); color: var(--profile-ink); font: inherit; }
+    .profileSignOut { margin-top: 15px; }
     .profileForm textarea { min-height: 75px; resize: vertical; }
     .profileForm fieldset { margin: 12px 0; padding: 0; border: 0; }
     .profileChoices { display: flex; flex-wrap: wrap; gap: 7px; }
@@ -899,6 +903,50 @@
     #mainWebsite .kissActions button:last-child { background: transparent; color: var(--kiss-ink); }
     #mainWebsite[data-wallpaper="underwater"] .kissActions button { color: #082c3d; }
     #mainWebsite[data-wallpaper="underwater"] .kissActions button:last-child { color: var(--kiss-ink); }
+    /* Shared colors for navigation, controls, content cards, and open panels. */
+    #mainWebsite { --ui-accent: var(--theme-accent); --ui-surface: var(--theme-surface); --ui-ink: var(--theme-text); --ui-field: var(--theme-bg); --ui-line: var(--theme-line); }
+    #mainWebsite[data-wallpaper="underwater"] { --ui-accent: var(--scene-accent); --ui-surface: var(--scene-surface); --ui-ink: #f4fdff; --ui-field: color-mix(in srgb, var(--scene-surface) 78%, #001421); --ui-line: var(--scene-accent); }
+    #mainWebsite .themeButton, #mainWebsite .wallpaperPanel, #mainWebsite .themePanel,
+    #mainWebsite .notificationBell, #mainWebsite .notificationHint, #mainWebsite .notificationPanel,
+    #mainWebsite .videoManager, #mainWebsite .videoManageToggle {
+      background: var(--ui-surface); color: var(--ui-ink); border-color: var(--ui-line);
+    }
+    #mainWebsite .themeButton { display: grid; place-items: center; }
+    #mainWebsite .themeButton svg, #mainWebsite .notificationBell svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    #mainWebsite .themeButton:hover, #mainWebsite .themeButton:focus-visible,
+    #mainWebsite .notificationBell:hover, #mainWebsite .notificationBell:focus-visible {
+      background: color-mix(in srgb, var(--ui-accent) 26%, var(--ui-surface)); color: var(--ui-ink);
+    }
+    #mainWebsite .wallpaperPanel { box-shadow: 0 18px 45px #0006; }
+    #mainWebsite .wallpaperChoices button, #mainWebsite .themeMode,
+    #mainWebsite .notificationPanel button, #mainWebsite .videoManager button {
+      background: color-mix(in srgb, var(--ui-accent) 18%, var(--ui-surface));
+      color: var(--ui-ink); border-color: var(--ui-line);
+    }
+    #mainWebsite .wallpaperChoices button[aria-pressed="true"], #mainWebsite .wallpaperChoices button:hover,
+    #mainWebsite .themeMode:hover, #mainWebsite .notificationPanel button:hover,
+    #mainWebsite .videoManager button:hover { background: color-mix(in srgb, var(--ui-accent) 38%, var(--ui-surface)); }
+    #mainWebsite .themeMode[aria-checked="true"]::after { background: var(--ui-accent); }
+    #mainWebsite .notificationBell.new { box-shadow: 0 0 23px color-mix(in srgb, var(--ui-accent) 55%, transparent); }
+    #mainWebsite .notificationBell.new::after, #mainWebsite .notificationCount {
+      background: var(--ui-accent); color: var(--ui-surface); box-shadow: 0 0 8px var(--ui-accent);
+    }
+    #mainWebsite .notificationForm input, #mainWebsite .notificationForm textarea,
+    #mainWebsite .videoManager input:not([type="checkbox"]), #mainWebsite .videoManager textarea {
+      background: var(--ui-field); color: var(--ui-ink); border-color: var(--ui-line);
+    }
+    #mainWebsite .sectionHeading, #mainWebsite .storyHeading,
+    #mainWebsite .cardText span, #mainWebsite .menuHandle span { border-color: var(--ui-line); }
+    #mainWebsite .swatches button { border-color: var(--ui-surface); box-shadow: 0 0 0 1px var(--ui-ink); }
+    #mainWebsite[data-wallpaper="underwater"] .wallpaperPanel,
+    #mainWebsite[data-wallpaper="underwater"] .themePanel,
+    #mainWebsite[data-wallpaper="underwater"] .themeButton { color: #f4fdff; }
+    #mainWebsite[data-wallpaper="underwater"] .themeMode,
+    #mainWebsite[data-wallpaper="underwater"] .wallpaperChoices button { color: #f4fdff; }
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .videoManager,
+    #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .videoManageToggle { color: #f4fdff; }
+    .siteUpdateNotice, .siteLockCard { background: var(--overlay-surface, #251a2b); color: var(--overlay-ink, #fbf3f8); border-color: var(--overlay-accent, #d987b6); }
+    .siteUpdateNotice button, .siteLockCard button { background: color-mix(in srgb, var(--overlay-accent, #d987b6) 45%, var(--overlay-surface, #251a2b)); color: var(--overlay-ink, #fbf3f8); border-color: var(--overlay-accent, #d987b6); }
 </style>
 </head>
 <body>
@@ -942,7 +990,7 @@
       <span class="spotifyLabel">OUR PLAYLIST ♫</span>
     </a>
     <div class="themeTools">
-      <button class="themeButton" id="themeButton" type="button" aria-label="Choose page colors" aria-expanded="false" aria-controls="themePanel">🎨</button>
+      <button class="themeButton" id="themeButton" type="button" aria-label="Choose page colors" aria-expanded="false" aria-controls="themePanel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="9" r="1"/><circle cx="13" cy="7" r="1"/><circle cx="17" cy="11" r="1"/><path d="M12 21c-2-1-2-4 1-4h2"/></svg></button>
       <div class="themePanel" id="themePanel" hidden>
         <p>Make this page yours ♡</p>
         <button class="themeMode" id="themeMode" type="button" role="switch" aria-checked="false">🌙 Dark Mode</button>
@@ -952,12 +1000,12 @@
       </div>
     </div>
     <div class="wallpaperTools">
-      <button class="themeButton" id="wallpaperButton" type="button" aria-label="Choose wallpaper" aria-expanded="false" aria-controls="wallpaperPanel">🖼️</button>
+      <button class="themeButton" id="wallpaperButton" type="button" aria-label="Choose wallpaper" aria-expanded="false" aria-controls="wallpaperPanel"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="1.5"/><path d="m4 17 5-5 3 3 3-4 5 6"/></svg></button>
       <div class="wallpaperPanel" id="wallpaperPanel" hidden>
         <p>Choose a wallpaper ♡</p>
         <div class="wallpaperChoices">
           <button type="button" data-wallpaper="original">♡ Original</button>
-          <button type="button" data-wallpaper="underwater">🌊 Underwater</button>
+          <button type="button" data-wallpaper="underwater">≋ Underwater</button>
         </div>
       </div>
     </div>
@@ -971,13 +1019,12 @@
           <a href="#story"><small>03</small>Our Story<span>↗</span></a>
         </div>
         <button class="accountMenuButton" id="accountButton" type="button" aria-haspopup="dialog">♡ Sign in</button>
-        <button class="accountMenuButton profileMenuButton" id="profileOpen" type="button" hidden>✦ My Profile · Edit &amp; Customize</button>
         <button class="messageMenuButton" id="messageOpen" type="button" hidden>✉ Messages ♡ <span class="messageBadge" id="messageBadge" hidden></span></button>
         <div class="onlineList" id="onlineList" aria-live="polite" hidden><strong>Here with us ♡</strong><div id="onlinePeople"></div></div>
         <button id="backToIntro" type="button">↶ Back to our cats</button>
       </nav>
     </div>
-    <button class="notificationBell" id="notificationBell" type="button" aria-label="Open updates" aria-controls="notificationPanel" aria-expanded="false">🔔<span class="notificationCount" id="notificationCount" hidden></span></button>
+    <button class="notificationBell" id="notificationBell" type="button" aria-label="Open updates" aria-controls="notificationPanel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17h14c-2-2-2-3-2-7a5 5 0 0 0-10 0c0 4 0 5-2 7Z"/><path d="M10 20h4"/></svg><span class="notificationCount" id="notificationCount" hidden></span></button>
     <div class="notificationPanel" id="notificationPanel" aria-label="Updates" hidden>
       <div class="notificationPanelHead"><h2>Our updates ♡</h2><button id="notificationClose" type="button" aria-label="Close updates">×</button></div>
       <form class="notificationForm" id="notificationForm" hidden>
@@ -1121,13 +1168,6 @@
       </div>
       <div class="accountSignedIn" id="accountSignedIn" hidden>
         <p>Signed in as <span class="accountEmail" id="accountEmail"></span></p>
-        <button class="accountAction" id="accountProfile" type="button">Customize profile ♡</button>
-        <form id="accountUsernameForm">
-          <label for="accountEditUsername">Username</label>
-          <input id="accountEditUsername" type="text" autocomplete="nickname" minlength="2" maxlength="24" pattern="[A-Za-z0-9_]+" title="Use 2–24 letters, numbers, or underscores" required>
-          <button class="accountAction" id="accountSaveUsername" type="submit">Save username</button>
-        </form>
-        <button class="accountAction" id="accountSignOut" type="button">Sign out</button>
       </div>
       <p class="accountFeedback" id="accountFeedback" role="status" aria-live="polite"></p>
     </div>
@@ -1144,6 +1184,13 @@
       <div class="profileBody">
         <p class="profileBio" id="profileBio"></p>
         <button class="profileEdit" id="profileEdit" type="button" hidden>Edit my profile</button>
+        <div class="profileSettings" id="profileSettings" hidden>
+          <form id="accountUsernameForm">
+            <label for="accountEditUsername">Username</label>
+            <input id="accountEditUsername" type="text" autocomplete="nickname" minlength="2" maxlength="24" pattern="[A-Za-z0-9_]+" title="Use 2–24 letters, numbers, or underscores" required>
+            <button id="accountSaveUsername" type="submit">Save username</button>
+          </form>
+        </div>
         <form class="profileForm" id="profileForm" hidden>
           <label for="profileDisplayName">Display name</label><input id="profileDisplayName" type="text" maxlength="32" placeholder="What should we call you?">
           <label for="profileStatusInput">Little status</label><input id="profileStatusInput" type="text" maxlength="60" placeholder="Here with you ♡">
@@ -1160,6 +1207,7 @@
           <button id="profileCancel" type="button">Cancel</button>
         </form>
         <p class="profileFeedback" id="profileFeedback" role="status"></p>
+        <button id="accountSignOut" class="profileSignOut" type="button" hidden>Sign out</button>
       </div>
     </div>
   </div>
@@ -1284,7 +1332,7 @@
         chickenPicture.src = chasePreyFrames()[0];
         ourWorldCard.setAttribute("aria-label", chosen === "dark" ? "Watch the cats chase a Nautilus underwater" : "Watch the cats chase a salmon underwater");
       }
-      themeMode.textContent = chosen === "light" ? "☀ Light Mode" : "🌙 Dark Mode";
+      themeMode.textContent = chosen === "light" ? "☼ Light Mode" : "☾ Dark Mode";
       themeMode.setAttribute("aria-checked", String(chosen === "light"));
       if (save && mainWebsite.dataset.wallpaper !== "underwater") savedTheme = chosen;
       if (save) try { localStorage.setItem(mainWebsite.dataset.wallpaper === "underwater" ? "ourSayangUnderwaterTheme" : "ourSayangTheme", chosen); } catch (error) {}
@@ -3053,6 +3101,9 @@
       const underwater = mainWebsite.dataset.wallpaper === "underwater";
       const surface = styles.getPropertyValue(underwater ? "--scene-surface" : "--theme-surface").trim();
       const accent = styles.getPropertyValue(underwater ? "--scene-accent" : "--theme-accent").trim();
+      document.documentElement.style.setProperty("--overlay-surface", surface || "#251a2b");
+      document.documentElement.style.setProperty("--overlay-accent", accent || "#d987b6");
+      document.documentElement.style.setProperty("--overlay-ink", underwater ? "#f4fdff" : styles.getPropertyValue("--theme-text").trim());
       accountDialog.style.setProperty("--account-surface", surface || "#251a2b");
       accountDialog.style.setProperty("--account-accent", accent || "#d987b6");
       accountDialog.style.setProperty("--account-ink", underwater ? "#f4fdff" : styles.getPropertyValue("--theme-text").trim());
@@ -3068,7 +3119,6 @@
     new MutationObserver(syncAccountPalette).observe(mainWebsite, { attributes: true, attributeFilter: ["data-wallpaper", "data-theme", "style"] });
     siteLockSignIn.addEventListener("click", () => openAccount(siteLockSignIn));
     const profileDialog = document.getElementById("profileDialog");
-    const profileOpen = document.getElementById("profileOpen");
     const profileForm = document.getElementById("profileForm");
     const profileEdit = document.getElementById("profileEdit");
     const profileFeedback = document.getElementById("profileFeedback");
@@ -3077,7 +3127,7 @@
     let profileDirty = false;
     function profileAccent(profile) {
       const value = profile?.accent_color;
-      return /^#[\da-f]{6}$/i.test(value || "") ? value : null;
+      return /^#[\da-f]{6}$/i.test(value || "") && value.toLowerCase() !== "#d987b6" ? value : null;
     }
     function profileAvatarColor(profile, name) {
       const chosen = profile?.avatar_style || "auto";
@@ -3103,6 +3153,8 @@
         const img = document.createElement("img"); img.src = `${cat}-online.png`; img.alt = ""; avatar.append(img);
       } else avatar.textContent = "♡";
       const own = profileViewedId === accountUser?.id;
+      document.getElementById("profileSettings").hidden = !own;
+      accountSignOut.hidden = !own;
       profileEdit.hidden = !own || !profileSchemaReady || !profileForm.hidden;
       if (!own) profileForm.hidden = true;
       if (!profileSchemaReady && own) profileFeedback.textContent = "Profile editing needs the one-time profile SQL setup.";
@@ -3115,7 +3167,7 @@
       document.getElementById("profileBioInput").value = profile.bio || "";
       const choice = profileForm.querySelector(`input[name="profileAvatarStyle"][value="${["auto","grey","beige","heart"].includes(profile.avatar_style) ? profile.avatar_style : "auto"}"]`);
       choice.checked = true;
-      document.getElementById("profileColor").value = profileAccent(profile) || "#d987b6";
+      document.getElementById("profileColor").value = profileAccent(profile) || getComputedStyle(accountDialog).getPropertyValue("--account-accent").trim() || "#d987b6";
       profileDirty = false;
     }
     function openProfile(id, edit = false, trigger = null) {
@@ -3138,11 +3190,6 @@
       profileViewedId = null;
       if (profileReturnFocus?.isConnected) profileReturnFocus.focus();
     }
-    profileOpen.addEventListener("click", () => openProfile(accountUser?.id, true, profileOpen));
-    document.getElementById("accountProfile").addEventListener("click", () => {
-      accountDialog.hidden = true;
-      openProfile(accountUser?.id, true, profileOpen);
-    });
     document.getElementById("profileClose").addEventListener("click", closeProfile);
     document.getElementById("profileCancel").addEventListener("click", () => { profileForm.hidden = true; profileDirty = false; profileFeedback.textContent = ""; renderProfileView(); profileEdit.focus(); });
     profileDialog.addEventListener("click", event => { if (event.target === profileDialog) closeProfile(); });
@@ -3182,8 +3229,7 @@
       const username = user?.user_metadata?.username || "";
       accountEmail.textContent = username || "Your account";
       accountEditUsername.value = username;
-      accountButton.textContent = user ? `♡ ${username || "Account"}` : "♡ Sign in";
-      profileOpen.hidden = !user;
+      accountButton.textContent = user ? `✦ My Profile · ${username || "Account"}` : "♡ Sign in";
       if (!user && !profileDialog.hidden) closeProfile();
       syncSiteLock();
       updatePresence();
@@ -3203,13 +3249,13 @@
       accountFeedback.textContent = !accountClient
         ? "Sign-in is unavailable right now. Please try again shortly."
         : fromIntro ? "Sign in with your existing account to enter ♡" : "";
-      (accountUser ? accountSignOut : accountEmailInput).focus();
+      (accountUser ? accountClose : accountEmailInput).focus();
     }
     window.requestOurWorldEntry = (enterWebsite, trigger) => {
       if (accountUser) enterWebsite();
       else openAccount(trigger, true);
     };
-    accountButton.addEventListener("click", () => openAccount(accountButton));
+    accountButton.addEventListener("click", () => accountUser ? openProfile(accountUser.id, false, accountButton) : openAccount(accountButton));
     accountClose.addEventListener("click", closeAccount);
     accountDialog.addEventListener("click", event => { if (event.target === accountDialog) closeAccount(); });
     document.addEventListener("keydown", event => { if (event.key === "Escape" && !accountDialog.hidden) closeAccount(); });
@@ -3276,8 +3322,8 @@
       accountSaveUsername.disabled = true;
       const { data, error } = await accountClient.auth.updateUser({ data: { username: accountEditUsername.value.trim() } });
       accountSaveUsername.disabled = false;
-      accountFeedback.textContent = error ? error.message : "Username saved ♡";
-      if (!error) showAccountUser(data.user);
+      profileFeedback.textContent = error ? error.message : "Username saved ♡";
+      if (!error) { showAccountUser(data.user); registeredPeople.set(data.user.id, accountEditUsername.value.trim()); profileRecords.set(data.user.id, { ...profileRecords.get(data.user.id), username: accountEditUsername.value.trim() }); renderProfileView(); renderOnlinePeople(); renderMessages(); }
     });
     accountRecoveryForm.addEventListener("submit", async event => {
       event.preventDefault();
@@ -3292,8 +3338,9 @@
       accountSignOut.disabled = true;
       const { error } = await accountClient.auth.signOut();
       accountSignOut.disabled = false;
-      accountFeedback.textContent = error ? error.message : "Signed out ♡";
+      profileFeedback.textContent = error ? error.message : "Signed out ♡";
       if (!error) {
+        closeProfile();
         accountDialog.hidden = true;
         if (mainWebsite.classList.contains("show")) backButton.click();
       }

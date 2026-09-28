@@ -727,6 +727,7 @@
           <a href="#videos"><small>02</small>Videos<span>↗</span></a>
           <a href="#story"><small>03</small>Our Story<span>↗</span></a>
         </div>
+        <button class="accountMenuButton" id="accountButton" type="button" aria-haspopup="dialog">♡ Sign in</button>
         <button id="backToIntro" type="button">↶ Back to our cats</button>
       </nav>
     </div>
@@ -801,6 +802,26 @@
       </div>
     </div>
   </main>
+
+  <div class="accountDialog" id="accountDialog" role="dialog" aria-modal="true" aria-labelledby="accountTitle" hidden>
+    <div class="accountCard">
+      <button class="accountClose" id="accountClose" type="button" aria-label="Close account window">×</button>
+      <h2 id="accountTitle">Your account ♡</h2>
+      <div class="accountSignedOut" id="accountSignedOut">
+        <p>Enter your email and we’ll send you a sign-in link. No password needed.</p>
+        <form id="accountForm">
+          <label for="accountEmailInput">Email address</label>
+          <input id="accountEmailInput" name="email" type="email" autocomplete="email" required>
+          <button class="accountAction" id="accountSend" type="submit">Send sign-in link</button>
+        </form>
+      </div>
+      <div class="accountSignedIn" id="accountSignedIn" hidden>
+        <p>Signed in as <span class="accountEmail" id="accountEmail"></span></p>
+        <button class="accountAction" id="accountSignOut" type="button">Sign out</button>
+      </div>
+      <p class="accountFeedback" id="accountFeedback" role="status" aria-live="polite"></p>
+    </div>
+  </div>
 
   <audio id="introMusic" src="Ariana Grande - everytime (Official Instrumental).mp3" loop preload="auto"></audio>
   <script>
@@ -1770,5 +1791,74 @@
 })();
 </script>
 
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script>
+    // Public browser settings from Supabase > Project Settings > API.
+    // Use a publishable/anon key here. Never put a secret/service_role key in this page.
+    const ACCOUNT_SUPABASE_URL = "PASTE_SUPABASE_PROJECT_URL_HERE";
+    const ACCOUNT_SUPABASE_KEY = "PASTE_SUPABASE_PUBLISHABLE_KEY_HERE";
+    const accountButton = document.getElementById("accountButton");
+    const accountDialog = document.getElementById("accountDialog");
+    const accountClose = document.getElementById("accountClose");
+    const accountForm = document.getElementById("accountForm");
+    const accountEmailInput = document.getElementById("accountEmailInput");
+    const accountSend = document.getElementById("accountSend");
+    const accountFeedback = document.getElementById("accountFeedback");
+    const accountSignedOut = document.getElementById("accountSignedOut");
+    const accountSignedIn = document.getElementById("accountSignedIn");
+    const accountEmail = document.getElementById("accountEmail");
+    const accountSignOut = document.getElementById("accountSignOut");
+    const accountConfigured = ACCOUNT_SUPABASE_URL.startsWith("https://") &&
+      !ACCOUNT_SUPABASE_URL.includes("PASTE_") && !ACCOUNT_SUPABASE_KEY.includes("PASTE_");
+    let accountClient = null;
+    let accountUser = null;
+    function showAccountUser(user) {
+      accountUser = user;
+      accountSignedIn.hidden = !user;
+      accountSignedOut.hidden = !!user;
+      accountEmail.textContent = user?.email || "";
+      accountButton.textContent = user ? `♡ ${user.email}` : "♡ Sign in";
+    }
+    function closeAccount() { accountDialog.hidden = true; accountButton.focus(); }
+    accountButton.addEventListener("click", () => {
+      accountDialog.hidden = false;
+      accountFeedback.textContent = accountConfigured ? "" : "Account sign-in needs to be connected first.";
+      (accountUser ? accountSignOut : accountEmailInput).focus();
+    });
+    accountClose.addEventListener("click", closeAccount);
+    accountDialog.addEventListener("click", event => { if (event.target === accountDialog) closeAccount(); });
+    document.addEventListener("keydown", event => { if (event.key === "Escape" && !accountDialog.hidden) closeAccount(); });
+    if (accountConfigured && window.supabase?.createClient) {
+      accountClient = window.supabase.createClient(ACCOUNT_SUPABASE_URL, ACCOUNT_SUPABASE_KEY);
+      accountClient.auth.onAuthStateChange((_event, session) => showAccountUser(session?.user || null));
+      accountClient.auth.getSession().then(({ data, error }) => {
+        if (error) accountFeedback.textContent = "Could not check your session. Please try again.";
+        else showAccountUser(data.session?.user || null);
+      });
+    }
+    accountForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!accountClient) { accountFeedback.textContent = "Account sign-in needs to be connected first."; return; }
+      accountSend.disabled = true;
+      accountFeedback.textContent = "Sending your link…";
+      try {
+        const { error } = await accountClient.auth.signInWithOtp({
+          email: accountEmailInput.value.trim(),
+          options: { emailRedirectTo: location.href.split(/[?#]/)[0], shouldCreateUser: true }
+        });
+        accountFeedback.textContent = error ? error.message : "Check your email for the sign-in link ♡";
+      } catch (_error) {
+        accountFeedback.textContent = "Could not send the link. Please try again.";
+      } finally { accountSend.disabled = false; }
+    });
+    accountSignOut.addEventListener("click", async () => {
+      if (!accountClient) return;
+      accountSignOut.disabled = true;
+      const { error } = await accountClient.auth.signOut();
+      accountSignOut.disabled = false;
+      accountFeedback.textContent = error ? error.message : "Signed out ♡";
+    });
+  </script>
 </body>
 </html>

@@ -1293,8 +1293,11 @@
       later(3850, id, () => { intro.style.opacity = "0"; mainWebsite.classList.add("show"); });
       later(4850, id, () => { intro.style.display = "none"; screen = "website"; });
     }
-    catButton.addEventListener("click", enterWebsite);
-    introText.addEventListener("click", enterWebsite);
+    function requestEntry(event) {
+      if (window.requestOurWorldEntry) window.requestOurWorldEntry(enterWebsite, event.currentTarget);
+    }
+    catButton.addEventListener("click", requestEntry);
+    introText.addEventListener("click", requestEntry);
     backButton.addEventListener("click", () => {
       ++transitionId;
       screen = "intro";
@@ -1800,6 +1803,7 @@
     const ACCOUNT_SUPABASE_KEY = "sb_publishable_74Fr4c8T4OIKBgXED-sgsg_iUPBviG0";
     const accountButton = document.getElementById("accountButton");
     const accountDialog = document.getElementById("accountDialog");
+    const accountTitle = document.getElementById("accountTitle");
     const accountClose = document.getElementById("accountClose");
     const accountForm = document.getElementById("accountForm");
     const accountEmailInput = document.getElementById("accountEmailInput");
@@ -1813,6 +1817,7 @@
       !ACCOUNT_SUPABASE_URL.includes("PASTE_") && !ACCOUNT_SUPABASE_KEY.includes("PASTE_");
     let accountClient = null;
     let accountUser = null;
+    let accountReturnFocus = accountButton;
     function showAccountUser(user) {
       accountUser = user;
       accountSignedIn.hidden = !user;
@@ -1820,12 +1825,21 @@
       accountEmail.textContent = user?.email || "";
       accountButton.textContent = user ? `♡ ${user.email}` : "♡ Sign in";
     }
-    function closeAccount() { accountDialog.hidden = true; accountButton.focus(); }
-    accountButton.addEventListener("click", () => {
+    function closeAccount() { accountDialog.hidden = true; accountReturnFocus.focus(); }
+    function openAccount(trigger, fromIntro = false) {
+      accountReturnFocus = trigger;
+      accountTitle.textContent = fromIntro ? "Come with us ♡" : "Your account ♡";
       accountDialog.hidden = false;
-      accountFeedback.textContent = accountConfigured ? "" : "Account sign-in needs to be connected first.";
+      accountFeedback.textContent = !accountClient
+        ? "Sign-in is unavailable right now. Please try again shortly."
+        : fromIntro ? "Sign in, then tap Come with us again ♡" : "";
       (accountUser ? accountSignOut : accountEmailInput).focus();
-    });
+    }
+    window.requestOurWorldEntry = (enterWebsite, trigger) => {
+      if (accountUser) enterWebsite();
+      else openAccount(trigger, true);
+    };
+    accountButton.addEventListener("click", () => openAccount(accountButton));
     accountClose.addEventListener("click", closeAccount);
     accountDialog.addEventListener("click", event => { if (event.target === accountDialog) closeAccount(); });
     document.addEventListener("keydown", event => { if (event.key === "Escape" && !accountDialog.hidden) closeAccount(); });

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v54">
+<meta name="site-build" content="cinta-kita-v55">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -551,11 +551,20 @@
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .coralDetails { display: block; }
     .coralDetails img { position: absolute; display: block; width: clamp(42px, 4.5vw, 62px); height: auto; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 5px 5px #000a) drop-shadow(0 0 8px #8be8f480); }
     .coralPearl { left: 24%; bottom: 82px; animation: coralPearlGlow 5s ease-in-out infinite alternate; }
-    .coralShellLink { position: absolute; right: 19%; bottom: 78px; display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; transform: rotate(-8deg); pointer-events: auto; cursor: pointer; transition: transform .22s, filter .22s; }
+    .coralShellLink { position: absolute; right: 19%; bottom: 78px; display: grid; place-items: center; width: 58px; height: 58px; padding: 0; border: 0; background: transparent; border-radius: 50%; transform: rotate(-8deg); pointer-events: auto; cursor: pointer; transition: transform .22s, filter .22s; }
     .coralShellLink:hover, .coralShellLink:focus-visible { transform: rotate(0) scale(1.18); filter: drop-shadow(0 0 9px #adf4ffb8); outline: 2px solid #b6faff; outline-offset: 2px; }
     .coralShellLink .coralShell { position: static; width: 48px; }
     .coralShellLink::after { content: "Open me"; position: absolute; bottom: 100%; left: 50%; padding: 5px 8px; border: 1px solid #78dbe977; border-radius: 8px; background: #06111ce8; color: #e3fbff; font: 700 10px/1.2 "DM Sans", Arial, sans-serif; white-space: nowrap; opacity: 0; transform: translate(-50%, 5px); transition: opacity .2s, transform .2s; }
     .coralShellLink:hover::after, .coralShellLink:focus-visible::after { opacity: 1; transform: translate(-50%, 0); }
+    .coralMessage[hidden] { display: none !important; }
+    .coralMessage { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 22px; background: #020d17d9; backdrop-filter: blur(10px); }
+    .coralMessageCard { position: relative; width: min(100%, 460px); padding: 56px 34px 48px; border: 1px solid #9feef3a8; border-radius: 28px; background: radial-gradient(circle at 50% 0%, #246879 0, #123b50 42%, #071b2e 100%); color: #f3fdff; text-align: center; box-shadow: 0 26px 80px #000a, inset 0 0 35px #67dbe12b, 0 0 35px #65e3ee38; }
+    .coralMessageCard::before { content: "✦"; display: block; margin-bottom: 14px; color: #a9f4ef; font-size: 30px; text-shadow: 0 0 18px #87f5f1; }
+    .coralMessageCard small { color: #b6e8e9; font: 700 11px/1.5 "DM Sans", Arial, sans-serif; letter-spacing: .22em; }
+    .coralMessageCard h2 { margin: 12px 0 16px; color: #fff; font-size: clamp(30px, 7vw, 44px); line-height: 1.15; }
+    .coralMessageCard p { margin: 0; color: #e3f9f8; font-size: clamp(17px, 4.2vw, 21px); line-height: 1.6; }
+    .coralMessageClose { position: absolute; top: 14px; right: 16px; display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid #b5e9e880; border-radius: 50%; background: #ffffff14; color: #fff; font-size: 25px; cursor: pointer; }
+    .coralMessageClose:hover, .coralMessageClose:focus-visible { background: #b3f0e83b; outline: 2px solid #b3f0e8; outline-offset: 2px; }
     .deepFishLane { display: none; position: absolute; inset: auto 0 clamp(255px, 32vw, 435px); z-index: 0; height: 108px; overflow: hidden; pointer-events: none; }
     #mainWebsite[data-wallpaper="underwater"][data-theme="dark"] .deepFishLane { display: block; }
     .deepFishDuo { position: absolute; left: calc(100% + 170px); top: 6px; width: clamp(95px, 12vw, 158px); animation: deepFishCross 34s linear infinite -12s; }
@@ -1136,7 +1145,7 @@
     <div class="deepFishLane" aria-hidden="true"><span class="deepFishDuo"><img id="deepFishDuoImage" src="deep-fish-duo-frame-1.png" alt="" loading="lazy" decoding="async"></span></div>
     <div class="coralDetails">
       <img class="coralPearl" src="Pearl.png" alt="" loading="lazy" decoding="async">
-      <a class="coralShellLink" href="secret.html" aria-label="Open me: visit our secret gifts" title="Open me"><img class="coralShell" src="Shell.png" alt="" loading="lazy" decoding="async"></a>
+      <button class="coralShellLink" id="coralShellOpen" type="button" aria-haspopup="dialog" aria-controls="coralMessage" aria-label="Open me: a little ocean message" title="Open me"><img class="coralShell" src="Shell.png" alt="" loading="lazy" decoding="async"></button>
       <span class="coralGlimmer" style="--glimmer-x:12%;--glimmer-y:118px;--glimmer-delay:-1s"></span>
       <span class="coralGlimmer" style="--glimmer-x:36%;--glimmer-y:164px;--glimmer-delay:-3.5s"></span>
       <span class="coralGlimmer" style="--glimmer-x:63%;--glimmer-y:132px;--glimmer-delay:-2s"></span>
@@ -4051,6 +4060,31 @@
         setTimeout(() => ctx.close().catch(() => {}), 1100);
       } catch (_error) { /* Some browsers block audio until interaction. */ }
     });
+  </script>
+  <div class="coralMessage" id="coralMessage" role="dialog" aria-modal="true" aria-labelledby="coralMessageTitle" hidden>
+    <div class="coralMessageCard">
+      <button class="coralMessageClose" id="coralMessageClose" type="button" aria-label="Close message">&times;</button>
+      <small>A LITTLE TREASURE FROM THE SEA</small>
+      <h2 id="coralMessageTitle">You found me! ♡</h2>
+      <p>No matter how deep in the ocean you are, I’ll always find you. ♡</p>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const shell = document.getElementById("coralShellOpen");
+      const message = document.getElementById("coralMessage");
+      const close = document.getElementById("coralMessageClose");
+      if (!shell || !message || !close) return;
+      const hideMessage = () => { message.hidden = true; shell.focus(); };
+      shell.addEventListener("click", () => { message.hidden = false; close.focus(); });
+      close.addEventListener("click", hideMessage);
+      message.addEventListener("click", (event) => { if (event.target === message) hideMessage(); });
+      document.addEventListener("keydown", (event) => {
+        if (message.hidden) return;
+        if (event.key === "Escape") hideMessage();
+        if (event.key === "Tab") { event.preventDefault(); close.focus(); }
+      });
+    })();
   </script>
 </body>
 </html>

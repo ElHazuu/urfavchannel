@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v59">
+<meta name="site-build" content="cinta-kita-v60">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1117,7 +1117,7 @@
     @media (max-width: 620px) { #mainWebsite .menuTaskbar, #mainWebsite .menuZone.near .menuTaskbar, #mainWebsite .menuZone.open .menuTaskbar { width: calc(100vw - 14px); min-height: 68px; padding: 5px 2px 7px; } #mainWebsite .menuTaskbar button { gap: 2px; padding-inline: 1px; font-size: 9px; letter-spacing: 0; } #mainWebsite .menuTaskbar .taskbarGlyph, #mainWebsite .menuTaskbar .taskbarGlyph svg { width: 19px; height: 19px; } #mainWebsite .taskbarProfileIcon, #mainWebsite .taskbarProfileIcon .avatarRing { width: 32px; height: 32px; } #mainWebsite .taskbarProfileIcon .avatarRing { font-size: 21px; } #mainWebsite .taskbarProfileName { display: none; } #mainWebsite .notificationPanel { top: 68px; width: calc(100vw - 14px); } #mainWebsite .menuLinks, #mainWebsite .activityPanel #onlinePeople { grid-template-columns: 1fr; } #mainWebsite .siteMenu, #mainWebsite .activityPanel { width: calc(100vw - 14px); padding: 14px; } }
     @media (prefers-reduced-motion: reduce) { #mainWebsite .menuTaskbar, #mainWebsite .menuTaskbar button { transition: none; } }
 
-    .visitBadgeSlot { display: flex; justify-content: center; margin: 12px 0 4px; }
+    .visitBadgeSlot { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin: 12px 0 4px; }
     .visitBadgeSlot:empty { display: none; }
     .visitBadge { --badge-color: #c99059; position: relative; display: grid; place-items: center; width: 58px; height: 58px; padding: 7px; border: 1px solid color-mix(in srgb, var(--badge-color) 60%, transparent); border-radius: 16px; background: color-mix(in srgb, var(--badge-color) 10%, transparent); cursor: pointer; color: var(--badge-color); isolation: isolate; }
     .visitBadge img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 3px var(--badge-color)); }
@@ -1131,6 +1131,8 @@
     .visitBadge[data-tier="platinum"] img { animation: visitBadgeGlow 2.5s ease-in-out infinite; }
     .visitBadge[data-tier="platinum"]::before { animation: visitBadgeHalo 2.5s ease-in-out infinite; }
     .visitBadge[data-tier="platinum"]::after { content: "✦"; position: absolute; right: -5px; top: -8px; color: #ecffff; text-shadow: 0 0 8px #8cf9ed; animation: visitBadgeSpark 3s ease-in-out infinite; }
+    .visitBadge[data-tier="ocean"] { --badge-color: #8ce7ee; box-shadow: 0 0 12px #68dbe92b; }
+    .visitBadge[data-tier="ocean"] img { animation: visitBadgeGlow 4s ease-in-out infinite; }
     .visitBadge:focus-visible { outline: 2px solid var(--badge-color); outline-offset: 5px; }
     .visitBadgeTooltip { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%); width: 245px; padding: 11px 13px; border: 1px solid var(--badge-color); border-radius: 10px; background: var(--profile-surface, #17151b); color: var(--profile-ink, #fff); font: 500 12px/1.5 "DM Sans", Arial, sans-serif; text-align: center; opacity: 0; visibility: hidden; pointer-events: none; z-index: 3; }
     .visitBadge:hover .visitBadgeTooltip, .visitBadge:focus .visitBadgeTooltip { opacity: 1; visibility: visible; }
@@ -2934,24 +2936,88 @@
     let visitRequestBusy = false;
     let visitAchievementTimer;
     function visitRank(count) { return [...visitRanks].reverse().find(rank => count >= rank.at) || null; }
+    const extraBadgeRecords = new Map();
+    const anniversaryRanks = [
+      { name: "bronze", months: 1, images: ["anniversary-1-month-bronze.png"] },
+      { name: "silver", months: 3, images: ["anniversary-3-months-silver.png", "anniversary-3-month-silver.png"] },
+      { name: "gold", months: 6, images: ["anniversary-6-months-gold.png", "anniversary-6-month-gold.png"] },
+      { name: "platinum", months: 12, images: ["anniversary-1-year-platinum.png", "anniversary-12-months-platinum.png", "anniversary-12-month-platinum.png"] }
+    ];
+    function setBadgeImage(img, paths, onMissing) {
+      let attempt = 0;
+      img.onerror = () => { if (++attempt < paths.length) img.src = paths[attempt]; else onMissing(); };
+      img.src = paths[0];
+    }
+    function makeProfileBadge(tier, label, detail, images) {
+      const badge = document.createElement("button");
+      badge.type = "button"; badge.className = "visitBadge"; badge.dataset.tier = tier;
+      badge.setAttribute("aria-label", `${label}. ${detail}`);
+      const img = document.createElement("img"); img.alt = "";
+      setBadgeImage(img, images, () => { img.remove(); const fallback = document.createElement("span"); fallback.className = "visitBadgeFallback"; fallback.textContent = "◆"; badge.prepend(fallback); });
+      const tooltip = document.createElement("span"); tooltip.className = "visitBadgeTooltip"; tooltip.textContent = `${label} — ${detail}`;
+      badge.append(img, tooltip); return badge;
+    }
     function renderVisitBadge() {
       const slot = document.getElementById("profileVisitBadge");
       slot.replaceChildren();
       if (!accountUser || !profileViewedId) return;
       const count = Number(visitBadgeRecords.get(profileViewedId)?.visit_count || 0);
       const rank = visitRank(count);
-      if (!rank) return;
-      const next = visitRanks.find(item => item.at > count);
-      const label = `${rank.name[0].toUpperCase() + rank.name.slice(1)} · Here With Us`;
-      const detail = `${count} days visited. ${next ? `${next.at - count} more days to ${next.name}.` : "Highest visit tier reached!"}`;
-      const badge = document.createElement("button");
-      badge.type = "button"; badge.className = "visitBadge"; badge.dataset.tier = rank.name;
-      badge.setAttribute("aria-label", `${label}. ${detail}`);
-      const img = document.createElement("img"); img.src = `visit-symbol-${rank.name}.png`; img.alt = "";
-      img.onerror = () => { img.remove(); const fallback = document.createElement("span"); fallback.className = "visitBadgeFallback"; fallback.textContent = "◆"; badge.prepend(fallback); };
-      const tooltip = document.createElement("span"); tooltip.className = "visitBadgeTooltip"; tooltip.textContent = `${label} — ${detail}`;
-      badge.append(img, tooltip); slot.append(badge);
+      if (rank) {
+        const next = visitRanks.find(item => item.at > count);
+        slot.append(makeProfileBadge(rank.name, `${rank.name[0].toUpperCase() + rank.name.slice(1)} · Here With Us`,
+          `${count} days visited. ${next ? `${next.at - count} more days to ${next.name}.` : "Highest visit tier reached!"}`, [`visit-symbol-${rank.name}.png`]));
+      }
+      const extra = extraBadgeRecords.get(profileViewedId);
+      const anniversary = anniversaryRanks[Number(extra?.anniversary_tier || 0) - 1];
+      if (anniversary) slot.append(makeProfileBadge(anniversary.name, `Our Anniversary · ${anniversary.name[0].toUpperCase() + anniversary.name.slice(1)}`,
+        `Together for ${anniversary.months === 12 ? "one year" : `${anniversary.months} ${anniversary.months === 1 ? "month" : "months"}`}.`, anniversary.images));
+      if (extra?.shell_unlocked) slot.append(makeProfileBadge("ocean", "Ocean Explorer", "You found the hidden shell and its ocean message!", ["Shell Badge.png"]));
     }
+    let achievementRequestBusy = false;
+    let pendingShellDiscovery = false;
+    async function loadExtraBadges() {
+      if (!accountUser || !accountClient) return;
+      const userId = accountUser.id;
+      try {
+        const { data, error } = await accountClient.from("site_achievement_badges").select("user_id,anniversary_tier,shell_unlocked");
+        if (error || accountUser?.id !== userId) return;
+        extraBadgeRecords.clear();
+        for (const row of data || []) extraBadgeRecords.set(row.user_id, row);
+        if (!profileDialog.hidden) renderVisitBadge();
+      } catch (_error) {}
+    }
+    async function checkSiteAchievements() {
+      if (!accountClient || !accountUser || !mainWebsite.classList.contains("show") || document.hidden || achievementRequestBusy) return;
+      const userId = accountUser.id;
+      const shell = pendingShellDiscovery;
+      achievementRequestBusy = true;
+      try {
+        const { data, error } = await accountClient.rpc("sync_site_achievements", { p_shell: shell });
+        if (error || accountUser?.id !== userId) return;
+        const result = Array.isArray(data) ? data[0] : data;
+        if (!result) return;
+        if (shell) pendingShellDiscovery = false;
+        extraBadgeRecords.set(userId, { user_id: userId, anniversary_tier: result.anniversary_tier, shell_unlocked: result.shell_unlocked });
+        if (!profileDialog.hidden) renderVisitBadge();
+        if (Number(result.anniversary_tier) > Number(result.previous_anniversary_tier)) {
+          const rank = anniversaryRanks[Number(result.anniversary_tier) - 1];
+          if (rank) enqueueAchievement({ userId, key: `anniversary:${rank.name}`, images: rank.images,
+            title: `Our Anniversary · ${rank.name[0].toUpperCase() + rank.name.slice(1)}`,
+            detail: `Together for ${rank.months === 12 ? "one year" : `${rank.months} ${rank.months === 1 ? "month" : "months"}`}!` });
+        }
+        if (result.shell_unlocked && !result.previous_shell_unlocked) enqueueAchievement({ userId, key: "ocean-explorer", images: ["Shell Badge.png"], title: "Ocean Explorer", detail: "You found the hidden treasure beneath the waves!" });
+      } catch (_error) { /* Retry when the signed-in page becomes active. */ }
+      finally {
+        achievementRequestBusy = false;
+        if (!shell && pendingShellDiscovery && accountUser?.id === userId) checkSiteAchievements();
+      }
+    }
+    document.getElementById("coralShellOpen").addEventListener("click", () => {
+      if (!accountUser || mainWebsite.dataset.wallpaper !== "underwater" || mainWebsite.dataset.theme !== "dark" || !mainWebsite.classList.contains("show")) return;
+      if (extraBadgeRecords.get(accountUser.id)?.shell_unlocked) return;
+      pendingShellDiscovery = true; checkSiteAchievements();
+    });
     async function loadVisitBadges() {
       if (!accountUser || !accountClient) return;
       const userId = accountUser.id;
@@ -2961,16 +3027,33 @@
       for (const row of data || []) visitBadgeRecords.set(row.user_id, row);
       if (!profileDialog.hidden) renderVisitBadge();
     }
+    const achievementQueue = [];
+    let achievementShowing = false;
     function announceVisitBadge(rank, count, userId) {
-      const key = `cintaKitaVisitBadge:${userId}:${rank.name}:${count}`;
+      enqueueAchievement({ userId, key: `visit:${rank.name}:${count}`, images: [`visit-symbol-${rank.name}.png`],
+        title: `Here With Us · ${rank.name[0].toUpperCase() + rank.name.slice(1)}`, detail: `${count} days visited — your badge has upgraded!` });
+    }
+    function enqueueAchievement(item) {
+      if (accountUser?.id !== item.userId) return;
+      const key = `cintaKitaAchievement:${item.userId}:${item.key}`;
       try { if (localStorage.getItem(key)) return; localStorage.setItem(key, "seen"); } catch (_error) {}
+      achievementQueue.push(item); showNextAchievement();
+    }
+    function showNextAchievement() {
+      if (achievementShowing || !achievementQueue.length) return;
+      const item = achievementQueue.shift();
+      if (accountUser?.id !== item.userId) { showNextAchievement(); return; }
+      achievementShowing = true;
       const toast = document.getElementById("visitAchievement");
       const image = document.getElementById("visitAchievementIcon");
-      image.hidden = false; image.src = `visit-symbol-${rank.name}.png`; image.onerror = () => { image.hidden = true; };
-      document.getElementById("visitAchievementTitle").textContent = `Here With Us · ${rank.name[0].toUpperCase() + rank.name.slice(1)}`;
-      document.getElementById("visitAchievementDetail").textContent = `${count} days visited — your badge has upgraded!`;
+      image.hidden = false; setBadgeImage(image, item.images, () => { image.hidden = true; });
+      document.getElementById("visitAchievementTitle").textContent = item.title;
+      document.getElementById("visitAchievementDetail").textContent = item.detail;
       toast.classList.add("show"); clearTimeout(visitAchievementTimer);
-      visitAchievementTimer = setTimeout(() => toast.classList.remove("show"), 6500);
+      visitAchievementTimer = setTimeout(() => {
+        toast.classList.remove("show");
+        visitAchievementTimer = setTimeout(() => { achievementShowing = false; showNextAchievement(); }, 450);
+      }, 6500);
       try {
         const Audio = window.AudioContext || window.webkitAudioContext;
         if (!Audio) return;
@@ -3002,10 +3085,10 @@
       } catch (_error) { /* Retry on the next visible visit check. */ }
       finally { visitRequestBusy = false; }
     }
-    new MutationObserver(() => { if (mainWebsite.classList.contains("show")) recordDailyVisit(); })
+    new MutationObserver(() => { if (mainWebsite.classList.contains("show")) { recordDailyVisit(); checkSiteAchievements(); } })
       .observe(mainWebsite, { attributes: true, attributeFilter: ["class"] });
-    document.addEventListener("visibilitychange", () => { if (!document.hidden) recordDailyVisit(); });
-    setInterval(recordDailyVisit, 60000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) { recordDailyVisit(); checkSiteAchievements(); } });
+    setInterval(() => { recordDailyVisit(); checkSiteAchievements(); }, 60000);
 
     const profileFields = "id,username,display_name,bio,status_line,avatar_style,accent_color,avatar_frame";
     async function fetchSiteProfiles() {
@@ -3841,7 +3924,7 @@
     function openProfile(id, edit = false, trigger = null) {
       if (!accountUser || !id) return;
       profileViewedId = id;
-      loadVisitBadges();
+      loadVisitBadges(); loadExtraBadges();
       profileReturnFocus = trigger;
       profileForm.hidden = true;
       profileFeedback.textContent = "";
@@ -3901,8 +3984,8 @@
     syncAccountPalette();
     function showAccountUser(user) {
       accountUser = user;
-      if (user) { recordDailyVisit(); loadVisitBadges(); }
-      else { visitBadgeRecords.clear(); document.getElementById("visitAchievement").classList.remove("show"); }
+      if (user) { recordDailyVisit(); checkSiteAchievements(); loadVisitBadges(); loadExtraBadges(); }
+      else { visitBadgeRecords.clear(); extraBadgeRecords.clear(); pendingShellDiscovery = false; achievementQueue.length = 0; clearTimeout(visitAchievementTimer); achievementShowing = false; document.getElementById("visitAchievement").classList.remove("show"); }
       window.ourWorldIsSignedIn = !!user;
       if (user) mainWebsite.dataset.guestBerserk = "false";
       accountSignedIn.hidden = !user;

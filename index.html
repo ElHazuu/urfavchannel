@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v64">
+<meta name="site-build" content="cinta-kita-v65">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1174,6 +1174,41 @@
     label.uploadedFrameChoice img { width: 48px; height: 48px; object-fit: contain; }
     label.uploadedFrameChoice:has(input:checked) { background: color-mix(in srgb, var(--profile-accent) 18%, transparent); border-color: var(--profile-accent); }
 </style>
+<style>    #mainWebsite .messageByline { display: flex; align-items: center; gap: 12px; min-height: 50px; line-height: 1.4; margin-bottom: 9px; padding: 5px 3px; overflow: visible; }
+    #mainWebsite .avatarRing { box-sizing: border-box; position: relative; vertical-align: middle; }
+    #mainWebsite .avatarRing > img:not(.memberFrameOverlay) { display: block; min-width: 0; min-height: 0; object-fit: contain; margin: 0; align-self: center; justify-self: center; }
+    #mainWebsite .messagePerson { gap: 12px; padding-top: 12px; }
+    #mainWebsite .avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4) { padding: 3px; }
+    #mainWebsite .avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4) > img:not(.memberFrameOverlay) { width: 72%; height: 72%; }
+    #mainWebsite .messageBubble .avatarRing { flex: 0 0 42px; width: 42px; height: 42px; }
+    #mainWebsite .calendarPanel { position: fixed; top: 96px; left: 50%; transform: translateX(-50%); z-index: 85; width: min(790px,calc(100vw - 24px)); max-height: calc(100dvh - 116px); overflow-y: auto; padding: 24px; border: 1px solid var(--ui-line); border-radius: 24px; background: var(--ui-surface); color: var(--ui-ink); box-shadow: 0 18px 60px #0005; }
+    #mainWebsite .calendarPanel[hidden], #mainWebsite .birthdayCelebration[hidden] { display: none; }
+    #mainWebsite[data-wallpaper="berserk"] .calendarPanel, #mainWebsite[data-wallpaper="berserk"] .birthdayCelebration { display: none; }
+    .calendarHeader,.calendarNavigation,.calendarEventActions { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .calendarHeader h2 { font: 600 34px/1.2 "Cormorant Garamond",Georgia,serif; margin: 0; }
+    .calendarHeader small { color: var(--ui-accent); }
+    .calendarNavigation { margin: 20px 0 14px; }
+    #mainWebsite .calendarPanel button,.birthdayCelebration button { border: 1px solid var(--ui-line); border-radius: 10px; background: color-mix(in srgb,var(--ui-accent) 15%,var(--ui-surface)); color: var(--ui-ink); padding: 8px 12px; font: inherit; cursor: pointer; }
+    #mainWebsite .calendarPanel button:focus-visible { outline: 2px solid var(--ui-accent); outline-offset: 3px; }
+    .calendarColumns { display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; }
+    .calendarWeek,.calendarGrid { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 5px; }
+    .calendarWeek { text-align: center; font-size: 11px; margin-bottom: 8px; opacity: .75; }
+    #mainWebsite .calendarDay { position: relative; padding: 9px 2px 16px; min-height: 46px; }
+    #mainWebsite .calendarDay[aria-pressed="true"] { background: var(--ui-accent); color: var(--ui-surface); }
+    #mainWebsite .calendarDay[aria-current="date"] { outline: 1px solid var(--ui-accent); }
+    .calendarDot { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; font-size: 12px; }
+    .calendarEvent { border: 1px solid var(--ui-line); border-radius: 14px; padding: 14px; margin-bottom: 10px; background: color-mix(in srgb,var(--ui-accent) 8%,transparent); }
+    .calendarEvent p { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; }
+    .calendarEventActions { justify-content: flex-end; }
+    #calendarForm { margin-top: 18px; display: grid; gap: 8px; }
+    #mainWebsite #calendarForm input,#mainWebsite #calendarForm textarea { box-sizing: border-box; width: 100%; border: 1px solid var(--ui-line); border-radius: 10px; padding: 10px; background: var(--ui-surface); color: var(--ui-ink); font: inherit; }
+    #calendarStatus { font-size: 12px; margin: 16px 0 0; }
+    #mainWebsite .birthdayCelebration { position: fixed; inset: 0; z-index: 140; pointer-events: none; display: grid; place-items: center; }
+    #birthdayCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .birthdayGreeting { position: relative; pointer-events: auto; text-align: center; width: min(420px,calc(100vw - 44px)); padding: 30px; box-sizing: border-box; border: 1px solid var(--ui-line); border-radius: 26px; background: var(--ui-surface); color: var(--ui-ink); box-shadow: 0 0 60px color-mix(in srgb,var(--ui-accent) 35%,transparent); }
+    .birthdayGreeting h2 { font: 600 38px/1.2 "Cormorant Garamond",Georgia,serif; }.birthdayGreeting .birthdayHearts { color: var(--ui-accent); font-size: 30px; letter-spacing: 10px; }
+    @media(max-width:620px){#mainWebsite .calendarPanel{top:78px;max-height:calc(100dvh - 94px);padding:16px;}.calendarColumns{grid-template-columns:1fr;gap:16px;}}
+</style>
 </head>
 <body>
   <div id="intro">
@@ -1267,6 +1302,7 @@
       <nav class="siteMenu" id="siteMenu" aria-label="Main menu">
         <div class="menuPanelHead"><strong>Cinta Kita ♡</strong><small>THE MENU</small></div>
         <div class="menuLinks">
+<button id="calendarToggle" type="button" aria-expanded="false" aria-controls="calendarPanel"><span>Calendar</span><small>Our shared days</small></button>
           <a href="#home"><small>01</small>Home<span>↗</span></a>
           <a href="#videos"><small>02</small>Videos<span>↗</span></a>
           <a href="#story"><small>03</small>Our Story<span>↗</span></a>
@@ -1293,6 +1329,13 @@
       <p class="notificationFeedback" id="notificationFeedback" role="status"></p>
       <div id="notificationList"></div>
     </div>
+<section class="calendarPanel" id="calendarPanel" aria-label="Shared calendar" hidden>
+<div class="calendarHeader"><div><small>OUR SHARED DAYS</small><h2>Calendar</h2></div><button id="calendarClose" type="button" aria-label="Close calendar">×</button></div>
+<div class="calendarNavigation"><button id="calendarPrevious" type="button" aria-label="Previous month">‹</button><strong id="calendarMonthTitle" aria-live="polite"></strong><button id="calendarNext" type="button" aria-label="Next month">›</button><button id="calendarToday" type="button">Today</button></div>
+<div class="calendarColumns"><div><div class="calendarWeek" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div><div class="calendarGrid" id="calendarGrid" role="group" aria-label="Choose a date"></div>
+<form id="calendarForm"><strong>A plan together</strong><label for="calendarEventDate">Date</label><input id="calendarEventDate" type="date" required><label for="calendarEventTitle">Plan</label><input id="calendarEventTitle" maxlength="100" placeholder="What shall we do?" required><label for="calendarEventNotes">Little details</label><textarea id="calendarEventNotes" maxlength="500" rows="2" placeholder="Something to remember…"></textarea><div class="calendarEventActions"><button id="calendarCancelEdit" type="button">Clear</button><button id="calendarSave" type="submit">Save shared plan</button></div></form></div>
+<div><h3 id="calendarSelected"></h3><div id="calendarEvents"></div></div></div><p id="calendarStatus" role="status"></p></section>
+<div class="birthdayCelebration" id="birthdayCelebration" hidden><canvas id="birthdayCanvas" aria-hidden="true"></canvas><section class="birthdayGreeting" aria-label="Birthday celebration"><div class="birthdayHearts" aria-hidden="true">♥ ♡ ♥</div><h2>Happy birthday,<br>urfavnay!</h2><p>November 4 · Your special day, every year.<br>So many hearts, all for you.</p><button id="birthdayReplay" type="button">Play celebration ♡</button> <button id="birthdayClose" type="button">Close</button></section></div>
     <button class="messageDock" id="messageDock" type="button" aria-label="Open messages" aria-controls="messagePanel" aria-expanded="false" hidden><span class="messageDockIcon" aria-hidden="true">✉</span><span>MESSAGES</span><span class="messageBadge" id="messageDockBadge" hidden></span></button>
     <section class="messagePanel" id="messagePanel" aria-label="Private messages" hidden>
       <div class="messagePanelHead"><h2>Our messages</h2><button class="messageCloseButton" id="messageClose" type="button" aria-label="Close messages" title="Close messages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg></button></div>
@@ -1680,6 +1723,8 @@
         menuZone.classList.remove("open", "near");
         document.getElementById("menuHandle").setAttribute("aria-expanded", "false");
         document.getElementById("activityPanel").hidden = true;
+        document.getElementById("calendarPanel").hidden = true;
+        document.getElementById("birthdayCelebration").hidden = true;
         document.getElementById("activityToggle").setAttribute("aria-expanded", "false");
         document.getElementById("notificationPanel").hidden = true;
         document.getElementById("messagePanel").hidden = true;
@@ -1733,15 +1778,15 @@
     function closeMenu() { menuZone.classList.remove("open"); menuHandle.setAttribute("aria-expanded", "false"); }
     function closeActivity() { activityPanel.hidden = true; activityToggle.setAttribute("aria-expanded", "false"); }
     function closeUpdates() { document.getElementById("notificationPanel").hidden = true; document.getElementById("notificationBell").setAttribute("aria-expanded", "false"); document.getElementById("taskbarUpdates").setAttribute("aria-expanded", "false"); }
-    function openMenu() { closeActivity(); closeUpdates(); menuZone.classList.add("open", "near"); menuHandle.setAttribute("aria-expanded", "true"); }
+    function openMenu() { closeCalendar(); closeActivity(); closeUpdates(); menuZone.classList.add("open", "near"); menuHandle.setAttribute("aria-expanded", "true"); }
     menuHandle.addEventListener("click", () => menuZone.classList.contains("open") ? closeMenu() : openMenu());
     activityToggle.addEventListener("click", () => {
       if (!activityPanel.hidden) { closeActivity(); return; }
-      closeMenu(); closeUpdates(); activityPanel.hidden = false; menuZone.classList.add("near"); activityToggle.setAttribute("aria-expanded", "true"); renderOnlinePeople();
+      closeCalendar(); closeMenu(); closeUpdates(); activityPanel.hidden = false; menuZone.classList.add("near"); activityToggle.setAttribute("aria-expanded", "true"); renderOnlinePeople();
     });
     document.getElementById("activityClose").addEventListener("click", closeActivity);
     taskbarProfile.addEventListener("click", () => {
-      closeMenu(); closeActivity(); closeUpdates();
+      closeCalendar(); closeMenu(); closeActivity(); closeUpdates();
       if (accountUser) openProfile(accountUser.id, false, taskbarProfile);
       else openAccount(taskbarProfile);
     });
@@ -1752,7 +1797,7 @@
       else openAccount(document.getElementById("taskbarMessages"));
     });
     document.getElementById("taskbarUpdates").addEventListener("click", () => {
-      closeMenu(); closeActivity(); document.getElementById("notificationBell").click();
+      closeCalendar(); closeMenu(); closeActivity(); document.getElementById("notificationBell").click();
     });
     const taskbarUpdatesCount = document.getElementById("taskbarUpdatesCount");
     const taskbarMessagesCount = document.getElementById("taskbarMessagesCount");
@@ -4095,6 +4140,119 @@
       renderProfileView(); renderOnlinePeople(); renderMessages(); renderMessagePeople();
     });
     syncAccountPalette();
+    const calendarPanel = document.getElementById('calendarPanel');
+    const calendarToggle = document.getElementById('calendarToggle');
+    const calendarGrid = document.getElementById('calendarGrid');
+    const calendarForm = document.getElementById('calendarForm');
+    const calendarStatus = document.getElementById('calendarStatus');
+    function calendarToday() { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Stockholm', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()); }
+    let calendarDate = calendarToday(), calendarMonth = calendarDate.slice(0,7), calendarRows = [], calendarChannel = null, calendarUserId = null, calendarEditId = null, calendarLoadId = 0;
+    function closeCalendar() { calendarPanel.hidden = true; calendarToggle.setAttribute('aria-expanded','false'); }
+    function calendarBirthday(date) { return date.slice(5) === '11-04'; }
+    function calendarEvents(date) { return calendarRows.filter(row => row.event_date === date); }
+    function renderCalendar() {
+      const [year, month] = calendarMonth.split('-').map(Number);
+      document.getElementById('calendarMonthTitle').textContent = new Intl.DateTimeFormat('en', {month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(year,month-1,1)));
+      calendarGrid.replaceChildren();
+      const first = (new Date(Date.UTC(year,month-1,1)).getUTCDay()+6)%7;
+      const days = new Date(Date.UTC(year,month,0)).getUTCDate();
+      for (let i=0;i<first;i++) { const blank=document.createElement('span'); blank.setAttribute('aria-hidden','true');calendarGrid.append(blank); }
+      for (let day=1;day<=days;day++) {
+        const date=`${calendarMonth}-${String(day).padStart(2,'0')}`;
+        const button=document.createElement('button');button.type='button';button.dataset.date=date;
+        button.className='calendarDay';button.textContent=day;
+        button.setAttribute('aria-pressed',String(date===calendarDate));
+        if (date===calendarToday()) button.setAttribute('aria-current','date');
+        const events=calendarEvents(date), birthday=calendarBirthday(date);
+        button.setAttribute('aria-label',`${date}${birthday ? ", urfavnay’s birthday" : ''}${events.length ? `, ${events.length} shared plans` : ''}`);
+        if (events.length || birthday) {const dot=document.createElement('span');dot.className='calendarDot';dot.textContent=birthday?'♡':'•';button.append(dot);}
+        button.addEventListener('click',()=>{calendarDate=date;calendarEditId=null;calendarForm.reset();document.getElementById('calendarEventDate').value=date;renderCalendar();});
+        calendarGrid.append(button);
+      }
+      document.getElementById('calendarSelected').textContent = new Intl.DateTimeFormat('en',{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'}).format(new Date(calendarDate+'T12:00:00Z'));
+      const list=document.getElementById('calendarEvents');list.replaceChildren();
+      if (calendarBirthday(calendarDate)) {
+        const card=document.createElement('article');card.className='calendarEvent birthdayCard';
+        const title=document.createElement('strong');title.textContent='Happy birthday, urfavnay! ♡';
+        const text=document.createElement('p');text.textContent='November 4 · Every year · A whole ocean of love for you.';
+        const celebrate=document.createElement('button');celebrate.type='button';celebrate.textContent='Celebrate ♡';celebrate.addEventListener('click',()=>celebrateBirthday(true));card.append(title,text,celebrate);list.append(card);
+      }
+      for (const row of calendarEvents(calendarDate)) {
+        const card=document.createElement('article');card.className='calendarEvent';
+        const title=document.createElement('strong');title.textContent=row.title;
+        const notes=document.createElement('p');notes.textContent=row.notes||'';
+        const actions=document.createElement('div');actions.className='calendarEventActions';
+        const edit=document.createElement('button');edit.type='button';edit.textContent='Edit';edit.onclick=()=>{calendarEditId=row.id;document.getElementById('calendarEventTitle').value=row.title;document.getElementById('calendarEventNotes').value=row.notes||'';document.getElementById('calendarEventDate').value=row.event_date;document.getElementById('calendarEventTitle').focus();};
+        const remove=document.createElement('button');remove.type='button';remove.textContent='Remove';remove.onclick=async()=>{remove.disabled=true;const {error}=await accountClient.from('site_calendar_events').update({deleted:true}).eq('id',row.id);if(error){calendarStatus.textContent=error.message;remove.disabled=false;}else{if(calendarEditId===row.id)resetCalendarForm();await loadCalendar();}};
+        actions.append(edit,remove);card.append(title,notes,actions);list.append(card);
+      }
+      if (!list.children.length) {const p=document.createElement('p');p.textContent='A little room for a new plan together.';list.append(p);}
+    }
+    function resetCalendarForm() {calendarEditId=null;calendarForm.reset();document.getElementById('calendarEventDate').value=calendarDate;}
+    async function loadCalendar() {
+      if (!accountClient || !accountUser) return;
+      const userId=accountUser.id, request=++calendarLoadId;
+      const {data,error}=await accountClient.from('site_calendar_events').select('id,title,notes,event_date,created_by').eq('deleted',false).order('event_date');
+      if(accountUser?.id!==userId || request!==calendarLoadId)return;
+      if(error){calendarStatus.textContent='Calendar needs the one-time calendar SQL setup in Supabase.';return;}
+      calendarRows=data||[];calendarStatus.textContent='Shared with all signed-in members · Live';renderCalendar();
+    }
+    function syncCalendar() {
+      const id=accountUser?.id||null;
+      if(id===calendarUserId)return;
+      calendarUserId=id;calendarLoadId++;
+      if(calendarChannel && accountClient)accountClient.removeChannel(calendarChannel);
+      calendarChannel=null;calendarRows=[];resetCalendarForm();
+      if(!id){birthdayLastDay='';closeCalendar();document.getElementById('birthdayCelebration').hidden=true;cancelAnimationFrame(birthdayAnimation);return;}
+      loadCalendar();
+      calendarChannel=accountClient.channel(`shared-calendar-${id}`).on('postgres_changes',{event:'*',schema:'public',table:'site_calendar_events'},loadCalendar).subscribe(status=>{if(status==='SUBSCRIBED')loadCalendar();});
+      checkBirthday();
+    }
+    calendarToggle.addEventListener('click',()=>{
+      if(!accountUser){openAccount(calendarToggle);return;}
+      if(!calendarPanel.hidden){closeCalendar();return;}
+      closeMenu();closeActivity();closeUpdates();calendarPanel.hidden=false;calendarToggle.setAttribute('aria-expanded','true');renderCalendar();loadCalendar();document.getElementById('calendarClose').focus();
+    });
+    document.getElementById('calendarClose').onclick=()=>{closeCalendar();calendarToggle.focus();};
+    for(const [id,step] of [['calendarPrevious',-1],['calendarNext',1]])document.getElementById(id).onclick=()=>{const [y,m]=calendarMonth.split('-').map(Number);const d=new Date(Date.UTC(y,m-1+step,1));calendarMonth=`${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}`;renderCalendar();};
+    document.getElementById('calendarToday').onclick=()=>{calendarDate=calendarToday();calendarMonth=calendarDate.slice(0,7);resetCalendarForm();renderCalendar();};
+    document.getElementById('calendarCancelEdit').onclick=resetCalendarForm;
+    calendarGrid.addEventListener('keydown',event=>{const date=event.target.dataset.date;if(!date)return;const delta={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7}[event.key];if(delta===undefined)return;event.preventDefault();const d=new Date(date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+delta);calendarDate=d.toISOString().slice(0,10);calendarMonth=calendarDate.slice(0,7);renderCalendar();calendarGrid.querySelector(`[data-date="${calendarDate}"]`).focus();});
+    calendarForm.addEventListener('submit',async event=>{
+      event.preventDefault();if(!accountClient||!accountUser)return;
+      const save=document.getElementById('calendarSave');save.disabled=true;
+      const userId=accountUser.id, editing=calendarEditId;
+      const values={title:document.getElementById('calendarEventTitle').value.trim(),notes:document.getElementById('calendarEventNotes').value.trim(),event_date:document.getElementById('calendarEventDate').value};
+      try {
+        if(!values.title || !/^\d{4}-\d{2}-\d{2}$/.test(values.event_date))return;
+        const {error}=await (editing ? accountClient.from('site_calendar_events').update(values).eq('id',editing) : accountClient.from('site_calendar_events').insert({...values,created_by:userId}));
+        if(accountUser?.id!==userId)return;
+        if(error){calendarStatus.textContent=error.message;return;}
+        calendarDate=values.event_date;calendarMonth=calendarDate.slice(0,7);resetCalendarForm();await loadCalendar();
+      }catch(error){calendarStatus.textContent='Could not save your plan. Please try again.';}finally{save.disabled=false;}
+    });
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!calendarPanel.hidden){closeCalendar();calendarToggle.focus();}});
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden&&accountUser){loadCalendar();checkBirthday();}});
+    let birthdayAnimation=0, birthdayAudio=null, birthdayLastDay='';
+    function birthdayMelody() {
+      try {birthdayAudio=birthdayAudio||new(window.AudioContext||window.webkitAudioContext)();birthdayAudio.resume();const t=birthdayAudio.currentTime;[523.25,659.25,783.99,1046.5,987.77,783.99,659.25,1046.5].forEach((frequency,i)=>{const o=birthdayAudio.createOscillator(),g=birthdayAudio.createGain();o.type='sine';o.frequency.value=frequency;g.gain.setValueAtTime(0,t+i*.24);g.gain.linearRampToValueAtTime(.055,t+i*.24+.03);g.gain.exponentialRampToValueAtTime(.001,t+i*.24+.65);o.connect(g);g.connect(birthdayAudio.destination);o.start(t+i*.24);o.stop(t+i*.24+.7);});}catch(error){}
+    }
+    function celebrateBirthday(sound=false) {
+      if(!accountUser || mainWebsite.dataset.wallpaper==='berserk')return;
+      const overlay=document.getElementById('birthdayCelebration'),canvas=document.getElementById('birthdayCanvas'),context=canvas.getContext('2d');
+      overlay.hidden=false;if(sound)birthdayMelody();cancelAnimationFrame(birthdayAnimation);
+      const width=window.innerWidth,height=window.innerHeight;canvas.width=width;canvas.height=height;
+      const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,accent=getComputedStyle(mainWebsite).getPropertyValue('--ui-accent').trim()||'#efa7b4';
+      const sparks=[];for(let burst=0;burst<7;burst++){const x=width*(.12+Math.random()*.76),y=height*(.1+Math.random()*.5);for(let i=0;i<28;i++){const a=Math.random()*Math.PI*2,v=1+Math.random()*3;sparks.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,heart:i%5===0,delay:burst*450});}}
+      const start=performance.now();function draw(now){if(overlay.hidden)return;const elapsed=now-start;context.clearRect(0,0,width,height);if(!reduce)for(const p of sparks){const age=elapsed-p.delay;if(age<0||age>2600)continue;const ticks=age/16;context.globalAlpha=1-age/2600;context.fillStyle=p.heart?accent:'#ffd59b';const x=p.x+p.vx*ticks,y=p.y+p.vy*ticks+.012*ticks*ticks;if(p.heart){context.font='20px Georgia';context.fillText('♥',x,y);}else{context.beginPath();context.arc(x,y,2,0,Math.PI*2);context.fill();}}context.globalAlpha=1;if(elapsed<6500)birthdayAnimation=requestAnimationFrame(draw);else context.clearRect(0,0,width,height);}birthdayAnimation=requestAnimationFrame(draw);
+    }
+    function checkBirthday(){const today=calendarToday();if(!accountUser||!mainWebsite.classList.contains('show')||mainWebsite.dataset.wallpaper==='berserk'||!calendarBirthday(today)||birthdayLastDay===today)return;birthdayLastDay=today;celebrateBirthday(false);}
+    document.getElementById('birthdayClose').onclick=()=>{document.getElementById('birthdayCelebration').hidden=true;cancelAnimationFrame(birthdayAnimation);};
+    document.getElementById('birthdayReplay').onclick=()=>celebrateBirthday(true);
+    new MutationObserver(checkBirthday).observe(mainWebsite,{attributes:true,attributeFilter:['class','data-wallpaper']});
+    setInterval(()=>{if(!document.hidden){checkBirthday();if(!calendarPanel.hidden)renderCalendar();}},60000);
+    resetCalendarForm();renderCalendar();
+
     function showAccountUser(user) {
       accountUser = user;
       if (user) { recordDailyVisit(); checkSiteAchievements(); loadVisitBadges(); loadExtraBadges(); }
@@ -4126,6 +4284,7 @@
       setTimeout(syncVideoAccess, 0);
       setTimeout(syncNotifications, 0);
       setTimeout(syncMessages, 0);
+      setTimeout(syncCalendar, 0);
     }
     syncSiteLock();
     function closeAccount() { accountDialog.hidden = true; accountPasswordInput.value = ""; accountReturnFocus.focus(); }

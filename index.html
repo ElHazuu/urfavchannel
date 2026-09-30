@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v63">
+<meta name="site-build" content="cinta-kita-v64">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1162,12 +1162,17 @@
 </style>
 <style>
     /* The decorative PNG stays above the cat without covering click targets. */
-    .avatarRing.frame-picture { position: relative; isolation: isolate; border-color: transparent; padding: 7px; background: transparent; }
-    .avatarRing.frame-picture > img:not(.memberFrameOverlay) { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; }
-    .avatarRing.frame-picture > img.memberFrameOverlay { position: absolute; z-index: 2; inset: -10%; width: 120%; height: 120%; max-height: none; object-fit: contain; border-radius: 0; background: transparent; pointer-events: none; }
-    .profileAvatar.avatarRing.frame-picture { padding: 17px; }
-    .messagePerson .avatarRing.frame-picture { padding: 10px; }
+    .avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4) { position: relative; isolation: isolate; border-color: transparent; padding: 7px; background: transparent; }
+    .avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4) > img:not(.memberFrameOverlay) { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; }
+    .avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4) > img.memberFrameOverlay { position: absolute; z-index: 2; inset: -10%; width: 120%; height: 120%; max-height: none; object-fit: contain; border-radius: 0; background: transparent; pointer-events: none; }
+    .profileAvatar.avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4) { padding: 17px; }
+    .messagePerson .avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4) { padding: 10px; }
     .profileForm label[hidden] { display: none !important; }
+</style>
+<style>
+    label.uploadedFrameChoice { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid color-mix(in srgb, var(--profile-accent) 40%, transparent); border-radius: 12px; cursor: pointer; }
+    label.uploadedFrameChoice img { width: 48px; height: 48px; object-fit: contain; }
+    label.uploadedFrameChoice:has(input:checked) { background: color-mix(in srgb, var(--profile-accent) 18%, transparent); border-color: var(--profile-accent); }
 </style>
 </head>
 <body>
@@ -1452,7 +1457,10 @@
           </div></fieldset>
           <fieldset><legend>Avatar frame</legend><div class="profileChoices">
             <label><input type="radio" name="profileAvatarFrame" value="simple" checked> Classic ring</label>
-            <label><input type="radio" name="profileAvatarFrame" value="picture"> Your uploaded frame</label>
+            <label class="uploadedFrameChoice"><input type="radio" name="profileAvatarFrame" value="picture"><img src="Frame.png" alt="" loading="lazy"> Frame 1</label>
+            <label class="uploadedFrameChoice"><input type="radio" name="profileAvatarFrame" value="picture2"><img src="Frame2.png" alt="" loading="lazy"> Frame 2</label>
+            <label class="uploadedFrameChoice"><input type="radio" name="profileAvatarFrame" value="picture3"><img src="Frame3.png" alt="" loading="lazy"> Frame 3</label>
+            <label class="uploadedFrameChoice"><input type="radio" name="profileAvatarFrame" value="picture4"><img src="Frame4.png" alt="" loading="lazy"> Frame 4</label>
             <label hidden><input type="radio" name="profileAvatarFrame" value="double"> Double</label>
             <label hidden><input type="radio" name="profileAvatarFrame" value="glow"> Glow</label>
             <label hidden><input type="radio" name="profileAvatarFrame" value="scallop"> Petals</label>
@@ -3146,20 +3154,21 @@
     }, { passive: true });
     function sceneAvatarColor() { return getComputedStyle(mainWebsite).getPropertyValue("--ui-accent").trim() || "#d987b6"; }
     function addMemberFrame(avatar, frame) {
-      if (frame !== "picture" || !accountUser) return;
+      const sources = { picture: "Frame.png", picture2: "Frame2.png", picture3: "Frame3.png", picture4: "Frame4.png" };
+      if (!sources[frame] || !accountUser) return;
       const overlay = document.createElement("img");
       overlay.className = "memberFrameOverlay";
-      overlay.src = "frame.png";
+      overlay.src = sources[frame];
       overlay.alt = "";
       overlay.draggable = false;
-      overlay.onerror = () => { overlay.remove(); avatar.classList.remove("frame-picture"); };
+      overlay.onerror = () => { overlay.remove(); avatar.classList.remove(`frame-${frame}`); };
       avatar.append(overlay);
     }
     function createAvatar(id, name, online = true) {
       const profile = profileRecords.get(id) || {};
       const color = profileAvatarColor(profile, name, id);
       const icon = document.createElement("span");
-      const frame = ["double", "glow", "scallop", "square", "picture"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple";
+      const frame = ["double", "glow", "scallop", "square", "picture", "picture2", "picture3", "picture4"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple";
       icon.className = `avatarRing frame-${frame}`;
       icon.style.setProperty("--avatar-accent", profileAccent(profile) || sceneAvatarColor());
       icon.setAttribute("aria-hidden", "true");
@@ -3956,7 +3965,7 @@
       document.getElementById("profileBio").textContent = profile.bio || "";
       const avatar = document.getElementById("profileAvatar");
       avatar.replaceChildren();
-      avatar.className = `profileAvatar avatarRing frame-${["double","glow","scallop","square","picture"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple"}`;
+      avatar.className = `profileAvatar avatarRing frame-${["double","glow","scallop","square","picture","picture2","picture3","picture4"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple"}`;
       const cat = profileAvatarColor(profile, name, profileViewedId);
       if (cat) {
         const img = document.createElement("img"); img.src = `${cat}-online.png`; img.alt = "";
@@ -3979,7 +3988,7 @@
       document.getElementById("profileBioInput").value = profile.bio || "";
       const choice = profileForm.querySelector(`input[name="profileAvatarStyle"][value="${["auto","grey","beige","heart"].includes(profile.avatar_style) ? profile.avatar_style : "auto"}"]`);
       choice.checked = true;
-      profileForm.querySelector(`input[name="profileAvatarFrame"][value="${["simple","double","glow","scallop","square","picture"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple"}"]`).checked = true;
+      profileForm.querySelector(`input[name="profileAvatarFrame"][value="${["simple","double","glow","scallop","square","picture","picture2","picture3","picture4"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple"}"]`).checked = true;
       document.getElementById("profileColor").value = profileAccent(profile) || getComputedStyle(accountDialog).getPropertyValue("--account-accent").trim() || "#d987b6";
       profileDirty = false;
     }

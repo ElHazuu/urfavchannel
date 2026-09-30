@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v60">
+<meta name="site-build" content="cinta-kita-v61">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1148,6 +1148,17 @@
     @keyframes visitBadgeSpark { 50% { opacity: .3; transform: scale(.65) rotate(25deg); } }
     @media (prefers-reduced-motion: reduce) { .visitBadge img, .visitBadge::before, .visitBadge::after { animation: none !important; } .visitAchievement { transition: none; } }
 
+
+    .profileUnsavedPrompt[hidden] { display: none !important; }
+    .profileUnsavedPrompt { position: fixed; inset: 0; z-index: 140; display: grid; place-items: center; padding: 20px; background: color-mix(in srgb, var(--overlay-surface, #251a2b) 80%, transparent); backdrop-filter: blur(8px); }
+    .profileUnsavedCard { width: min(390px, 100%); padding: 28px; border: 1px solid var(--overlay-accent, #d987b6); border-radius: 20px; background: var(--overlay-surface, #251a2b); color: var(--overlay-ink, #fff); box-shadow: 0 20px 60px #0008; }
+    .profileUnsavedCard h2 { margin: 0 0 12px; font-size: 24px; }
+    .profileUnsavedCard p { line-height: 1.6; }
+    .profileUnsavedActions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .profileUnsavedActions button { padding: 11px 14px; border: 1px solid var(--overlay-accent, #d987b6); border-radius: 10px; background: transparent; color: inherit; cursor: pointer; }
+    .profileUnsavedActions button:first-child { background: color-mix(in srgb, var(--overlay-accent, #d987b6) 25%, var(--overlay-surface, #251a2b)); }
+    .profileUnsavedActions button:focus-visible { outline: 2px solid var(--overlay-accent, #d987b6); outline-offset: 3px; }
+
 </style>
 </head>
 <body>
@@ -1450,6 +1461,9 @@
   </div>
 
   <div class="visitAchievement" id="visitAchievement" role="status" aria-live="polite"><img id="visitAchievementIcon" alt=""><div><small>Achievement unlocked!</small><strong id="visitAchievementTitle"></strong><span id="visitAchievementDetail"></span></div></div>
+  <div class="profileUnsavedPrompt" id="profileUnsavedPrompt" role="alertdialog" aria-modal="true" aria-labelledby="profileUnsavedTitle" aria-describedby="profileUnsavedText" hidden>
+    <div class="profileUnsavedCard"><h2 id="profileUnsavedTitle">Unsaved profile changes</h2><p id="profileUnsavedText">You changed your profile but haven’t saved it yet. Keep editing, or discard your changes?</p><div class="profileUnsavedActions"><button id="profileKeepEditing" type="button">Keep editing</button><button id="profileDiscardChanges" type="button">Discard changes</button></div></div>
+  </div>
   <audio id="introMusic" src="Ariana Grande - everytime (Official Instrumental).mp3" loop preload="auto"></audio>
   <script>
     const intro = document.getElementById("intro");
@@ -3936,7 +3950,38 @@
         fillProfileForm(); profileForm.hidden = false; renderProfileView(); document.getElementById("profileDisplayName").focus();
       } else document.getElementById("profileClose").focus();
     }
-    function closeProfile() {
+    const profileUnsavedPrompt = document.getElementById("profileUnsavedPrompt");
+    let pendingProfileExit = null;
+    let unsavedReturnFocus = null;
+    function guardProfileExit(action) {
+      if (!profileDirty || profileForm.hidden || !accountUser) { action(); return; }
+      pendingProfileExit = action;
+      unsavedReturnFocus = document.activeElement;
+      profileUnsavedPrompt.hidden = false;
+      profileDialog.inert = true;
+      document.getElementById("profileKeepEditing").focus();
+    }
+    function keepEditingProfile() {
+      profileUnsavedPrompt.hidden = true;
+      profileDialog.inert = false;
+      pendingProfileExit = null;
+      if (unsavedReturnFocus?.isConnected) unsavedReturnFocus.focus();
+      else document.getElementById("profileDisplayName").focus();
+    }
+    document.getElementById("profileKeepEditing").addEventListener("click", keepEditingProfile);
+    document.getElementById("profileDiscardChanges").addEventListener("click", () => {
+      const action = pendingProfileExit;
+      profileUnsavedPrompt.hidden = true; profileDialog.inert = false; pendingProfileExit = null;
+      profileDirty = false;
+      action?.();
+    });
+    profileUnsavedPrompt.addEventListener("click", event => { if (event.target === profileUnsavedPrompt) keepEditingProfile(); });
+    window.addEventListener("beforeunload", event => {
+      if (profileDirty && !profileDialog.hidden) { event.preventDefault(); event.returnValue = ""; }
+    });
+    function closeProfile(force = false) {
+      if (force !== true && profileDirty && !profileForm.hidden && accountUser) { guardProfileExit(() => closeProfile(true)); return; }
+      profileUnsavedPrompt.hidden = true; profileDialog.inert = false; pendingProfileExit = null;
       profileDialog.hidden = true;
       profileForm.hidden = true;
       profileDirty = false;
@@ -3949,9 +3994,20 @@
       if (!profileSchemaReady) { profileFeedback.textContent = "Profile editing needs the one-time profile SQL setup."; return; }
       fillProfileForm(); profileForm.hidden = false; renderProfileView(); document.getElementById("profileDisplayName").focus();
     });
-    document.getElementById("profileCancel").addEventListener("click", () => { fillProfileForm(); profileForm.hidden = true; profileDirty = false; profileFeedback.textContent = "Changes discarded"; renderProfileView(); });
+    document.getElementById("profileCancel").addEventListener("click", () => guardProfileExit(() => { fillProfileForm(); profileForm.hidden = true; profileDirty = false; profileFeedback.textContent = "Changes discarded"; renderProfileView(); }));
     profileDialog.addEventListener("click", event => { if (event.target === profileDialog) closeProfile(); });
-    document.addEventListener("keydown", event => { if (event.key === "Escape" && !profileDialog.hidden) closeProfile(); });
+    document.addEventListener("keydown", event => {
+      if (!profileUnsavedPrompt.hidden) {
+        if (event.key === "Escape") { event.preventDefault(); keepEditingProfile(); }
+        if (event.key === "Tab") {
+          event.preventDefault();
+          const keep = document.getElementById("profileKeepEditing"), discard = document.getElementById("profileDiscardChanges");
+          (document.activeElement === keep ? discard : keep).focus();
+        }
+        return;
+      }
+      if (event.key === "Escape" && !profileDialog.hidden) closeProfile();
+    });
     profileForm.addEventListener("input", () => { profileDirty = true; renderProfileView(); });
     profileForm.addEventListener("change", () => { profileDirty = true; renderProfileView(); });
     profileForm.addEventListener("submit", async event => {
@@ -4110,7 +4166,7 @@
       accountFeedback.textContent = error ? error.message : "Password updated. You’re signed in ♡";
       if (!error) { accountRecovery.hidden = true; showAccountUser((await accountClient.auth.getUser()).data.user); }
     });
-    accountSignOut.addEventListener("click", async () => {
+    accountSignOut.addEventListener("click", () => guardProfileExit(async () => {
       if (!accountClient) return;
       accountSignOut.disabled = true;
       const { error } = await accountClient.auth.signOut();
@@ -4121,7 +4177,7 @@
         accountDialog.hidden = true;
         if (mainWebsite.classList.contains("show")) backButton.click();
       }
-    });
+    }));
   </script>
   <script>
     (() => {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v62">
+<meta name="site-build" content="cinta-kita-v63">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -3464,17 +3464,43 @@
       }
       if (changed && !messagePanel.hidden) renderMessages();
     }
+    const pendingReactions = new Set();
     async function toggleMessageReaction(item, reaction, button) {
-      if (!accountUser || !reactionsReady) return;
+      if (!accountClient || !accountUser || !reactionsReady || pendingReactions.has(item.id)) return;
+      if (!["heart", "like", "dislike"].includes(reaction)) return;
+      const userId = accountUser.id;
+      pendingReactions.add(item.id);
       button.disabled = true;
-      const current = messageReactions.get(item.id)?.find(entry => entry.user_id === accountUser.id);
-      const query = current?.reaction === reaction
-        ? accountClient.from("site_message_reactions").delete().eq("message_id", item.id).eq("user_id", accountUser.id)
-        : accountClient.from("site_message_reactions").upsert({ message_id: item.id, user_id: accountUser.id, reaction }, { onConflict: "message_id,user_id" });
-      const { error } = await query;
-      if (error) { button.disabled = false; messageStatus.textContent = error.message; return; }
-      messageStatus.textContent = "";
-      await loadMessageReactions();
+      try {
+        const table = () => accountClient.from("site_message_reactions");
+        const current = messageReactions.get(item.id)?.find(entry => entry.user_id === userId);
+        let result;
+        if (current?.reaction === reaction) {
+          result = await table().delete().eq("message_id", item.id).eq("user_id", userId);
+        } else if (current) {
+          result = await table().update({ reaction }).eq("message_id", item.id).eq("user_id", userId);
+        } else {
+          result = await table().insert({ message_id: item.id, user_id: userId, reaction });
+          // Another tab may have inserted this member's reaction first.
+          if (result.error?.code === "23505") {
+            result = await table().update({ reaction }).eq("message_id", item.id).eq("user_id", userId);
+          }
+        }
+        if (accountUser?.id !== userId) return;
+        if (result.error) {
+          messageStatus.textContent = result.error.code === "42501"
+            ? "Reaction permission needs the one-time reaction SQL repair in Supabase."
+            : result.error.message;
+          return;
+        }
+        messageStatus.textContent = "";
+        await loadMessageReactions();
+      } catch (error) {
+        if (accountUser?.id === userId) messageStatus.textContent = "Could not save your reaction. Please try again.";
+      } finally {
+        pendingReactions.delete(item.id);
+        button.disabled = false;
+      }
     }
     function renderMessages() {
       const userId = accountUser?.id;

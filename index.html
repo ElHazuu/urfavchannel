@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v61">
+<meta name="site-build" content="cinta-kita-v62">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1160,6 +1160,15 @@
     .profileUnsavedActions button:focus-visible { outline: 2px solid var(--overlay-accent, #d987b6); outline-offset: 3px; }
 
 </style>
+<style>
+    /* The decorative PNG stays above the cat without covering click targets. */
+    .avatarRing.frame-picture { position: relative; isolation: isolate; border-color: transparent; padding: 7px; background: transparent; }
+    .avatarRing.frame-picture > img:not(.memberFrameOverlay) { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; }
+    .avatarRing.frame-picture > img.memberFrameOverlay { position: absolute; z-index: 2; inset: -10%; width: 120%; height: 120%; max-height: none; object-fit: contain; border-radius: 0; background: transparent; pointer-events: none; }
+    .profileAvatar.avatarRing.frame-picture { padding: 17px; }
+    .messagePerson .avatarRing.frame-picture { padding: 10px; }
+    .profileForm label[hidden] { display: none !important; }
+</style>
 </head>
 <body>
   <div id="intro">
@@ -1442,11 +1451,12 @@
             <label><input type="radio" name="profileAvatarStyle" value="heart"> Heart ♡</label>
           </div></fieldset>
           <fieldset><legend>Avatar frame</legend><div class="profileChoices">
-            <label><input type="radio" name="profileAvatarFrame" value="simple" checked> Simple</label>
-            <label><input type="radio" name="profileAvatarFrame" value="double"> Double</label>
-            <label><input type="radio" name="profileAvatarFrame" value="glow"> Glow</label>
-            <label><input type="radio" name="profileAvatarFrame" value="scallop"> Petals</label>
-            <label><input type="radio" name="profileAvatarFrame" value="square"> Rounded</label>
+            <label><input type="radio" name="profileAvatarFrame" value="simple" checked> Classic ring</label>
+            <label><input type="radio" name="profileAvatarFrame" value="picture"> Your uploaded frame</label>
+            <label hidden><input type="radio" name="profileAvatarFrame" value="double"> Double</label>
+            <label hidden><input type="radio" name="profileAvatarFrame" value="glow"> Glow</label>
+            <label hidden><input type="radio" name="profileAvatarFrame" value="scallop"> Petals</label>
+            <label hidden><input type="radio" name="profileAvatarFrame" value="square"> Rounded</label>
           </div></fieldset>
           <label for="profileColor">Profile color</label><input id="profileColor" type="color" value="#d987b6">
           <p class="profileHint">The preview above updates while you edit. Save to show it to others.</p>
@@ -3135,16 +3145,27 @@
       noteSiteInteraction();
     }, { passive: true });
     function sceneAvatarColor() { return getComputedStyle(mainWebsite).getPropertyValue("--ui-accent").trim() || "#d987b6"; }
+    function addMemberFrame(avatar, frame) {
+      if (frame !== "picture" || !accountUser) return;
+      const overlay = document.createElement("img");
+      overlay.className = "memberFrameOverlay";
+      overlay.src = "frame.png";
+      overlay.alt = "";
+      overlay.draggable = false;
+      overlay.onerror = () => { overlay.remove(); avatar.classList.remove("frame-picture"); };
+      avatar.append(overlay);
+    }
     function createAvatar(id, name, online = true) {
       const profile = profileRecords.get(id) || {};
       const color = profileAvatarColor(profile, name, id);
       const icon = document.createElement("span");
-      const frame = ["double", "glow", "scallop", "square"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple";
+      const frame = ["double", "glow", "scallop", "square", "picture"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple";
       icon.className = `avatarRing frame-${frame}`;
       icon.style.setProperty("--avatar-accent", profileAccent(profile) || sceneAvatarColor());
       icon.setAttribute("aria-hidden", "true");
-      if (color) { const img = document.createElement("img"); img.src = `${color}-${online ? "online" : "offline"}.png`; img.alt = ""; img.onerror = () => { img.remove(); icon.textContent = "♡"; }; icon.append(img); }
+      if (color) { const img = document.createElement("img"); img.src = `${color}-${online ? "online" : "offline"}.png`; img.alt = ""; img.onerror = () => { img.remove(); icon.prepend(document.createTextNode("♡")); }; icon.append(img); }
       else icon.textContent = "♡";
+      addMemberFrame(icon, frame);
       return icon;
     }
     function updateTaskbarProfile() {
@@ -3909,13 +3930,14 @@
       document.getElementById("profileBio").textContent = profile.bio || "";
       const avatar = document.getElementById("profileAvatar");
       avatar.replaceChildren();
-      avatar.className = `profileAvatar avatarRing frame-${["double","glow","scallop","square"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple"}`;
+      avatar.className = `profileAvatar avatarRing frame-${["double","glow","scallop","square","picture"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple"}`;
       const cat = profileAvatarColor(profile, name, profileViewedId);
       if (cat) {
         const img = document.createElement("img"); img.src = `${cat}-online.png`; img.alt = "";
-        img.onerror = () => { img.remove(); avatar.textContent = "♡"; };
+        img.onerror = () => { img.remove(); avatar.prepend(document.createTextNode("♡")); };
         avatar.append(img);
       } else avatar.textContent = "♡";
+      addMemberFrame(avatar, profile.avatar_frame);
       const own = profileViewedId === accountUser?.id;
       document.getElementById("profileCustomize").hidden = !own || !profileForm.hidden;
       document.getElementById("profileSettings").hidden = !own || profileForm.hidden;
@@ -3931,7 +3953,7 @@
       document.getElementById("profileBioInput").value = profile.bio || "";
       const choice = profileForm.querySelector(`input[name="profileAvatarStyle"][value="${["auto","grey","beige","heart"].includes(profile.avatar_style) ? profile.avatar_style : "auto"}"]`);
       choice.checked = true;
-      profileForm.querySelector(`input[name="profileAvatarFrame"][value="${["simple","double","glow","scallop","square"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple"}"]`).checked = true;
+      profileForm.querySelector(`input[name="profileAvatarFrame"][value="${["simple","double","glow","scallop","square","picture"].includes(profile.avatar_frame) ? profile.avatar_frame : "simple"}"]`).checked = true;
       document.getElementById("profileColor").value = profileAccent(profile) || getComputedStyle(accountDialog).getPropertyValue("--account-accent").trim() || "#d987b6";
       profileDirty = false;
     }

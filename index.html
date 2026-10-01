@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v66">
+<meta name="site-build" content="cinta-kita-v67">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1229,6 +1229,28 @@
 @media(max-width:620px){#mainWebsite .puzzlePanel{inset:78px 8px 8px;padding:14px;}.puzzleCreateForm{grid-template-columns:1fr;padding:14px;}.puzzleHeading h2{font-size:30px;}.puzzleCollectionHeading{align-items:flex-start;flex-direction:column;}.puzzleMusicInput{flex-direction:column;}#puzzleCanvas{height:52vh;}}
 </style>
 <style>.puzzleCard img{width:100%;height:130px;object-fit:cover;border-radius:9px;}.puzzleCard img:not([src]){display:none;}</style>
+<style>
+.avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4){position:relative!important;display:inline-block!important;box-sizing:border-box!important;padding:0!important;border:0!important;overflow:visible!important;}
+.avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4)>img:not(.memberFrameOverlay){position:absolute!important;inset:15%!important;left:15%!important;top:15%!important;width:70%!important;height:70%!important;transform:none!important;margin:0!important;object-fit:contain!important;z-index:1;}
+.avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4)>img.memberFrameOverlay{position:absolute!important;inset:-10%!important;left:-10%!important;top:-10%!important;width:120%!important;height:120%!important;transform:none!important;margin:0!important;object-fit:contain!important;pointer-events:none;z-index:2;}
+#mainWebsite .puzzlePanel{inset:86px 6px 6px;padding:16px;border-radius:18px;}
+#puzzleGame:not([hidden]){display:flex;flex-direction:column;min-height:calc(100dvh - 210px);}
+#puzzleCanvas{height:calc(100dvh - 265px);min-height:300px;flex:1;}
+.puzzleMusicDock{position:fixed;bottom:24px;right:28px;z-index:3;}
+#mainWebsite .puzzlePanel #puzzleMusicToggle{width:46px;height:46px;border-radius:50%;padding:8px;display:grid;place-items:center;box-shadow:0 5px 20px #0004;color:var(--ui-accent);}
+#puzzleMusicToggle svg{width:28px;height:28px;}
+.puzzleMusicPopover{position:absolute;right:0;bottom:54px;width:min(350px,calc(100vw - 42px));max-height:calc(100dvh - 175px);overflow:auto;box-sizing:border-box;padding:14px;border:1px solid var(--ui-line);border-radius:18px;background:var(--ui-surface);color:var(--ui-ink);box-shadow:0 12px 38px #0005;visibility:hidden;opacity:0;pointer-events:none;transform:translateY(7px);transition:opacity .15s,transform .15s;}
+.puzzleMusicDock::before{content:"";position:absolute;bottom:42px;right:0;width:350px;height:16px;pointer-events:none;}
+.puzzleMusicDock:hover::before,.puzzleMusicDock.musicOpen::before{pointer-events:auto;}
+.puzzleMusicDock:hover .puzzleMusicPopover,.puzzleMusicDock .puzzleMusicPopover:focus-within,.puzzleMusicDock.musicOpen .puzzleMusicPopover{visibility:visible;opacity:1;pointer-events:auto;transform:none;}
+.puzzleMusicHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;}
+.puzzleMusicPopover label{display:block;font-size:11px;margin-bottom:7px;}
+.puzzleMusicPopover .puzzleMusicInput{display:flex;gap:6px;}
+.puzzleMusicPopover iframe{width:100%;border:0;border-radius:12px;margin-top:12px;display:block;}
+.puzzleMusicPopover a{display:block;margin-top:10px;color:var(--ui-accent);font-size:11px;text-decoration:underline;}
+@media(max-width:620px){#mainWebsite .puzzlePanel{inset:74px 4px 4px;padding:12px;}#puzzleCanvas{height:calc(100dvh - 300px);min-height:240px;}.puzzleMusicDock{bottom:16px;right:16px;}}
+@media(prefers-reduced-motion:reduce){.puzzleMusicPopover{transition:none;}}
+</style>
 </head>
 <body>
   <div id="intro">
@@ -1322,8 +1344,8 @@
       <nav class="siteMenu" id="siteMenu" aria-label="Main menu">
         <div class="menuPanelHead"><strong>Cinta Kita ♡</strong><small>THE MENU</small></div>
         <div class="menuLinks">
-<button id="puzzleToggle" type="button" aria-expanded="false" aria-controls="puzzlePanel"><span>Puzzles</span><small>Build together</small></button>
-<button id="calendarToggle" type="button" aria-expanded="false" aria-controls="calendarPanel"><span>Calendar</span><small>Our shared days</small></button>
+<button id="puzzleToggle" type="button" aria-expanded="false" aria-controls="puzzlePanel"><span>Puzzles</span></button>
+<button id="calendarToggle" type="button" aria-expanded="false" aria-controls="calendarPanel"><span>Calendar</span></button>
           <a href="#home"><small>01</small>Home<span>↗</span></a>
           <a href="#videos"><small>02</small>Videos<span>↗</span></a>
           <a href="#story"><small>03</small>Our Story<span>↗</span></a>
@@ -1354,7 +1376,7 @@
 <header class="puzzleHeading"><div><small>PIECE BY PIECE, TOGETHER</small><h2>Our puzzles</h2></div><button id="puzzleClose" type="button" aria-label="Close puzzles">×</button></header>
 <div id="puzzleLibrary"><form id="puzzleCreateForm" class="puzzleCreateForm"><h3>Create a puzzle</h3><label for="puzzleTitle">Name</label><input id="puzzleTitle" maxlength="80" placeholder="A memory together"><label for="puzzlePhoto">Your picture</label><input id="puzzlePhoto" type="file" accept="image/png,image/jpeg,image/webp" required><img id="puzzlePhotoPreview" alt="Your chosen puzzle picture" hidden><label for="puzzleCount">How many pieces?</label><input id="puzzleCount" type="number" min="4" max="1000" step="1" value="48" required><small id="puzzleCountPreview"></small><button id="puzzleCreate" type="submit">Create shared puzzle</button><p>All registered members can join the same puzzle. Your progress saves automatically.</p></form><div class="puzzleCollectionHeading"><h3>Our collection</h3><div><button id="puzzleIncomplete" type="button" aria-pressed="true">Not Completed</button><button id="puzzleCompleted" type="button" aria-pressed="false">Completed</button></div></div><div id="puzzleCollection" class="puzzleCollection"></div></div>
 <div id="puzzleGame" hidden><div class="puzzleTools"><button id="puzzleBack" type="button">Collection</button><strong id="puzzleRoomTitle"></strong><button id="puzzleFit" type="button">Fit view</button><label><input id="puzzleReference" type="checkbox"> Picture guide</label><label><input id="puzzleMute" type="checkbox"> Mute clicks</label></div><p id="puzzlePlayers" class="puzzlePlayers" aria-live="polite"></p><p id="puzzleProgress" role="status"></p><canvas id="puzzleCanvas" aria-label="Shared jigsaw board. Drag pieces to the outlined picture. Drag empty space to pan; use the scroll wheel to zoom."></canvas><p class="puzzleHint">Drag a piece to fit it. Loose pieces stay where you leave them. Drag empty space to move the view; scroll to zoom.</p></div>
-<details class="puzzleMusic"><summary>Music while we puzzle</summary><label for="puzzleSpotifyLink">Spotify playlist, album or track link</label><div class="puzzleMusicInput"><input id="puzzleSpotifyLink" type="url" placeholder="https://open.spotify.com/playlist/…"><button id="puzzleSpotifyLoad" type="button">Load player</button></div><iframe id="puzzleSpotifyPlayer" title="Spotify music player" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" hidden></iframe><small>Each person controls their own music. Spotify determines available playback.</small></details><p id="puzzleStatus" role="status"></p>
+<div class="puzzleMusicDock" id="puzzleMusicDock"><button id="puzzleMusicToggle" type="button" aria-label="Spotify player" aria-expanded="false" aria-controls="puzzleMusicPopover"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M6 9c4-1.4 8-1.1 12 1M7 12c3.3-1 6.7-.7 10 1M8 15c2.7-.6 5.3-.4 8 .8" fill="none" stroke="var(--ui-surface)" stroke-width="1.6" stroke-linecap="round"/></svg></button><section id="puzzleMusicPopover" class="puzzleMusicPopover" aria-label="Spotify music"><div class="puzzleMusicHead"><strong>Spotify</strong><button id="puzzleMusicPin" type="button" aria-pressed="false">Keep open</button></div><label for="puzzleSpotifyLink">Playlist, album or track link</label><div class="puzzleMusicInput"><input id="puzzleSpotifyLink" type="url" placeholder="Paste your Spotify link"><button id="puzzleSpotifyLoad" type="button">Load</button></div><iframe id="puzzleSpotifyPlayer" title="Spotify playlist and playback controls" height="352" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" hidden></iframe><a id="puzzleSpotifyFull" href="https://open.spotify.com/" target="_blank" rel="noopener noreferrer">Open Spotify · repeat &amp; full controls</a></section></div><p id="puzzleStatus" role="status"></p>
 </section>
 
 <section class="calendarPanel" id="calendarPanel" aria-label="Shared calendar" hidden>
@@ -4326,10 +4348,19 @@
     document.getElementById('puzzleCount').oninput=updatePuzzlePreview;
     document.getElementById('puzzlePhoto').onchange=async event=>{const file=event.target.files[0];if(!file)return;const url=URL.createObjectURL(file),img=new Image();try{img.src=url;await img.decode();if(puzzlePreviewImage)URL.revokeObjectURL(puzzlePreviewImage.src);puzzlePreviewImage=img;document.getElementById('puzzlePhotoPreview').src=img.src;document.getElementById('puzzlePhotoPreview').hidden=false;updatePuzzlePreview();}catch(error){URL.revokeObjectURL(url);puzzleStatus.textContent='Please choose a readable PNG, JPEG or WebP picture.';}};
     document.getElementById('puzzleCreateForm').onsubmit=async event=>{event.preventDefault();if(!accountUser||!accountClient)return;const file=document.getElementById('puzzlePhoto').files[0];if(!file)return;const button=document.getElementById('puzzleCreate');button.disabled=true;const uid=accountUser.id;try{if(!['image/png','image/jpeg','image/webp'].includes(file.type))throw new Error('Choose a PNG, JPEG or WebP image.');if(file.size>20*1024*1024)throw new Error('Please choose a picture below 20 MB.');const url=URL.createObjectURL(file),img=new Image();try{img.src=url;await img.decode();}finally{URL.revokeObjectURL(url);}const resize=Math.min(1,2000/img.width,2000/img.height),canvas=document.createElement('canvas');canvas.width=Math.round(img.width*resize);canvas.height=Math.round(img.height*resize);const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.9));if(!blob)throw new Error('Could not prepare this picture.');const count=Number(document.getElementById('puzzleCount').value);const layout=puzzleLayout(count,canvas.width,canvas.height);const path=`${uid}/${crypto.randomUUID()}.jpg`;puzzleStatus.textContent='Uploading your picture…';const upload=await accountClient.storage.from('site-puzzle-images').upload(path,blob,{contentType:'image/jpeg'});if(upload.error)throw upload.error;if(accountUser?.id!==uid)return;const {data,error}=await accountClient.rpc('create_site_puzzle',{p_title:document.getElementById('puzzleTitle').value.trim()||'Our puzzle',p_image_path:path,p_width:canvas.width,p_height:canvas.height,p_rows:layout.rows,p_cols:layout.cols});if(error)throw error;if(accountUser?.id!==uid)return;await loadPuzzleCollection();await openPuzzleRoom(data);}catch(error){puzzleError(error);}finally{button.disabled=false;}};
-    document.getElementById('puzzleSpotifyLoad').onclick=()=>{const text=document.getElementById('puzzleSpotifyLink').value.trim();try{const url=new URL(text);const match=url.pathname.match(/^\/(?:intl-[a-z]+\/)?(playlist|album|track)\/([A-Za-z0-9]+)\/?$/);if(url.hostname!=='open.spotify.com'||!match)throw new Error();document.getElementById('puzzleSpotifyPlayer').src=`https://open.spotify.com/embed/${match[1]}/${match[2]}`;document.getElementById('puzzleSpotifyPlayer').hidden=false;}catch(error){puzzleStatus.textContent='Paste a Spotify playlist, album or track link.';}};
+    document.getElementById('puzzleSpotifyLoad').onclick=()=>{const text=document.getElementById('puzzleSpotifyLink').value.trim();try{const url=new URL(text);const match=url.pathname.match(/^\/(?:intl-[a-z]+\/)?(playlist|album|track)\/([A-Za-z0-9]+)\/?$/);if(url.hostname!=='open.spotify.com'||!match)throw new Error();document.getElementById('puzzleSpotifyPlayer').src=`https://open.spotify.com/embed/${match[1]}/${match[2]}`;document.getElementById('puzzleSpotifyPlayer').hidden=false;document.getElementById('puzzleSpotifyFull').href=url.href;}catch(error){puzzleStatus.textContent='Paste a Spotify playlist, album or track link.';}};
     new ResizeObserver(()=>{if(puzzleRoom&&!puzzlePanel.hidden)drawPuzzle();}).observe(puzzleCanvas);
     document.addEventListener('visibilitychange',()=>{if(document.hidden)finishPuzzleDrag();else if(puzzleRoom)refreshPuzzlePieces();});
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!puzzlePanel.hidden)closePuzzle();});
+
+    const puzzleMusicDock=document.getElementById('puzzleMusicDock');
+    const puzzleMusicToggle=document.getElementById('puzzleMusicToggle');
+    function setPuzzleMusicOpen(open){puzzleMusicDock.classList.toggle('musicOpen',open);puzzleMusicToggle.setAttribute('aria-expanded',String(open));document.getElementById('puzzleMusicPin').setAttribute('aria-pressed',String(open));}
+    puzzleMusicToggle.onclick=()=>setPuzzleMusicOpen(!puzzleMusicDock.classList.contains('musicOpen'));
+    document.getElementById('puzzleMusicPin').onclick=()=>setPuzzleMusicOpen(!puzzleMusicDock.classList.contains('musicOpen'));
+    puzzleMusicDock.addEventListener('pointerenter',()=>puzzleMusicToggle.setAttribute('aria-expanded','true'));
+    puzzleMusicDock.addEventListener('pointerleave',()=>{if(!puzzleMusicDock.classList.contains('musicOpen'))puzzleMusicToggle.setAttribute('aria-expanded','false');});
+    puzzleMusicDock.addEventListener('keydown',event=>{if(event.key==='Escape'){event.stopPropagation();setPuzzleMusicOpen(false);puzzleMusicToggle.focus();}});
     updatePuzzlePreview();
 
     function showAccountUser(user) {

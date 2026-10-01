@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v65">
+<meta name="site-build" content="cinta-kita-v66">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1209,6 +1209,26 @@
     .birthdayGreeting h2 { font: 600 38px/1.2 "Cormorant Garamond",Georgia,serif; }.birthdayGreeting .birthdayHearts { color: var(--ui-accent); font-size: 30px; letter-spacing: 10px; }
     @media(max-width:620px){#mainWebsite .calendarPanel{top:78px;max-height:calc(100dvh - 94px);padding:16px;}.calendarColumns{grid-template-columns:1fr;gap:16px;}}
 </style>
+<style>#mainWebsite .puzzlePanel{position:fixed;z-index:86;inset:96px 18px 18px;padding:22px;border:1px solid var(--ui-line);border-radius:24px;background:var(--ui-surface);color:var(--ui-ink);box-shadow:0 20px 60px #0005;overflow:auto;}
+#mainWebsite .puzzlePanel[hidden],#puzzleLibrary[hidden],#puzzleGame[hidden],#puzzlePhotoPreview[hidden],#puzzleSpotifyPlayer[hidden]{display:none;}
+#mainWebsite[data-wallpaper="berserk"] .puzzlePanel{display:none;}
+.puzzleHeading,.puzzleCollectionHeading{display:flex;justify-content:space-between;align-items:center;gap:14px;}.puzzleHeading h2{font:600 36px/1.2 "Cormorant Garamond",Georgia,serif;margin:0;}.puzzleHeading small{color:var(--ui-accent);}
+#mainWebsite .puzzlePanel button,#mainWebsite #calendarToggle,#mainWebsite #puzzleToggle{border:1px solid var(--ui-line);background:color-mix(in srgb,var(--ui-accent) 16%,var(--ui-surface));color:var(--ui-ink);border-radius:12px;padding:9px 13px;cursor:pointer;font:inherit;}
+#mainWebsite .puzzlePanel button:hover,#mainWebsite .puzzlePanel button[aria-pressed="true"]{background:color-mix(in srgb,var(--ui-accent) 35%,var(--ui-surface));}
+#mainWebsite .puzzlePanel input:not([type="checkbox"]){box-sizing:border-box;border:1px solid var(--ui-line);background:var(--ui-surface);color:var(--ui-ink);padding:10px;border-radius:10px;width:100%;font:inherit;}
+#mainWebsite .puzzlePanel input{accent-color:var(--ui-accent);}#mainWebsite .puzzlePanel :focus-visible{outline:2px solid var(--ui-accent);outline-offset:3px;}
+.puzzleCreateForm{display:grid;grid-template-columns:140px 1fr;gap:12px;max-width:760px;margin:22px auto;padding:20px;border:1px solid var(--ui-line);border-radius:18px;}.puzzleCreateForm h3,.puzzleCreateForm p,.puzzleCreateForm>small,.puzzleCreateForm>button,.puzzleCreateForm>img{grid-column:1/-1;}.puzzleCreateForm h3{margin:0;}#puzzlePhotoPreview{width:100%;max-height:180px;object-fit:contain;border-radius:12px;}.puzzleCreateForm p,.puzzleHint,#puzzleStatus{font-size:12px;opacity:.85;}
+.puzzleCollection{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin:18px 0;}.puzzleCard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;}.puzzleCard strong{overflow-wrap:anywhere;}.puzzleCard small{opacity:.75;}
+.puzzleTools{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:18px 0;}.puzzleTools strong{margin-right:auto;}.puzzleTools label{font-size:12px;}.puzzlePlayers{color:var(--ui-accent);font-size:12px;}#puzzleCanvas{display:block;width:100%;height:min(62vh,700px);background:color-mix(in srgb,var(--ui-accent) 8%,var(--ui-surface));border:1px solid var(--ui-line);border-radius:16px;touch-action:none;cursor:grab;}
+.puzzleMusic{margin-top:18px;padding:14px;border:1px solid var(--ui-line);border-radius:14px;}.puzzleMusic summary{cursor:pointer;color:var(--ui-accent);}.puzzleMusic label{display:block;margin:12px 0 8px;font-size:12px;}.puzzleMusicInput{display:flex;gap:10px;}.puzzleMusic iframe{width:100%;border:0;border-radius:12px;margin-top:12px;}.puzzleMusic small{display:block;margin-top:8px;opacity:.75;}
+/* Explicit positioning avoids CSS grid placing the cat and frame in separate rows. */
+#mainWebsite .avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4){display:inline-block;position:relative;padding:0;background:transparent;border:0;line-height:1;}
+#mainWebsite .avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4)>img:not(.memberFrameOverlay){position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:70%;height:70%;margin:0;object-fit:contain;z-index:1;}
+#mainWebsite .avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4)>img.memberFrameOverlay{position:absolute;left:50%;top:50%;inset:auto;transform:translate(-50%,-50%);width:120%;height:120%;margin:0;object-fit:contain;z-index:2;}
+#mainWebsite .messageByline{align-items:center;gap:14px;}#mainWebsite #calendarToggle small,#mainWebsite #puzzleToggle small{color:var(--ui-ink);opacity:.75;}
+@media(max-width:620px){#mainWebsite .puzzlePanel{inset:78px 8px 8px;padding:14px;}.puzzleCreateForm{grid-template-columns:1fr;padding:14px;}.puzzleHeading h2{font-size:30px;}.puzzleCollectionHeading{align-items:flex-start;flex-direction:column;}.puzzleMusicInput{flex-direction:column;}#puzzleCanvas{height:52vh;}}
+</style>
+<style>.puzzleCard img{width:100%;height:130px;object-fit:cover;border-radius:9px;}.puzzleCard img:not([src]){display:none;}</style>
 </head>
 <body>
   <div id="intro">
@@ -1302,6 +1322,7 @@
       <nav class="siteMenu" id="siteMenu" aria-label="Main menu">
         <div class="menuPanelHead"><strong>Cinta Kita ♡</strong><small>THE MENU</small></div>
         <div class="menuLinks">
+<button id="puzzleToggle" type="button" aria-expanded="false" aria-controls="puzzlePanel"><span>Puzzles</span><small>Build together</small></button>
 <button id="calendarToggle" type="button" aria-expanded="false" aria-controls="calendarPanel"><span>Calendar</span><small>Our shared days</small></button>
           <a href="#home"><small>01</small>Home<span>↗</span></a>
           <a href="#videos"><small>02</small>Videos<span>↗</span></a>
@@ -1329,6 +1350,13 @@
       <p class="notificationFeedback" id="notificationFeedback" role="status"></p>
       <div id="notificationList"></div>
     </div>
+<section id="puzzlePanel" class="puzzlePanel" aria-label="Shared puzzles" hidden>
+<header class="puzzleHeading"><div><small>PIECE BY PIECE, TOGETHER</small><h2>Our puzzles</h2></div><button id="puzzleClose" type="button" aria-label="Close puzzles">×</button></header>
+<div id="puzzleLibrary"><form id="puzzleCreateForm" class="puzzleCreateForm"><h3>Create a puzzle</h3><label for="puzzleTitle">Name</label><input id="puzzleTitle" maxlength="80" placeholder="A memory together"><label for="puzzlePhoto">Your picture</label><input id="puzzlePhoto" type="file" accept="image/png,image/jpeg,image/webp" required><img id="puzzlePhotoPreview" alt="Your chosen puzzle picture" hidden><label for="puzzleCount">How many pieces?</label><input id="puzzleCount" type="number" min="4" max="1000" step="1" value="48" required><small id="puzzleCountPreview"></small><button id="puzzleCreate" type="submit">Create shared puzzle</button><p>All registered members can join the same puzzle. Your progress saves automatically.</p></form><div class="puzzleCollectionHeading"><h3>Our collection</h3><div><button id="puzzleIncomplete" type="button" aria-pressed="true">Not Completed</button><button id="puzzleCompleted" type="button" aria-pressed="false">Completed</button></div></div><div id="puzzleCollection" class="puzzleCollection"></div></div>
+<div id="puzzleGame" hidden><div class="puzzleTools"><button id="puzzleBack" type="button">Collection</button><strong id="puzzleRoomTitle"></strong><button id="puzzleFit" type="button">Fit view</button><label><input id="puzzleReference" type="checkbox"> Picture guide</label><label><input id="puzzleMute" type="checkbox"> Mute clicks</label></div><p id="puzzlePlayers" class="puzzlePlayers" aria-live="polite"></p><p id="puzzleProgress" role="status"></p><canvas id="puzzleCanvas" aria-label="Shared jigsaw board. Drag pieces to the outlined picture. Drag empty space to pan; use the scroll wheel to zoom."></canvas><p class="puzzleHint">Drag a piece to fit it. Loose pieces stay where you leave them. Drag empty space to move the view; scroll to zoom.</p></div>
+<details class="puzzleMusic"><summary>Music while we puzzle</summary><label for="puzzleSpotifyLink">Spotify playlist, album or track link</label><div class="puzzleMusicInput"><input id="puzzleSpotifyLink" type="url" placeholder="https://open.spotify.com/playlist/…"><button id="puzzleSpotifyLoad" type="button">Load player</button></div><iframe id="puzzleSpotifyPlayer" title="Spotify music player" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" hidden></iframe><small>Each person controls their own music. Spotify determines available playback.</small></details><p id="puzzleStatus" role="status"></p>
+</section>
+
 <section class="calendarPanel" id="calendarPanel" aria-label="Shared calendar" hidden>
 <div class="calendarHeader"><div><small>OUR SHARED DAYS</small><h2>Calendar</h2></div><button id="calendarClose" type="button" aria-label="Close calendar">×</button></div>
 <div class="calendarNavigation"><button id="calendarPrevious" type="button" aria-label="Previous month">‹</button><strong id="calendarMonthTitle" aria-live="polite"></strong><button id="calendarNext" type="button" aria-label="Next month">›</button><button id="calendarToday" type="button">Today</button></div>
@@ -1724,6 +1752,7 @@
         document.getElementById("menuHandle").setAttribute("aria-expanded", "false");
         document.getElementById("activityPanel").hidden = true;
         document.getElementById("calendarPanel").hidden = true;
+        document.getElementById("puzzlePanel").hidden = true;
         document.getElementById("birthdayCelebration").hidden = true;
         document.getElementById("activityToggle").setAttribute("aria-expanded", "false");
         document.getElementById("notificationPanel").hidden = true;
@@ -1778,15 +1807,15 @@
     function closeMenu() { menuZone.classList.remove("open"); menuHandle.setAttribute("aria-expanded", "false"); }
     function closeActivity() { activityPanel.hidden = true; activityToggle.setAttribute("aria-expanded", "false"); }
     function closeUpdates() { document.getElementById("notificationPanel").hidden = true; document.getElementById("notificationBell").setAttribute("aria-expanded", "false"); document.getElementById("taskbarUpdates").setAttribute("aria-expanded", "false"); }
-    function openMenu() { closeCalendar(); closeActivity(); closeUpdates(); menuZone.classList.add("open", "near"); menuHandle.setAttribute("aria-expanded", "true"); }
+    function openMenu() { closePuzzle(); closeCalendar(); closeActivity(); closeUpdates(); menuZone.classList.add("open", "near"); menuHandle.setAttribute("aria-expanded", "true"); }
     menuHandle.addEventListener("click", () => menuZone.classList.contains("open") ? closeMenu() : openMenu());
     activityToggle.addEventListener("click", () => {
       if (!activityPanel.hidden) { closeActivity(); return; }
-      closeCalendar(); closeMenu(); closeUpdates(); activityPanel.hidden = false; menuZone.classList.add("near"); activityToggle.setAttribute("aria-expanded", "true"); renderOnlinePeople();
+      closePuzzle(); closeCalendar(); closeMenu(); closeUpdates(); activityPanel.hidden = false; menuZone.classList.add("near"); activityToggle.setAttribute("aria-expanded", "true"); renderOnlinePeople();
     });
     document.getElementById("activityClose").addEventListener("click", closeActivity);
     taskbarProfile.addEventListener("click", () => {
-      closeCalendar(); closeMenu(); closeActivity(); closeUpdates();
+      closePuzzle(); closeCalendar(); closeMenu(); closeActivity(); closeUpdates();
       if (accountUser) openProfile(accountUser.id, false, taskbarProfile);
       else openAccount(taskbarProfile);
     });
@@ -1797,7 +1826,7 @@
       else openAccount(document.getElementById("taskbarMessages"));
     });
     document.getElementById("taskbarUpdates").addEventListener("click", () => {
-      closeCalendar(); closeMenu(); closeActivity(); document.getElementById("notificationBell").click();
+      closePuzzle(); closeCalendar(); closeMenu(); closeActivity(); document.getElementById("notificationBell").click();
     });
     const taskbarUpdatesCount = document.getElementById("taskbarUpdatesCount");
     const taskbarMessagesCount = document.getElementById("taskbarMessagesCount");
@@ -4163,7 +4192,7 @@
         button.className='calendarDay';button.textContent=day;
         button.setAttribute('aria-pressed',String(date===calendarDate));
         if (date===calendarToday()) button.setAttribute('aria-current','date');
-        const events=calendarEvents(date), birthday=calendarBirthday(date);
+        const events=calendarEvents(date), birthday=false;
         button.setAttribute('aria-label',`${date}${birthday ? ", urfavnay’s birthday" : ''}${events.length ? `, ${events.length} shared plans` : ''}`);
         if (events.length || birthday) {const dot=document.createElement('span');dot.className='calendarDot';dot.textContent=birthday?'♡':'•';button.append(dot);}
         button.addEventListener('click',()=>{calendarDate=date;calendarEditId=null;calendarForm.reset();document.getElementById('calendarEventDate').value=date;renderCalendar();});
@@ -4171,12 +4200,6 @@
       }
       document.getElementById('calendarSelected').textContent = new Intl.DateTimeFormat('en',{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'}).format(new Date(calendarDate+'T12:00:00Z'));
       const list=document.getElementById('calendarEvents');list.replaceChildren();
-      if (calendarBirthday(calendarDate)) {
-        const card=document.createElement('article');card.className='calendarEvent birthdayCard';
-        const title=document.createElement('strong');title.textContent='Happy birthday, urfavnay! ♡';
-        const text=document.createElement('p');text.textContent='November 4 · Every year · A whole ocean of love for you.';
-        const celebrate=document.createElement('button');celebrate.type='button';celebrate.textContent='Celebrate ♡';celebrate.addEventListener('click',()=>celebrateBirthday(true));card.append(title,text,celebrate);list.append(card);
-      }
       for (const row of calendarEvents(calendarDate)) {
         const card=document.createElement('article');card.className='calendarEvent';
         const title=document.createElement('strong');title.textContent=row.title;
@@ -4211,7 +4234,7 @@
     calendarToggle.addEventListener('click',()=>{
       if(!accountUser){openAccount(calendarToggle);return;}
       if(!calendarPanel.hidden){closeCalendar();return;}
-      closeMenu();closeActivity();closeUpdates();calendarPanel.hidden=false;calendarToggle.setAttribute('aria-expanded','true');renderCalendar();loadCalendar();document.getElementById('calendarClose').focus();
+      closePuzzle();closeMenu();closeActivity();closeUpdates();calendarPanel.hidden=false;calendarToggle.setAttribute('aria-expanded','true');renderCalendar();loadCalendar();document.getElementById('calendarClose').focus();
     });
     document.getElementById('calendarClose').onclick=()=>{closeCalendar();calendarToggle.focus();};
     for(const [id,step] of [['calendarPrevious',-1],['calendarNext',1]])document.getElementById(id).onclick=()=>{const [y,m]=calendarMonth.split('-').map(Number);const d=new Date(Date.UTC(y,m-1+step,1));calendarMonth=`${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}`;renderCalendar();};
@@ -4238,7 +4261,7 @@
       try {birthdayAudio=birthdayAudio||new(window.AudioContext||window.webkitAudioContext)();birthdayAudio.resume();const t=birthdayAudio.currentTime;[523.25,659.25,783.99,1046.5,987.77,783.99,659.25,1046.5].forEach((frequency,i)=>{const o=birthdayAudio.createOscillator(),g=birthdayAudio.createGain();o.type='sine';o.frequency.value=frequency;g.gain.setValueAtTime(0,t+i*.24);g.gain.linearRampToValueAtTime(.055,t+i*.24+.03);g.gain.exponentialRampToValueAtTime(.001,t+i*.24+.65);o.connect(g);g.connect(birthdayAudio.destination);o.start(t+i*.24);o.stop(t+i*.24+.7);});}catch(error){}
     }
     function celebrateBirthday(sound=false) {
-      if(!accountUser || mainWebsite.dataset.wallpaper==='berserk')return;
+      if(!accountUser || !birthdayIsNay() || mainWebsite.dataset.wallpaper==='berserk')return;
       const overlay=document.getElementById('birthdayCelebration'),canvas=document.getElementById('birthdayCanvas'),context=canvas.getContext('2d');
       overlay.hidden=false;if(sound)birthdayMelody();cancelAnimationFrame(birthdayAnimation);
       const width=window.innerWidth,height=window.innerHeight;canvas.width=width;canvas.height=height;
@@ -4246,12 +4269,68 @@
       const sparks=[];for(let burst=0;burst<7;burst++){const x=width*(.12+Math.random()*.76),y=height*(.1+Math.random()*.5);for(let i=0;i<28;i++){const a=Math.random()*Math.PI*2,v=1+Math.random()*3;sparks.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,heart:i%5===0,delay:burst*450});}}
       const start=performance.now();function draw(now){if(overlay.hidden)return;const elapsed=now-start;context.clearRect(0,0,width,height);if(!reduce)for(const p of sparks){const age=elapsed-p.delay;if(age<0||age>2600)continue;const ticks=age/16;context.globalAlpha=1-age/2600;context.fillStyle=p.heart?accent:'#ffd59b';const x=p.x+p.vx*ticks,y=p.y+p.vy*ticks+.012*ticks*ticks;if(p.heart){context.font='20px Georgia';context.fillText('♥',x,y);}else{context.beginPath();context.arc(x,y,2,0,Math.PI*2);context.fill();}}context.globalAlpha=1;if(elapsed<6500)birthdayAnimation=requestAnimationFrame(draw);else context.clearRect(0,0,width,height);}birthdayAnimation=requestAnimationFrame(draw);
     }
-    function checkBirthday(){const today=calendarToday();if(!accountUser||!mainWebsite.classList.contains('show')||mainWebsite.dataset.wallpaper==='berserk'||!calendarBirthday(today)||birthdayLastDay===today)return;birthdayLastDay=today;celebrateBirthday(false);}
+    function birthdayIsNay(){return String(registeredPeople.get(accountUser?.id)||profileRecords.get(accountUser?.id)?.username||accountUser?.user_metadata?.username||'').toLowerCase()==='urfavnay';}
+    function checkBirthday(){const today=calendarToday();if(!accountUser||!birthdayIsNay()||!mainWebsite.classList.contains('show')||mainWebsite.dataset.wallpaper==='berserk'||!calendarBirthday(today)||birthdayLastDay===today)return;birthdayLastDay=today;celebrateBirthday(false);}
     document.getElementById('birthdayClose').onclick=()=>{document.getElementById('birthdayCelebration').hidden=true;cancelAnimationFrame(birthdayAnimation);};
     document.getElementById('birthdayReplay').onclick=()=>celebrateBirthday(true);
     new MutationObserver(checkBirthday).observe(mainWebsite,{attributes:true,attributeFilter:['class','data-wallpaper']});
     setInterval(()=>{if(!document.hidden){checkBirthday();if(!calendarPanel.hidden)renderCalendar();}},60000);
     resetCalendarForm();renderCalendar();
+
+    const puzzlePanel=document.getElementById('puzzlePanel'),puzzleToggle=document.getElementById('puzzleToggle'),puzzleCanvas=document.getElementById('puzzleCanvas'),puzzleCtx=puzzleCanvas.getContext('2d'),puzzleStatus=document.getElementById('puzzleStatus');
+    let puzzleRooms=[],puzzleRoom=null,puzzlePieces=new Map(),puzzlePaths=new Map(),puzzleImage=null,puzzleChannel=null,puzzleCollectionChannel=null,puzzleAuthId=null,puzzleGeneration=0,puzzleDrag=null,puzzleClaiming=false,puzzleLastPointer=null,puzzleScale=1,puzzlePan={x:20,y:20},puzzleCursors=new Map(),puzzleSound=true,puzzleAudio=null,puzzleLastBroadcast=0,puzzleLeaseTimer=null,puzzleFilter='incomplete',puzzlePreviewImage=null,puzzleFrame=0,puzzleClickedPieces=new Set();
+    function closePuzzle(){puzzlePanel.hidden=true;puzzleToggle.setAttribute('aria-expanded','false');finishPuzzleDrag();}
+    function puzzleName(){return registeredPeople.get(accountUser?.id)||accountUser?.user_metadata?.username||'Friend';}
+    function puzzleLayout(count,width,height){count=Math.max(4,Math.min(1000,Math.round(Number(count)||48)));let best=null;for(let rows=2;rows<=Math.min(100,Math.ceil(count/2));rows++){const cols=Math.max(2,Math.round(count/rows)),actual=rows*cols;if(actual>1000)continue;const cost=Math.abs(Math.log((cols/rows)/(width/height)))+.9*Math.abs(actual-count)/count;if(!best||cost<best.cost)best={rows,cols,actual,cost};}return best;}
+    function updatePuzzlePreview(){const layout=puzzleLayout(document.getElementById('puzzleCount').value,puzzlePreviewImage?.width||4,puzzlePreviewImage?.height||3);document.getElementById('puzzleCountPreview').textContent=`Preview: ${layout.actual} pieces · ${layout.cols} × ${layout.rows}. Counts adjust to a grid that suits your picture.`;}
+    function puzzleError(error){puzzleStatus.textContent=error?.message||'Puzzle connection failed. Please try again.';}
+    async function loadPuzzleCollection(){if(!accountUser||!accountClient)return;const id=accountUser.id;const {data,error}=await accountClient.from('site_puzzles').select('*').order('created_at',{ascending:false});if(accountUser?.id!==id)return;if(error){puzzleStatus.textContent='Run the one-time live puzzle SQL setup in Supabase first.';return;}puzzleRooms=data||[];renderPuzzleCollection();}
+    function renderPuzzleCollection(){const list=document.getElementById('puzzleCollection');list.replaceChildren();for(const room of puzzleRooms.filter(r=>puzzleFilter==='completed'?r.completed_at:!r.completed_at)){const card=document.createElement('button');card.type='button';card.className='puzzleCard';const title=document.createElement('strong');title.textContent=room.title;const detail=document.createElement('small');detail.textContent=`${room.rows*room.cols} pieces · ${room.completed_at?'Completed':'Not Completed'}`;const thumbnail=document.createElement('img');thumbnail.alt='';thumbnail.loading='lazy';card.append(thumbnail,title,detail);accountClient.storage.from('site-puzzle-images').createSignedUrl(room.image_path,3600).then(({data,error})=>{if(!error&&card.isConnected)thumbnail.src=data.signedUrl;});card.onclick=()=>openPuzzleRoom(room.id);list.append(card);}if(!list.children.length){const empty=document.createElement('p');empty.textContent=puzzleFilter==='completed'?'Your finished pictures will live here.':'Upload a picture and start a puzzle together.';list.append(empty);}for(const [id,value]of [['puzzleIncomplete','incomplete'],['puzzleCompleted','completed']])document.getElementById(id).setAttribute('aria-pressed',String(puzzleFilter===value));}
+    async function syncPuzzles(){const id=accountUser?.id||null;if(id===puzzleAuthId)return;puzzleAuthId=id;puzzleGeneration++;leavePuzzleRoom();if(puzzleCollectionChannel&&accountClient)accountClient.removeChannel(puzzleCollectionChannel);puzzleCollectionChannel=null;puzzleRooms=[];renderPuzzleCollection();if(!id){closePuzzle();return;}loadPuzzleCollection();puzzleCollectionChannel=accountClient.channel(`puzzle-collection-${id}`).on('postgres_changes',{event:'*',schema:'public',table:'site_puzzles'},()=>{loadPuzzleCollection();if(puzzleRoom)refreshPuzzlePieces();}).subscribe();}
+    function leavePuzzleRoom(){finishPuzzleDrag();puzzleGeneration++;if(puzzleChannel&&accountClient)accountClient.removeChannel(puzzleChannel);puzzleChannel=null;puzzleRoom=null;puzzleImage=null;puzzlePieces.clear();puzzlePaths.clear();puzzleCursors.clear();puzzleClickedPieces.clear();clearInterval(puzzleLeaseTimer);document.getElementById('puzzleGame').hidden=true;document.getElementById('puzzleLibrary').hidden=false;}
+    async function openPuzzleRoom(id){if(!accountUser)return;leavePuzzleRoom();const generation=puzzleGeneration,uid=accountUser.id;const room=puzzleRooms.find(r=>r.id===id);if(!room)return;puzzleStatus.textContent='Opening your puzzle…';try{const [piecesResult,imageResult]=await Promise.all([accountClient.from('site_puzzle_pieces').select('*').eq('room_id',id),accountClient.storage.from('site-puzzle-images').download(room.image_path)]);if(piecesResult.error)throw piecesResult.error;if(imageResult.error)throw imageResult.error;const url=URL.createObjectURL(imageResult.data),image=new Image();try{image.src=url;await image.decode();}finally{URL.revokeObjectURL(url);}if(generation!==puzzleGeneration||accountUser?.id!==uid)return;puzzleRoom=room;puzzleImage=image;puzzlePieces=new Map(piecesResult.data.map(p=>[p.piece_id,p]));buildPuzzlePaths();document.getElementById('puzzleLibrary').hidden=true;document.getElementById('puzzleGame').hidden=false;document.getElementById('puzzleRoomTitle').textContent=room.title;puzzleStatus.textContent='Saved automatically · Join the same puzzle from your collection.';fitPuzzleView();
+      await accountClient.realtime.setAuth();if(generation!==puzzleGeneration)return;
+      puzzleChannel=accountClient.channel(`puzzle:${id}`,{config:{private:true,presence:{key:uid}}})
+      .on('postgres_changes',{event:'*',schema:'public',table:'site_puzzle_pieces',filter:`room_id=eq.${id}`},payload=>{if(generation!==puzzleGeneration||!payload.new?.piece_id&&payload.new?.piece_id!==0)return;const p=payload.new;const old=puzzlePieces.get(p.piece_id);if(puzzleDrag?.id===p.piece_id&&!p.placed&&p.locked_by===accountUser?.id){p.x=old.x;p.y=old.y;}puzzlePieces.set(p.piece_id,p);if(p.placed&&!old?.placed)playPuzzleFit(p.piece_id);drawPuzzle();updatePuzzleProgress();})
+      .on('broadcast',{event:'cursor'},({payload})=>{if(payload.user_id===accountUser?.id||!Number.isFinite(payload.x)||!Number.isFinite(payload.y))return;puzzleCursors.set(payload.user_id,{...payload,seen:Date.now()});drawPuzzle();})
+      .on('broadcast',{event:'drag'},({payload})=>{if(payload.user_id===accountUser?.id||!Number.isFinite(payload.x)||!Number.isFinite(payload.y))return;const p=puzzlePieces.get(payload.piece_id);if(p&&!p.placed&&p.locked_by===payload.user_id){p.x=payload.x;p.y=payload.y;drawPuzzle();}})
+      .on('presence',{event:'sync'},()=>{const people=Object.values(puzzleChannel.presenceState()).flat();document.getElementById('puzzlePlayers').textContent=people.map(p=>p.name||'Friend').join(' · ');const ids=new Set(people.map(p=>p.user_id));for(const key of puzzleCursors.keys())if(!ids.has(key))puzzleCursors.delete(key);drawPuzzle();})
+      .subscribe(async status=>{if(generation!==puzzleGeneration)return;if(status==='SUBSCRIBED'){await puzzleChannel.track({user_id:uid,name:puzzleName()});refreshPuzzlePieces();}else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')puzzleStatus.textContent='Live connection interrupted. Close and reopen this puzzle to reconnect.';});
+      puzzleLeaseTimer=setInterval(async()=>{if(!puzzleDrag||!accountUser)return;const d=puzzleDrag;const {data,error}=await accountClient.rpc('claim_site_puzzle_piece',{p_room:id,p_piece:d.id});if(puzzleDrag!==d)return;if(error||!data?.length){puzzleDrag=null;puzzleStatus.textContent='Piece lock expired. Pick it up again.';refreshPuzzlePieces();}},7000);
+      updatePuzzleProgress();
+    }catch(error){if(generation===puzzleGeneration)puzzleError(error);}}
+    async function refreshPuzzlePieces(){if(!puzzleRoom||!accountUser)return;const id=puzzleRoom.id,g=puzzleGeneration;const {data,error}=await accountClient.from('site_puzzle_pieces').select('*').eq('room_id',id);if(error||g!==puzzleGeneration)return;for(const p of data){if(puzzleDrag?.id===p.piece_id)continue;puzzlePieces.set(p.piece_id,p);}drawPuzzle();updatePuzzleProgress();}
+    function puzzleEdge(key){return ((key*1103515245+puzzleRoom.seed*12345)>>>3)%2?1:-1;}
+    function buildPuzzlePaths(){const w=1000/puzzleRoom.cols,h=1000*puzzleRoom.image_height/puzzleRoom.image_width/puzzleRoom.rows;for(let id=0;id<puzzleRoom.rows*puzzleRoom.cols;id++){const col=id%puzzleRoom.cols,row=Math.floor(id/puzzleRoom.cols),path=new Path2D();path.moveTo(0,0);const edge=(ax,ay,bx,by,sign)=>{const dx=bx-ax,dy=by-ay,L=Math.hypot(dx,dy),nx=-dy/L,ny=dx/L,tab=Math.min(w,h)*.18*sign;const point=(t,k)=>[ax+dx*t+nx*tab*k,ay+dy*t+ny*tab*k];const line=(t,k)=>path.lineTo(...point(t,k));const curve=(a,ka,b,kb,c,kc)=>path.bezierCurveTo(...point(a,ka),...point(b,kb),...point(c,kc));line(.35,0);if(sign){curve(.43,0,.35,1,.43,1);curve(.47,1.3,.53,1.3,.57,1);curve(.65,1,.57,0,.65,0);}line(1,0);};edge(0,0,w,0,row? -puzzleEdge((row-1)*puzzleRoom.cols+col+10000):0);edge(w,0,w,h,col<puzzleRoom.cols-1?puzzleEdge(row*puzzleRoom.cols+col):0);edge(w,h,0,h,row<puzzleRoom.rows-1?puzzleEdge(row*puzzleRoom.cols+col+10000):0);edge(0,h,0,0,col?-puzzleEdge(row*puzzleRoom.cols+col-1):0);path.closePath();puzzlePaths.set(id,path);}}
+    function fitPuzzleView(){if(!puzzleRoom)return;const h=1000*puzzleRoom.image_height/puzzleRoom.image_width;puzzleScale=Math.min(puzzleCanvas.clientWidth/1900,puzzleCanvas.clientHeight/(h+200));puzzlePan={x:20,y:40};drawPuzzle();}
+    function drawPuzzle(){cancelAnimationFrame(puzzleFrame);puzzleFrame=requestAnimationFrame(()=>{if(!puzzleRoom||!puzzleImage)return;const ratio=Math.min(devicePixelRatio||1,2);puzzleCanvas.width=Math.round(puzzleCanvas.clientWidth*ratio);puzzleCanvas.height=Math.round(puzzleCanvas.clientHeight*ratio);puzzleCtx.setTransform(ratio,0,0,ratio,0,0);puzzleCtx.clearRect(0,0,puzzleCanvas.clientWidth,puzzleCanvas.clientHeight);const theme=getComputedStyle(mainWebsite),accent=theme.getPropertyValue('--ui-accent').trim()||'#d987b6',ink=theme.getPropertyValue('--ui-ink').trim()||'#fff',bh=1000*puzzleRoom.image_height/puzzleRoom.image_width;const w=1000/puzzleRoom.cols,h=bh/puzzleRoom.rows;puzzleCtx.translate(puzzlePan.x,puzzlePan.y);puzzleCtx.scale(puzzleScale,puzzleScale);puzzleCtx.strokeStyle=accent;puzzleCtx.lineWidth=2/puzzleScale;puzzleCtx.strokeRect(0,0,1000,bh);if(document.getElementById('puzzleReference').checked){puzzleCtx.globalAlpha=.2;puzzleCtx.drawImage(puzzleImage,0,0,1000,bh);puzzleCtx.globalAlpha=1;}
+      const pieces=[...puzzlePieces.values()].sort((a,b)=>Number(b.placed)-Number(a.placed));if(puzzleDrag){const index=pieces.findIndex(p=>p.piece_id===puzzleDrag.id);if(index>=0)pieces.push(...pieces.splice(index,1));}
+      for(const p of pieces){const path=puzzlePaths.get(p.piece_id);if(!path)continue;const col=p.piece_id%puzzleRoom.cols,row=Math.floor(p.piece_id/puzzleRoom.cols);puzzleCtx.save();puzzleCtx.translate(p.x,p.y);puzzleCtx.save();puzzleCtx.clip(path);puzzleCtx.drawImage(puzzleImage,-col*w,-row*h,1000,bh);puzzleCtx.restore();puzzleCtx.strokeStyle=p.locked_by&&!p.placed?accent:'rgba(0,0,0,.4)';puzzleCtx.lineWidth=(p.locked_by?2: .6)/puzzleScale;puzzleCtx.stroke(path);puzzleCtx.restore();}
+      for(const [id,c]of puzzleCursors){if(Date.now()-c.seen>12000)continue;puzzleCtx.fillStyle=accent;puzzleCtx.beginPath();puzzleCtx.moveTo(c.x,c.y);puzzleCtx.lineTo(c.x+12/puzzleScale,c.y+24/puzzleScale);puzzleCtx.lineTo(c.x+3/puzzleScale,c.y+21/puzzleScale);puzzleCtx.closePath();puzzleCtx.fill();puzzleCtx.fillStyle=ink;puzzleCtx.font=`${12/puzzleScale}px sans-serif`;puzzleCtx.fillText(String(c.name||'Friend').slice(0,24),c.x+15/puzzleScale,c.y+18/puzzleScale);}
+    });}
+    function updatePuzzleProgress(){if(!puzzleRoom)return;const done=[...puzzlePieces.values()].filter(p=>p.placed).length,total=puzzleRoom.rows*puzzleRoom.cols;document.getElementById('puzzleProgress').textContent=done===total?`Completed! ${total} pieces together ♡`:`${done} / ${total} pieces fitted`;if(done===total){puzzleStatus.textContent='Beautifully done! Saved in Completed.';loadPuzzleCollection();}}
+    function playPuzzleFit(id){if(puzzleClickedPieces.has(id))return;puzzleClickedPieces.add(id);playPuzzleClick();}
+    function playPuzzleClick(){if(!puzzleSound)return;try{puzzleAudio=puzzleAudio||new(window.AudioContext||window.webkitAudioContext)();if(puzzleAudio.state!=='running')return;const t=puzzleAudio.currentTime,o=puzzleAudio.createOscillator(),g=puzzleAudio.createGain();o.type='sine';o.frequency.setValueAtTime(900,t);o.frequency.exponentialRampToValueAtTime(450,t+.025);g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.001,t+.035);o.connect(g);g.connect(puzzleAudio.destination);o.start(t);o.stop(t+.04);}catch(error){}}
+    function puzzlePoint(event){const rect=puzzleCanvas.getBoundingClientRect();return{x:(event.clientX-rect.left-puzzlePan.x)/puzzleScale,y:(event.clientY-rect.top-puzzlePan.y)/puzzleScale};}
+    puzzleCanvas.addEventListener('pointerdown',async event=>{if(!puzzleRoom||!accountUser||puzzleClaiming||puzzleDrag)return;event.preventDefault();try{puzzleAudio=puzzleAudio||new(window.AudioContext||window.webkitAudioContext)();puzzleAudio.resume();}catch(error){}puzzleCanvas.setPointerCapture(event.pointerId);puzzleLastPointer={id:event.pointerId,x:event.clientX,y:event.clientY,down:true};const pos=puzzlePoint(event);puzzleCtx.save();puzzleCtx.setTransform(1,0,0,1,0,0);const pieces=[...puzzlePieces.values()].reverse();const hit=pieces.find(p=>!p.placed&&puzzleCtx.isPointInPath(puzzlePaths.get(p.piece_id),pos.x-p.x,pos.y-p.y));puzzleCtx.restore();if(!hit){puzzleLastPointer.pan=true;return;}const room=puzzleRoom.id,g=puzzleGeneration;puzzleClaiming=true;try{const {data,error}=await accountClient.rpc('claim_site_puzzle_piece',{p_room:room,p_piece:hit.piece_id});if(g!==puzzleGeneration)return;if(error)throw error;if(!data?.length){puzzleStatus.textContent='Your friend is holding this piece.';return;}puzzlePieces.delete(hit.piece_id);puzzlePieces.set(hit.piece_id,data[0]);if(!puzzleLastPointer?.down){await accountClient.rpc('move_site_puzzle_piece',{p_room:room,p_piece:hit.piece_id,p_x:hit.x,p_y:hit.y});refreshPuzzlePieces();return;}puzzleDrag={id:hit.piece_id,room,offsetX:pos.x-hit.x,offsetY:pos.y-hit.y};drawPuzzle();}catch(error){puzzleError(error);}finally{puzzleClaiming=false;}});
+    puzzleCanvas.addEventListener('pointermove',event=>{if(!puzzleRoom)return;const pos=puzzlePoint(event);if(puzzleLastPointer?.down&&puzzleLastPointer.pan){puzzlePan.x+=event.clientX-puzzleLastPointer.x;puzzlePan.y+=event.clientY-puzzleLastPointer.y;puzzleLastPointer.x=event.clientX;puzzleLastPointer.y=event.clientY;drawPuzzle();return;}if(puzzleDrag){const p=puzzlePieces.get(puzzleDrag.id);p.x=Math.max(-350,Math.min(2150,pos.x-puzzleDrag.offsetX));p.y=Math.max(-350,Math.min(3350,pos.y-puzzleDrag.offsetY));drawPuzzle();}if(puzzleChannel&&Date.now()-puzzleLastBroadcast>60){puzzleLastBroadcast=Date.now();puzzleChannel.send({type:'broadcast',event:'cursor',payload:{user_id:accountUser.id,name:puzzleName(),x:pos.x,y:pos.y}});if(puzzleDrag){const p=puzzlePieces.get(puzzleDrag.id);puzzleChannel.send({type:'broadcast',event:'drag',payload:{user_id:accountUser.id,piece_id:p.piece_id,x:p.x,y:p.y}});}}});
+    async function finishPuzzleDrag(){if(puzzleLastPointer)puzzleLastPointer.down=false;const drag=puzzleDrag;if(!drag)return;puzzleDrag=null;const p=puzzlePieces.get(drag.id);if(!p||!accountUser)return;const g=puzzleGeneration;try{const {data,error}=await accountClient.rpc('move_site_puzzle_piece',{p_room:drag.room,p_piece:drag.id,p_x:p.x,p_y:p.y});if(g!==puzzleGeneration)return;if(error)throw error;if(!data?.length){puzzleStatus.textContent='Piece lock expired. Its saved position has been restored.';await refreshPuzzlePieces();return;}const was=p.placed;puzzlePieces.set(drag.id,data[0]);if(data[0].placed&&!was)playPuzzleFit(drag.id);drawPuzzle();updatePuzzleProgress();}catch(error){puzzleError(error);refreshPuzzlePieces();}}
+    for(const event of ['pointerup','pointercancel','lostpointercapture'])puzzleCanvas.addEventListener(event,finishPuzzleDrag);
+    puzzleCanvas.addEventListener('wheel',event=>{if(!puzzleRoom)return;event.preventDefault();const p=puzzlePoint(event);const rect=puzzleCanvas.getBoundingClientRect();puzzleScale=Math.max(.08,Math.min(3,puzzleScale*(event.deltaY<0?1.1:.9)));puzzlePan.x=event.clientX-rect.left-p.x*puzzleScale;puzzlePan.y=event.clientY-rect.top-p.y*puzzleScale;drawPuzzle();},{passive:false});
+    document.getElementById('puzzleFit').onclick=fitPuzzleView;document.getElementById('puzzleReference').onchange=drawPuzzle;
+    document.getElementById('puzzleMute').onchange=event=>{puzzleSound=!event.target.checked;};
+    document.getElementById('puzzleBack').onclick=leavePuzzleRoom;
+    document.getElementById('puzzleClose').onclick=()=>{closePuzzle();puzzleToggle.focus();};
+    puzzleToggle.onclick=()=>{if(!accountUser){openAccount(puzzleToggle);return;}closeMenu();closeActivity();closeUpdates();closeCalendar();puzzlePanel.hidden=false;puzzleToggle.setAttribute('aria-expanded','true');loadPuzzleCollection();document.getElementById('puzzleClose').focus();if(puzzleRoom)fitPuzzleView();};
+    for(const [id,filter]of [['puzzleIncomplete','incomplete'],['puzzleCompleted','completed']])document.getElementById(id).onclick=()=>{puzzleFilter=filter;renderPuzzleCollection();};
+    document.getElementById('puzzleCount').oninput=updatePuzzlePreview;
+    document.getElementById('puzzlePhoto').onchange=async event=>{const file=event.target.files[0];if(!file)return;const url=URL.createObjectURL(file),img=new Image();try{img.src=url;await img.decode();if(puzzlePreviewImage)URL.revokeObjectURL(puzzlePreviewImage.src);puzzlePreviewImage=img;document.getElementById('puzzlePhotoPreview').src=img.src;document.getElementById('puzzlePhotoPreview').hidden=false;updatePuzzlePreview();}catch(error){URL.revokeObjectURL(url);puzzleStatus.textContent='Please choose a readable PNG, JPEG or WebP picture.';}};
+    document.getElementById('puzzleCreateForm').onsubmit=async event=>{event.preventDefault();if(!accountUser||!accountClient)return;const file=document.getElementById('puzzlePhoto').files[0];if(!file)return;const button=document.getElementById('puzzleCreate');button.disabled=true;const uid=accountUser.id;try{if(!['image/png','image/jpeg','image/webp'].includes(file.type))throw new Error('Choose a PNG, JPEG or WebP image.');if(file.size>20*1024*1024)throw new Error('Please choose a picture below 20 MB.');const url=URL.createObjectURL(file),img=new Image();try{img.src=url;await img.decode();}finally{URL.revokeObjectURL(url);}const resize=Math.min(1,2000/img.width,2000/img.height),canvas=document.createElement('canvas');canvas.width=Math.round(img.width*resize);canvas.height=Math.round(img.height*resize);const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.9));if(!blob)throw new Error('Could not prepare this picture.');const count=Number(document.getElementById('puzzleCount').value);const layout=puzzleLayout(count,canvas.width,canvas.height);const path=`${uid}/${crypto.randomUUID()}.jpg`;puzzleStatus.textContent='Uploading your picture…';const upload=await accountClient.storage.from('site-puzzle-images').upload(path,blob,{contentType:'image/jpeg'});if(upload.error)throw upload.error;if(accountUser?.id!==uid)return;const {data,error}=await accountClient.rpc('create_site_puzzle',{p_title:document.getElementById('puzzleTitle').value.trim()||'Our puzzle',p_image_path:path,p_width:canvas.width,p_height:canvas.height,p_rows:layout.rows,p_cols:layout.cols});if(error)throw error;if(accountUser?.id!==uid)return;await loadPuzzleCollection();await openPuzzleRoom(data);}catch(error){puzzleError(error);}finally{button.disabled=false;}};
+    document.getElementById('puzzleSpotifyLoad').onclick=()=>{const text=document.getElementById('puzzleSpotifyLink').value.trim();try{const url=new URL(text);const match=url.pathname.match(/^\/(?:intl-[a-z]+\/)?(playlist|album|track)\/([A-Za-z0-9]+)\/?$/);if(url.hostname!=='open.spotify.com'||!match)throw new Error();document.getElementById('puzzleSpotifyPlayer').src=`https://open.spotify.com/embed/${match[1]}/${match[2]}`;document.getElementById('puzzleSpotifyPlayer').hidden=false;}catch(error){puzzleStatus.textContent='Paste a Spotify playlist, album or track link.';}};
+    new ResizeObserver(()=>{if(puzzleRoom&&!puzzlePanel.hidden)drawPuzzle();}).observe(puzzleCanvas);
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)finishPuzzleDrag();else if(puzzleRoom)refreshPuzzlePieces();});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!puzzlePanel.hidden)closePuzzle();});
+    updatePuzzlePreview();
 
     function showAccountUser(user) {
       accountUser = user;
@@ -4285,6 +4364,7 @@
       setTimeout(syncNotifications, 0);
       setTimeout(syncMessages, 0);
       setTimeout(syncCalendar, 0);
+      setTimeout(syncPuzzles, 0);
     }
     syncSiteLock();
     function closeAccount() { accountDialog.hidden = true; accountPasswordInput.value = ""; accountReturnFocus.focus(); }

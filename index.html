@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v67">
+<meta name="site-build" content="cinta-kita-v68">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1213,7 +1213,7 @@
 #mainWebsite .puzzlePanel[hidden],#puzzleLibrary[hidden],#puzzleGame[hidden],#puzzlePhotoPreview[hidden],#puzzleSpotifyPlayer[hidden]{display:none;}
 #mainWebsite[data-wallpaper="berserk"] .puzzlePanel{display:none;}
 .puzzleHeading,.puzzleCollectionHeading{display:flex;justify-content:space-between;align-items:center;gap:14px;}.puzzleHeading h2{font:600 36px/1.2 "Cormorant Garamond",Georgia,serif;margin:0;}.puzzleHeading small{color:var(--ui-accent);}
-#mainWebsite .puzzlePanel button,#mainWebsite #calendarToggle,#mainWebsite #puzzleToggle{border:1px solid var(--ui-line);background:color-mix(in srgb,var(--ui-accent) 16%,var(--ui-surface));color:var(--ui-ink);border-radius:12px;padding:9px 13px;cursor:pointer;font:inherit;}
+#mainWebsite .puzzlePanel button{border:1px solid var(--ui-line);background:color-mix(in srgb,var(--ui-accent) 16%,var(--ui-surface));color:var(--ui-ink);border-radius:12px;padding:9px 13px;cursor:pointer;font:inherit;}
 #mainWebsite .puzzlePanel button:hover,#mainWebsite .puzzlePanel button[aria-pressed="true"]{background:color-mix(in srgb,var(--ui-accent) 35%,var(--ui-surface));}
 #mainWebsite .puzzlePanel input:not([type="checkbox"]){box-sizing:border-box;border:1px solid var(--ui-line);background:var(--ui-surface);color:var(--ui-ink);padding:10px;border-radius:10px;width:100%;font:inherit;}
 #mainWebsite .puzzlePanel input{accent-color:var(--ui-accent);}#mainWebsite .puzzlePanel :focus-visible{outline:2px solid var(--ui-accent);outline-offset:3px;}
@@ -1250,6 +1250,21 @@
 .puzzleMusicPopover a{display:block;margin-top:10px;color:var(--ui-accent);font-size:11px;text-decoration:underline;}
 @media(max-width:620px){#mainWebsite .puzzlePanel{inset:74px 4px 4px;padding:12px;}#puzzleCanvas{height:calc(100dvh - 300px);min-height:240px;}.puzzleMusicDock{bottom:16px;right:16px;}}
 @media(prefers-reduced-motion:reduce){.puzzleMusicPopover{transition:none;}}
+</style>
+<style>
+/* Match the existing numbered menu links, including underwater themes. */
+/* Offset the transparent margins in the original cat artwork. */
+.avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4)>img[src$="grey-online.png"]{left:15.07%!important;top:8.92%!important;}
+.avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4)>img[src$="beige-online.png"]{left:15%!important;top:12.68%!important;}
+.avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4)>img[src$="grey-offline.png"]{left:15.07%!important;top:13.77%!important;}
+.avatarRing:is(.frame-picture,.frame-picture2,.frame-picture3,.frame-picture4)>img[src$="beige-offline.png"]{left:15%!important;top:17.05%!important;}
+body.puzzlePageActive{overflow:hidden;}
+#mainWebsite[data-page="puzzles"]>#puzzlePanel{position:fixed;inset:0;z-index:120;max-height:none;border:0;border-radius:0;padding:24px;box-sizing:border-box;background:var(--ui-surface);}
+#mainWebsite[data-page="puzzles"]>:not(#puzzlePanel):not(#birthdayCelebration){visibility:hidden;pointer-events:none;}
+#mainWebsite[data-page="puzzles"] #puzzleCanvas{height:calc(100dvh - 200px);min-height:300px;}
+#mainWebsite[data-page="puzzles"] #puzzleGame:not([hidden]){min-height:calc(100dvh - 110px);}
+#mainWebsite[data-page="puzzles"] .puzzleMusicDock{z-index:121;}
+@media(max-width:620px){#mainWebsite[data-page="puzzles"]>#puzzlePanel{padding:14px;}#mainWebsite[data-page="puzzles"] #puzzleCanvas{height:calc(100dvh - 260px);min-height:240px;}}
 </style>
 </head>
 <body>
@@ -1344,11 +1359,12 @@
       <nav class="siteMenu" id="siteMenu" aria-label="Main menu">
         <div class="menuPanelHead"><strong>Cinta Kita ♡</strong><small>THE MENU</small></div>
         <div class="menuLinks">
-<button id="puzzleToggle" type="button" aria-expanded="false" aria-controls="puzzlePanel"><span>Puzzles</span></button>
-<button id="calendarToggle" type="button" aria-expanded="false" aria-controls="calendarPanel"><span>Calendar</span></button>
           <a href="#home"><small>01</small>Home<span>↗</span></a>
           <a href="#videos"><small>02</small>Videos<span>↗</span></a>
           <a href="#story"><small>03</small>Our Story<span>↗</span></a>
+<a id="puzzleToggle" href="#puzzles" aria-expanded="false" aria-controls="puzzlePanel"><small>04</small>Puzzles<span>↗</span></a>
+<a id="calendarToggle" href="#calendar" aria-expanded="false" aria-controls="calendarPanel"><small>05</small>Calendar<span>↗</span></a>
+
         </div>
         <button class="accountMenuButton" id="accountButton" type="button" aria-haspopup="dialog">♡ Sign in</button>
         <button class="messageMenuButton" id="messageOpen" type="button" hidden>✉ Messages <span class="messageBadge" id="messageBadge" hidden></span></button>
@@ -1373,7 +1389,7 @@
       <div id="notificationList"></div>
     </div>
 <section id="puzzlePanel" class="puzzlePanel" aria-label="Shared puzzles" hidden>
-<header class="puzzleHeading"><div><small>PIECE BY PIECE, TOGETHER</small><h2>Our puzzles</h2></div><button id="puzzleClose" type="button" aria-label="Close puzzles">×</button></header>
+<header class="puzzleHeading"><div><small>PIECE BY PIECE, TOGETHER</small><h2>Our puzzles</h2></div><button id="puzzleClose" type="button" aria-label="Back to website">← Back to website</button></header>
 <div id="puzzleLibrary"><form id="puzzleCreateForm" class="puzzleCreateForm"><h3>Create a puzzle</h3><label for="puzzleTitle">Name</label><input id="puzzleTitle" maxlength="80" placeholder="A memory together"><label for="puzzlePhoto">Your picture</label><input id="puzzlePhoto" type="file" accept="image/png,image/jpeg,image/webp" required><img id="puzzlePhotoPreview" alt="Your chosen puzzle picture" hidden><label for="puzzleCount">How many pieces?</label><input id="puzzleCount" type="number" min="4" max="1000" step="1" value="48" required><small id="puzzleCountPreview"></small><button id="puzzleCreate" type="submit">Create shared puzzle</button><p>All registered members can join the same puzzle. Your progress saves automatically.</p></form><div class="puzzleCollectionHeading"><h3>Our collection</h3><div><button id="puzzleIncomplete" type="button" aria-pressed="true">Not Completed</button><button id="puzzleCompleted" type="button" aria-pressed="false">Completed</button></div></div><div id="puzzleCollection" class="puzzleCollection"></div></div>
 <div id="puzzleGame" hidden><div class="puzzleTools"><button id="puzzleBack" type="button">Collection</button><strong id="puzzleRoomTitle"></strong><button id="puzzleFit" type="button">Fit view</button><label><input id="puzzleReference" type="checkbox"> Picture guide</label><label><input id="puzzleMute" type="checkbox"> Mute clicks</label></div><p id="puzzlePlayers" class="puzzlePlayers" aria-live="polite"></p><p id="puzzleProgress" role="status"></p><canvas id="puzzleCanvas" aria-label="Shared jigsaw board. Drag pieces to the outlined picture. Drag empty space to pan; use the scroll wheel to zoom."></canvas><p class="puzzleHint">Drag a piece to fit it. Loose pieces stay where you leave them. Drag empty space to move the view; scroll to zoom.</p></div>
 <div class="puzzleMusicDock" id="puzzleMusicDock"><button id="puzzleMusicToggle" type="button" aria-label="Spotify player" aria-expanded="false" aria-controls="puzzleMusicPopover"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M6 9c4-1.4 8-1.1 12 1M7 12c3.3-1 6.7-.7 10 1M8 15c2.7-.6 5.3-.4 8 .8" fill="none" stroke="var(--ui-surface)" stroke-width="1.6" stroke-linecap="round"/></svg></button><section id="puzzleMusicPopover" class="puzzleMusicPopover" aria-label="Spotify music"><div class="puzzleMusicHead"><strong>Spotify</strong><button id="puzzleMusicPin" type="button" aria-pressed="false">Keep open</button></div><label for="puzzleSpotifyLink">Playlist, album or track link</label><div class="puzzleMusicInput"><input id="puzzleSpotifyLink" type="url" placeholder="Paste your Spotify link"><button id="puzzleSpotifyLoad" type="button">Load</button></div><iframe id="puzzleSpotifyPlayer" title="Spotify playlist and playback controls" height="352" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" hidden></iframe><a id="puzzleSpotifyFull" href="https://open.spotify.com/" target="_blank" rel="noopener noreferrer">Open Spotify · repeat &amp; full controls</a></section></div><p id="puzzleStatus" role="status"></p>
@@ -4253,7 +4269,7 @@
       calendarChannel=accountClient.channel(`shared-calendar-${id}`).on('postgres_changes',{event:'*',schema:'public',table:'site_calendar_events'},loadCalendar).subscribe(status=>{if(status==='SUBSCRIBED')loadCalendar();});
       checkBirthday();
     }
-    calendarToggle.addEventListener('click',()=>{
+    calendarToggle.addEventListener('click',event=>{event.preventDefault();
       if(!accountUser){openAccount(calendarToggle);return;}
       if(!calendarPanel.hidden){closeCalendar();return;}
       closePuzzle();closeMenu();closeActivity();closeUpdates();calendarPanel.hidden=false;calendarToggle.setAttribute('aria-expanded','true');renderCalendar();loadCalendar();document.getElementById('calendarClose').focus();
@@ -4301,7 +4317,7 @@
 
     const puzzlePanel=document.getElementById('puzzlePanel'),puzzleToggle=document.getElementById('puzzleToggle'),puzzleCanvas=document.getElementById('puzzleCanvas'),puzzleCtx=puzzleCanvas.getContext('2d'),puzzleStatus=document.getElementById('puzzleStatus');
     let puzzleRooms=[],puzzleRoom=null,puzzlePieces=new Map(),puzzlePaths=new Map(),puzzleImage=null,puzzleChannel=null,puzzleCollectionChannel=null,puzzleAuthId=null,puzzleGeneration=0,puzzleDrag=null,puzzleClaiming=false,puzzleLastPointer=null,puzzleScale=1,puzzlePan={x:20,y:20},puzzleCursors=new Map(),puzzleSound=true,puzzleAudio=null,puzzleLastBroadcast=0,puzzleLeaseTimer=null,puzzleFilter='incomplete',puzzlePreviewImage=null,puzzleFrame=0,puzzleClickedPieces=new Set();
-    function closePuzzle(){puzzlePanel.hidden=true;puzzleToggle.setAttribute('aria-expanded','false');finishPuzzleDrag();}
+    function closePuzzle(){puzzlePanel.hidden=true;delete mainWebsite.dataset.page;document.body.classList.remove('puzzlePageActive');puzzleToggle.setAttribute('aria-expanded','false');if(location.hash==='#puzzles')history.replaceState(null,'','#home');finishPuzzleDrag();}
     function puzzleName(){return registeredPeople.get(accountUser?.id)||accountUser?.user_metadata?.username||'Friend';}
     function puzzleLayout(count,width,height){count=Math.max(4,Math.min(1000,Math.round(Number(count)||48)));let best=null;for(let rows=2;rows<=Math.min(100,Math.ceil(count/2));rows++){const cols=Math.max(2,Math.round(count/rows)),actual=rows*cols;if(actual>1000)continue;const cost=Math.abs(Math.log((cols/rows)/(width/height)))+.9*Math.abs(actual-count)/count;if(!best||cost<best.cost)best={rows,cols,actual,cost};}return best;}
     function updatePuzzlePreview(){const layout=puzzleLayout(document.getElementById('puzzleCount').value,puzzlePreviewImage?.width||4,puzzlePreviewImage?.height||3);document.getElementById('puzzleCountPreview').textContent=`Preview: ${layout.actual} pieces · ${layout.cols} × ${layout.rows}. Counts adjust to a grid that suits your picture.`;}
@@ -4343,7 +4359,7 @@
     document.getElementById('puzzleMute').onchange=event=>{puzzleSound=!event.target.checked;};
     document.getElementById('puzzleBack').onclick=leavePuzzleRoom;
     document.getElementById('puzzleClose').onclick=()=>{closePuzzle();puzzleToggle.focus();};
-    puzzleToggle.onclick=()=>{if(!accountUser){openAccount(puzzleToggle);return;}closeMenu();closeActivity();closeUpdates();closeCalendar();puzzlePanel.hidden=false;puzzleToggle.setAttribute('aria-expanded','true');loadPuzzleCollection();document.getElementById('puzzleClose').focus();if(puzzleRoom)fitPuzzleView();};
+    puzzleToggle.onclick=event=>{event?.preventDefault();if(!accountUser){openAccount(puzzleToggle);return;}closeMenu();closeActivity();closeUpdates();closeCalendar();puzzlePanel.hidden=false;mainWebsite.dataset.page='puzzles';document.body.classList.add('puzzlePageActive');if(location.hash!=='#puzzles')history.pushState(null,'','#puzzles');puzzleToggle.setAttribute('aria-expanded','true');loadPuzzleCollection();document.getElementById('puzzleClose').focus();if(puzzleRoom)fitPuzzleView();};
     for(const [id,filter]of [['puzzleIncomplete','incomplete'],['puzzleCompleted','completed']])document.getElementById(id).onclick=()=>{puzzleFilter=filter;renderPuzzleCollection();};
     document.getElementById('puzzleCount').oninput=updatePuzzlePreview;
     document.getElementById('puzzlePhoto').onchange=async event=>{const file=event.target.files[0];if(!file)return;const url=URL.createObjectURL(file),img=new Image();try{img.src=url;await img.decode();if(puzzlePreviewImage)URL.revokeObjectURL(puzzlePreviewImage.src);puzzlePreviewImage=img;document.getElementById('puzzlePhotoPreview').src=img.src;document.getElementById('puzzlePhotoPreview').hidden=false;updatePuzzlePreview();}catch(error){URL.revokeObjectURL(url);puzzleStatus.textContent='Please choose a readable PNG, JPEG or WebP picture.';}};
@@ -4361,6 +4377,14 @@
     puzzleMusicDock.addEventListener('pointerenter',()=>puzzleMusicToggle.setAttribute('aria-expanded','true'));
     puzzleMusicDock.addEventListener('pointerleave',()=>{if(!puzzleMusicDock.classList.contains('musicOpen'))puzzleMusicToggle.setAttribute('aria-expanded','false');});
     puzzleMusicDock.addEventListener('keydown',event=>{if(event.key==='Escape'){event.stopPropagation();setPuzzleMusicOpen(false);puzzleMusicToggle.focus();}});
+
+    function syncPuzzleRoute(){
+      if(location.hash==='#puzzles'){
+        if(accountUser){window.resumeOurWorldAfterUpdate?.();if(puzzlePanel.hidden)puzzleToggle.click();}
+      }else if(mainWebsite.dataset.page==='puzzles')closePuzzle();
+    }
+    window.addEventListener('hashchange',syncPuzzleRoute);
+    window.addEventListener('popstate',syncPuzzleRoute);
     updatePuzzlePreview();
 
     function showAccountUser(user) {
@@ -4396,6 +4420,7 @@
       setTimeout(syncMessages, 0);
       setTimeout(syncCalendar, 0);
       setTimeout(syncPuzzles, 0);
+      if(user)setTimeout(syncPuzzleRoute,0);
     }
     syncSiteLock();
     function closeAccount() { accountDialog.hidden = true; accountPasswordInput.value = ""; accountReturnFocus.focus(); }

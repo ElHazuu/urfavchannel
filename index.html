@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v77">
+<meta name="site-build" content="cinta-kita-v78">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1159,6 +1159,7 @@
     .profileUnsavedActions button:first-child { background: color-mix(in srgb, var(--overlay-accent, #d987b6) 25%, var(--overlay-surface, #251a2b)); }
     .profileUnsavedActions button:focus-visible { outline: 2px solid var(--overlay-accent, #d987b6); outline-offset: 3px; }
 
+
 </style>
 <style>
     /* The decorative PNG stays above the cat without covering click targets. */
@@ -1352,7 +1353,29 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
  .puzzleTools strong{display:none;}
 }
 </style>
-</head>
+<style>/* v78: compact chat, uncapped avatar artwork, laptop history space. */
+#mainWebsite .messagePeopleHead,#mainWebsite .messageHiddenContacts,#mainWebsite .messagePersonHide{display:none!important}
+#mainWebsite .messageHistory{border:0;background:transparent;padding:8px 4px;margin:8px 0;flex:1 1 0;min-height:180px}
+#mainWebsite .messageBubble{max-width:76%;padding:8px 10px;border-radius:12px;white-space:normal;font-size:14px;line-height:1.4}
+#mainWebsite .messageBody{white-space:pre-wrap}
+#mainWebsite .messageBubble .messageByline{white-space:nowrap;gap:9px;opacity:1;margin-bottom:6px}
+#mainWebsite .messageBubble .avatarRing{flex:0 0 36px;width:36px;height:36px}
+#mainWebsite .avatarRing>img{max-width:none!important;max-height:none!important;aspect-ratio:1;margin:0!important;background:transparent!important;border-radius:0!important}
+#mainWebsite .messageComposer{display:grid;grid-template-columns:1fr auto;gap:7px;border-top:0;padding-top:0}
+#mainWebsite .messageTabs,#mainWebsite .messageCanvas,#mainWebsite .messageDrawTools{grid-column:1/-1}
+#mainWebsite .messageComposer textarea{min-height:42px;height:42px;max-height:90px;resize:none;border-radius:18px;padding:10px 12px;box-sizing:border-box}
+#mainWebsite .messageSend{align-self:end;min-height:42px;padding:8px 13px;border-radius:18px}
+#mainWebsite .messageReactions{gap:5px;margin-top:5px}
+#mainWebsite .messageReactions button{padding:2px 6px;font-size:11px}
+@media(min-width:621px){#mainWebsite .messagePanel{width:min(620px,calc(100vw - 28px));height:min(820px,calc(100dvh - 88px));padding:14px;min-height:0}#mainWebsite .messagePanelHead h2{font-size:24px;margin:0}#mainWebsite .messagePeople{margin:4px 0}}
+@media(max-height:650px){#mainWebsite .messageHistory{min-height:100px}}
+body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-index:200;bottom:65px}
+.puzzleClickBubble{position:fixed;z-index:190!important;pointer-events:none}
+
+#mainWebsite .messagePeople{border:0!important;background:transparent!important;padding:4px 2px!important;border-radius:0;flex-shrink:0}
+#mainWebsite .messageHistory{scrollbar-width:thin;scrollbar-color:var(--message-accent) transparent}
+.puzzleCard form{display:flex;flex-wrap:wrap;gap:6px;padding:10px}.puzzleCard form input{min-width:0;flex:1 1 140px;background:var(--ui-surface);color:var(--ui-ink);border:1px solid var(--ui-line);padding:8px;border-radius:8px}
+</style></head>
 <body>
   <div id="intro">
     <button id="catButton" type="button" aria-label="Enter the website">
@@ -3776,7 +3799,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
           actions.append(save, cancel);
           bubble.append(editor, actions);
         } else {
-          bubble.append(document.createTextNode(item.body));
+          const body = document.createElement("div"); body.className = "messageBody"; body.textContent = item.body; bubble.append(body);
         }
         const meta = document.createElement("small");
         meta.className = "messageMeta";
@@ -3890,7 +3913,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
       if (messageChannel) accountClient.removeChannel(messageChannel);
       ++messageGeneration;
       messageUserId = user.id;
-      hiddenChatContacts = readHiddenChatContacts(user.id);
+      hiddenChatContacts = new Set();
       messageLoaded = false;
       seenIncoming.clear();
       const channel = accountClient.channel(`cinta-kita-messages-${user.id}`);
@@ -4002,7 +4025,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
           }
           renderMessagePeople();
         });
-        wrap.append(choose, info, hide); messagePeople.append(wrap);
+        wrap.append(choose, info); messagePeople.append(wrap);
       }
       if (!messagePeople.children.length) messagePeople.textContent = messageRecipient.options.length ? "All chat icons are hidden. Use Hidden contacts to bring one back." : "No other profiles yet ♡";
       if (!messageHiddenContacts.children.length) messageHiddenContacts.textContent = "No hidden contacts";
@@ -4408,7 +4431,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
     function puzzleLayout(count,width,height){count=Math.max(4,Math.min(1000,Math.round(Number(count)||48)));let best=null;for(let rows=2;rows<=Math.min(100,Math.ceil(count/2));rows++){const cols=Math.max(2,Math.round(count/rows)),actual=rows*cols;if(actual>1000)continue;const cost=Math.abs(Math.log((cols/rows)/(width/height)))+.9*Math.abs(actual-count)/count;if(!best||cost<best.cost)best={rows,cols,actual,cost};}return best;}
     function updatePuzzlePreview(){const layout=puzzleLayout(document.getElementById('puzzleCount').value,puzzlePreviewImage?.width||4,puzzlePreviewImage?.height||3);document.getElementById('puzzleCountPreview').textContent=`Preview: ${layout.actual} pieces · ${layout.cols} × ${layout.rows}. Counts adjust to a grid that suits your picture.`;}
     function puzzleError(error){puzzleStatus.classList.add('puzzleError');puzzleStatus.textContent=error?.message||'Puzzle connection failed. Please try again.';}
-    async function loadPuzzleCollection(){if(!accountUser||!accountClient)return;const id=accountUser.id;const {data,error}=await accountClient.from('site_puzzles').select('*').eq('deleted',false).order('created_at',{ascending:false});if(accountUser?.id!==id)return;if(error){puzzleStatus.textContent='Run the one-time live puzzle SQL setup in Supabase first.';return;}puzzleRooms=data||[];const updatedRoom=puzzleRoom&&puzzleRooms.find(r=>r.id===puzzleRoom.id);if(updatedRoom?.spotify_url&&updatedRoom.spotify_url!==puzzleRoom.spotify_url){puzzleRoom.spotify_url=updatedRoom.spotify_url;applyPuzzleSpotify(updatedRoom.spotify_url);}if(puzzleRoom&&!puzzleRooms.some(r=>r.id===puzzleRoom.id))leavePuzzleRoom();renderPuzzleCollection();}
+    async function loadPuzzleCollection(){if(!accountUser||!accountClient)return;const id=accountUser.id;const {data,error}=await accountClient.from('site_puzzles').select('*').eq('deleted',false).order('created_at',{ascending:false});if(accountUser?.id!==id)return;if(error){puzzleStatus.textContent='Run the one-time live puzzle SQL setup in Supabase first.';return;}puzzleRooms=data||[];if(puzzleRoom){const current=puzzleRooms.find(r=>r.id===puzzleRoom.id);if(current){puzzleRoom.title=current.title;document.getElementById('puzzleRoomTitle').textContent=current.title;}}const updatedRoom=puzzleRoom&&puzzleRooms.find(r=>r.id===puzzleRoom.id);if(updatedRoom?.spotify_url&&updatedRoom.spotify_url!==puzzleRoom.spotify_url){puzzleRoom.spotify_url=updatedRoom.spotify_url;applyPuzzleSpotify(updatedRoom.spotify_url);}if(puzzleRoom&&!puzzleRooms.some(r=>r.id===puzzleRoom.id))leavePuzzleRoom();renderPuzzleCollection();}
     function renderPuzzleCollection(){
       const list=document.getElementById('puzzleCollection');list.replaceChildren();
       for(const room of puzzleRooms.filter(r=>puzzleFilter==='completed'?r.completed_at:!r.completed_at)){
@@ -4421,7 +4444,9 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
         accountClient.storage.from('site-puzzle-images').createSignedUrl(room.image_path,3600).then(({data,error})=>{if(!error&&card.isConnected)thumbnail.src=data.signedUrl;});
         const remove=document.createElement('button');remove.type='button';remove.className='puzzleRemove';remove.textContent='Remove';
         remove.onclick=async()=>{remove.disabled=true;const {error}=await accountClient.from('site_puzzles').update({deleted:true}).eq('id',room.id);if(error){puzzleError(error);remove.disabled=false;}else{if(puzzleRoom?.id===room.id)leavePuzzleRoom();await loadPuzzleCollection();}};
-        card.append(open,remove);list.append(card);
+        const rename=document.createElement('button');rename.type='button';rename.className='puzzleRename';rename.textContent='Rename';
+        rename.onclick=()=>{if(card.querySelector('form'))return;const form=document.createElement('form'),input=document.createElement('input'),save=document.createElement('button'),cancel=document.createElement('button');input.value=room.title;input.maxLength=80;input.required=true;input.setAttribute('aria-label','Puzzle name');save.type='submit';save.textContent='Save';cancel.type='button';cancel.textContent='Cancel';cancel.onclick=()=>form.remove();form.append(input,save,cancel);form.onsubmit=async event=>{event.preventDefault();const name=input.value.trim();if(!name)return;save.disabled=true;const {error}=await accountClient.from('site_puzzles').update({title:name}).eq('id',room.id);if(error){puzzleError(error);save.disabled=false;}else{await loadPuzzleCollection();}};card.append(form);input.focus();input.select();};
+        card.append(open,rename,remove);list.append(card);
       }
       if(!list.children.length){const empty=document.createElement('p');empty.textContent=puzzleFilter==='completed'?'Your finished pictures will live here.':'Upload a picture and start a puzzle together.';list.append(empty);}
       for(const [id,value]of [['puzzleIncomplete','incomplete'],['puzzleCompleted','completed']])document.getElementById(id).setAttribute('aria-pressed',String(puzzleFilter===value));
@@ -4435,7 +4460,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
       .on('broadcast',{event:'cursor'},({payload})=>{if(payload.user_id===accountUser?.id||!Number.isFinite(payload.x)||!Number.isFinite(payload.y))return;puzzleCursors.set(payload.user_id,{...payload,seen:Date.now()});drawPuzzle();})
       .on('broadcast',{event:'drag'},({payload})=>{if(payload.user_id===accountUser?.id||!Number.isFinite(payload.x)||!Number.isFinite(payload.y))return;const p=puzzlePieces.get(payload.piece_id);if(p&&!p.placed&&p.locked_by===payload.user_id){const dx=payload.x-p.x,dy=payload.y-p.y;const group=p.cluster_id??p.piece_id;for(const piece of puzzlePieces.values())if(!piece.placed&&(piece.cluster_id??piece.piece_id)===group){piece.x+=dx;piece.y+=dy;}drawPuzzle();}})
       .on('presence',{event:'sync'},()=>{const people=Object.values(puzzleChannel.presenceState()).flat();renderPuzzlePlayers(people);const ids=new Set(people.map(p=>p.user_id));for(const key of puzzleCursors.keys())if(!ids.has(key))puzzleCursors.delete(key);drawPuzzle();})
-      .subscribe(async status=>{if(generation!==puzzleGeneration)return;if(status==='SUBSCRIBED'){await puzzleChannel.track({user_id:uid,name:puzzleName()});refreshPuzzlePieces();}else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')puzzleStatus.textContent='Live connection interrupted. Close and reopen this puzzle to reconnect.';});
+      .subscribe(async status=>{if(generation!==puzzleGeneration)return;if(status==='SUBSCRIBED'){await puzzleChannel.track({user_id:uid,name:puzzleName()});puzzleStatus.textContent='Connected · Progress saves automatically.';refreshPuzzlePieces();}else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')puzzleStatus.textContent='Reconnecting to your puzzle… Your saved progress is safe.';});
       puzzleLeaseTimer=setInterval(async()=>{if(!puzzleDrag||!accountUser)return;const d=puzzleDrag;const {data,error}=await accountClient.rpc('claim_site_puzzle_piece',{p_room:id,p_piece:d.id});if(puzzleDrag!==d)return;if(error||!data?.length){puzzleDrag=null;puzzleStatus.textContent='Piece lock expired. Pick it up again.';refreshPuzzlePieces();}},7000);
       updatePuzzleProgress();
     }catch(error){if(generation===puzzleGeneration)puzzleError(error);}}
@@ -4460,8 +4485,9 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
     let puzzleClickAt=0;
     function playPuzzleClick(){if(!puzzleSound||Date.now()-puzzleClickAt<120)return;puzzleClickAt=Date.now();try{puzzleAudio=puzzleAudio||new(window.AudioContext||window.webkitAudioContext)();if(puzzleAudio.state!=='running')return;const t=puzzleAudio.currentTime,o=puzzleAudio.createOscillator(),g=puzzleAudio.createGain();o.type='sine';o.frequency.setValueAtTime(900,t);o.frequency.exponentialRampToValueAtTime(450,t+.025);g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.001,t+.035);o.connect(g);g.connect(puzzleAudio.destination);o.start(t);o.stop(t+.04);}catch(error){}}
     function puzzlePoint(event){const rect=puzzleCanvas.getBoundingClientRect();return{x:(event.clientX-rect.left-puzzlePan.x)/puzzleScale,y:(event.clientY-rect.top-puzzlePan.y)/puzzleScale};}
+    puzzleCanvas.addEventListener('pointerdown',event=>{if(mainWebsite.dataset.wallpaper!=='underwater'||matchMedia('(prefers-reduced-motion: reduce)').matches)return;for(let i=0;i<7;i++){const bubble=document.createElement('span');bubble.className='seaClickBubble puzzleClickBubble';bubble.style.setProperty('--x',(event.clientX+Math.random()*36-18)+'px');bubble.style.setProperty('--y',(event.clientY+Math.random()*20-10)+'px');bubble.style.setProperty('--size',(6+Math.random()*10)+'px');bubble.style.setProperty('--drift',(Math.random()*60-30)+'px');puzzlePanel.append(bubble);setTimeout(()=>bubble.remove(),1850);}});
     puzzleCanvas.addEventListener('pointerdown',async event=>{if(!puzzleRoom||!accountUser||puzzleClaiming||puzzleDrag)return;event.preventDefault();try{puzzleAudio=puzzleAudio||new(window.AudioContext||window.webkitAudioContext)();puzzleAudio.resume();}catch(error){}puzzleCanvas.setPointerCapture(event.pointerId);puzzleLastPointer={id:event.pointerId,x:event.clientX,y:event.clientY,down:true};const pos=puzzlePoint(event);puzzleCtx.save();puzzleCtx.setTransform(1,0,0,1,0,0);const pieces=[...puzzlePieces.values()].reverse();const hit=pieces.find(p=>!p.placed&&puzzleCtx.isPointInPath(puzzlePaths.get(p.piece_id),pos.x-p.x,pos.y-p.y));puzzleCtx.restore();if(!hit){puzzleLastPointer.pan=true;return;}const room=puzzleRoom.id,g=puzzleGeneration;puzzleClaiming=true;try{const {data,error}=await accountClient.rpc('claim_site_puzzle_piece',{p_room:room,p_piece:hit.piece_id});if(g!==puzzleGeneration)return;if(error)throw error;if(!data?.length){puzzleStatus.textContent='Your friend is holding this piece.';return;}for(const piece of data){puzzlePieces.delete(piece.piece_id);puzzlePieces.set(piece.piece_id,piece);}if(!puzzleLastPointer?.down){await accountClient.rpc('move_site_puzzle_piece',{p_room:room,p_piece:hit.piece_id,p_x:hit.x,p_y:hit.y});refreshPuzzlePieces();return;}const claimed=data.find(piece=>piece.piece_id===hit.piece_id);puzzleDrag={id:hit.piece_id,ids:data.map(piece=>piece.piece_id),room,offsetX:pos.x-claimed.x,offsetY:pos.y-claimed.y};drawPuzzle();}catch(error){puzzleError(error);}finally{puzzleClaiming=false;}});
-    puzzleCanvas.addEventListener('pointermove',event=>{if(!puzzleRoom)return;const pos=puzzlePoint(event);if(puzzleLastPointer?.down&&puzzleLastPointer.pan){puzzlePan.x+=event.clientX-puzzleLastPointer.x;puzzlePan.y+=event.clientY-puzzleLastPointer.y;puzzleLastPointer.x=event.clientX;puzzleLastPointer.y=event.clientY;constrainPuzzleView();drawPuzzle();return;}if(puzzleDrag){const p=puzzlePieces.get(puzzleDrag.id);const dx=pos.x-puzzleDrag.offsetX-p.x,dy=pos.y-puzzleDrag.offsetY-p.y;for(const id of puzzleDrag.ids){const piece=puzzlePieces.get(id);piece.x+=dx;piece.y+=dy;}drawPuzzle();}if(puzzleChannel&&Date.now()-puzzleLastBroadcast>60){puzzleLastBroadcast=Date.now();puzzleChannel.send({type:'broadcast',event:'cursor',payload:{user_id:accountUser.id,name:puzzleName(),x:pos.x,y:pos.y}});if(puzzleDrag){const p=puzzlePieces.get(puzzleDrag.id);puzzleChannel.send({type:'broadcast',event:'drag',payload:{user_id:accountUser.id,piece_id:p.piece_id,x:p.x,y:p.y}});}}});
+    puzzleCanvas.addEventListener('pointermove',event=>{if(!puzzleRoom)return;const pos=puzzlePoint(event);if(puzzleLastPointer?.down&&puzzleLastPointer.pan){puzzlePan.x+=event.clientX-puzzleLastPointer.x;puzzlePan.y+=event.clientY-puzzleLastPointer.y;puzzleLastPointer.x=event.clientX;puzzleLastPointer.y=event.clientY;constrainPuzzleView();drawPuzzle();return;}if(puzzleDrag){const p=puzzlePieces.get(puzzleDrag.id);const dx=pos.x-puzzleDrag.offsetX-p.x,dy=pos.y-puzzleDrag.offsetY-p.y;for(const id of puzzleDrag.ids){const piece=puzzlePieces.get(id);piece.x+=dx;piece.y+=dy;}drawPuzzle();}if(puzzleChannel&&Date.now()-puzzleLastBroadcast>35){puzzleLastBroadcast=Date.now();puzzleChannel.send({type:'broadcast',event:'cursor',payload:{user_id:accountUser.id,name:puzzleName(),x:pos.x,y:pos.y}});if(puzzleDrag){const p=puzzlePieces.get(puzzleDrag.id);puzzleChannel.send({type:'broadcast',event:'drag',payload:{user_id:accountUser.id,piece_id:p.piece_id,x:p.x,y:p.y}});}}});
     async function finishPuzzleDrag(){if(puzzleLastPointer)puzzleLastPointer.down=false;const drag=puzzleDrag;if(!drag)return;puzzleDrag=null;const p=puzzlePieces.get(drag.id);if(!p||!accountUser)return;const g=puzzleGeneration;try{const {data,error}=await accountClient.rpc('move_site_puzzle_piece',{p_room:drag.room,p_piece:drag.id,p_x:p.x,p_y:p.y});if(g!==puzzleGeneration)return;if(error)throw error;if(!data?.length){puzzleStatus.textContent='Piece lock expired. Its saved position has been restored.';await refreshPuzzlePieces();return;}const connected=data.length>drag.ids.length;const fitted=data.some(piece=>piece.placed);for(const piece of data){puzzlePieces.set(piece.piece_id,piece);if(piece.placed)puzzleClickedPieces.add(piece.piece_id);}if(connected||fitted)playPuzzleClick();drawPuzzle();updatePuzzleProgress();}catch(error){puzzleError(error);refreshPuzzlePieces();}}
     for(const event of ['pointerup','pointercancel','lostpointercapture'])puzzleCanvas.addEventListener(event,finishPuzzleDrag);
     function puzzleWheelFactor(delta,mode,pinch,height){const pixels=delta*(mode===1?16:mode===2?height:1);return Math.exp(-Math.max(-120,Math.min(120,pixels))*(pinch?.01:.0015));}
@@ -4740,6 +4766,7 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
         return !!(draft || announcement || videoDraft || messageDrawn || editingMessageId || profileDirty || !document.getElementById("profileDialog").hidden || !document.getElementById("accountDialog").hidden);
       }
       function safeToReload() {
+        if (document.getElementById('mainWebsite').dataset.page === 'puzzles') return false;
         if (!pendingBuild || hasUnsentWork() || !document.getElementById("introMusic").paused || videoVisited) return false;
         if (!document.getElementById("messagePanel").hidden || !document.getElementById("notificationPanel").hidden || !document.getElementById("activityPanel").hidden || document.getElementById("menuZone").classList.contains("open")) return false;
         if (videoSection.querySelector("iframe") && onScreen(videoSection)) return false;
@@ -4779,6 +4806,8 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
           if (deployedBuildNumber > currentBuildNumber) {
             pendingBuild = deployedBuild;
             notice.hidden = false;
+            if(document.fullscreenElement===document.getElementById('puzzlePanel'))document.fullscreenElement.append(notice);
+            noticeText.textContent = 'A new website update is ready. Update when you are ready.';
             playUpdateChime();
             setTimeout(maybeReload, 1700);
           }

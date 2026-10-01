@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v76">
+<meta name="site-build" content="cinta-kita-v77">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1306,6 +1306,51 @@ body.puzzlePageActive{overflow:hidden;}
 <style>
 #mainWebsite .puzzlePlaying #puzzleControlsToggle{right:auto;left:50%;bottom:14px;transform:translateX(-50%);max-width:calc(100vw - 240px);white-space:nowrap;z-index:130;}
 @media(max-width:620px){#mainWebsite .puzzlePlaying #puzzleControlsToggle{left:14px;right:auto;bottom:74px;transform:none;max-width:calc(100vw - 28px);}}
+</style>
+<style>
+/* Responsive laptop layout: CSS pixels also cover Retina display scaling. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+#mainWebsite .puzzlePanel,#mainWebsite .messagePanel,.profileCard,.accountCard,#mainWebsite .calendarPanel{box-sizing:border-box;}
+#mainWebsite .puzzlePanel button,#mainWebsite .calendarPanel button,.profileCard button{white-space:normal;line-height:1.35;}
+.puzzlePlaying #puzzlePlayers{top:var(--puzzle-toolbar-bottom,90px);max-width:calc(100% - 40px);}
+.puzzlePicturePreview{top:calc(var(--puzzle-toolbar-bottom,90px) + 48px);max-height:calc(100dvh - var(--puzzle-toolbar-bottom,90px) - 130px);overflow:auto;}
+.puzzleTools strong{min-width:0;max-width:30vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.profileCard,.accountCard{max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;}
+.profileCard input,.profileCard textarea,.accountCard input{box-sizing:border-box;max-width:100%;}
+#mainWebsite .messageHistory{min-height:0;overscroll-behavior:contain;}
+#mainWebsite .calendarPanel,#mainWebsite .activityPanel,#mainWebsite .siteMenu,.puzzleMusicPopover{overscroll-behavior:contain;}
+@media(max-width:1440px) and (max-height:900px){
+ #mainWebsite .messagePanel{right:14px;bottom:14px;width:min(660px,calc(100vw - 28px));height:calc(100dvh - 110px);min-height:0;padding:18px;}
+ #mainWebsite .messagePanelHead h2{font-size:28px;}
+ #mainWebsite .messagePeople{gap:10px;padding:10px 1px 12px;}
+ #mainWebsite .calendarPanel{top:92px;max-height:calc(100dvh - 108px);padding:18px;}
+ #mainWebsite .menuTaskbar{min-height:68px;padding:5px 10px;}
+ #mainWebsite .siteMenu,#mainWebsite .activityPanel{max-height:calc(100dvh - 95px);}
+ .puzzlePlaying .puzzleTools{gap:8px;padding:8px;}
+ #mainWebsite .puzzlePlaying .puzzleTools button{font-size:12px;padding:7px 10px;}
+ .puzzleMusicPopover{width:min(330px,calc(100vw - 40px));max-height:calc(100dvh - 110px);}
+ .puzzleMusicPopover iframe{height:300px;}
+ .profileHero{padding-top:24px;}
+}
+@media(max-height:650px){
+ #mainWebsite .messagePanel{height:calc(100dvh - 96px);bottom:10px;padding:12px;min-height:0;}
+ #mainWebsite .messagePanelHead h2{font-size:24px;}
+ .profileDialog,.accountDialog{padding:10px;}
+ .profileCard,.accountCard{max-height:calc(100dvh - 20px);}
+ #mainWebsite .calendarPanel{padding:14px;}
+ .calendarNavigation{margin:12px 0 10px;}
+ .puzzleMusicPopover{max-height:calc(100dvh - 90px);}
+}
+@media(max-width:1050px){
+ .puzzleTools strong{max-width:22vw;}
+ .calendarColumns{gap:16px;}
+ .puzzlePlaying #puzzlePlayers{font-size:11px;gap:10px;}
+}
+@media(max-width:620px){
+ #mainWebsite .messagePanel{right:8px;bottom:10px;width:calc(100vw - 16px);height:calc(100dvh - 90px);padding:12px;}
+ .calendarColumns{grid-template-columns:1fr;}
+ .puzzleTools strong{display:none;}
+}
 </style>
 </head>
 <body>
@@ -4402,10 +4447,10 @@ body.puzzlePageActive{overflow:hidden;}
       const width=puzzleCanvas.clientWidth,height=puzzleCanvas.clientHeight,bw=1000*puzzleScale,bh=1000*puzzleRoom.image_height/puzzleRoom.image_width*puzzleScale;
       const vx=Math.min(width*.3,bw*.65),vy=Math.min(Math.max(50,height*.25),bh*.65);
       puzzlePan.x=Math.max(vx-bw,Math.min(width-vx,puzzlePan.x));
-      puzzlePan.y=Math.max(100+vy-bh,Math.min(height-vy,puzzlePan.y));
+      const toolbar=puzzlePanel.querySelector('.puzzleTools');const reserve=puzzlePanel.classList.contains('puzzleControlsHidden')?20:Math.max(100,(toolbar?.getBoundingClientRect().height||60)+45);puzzlePan.y=Math.max(reserve+vy-bh,Math.min(height-vy,puzzlePan.y));
     }
     function fitPuzzleView(){if(!puzzleRoom)return;const bh=1000*puzzleRoom.image_height/puzzleRoom.image_width,w=1000/puzzleRoom.cols;const pieces=[...puzzlePieces.values()];const minX=Math.min(0,...pieces.map(p=>p.x-w*.2)),maxX=Math.max(1000,...pieces.map(p=>p.x+w*1.2));puzzleScale=Math.min(puzzleCanvas.clientWidth/(maxX-minX+80),Math.max(100,puzzleCanvas.clientHeight-210)/(bh+60));puzzlePan={x:40-minX*puzzleScale,y:145};constrainPuzzleView();drawPuzzle();}
-    function drawPuzzle(){cancelAnimationFrame(puzzleFrame);puzzleFrame=requestAnimationFrame(()=>{if(!puzzleRoom||!puzzleImage)return;const ratio=Math.min(devicePixelRatio||1,2);puzzleCanvas.width=Math.round(puzzleCanvas.clientWidth*ratio);puzzleCanvas.height=Math.round(puzzleCanvas.clientHeight*ratio);puzzleCtx.setTransform(ratio,0,0,ratio,0,0);puzzleCtx.clearRect(0,0,puzzleCanvas.clientWidth,puzzleCanvas.clientHeight);puzzleCtx.imageSmoothingEnabled=true;puzzleCtx.imageSmoothingQuality='high';const theme=getComputedStyle(mainWebsite),accent=theme.getPropertyValue('--ui-accent').trim()||'#d987b6',ink=theme.getPropertyValue('--ui-ink').trim()||'#fff',bh=1000*puzzleRoom.image_height/puzzleRoom.image_width;const w=1000/puzzleRoom.cols,h=bh/puzzleRoom.rows;puzzleCtx.translate(puzzlePan.x,puzzlePan.y);puzzleCtx.scale(puzzleScale,puzzleScale);puzzleCtx.strokeStyle=accent;puzzleCtx.lineWidth=2/puzzleScale;puzzleCtx.strokeRect(0,0,1000,bh);
+    function drawPuzzle(){cancelAnimationFrame(puzzleFrame);puzzleFrame=requestAnimationFrame(()=>{if(!puzzleRoom||!puzzleImage)return;const ratio=Math.min(window.devicePixelRatio||1,2);puzzleCanvas.width=Math.round(puzzleCanvas.clientWidth*ratio);puzzleCanvas.height=Math.round(puzzleCanvas.clientHeight*ratio);puzzleCtx.setTransform(ratio,0,0,ratio,0,0);puzzleCtx.clearRect(0,0,puzzleCanvas.clientWidth,puzzleCanvas.clientHeight);puzzleCtx.imageSmoothingEnabled=true;puzzleCtx.imageSmoothingQuality='high';const theme=getComputedStyle(mainWebsite),accent=theme.getPropertyValue('--ui-accent').trim()||'#d987b6',ink=theme.getPropertyValue('--ui-ink').trim()||'#fff',bh=1000*puzzleRoom.image_height/puzzleRoom.image_width;const w=1000/puzzleRoom.cols,h=bh/puzzleRoom.rows;puzzleCtx.translate(puzzlePan.x,puzzlePan.y);puzzleCtx.scale(puzzleScale,puzzleScale);puzzleCtx.strokeStyle=accent;puzzleCtx.lineWidth=2/puzzleScale;puzzleCtx.strokeRect(0,0,1000,bh);
       const pieces=[...puzzlePieces.values()].sort((a,b)=>Number(b.placed)-Number(a.placed));if(puzzleDrag){const index=pieces.findIndex(p=>p.piece_id===puzzleDrag.id);if(index>=0)pieces.push(...pieces.splice(index,1));}
       for(const p of pieces){const path=puzzlePaths.get(p.piece_id);if(!path)continue;const col=p.piece_id%puzzleRoom.cols,row=Math.floor(p.piece_id/puzzleRoom.cols);puzzleCtx.save();puzzleCtx.translate(p.x,p.y);puzzleCtx.save();puzzleCtx.clip(path);puzzleCtx.drawImage(puzzleImage,-col*w,-row*h,1000,bh);puzzleCtx.restore();puzzleCtx.strokeStyle=p.locked_by&&!p.placed?accent:'rgba(0,0,0,.4)';puzzleCtx.lineWidth=(p.locked_by?2: .6)/puzzleScale;puzzleCtx.stroke(path);puzzleCtx.restore();}
       for(const [id,c]of puzzleCursors){if(Date.now()-c.seen>12000)continue;puzzleCtx.save();puzzleCtx.translate(c.x,c.y);puzzleCtx.scale(1/puzzleScale,1/puzzleScale);puzzleCtx.beginPath();puzzleCtx.moveTo(0,0);puzzleCtx.lineTo(0,23);puzzleCtx.lineTo(6,17);puzzleCtx.lineTo(11,28);puzzleCtx.lineTo(15,26);puzzleCtx.lineTo(10,15);puzzleCtx.lineTo(19,15);puzzleCtx.closePath();puzzleCtx.fillStyle=accent;puzzleCtx.strokeStyle=ink;puzzleCtx.lineWidth=1.5;puzzleCtx.lineJoin='round';puzzleCtx.fill();puzzleCtx.stroke();puzzleCtx.restore();puzzleCtx.fillStyle=ink;puzzleCtx.font=`${12/puzzleScale}px sans-serif`;puzzleCtx.fillText(String(c.name||'Friend').slice(0,24),c.x+25/puzzleScale,c.y+19/puzzleScale);}
@@ -4419,7 +4464,8 @@ body.puzzlePageActive{overflow:hidden;}
     puzzleCanvas.addEventListener('pointermove',event=>{if(!puzzleRoom)return;const pos=puzzlePoint(event);if(puzzleLastPointer?.down&&puzzleLastPointer.pan){puzzlePan.x+=event.clientX-puzzleLastPointer.x;puzzlePan.y+=event.clientY-puzzleLastPointer.y;puzzleLastPointer.x=event.clientX;puzzleLastPointer.y=event.clientY;constrainPuzzleView();drawPuzzle();return;}if(puzzleDrag){const p=puzzlePieces.get(puzzleDrag.id);const dx=pos.x-puzzleDrag.offsetX-p.x,dy=pos.y-puzzleDrag.offsetY-p.y;for(const id of puzzleDrag.ids){const piece=puzzlePieces.get(id);piece.x+=dx;piece.y+=dy;}drawPuzzle();}if(puzzleChannel&&Date.now()-puzzleLastBroadcast>60){puzzleLastBroadcast=Date.now();puzzleChannel.send({type:'broadcast',event:'cursor',payload:{user_id:accountUser.id,name:puzzleName(),x:pos.x,y:pos.y}});if(puzzleDrag){const p=puzzlePieces.get(puzzleDrag.id);puzzleChannel.send({type:'broadcast',event:'drag',payload:{user_id:accountUser.id,piece_id:p.piece_id,x:p.x,y:p.y}});}}});
     async function finishPuzzleDrag(){if(puzzleLastPointer)puzzleLastPointer.down=false;const drag=puzzleDrag;if(!drag)return;puzzleDrag=null;const p=puzzlePieces.get(drag.id);if(!p||!accountUser)return;const g=puzzleGeneration;try{const {data,error}=await accountClient.rpc('move_site_puzzle_piece',{p_room:drag.room,p_piece:drag.id,p_x:p.x,p_y:p.y});if(g!==puzzleGeneration)return;if(error)throw error;if(!data?.length){puzzleStatus.textContent='Piece lock expired. Its saved position has been restored.';await refreshPuzzlePieces();return;}const connected=data.length>drag.ids.length;const fitted=data.some(piece=>piece.placed);for(const piece of data){puzzlePieces.set(piece.piece_id,piece);if(piece.placed)puzzleClickedPieces.add(piece.piece_id);}if(connected||fitted)playPuzzleClick();drawPuzzle();updatePuzzleProgress();}catch(error){puzzleError(error);refreshPuzzlePieces();}}
     for(const event of ['pointerup','pointercancel','lostpointercapture'])puzzleCanvas.addEventListener(event,finishPuzzleDrag);
-    puzzleCanvas.addEventListener('wheel',event=>{if(!puzzleRoom)return;event.preventDefault();const p=puzzlePoint(event);const rect=puzzleCanvas.getBoundingClientRect();const boardHeight=1000*puzzleRoom.image_height/puzzleRoom.image_width;const minScale=Math.min(puzzleCanvas.clientWidth/1900,puzzleCanvas.clientHeight/(boardHeight+200))*.2;puzzleScale=Math.max(minScale,Math.min(3,puzzleScale*(event.deltaY<0?1.1:.9)));puzzlePan.x=event.clientX-rect.left-p.x*puzzleScale;puzzlePan.y=event.clientY-rect.top-p.y*puzzleScale;constrainPuzzleView();drawPuzzle();},{passive:false});
+    function puzzleWheelFactor(delta,mode,pinch,height){const pixels=delta*(mode===1?16:mode===2?height:1);return Math.exp(-Math.max(-120,Math.min(120,pixels))*(pinch?.01:.0015));}
+    puzzleCanvas.addEventListener('wheel',event=>{if(!puzzleRoom)return;event.preventDefault();const p=puzzlePoint(event),rect=puzzleCanvas.getBoundingClientRect(),boardHeight=1000*puzzleRoom.image_height/puzzleRoom.image_width;const minScale=Math.min(puzzleCanvas.clientWidth/1900,puzzleCanvas.clientHeight/(boardHeight+200))*.2;puzzleScale=Math.max(minScale,Math.min(3,puzzleScale*puzzleWheelFactor(event.deltaY,event.deltaMode,event.ctrlKey,puzzleCanvas.clientHeight)));puzzlePan.x=event.clientX-rect.left-p.x*puzzleScale;puzzlePan.y=event.clientY-rect.top-p.y*puzzleScale;constrainPuzzleView();drawPuzzle();},{passive:false});
     function enterPuzzleFullscreen(){if(!document.fullscreenElement&&puzzlePanel.requestFullscreen)puzzlePanel.requestFullscreen().catch(()=>{});}
     document.getElementById('puzzleFullscreen').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});else enterPuzzleFullscreen();};
     document.getElementById('puzzlePreviewToggle').onclick=()=>{const preview=document.getElementById('puzzlePicturePreview');preview.hidden=!preview.hidden;document.getElementById('puzzlePreviewToggle').setAttribute('aria-expanded',String(!preview.hidden));};
@@ -4437,7 +4483,19 @@ body.puzzlePageActive{overflow:hidden;}
 if(img.width>8192||img.height>8192||img.width*img.height>32000000){const resize=Math.min(1,4096/img.width,4096/img.height),canvas=document.createElement('canvas');canvas.width=Math.round(img.width*resize);canvas.height=Math.round(img.height*resize);const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.97));if(!blob)throw new Error('Could not prepare this picture.');imageWidth=canvas.width;imageHeight=canvas.height;mime='image/jpeg';}
 const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLayout(count,imageWidth,imageHeight),extension={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[mime];const path=`${uid}/${crypto.randomUUID()}.${extension}`;puzzleStatus.textContent='Uploading your picture at its best supported quality…';const upload=await accountClient.storage.from('site-puzzle-images').upload(path,blob,{contentType:mime});if(upload.error)throw upload.error;if(accountUser?.id!==uid)return;const {data,error}=await accountClient.rpc('create_site_puzzle',{p_title:document.getElementById('puzzleTitle').value.trim()||'Our puzzle',p_image_path:path,p_width:imageWidth,p_height:imageHeight,p_rows:layout.rows,p_cols:layout.cols});if(error)throw error;if(accountUser?.id!==uid)return;await loadPuzzleCollection();await openPuzzleRoom(data);}catch(error){puzzleError(error);}finally{button.disabled=false;}};
     document.getElementById('puzzleSpotifyLoad').onclick=async()=>{try{const url=applyPuzzleSpotify(document.getElementById('puzzleSpotifyLink').value.trim());if(puzzleRoom){const {error}=await accountClient.from('site_puzzles').update({spotify_url:url}).eq('id',puzzleRoom.id);if(error)throw error;puzzleRoom.spotify_url=url;}puzzleStatus.textContent='Playlist shared with your puzzle room. Each person presses Play in Spotify.';}catch(error){puzzleError(error);}};
-    new ResizeObserver(()=>{if(puzzleRoom&&!puzzlePanel.hidden)fitPuzzleView();}).observe(puzzleCanvas);
+    let puzzleViewportWidth=0,puzzleViewportHeight=0;
+    new ResizeObserver(()=>{
+      const width=puzzleCanvas.clientWidth,height=puzzleCanvas.clientHeight;
+      if(!width||!height)return;
+      if(puzzleRoom&&!puzzlePanel.hidden){
+        if(puzzleViewportWidth&&puzzleViewportHeight){const centerX=(puzzleViewportWidth/2-puzzlePan.x)/puzzleScale,centerY=(puzzleViewportHeight/2-puzzlePan.y)/puzzleScale;puzzleScale*=Math.min(width/puzzleViewportWidth,height/puzzleViewportHeight);puzzlePan.x=width/2-centerX*puzzleScale;puzzlePan.y=height/2-centerY*puzzleScale;constrainPuzzleView();drawPuzzle();}else fitPuzzleView();
+      }
+      puzzleViewportWidth=width;puzzleViewportHeight=height;
+      updatePuzzleToolbarLayout();
+    }).observe(puzzleCanvas);
+    function updatePuzzleToolbarLayout(){const toolbar=puzzlePanel.querySelector('.puzzleTools');if(!toolbar)return;const height=Math.ceil(toolbar.getBoundingClientRect().height);puzzlePanel.style.setProperty('--puzzle-toolbar-bottom',`${height+30}px`);}
+    new ResizeObserver(updatePuzzleToolbarLayout).observe(puzzlePanel.querySelector('.puzzleTools'));
+
     document.addEventListener('visibilitychange',()=>{if(document.hidden)finishPuzzleDrag();else if(puzzleRoom)refreshPuzzlePieces();});
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!puzzlePanel.hidden)closePuzzle();});
 

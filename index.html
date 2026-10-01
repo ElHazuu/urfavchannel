@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v75">
+<meta name="site-build" content="cinta-kita-v76">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1302,6 +1302,10 @@ body.puzzlePageActive{overflow:hidden;}
 #puzzleControlsToggle{display:none;position:absolute;z-index:130;right:18px;bottom:82px;font-size:11px!important;opacity:.85;}
 .puzzlePlaying #puzzleControlsToggle{display:block;}
 .puzzlePlaying.puzzleControlsHidden .puzzleTools,.puzzlePlaying.puzzleControlsHidden #puzzlePlayers,.puzzlePlaying.puzzleControlsHidden #puzzleProgress,.puzzlePlaying.puzzleControlsHidden .puzzleMusicDock,.puzzlePlaying.puzzleControlsHidden .puzzleWallpaperDock,.puzzlePlaying.puzzleControlsHidden .puzzlePicturePreview{display:none!important;}
+</style>
+<style>
+#mainWebsite .puzzlePlaying #puzzleControlsToggle{right:auto;left:50%;bottom:14px;transform:translateX(-50%);max-width:calc(100vw - 240px);white-space:nowrap;z-index:130;}
+@media(max-width:620px){#mainWebsite .puzzlePlaying #puzzleControlsToggle{left:14px;right:auto;bottom:74px;transform:none;max-width:calc(100vw - 28px);}}
 </style>
 </head>
 <body>
@@ -4404,7 +4408,7 @@ body.puzzlePageActive{overflow:hidden;}
     function drawPuzzle(){cancelAnimationFrame(puzzleFrame);puzzleFrame=requestAnimationFrame(()=>{if(!puzzleRoom||!puzzleImage)return;const ratio=Math.min(devicePixelRatio||1,2);puzzleCanvas.width=Math.round(puzzleCanvas.clientWidth*ratio);puzzleCanvas.height=Math.round(puzzleCanvas.clientHeight*ratio);puzzleCtx.setTransform(ratio,0,0,ratio,0,0);puzzleCtx.clearRect(0,0,puzzleCanvas.clientWidth,puzzleCanvas.clientHeight);puzzleCtx.imageSmoothingEnabled=true;puzzleCtx.imageSmoothingQuality='high';const theme=getComputedStyle(mainWebsite),accent=theme.getPropertyValue('--ui-accent').trim()||'#d987b6',ink=theme.getPropertyValue('--ui-ink').trim()||'#fff',bh=1000*puzzleRoom.image_height/puzzleRoom.image_width;const w=1000/puzzleRoom.cols,h=bh/puzzleRoom.rows;puzzleCtx.translate(puzzlePan.x,puzzlePan.y);puzzleCtx.scale(puzzleScale,puzzleScale);puzzleCtx.strokeStyle=accent;puzzleCtx.lineWidth=2/puzzleScale;puzzleCtx.strokeRect(0,0,1000,bh);
       const pieces=[...puzzlePieces.values()].sort((a,b)=>Number(b.placed)-Number(a.placed));if(puzzleDrag){const index=pieces.findIndex(p=>p.piece_id===puzzleDrag.id);if(index>=0)pieces.push(...pieces.splice(index,1));}
       for(const p of pieces){const path=puzzlePaths.get(p.piece_id);if(!path)continue;const col=p.piece_id%puzzleRoom.cols,row=Math.floor(p.piece_id/puzzleRoom.cols);puzzleCtx.save();puzzleCtx.translate(p.x,p.y);puzzleCtx.save();puzzleCtx.clip(path);puzzleCtx.drawImage(puzzleImage,-col*w,-row*h,1000,bh);puzzleCtx.restore();puzzleCtx.strokeStyle=p.locked_by&&!p.placed?accent:'rgba(0,0,0,.4)';puzzleCtx.lineWidth=(p.locked_by?2: .6)/puzzleScale;puzzleCtx.stroke(path);puzzleCtx.restore();}
-      for(const [id,c]of puzzleCursors){if(Date.now()-c.seen>12000)continue;puzzleCtx.fillStyle=accent;puzzleCtx.beginPath();puzzleCtx.moveTo(c.x,c.y);puzzleCtx.lineTo(c.x+12/puzzleScale,c.y+24/puzzleScale);puzzleCtx.lineTo(c.x+3/puzzleScale,c.y+21/puzzleScale);puzzleCtx.closePath();puzzleCtx.fill();puzzleCtx.fillStyle=ink;puzzleCtx.font=`${12/puzzleScale}px sans-serif`;puzzleCtx.fillText(String(c.name||'Friend').slice(0,24),c.x+15/puzzleScale,c.y+18/puzzleScale);}
+      for(const [id,c]of puzzleCursors){if(Date.now()-c.seen>12000)continue;puzzleCtx.save();puzzleCtx.translate(c.x,c.y);puzzleCtx.scale(1/puzzleScale,1/puzzleScale);puzzleCtx.beginPath();puzzleCtx.moveTo(0,0);puzzleCtx.lineTo(0,23);puzzleCtx.lineTo(6,17);puzzleCtx.lineTo(11,28);puzzleCtx.lineTo(15,26);puzzleCtx.lineTo(10,15);puzzleCtx.lineTo(19,15);puzzleCtx.closePath();puzzleCtx.fillStyle=accent;puzzleCtx.strokeStyle=ink;puzzleCtx.lineWidth=1.5;puzzleCtx.lineJoin='round';puzzleCtx.fill();puzzleCtx.stroke();puzzleCtx.restore();puzzleCtx.fillStyle=ink;puzzleCtx.font=`${12/puzzleScale}px sans-serif`;puzzleCtx.fillText(String(c.name||'Friend').slice(0,24),c.x+25/puzzleScale,c.y+19/puzzleScale);}
     });}
     function updatePuzzleProgress(){if(!puzzleRoom)return;const done=[...puzzlePieces.values()].filter(p=>p.placed).length,total=puzzleRoom.rows*puzzleRoom.cols;document.getElementById('puzzleProgress').textContent=done===total?`Completed! ${total} pieces together ♡`:`${done} / ${total} pieces fitted`;if(done===total){puzzleStatus.textContent='Beautifully done! Saved in Completed.';loadPuzzleCollection();}}
     function playPuzzleFit(id){if(puzzleClickedPieces.has(id))return;puzzleClickedPieces.add(id);playPuzzleClick();}

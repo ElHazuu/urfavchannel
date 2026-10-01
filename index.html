@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v78">
+<meta name="site-build" content="cinta-kita-v79">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1375,6 +1375,30 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
 #mainWebsite .messagePeople{border:0!important;background:transparent!important;padding:4px 2px!important;border-radius:0;flex-shrink:0}
 #mainWebsite .messageHistory{scrollbar-width:thin;scrollbar-color:var(--message-accent) transparent}
 .puzzleCard form{display:flex;flex-wrap:wrap;gap:6px;padding:10px}.puzzleCard form input{min-width:0;flex:1 1 140px;background:var(--ui-surface);color:var(--ui-ink);border:1px solid var(--ui-line);padding:8px;border-radius:8px}
+</style><style>
+/* v79 WhatsApp-inspired compact bubbles and a separate reaction picker. */
+#mainWebsite .chatMessageRow{display:flex;align-items:flex-start;gap:10px;margin:12px 0;width:100%;min-width:0}
+#mainWebsite .chatMessageRow.mine{flex-direction:row-reverse}
+#mainWebsite .chatMessageAvatar{flex:0 0 36px;width:36px;height:36px;display:grid;place-items:center;border:0;background:transparent;padding:0;margin-top:2px;cursor:pointer}
+#mainWebsite .chatMessageAvatar .avatarRing{width:32px;height:32px;flex:none}
+#mainWebsite .chatMessageRow .messageBubble{position:relative;min-width:0;width:fit-content;max-width:min(76%,440px);margin:0;padding:7px 10px 6px;border:0;border-radius:0 12px 12px 12px;box-shadow:0 1px 2px #0002}
+#mainWebsite .chatMessageRow.mine .messageBubble{margin:0;border-radius:12px 0 12px 12px}
+#mainWebsite .messageBubble .messageByline{min-height:0;display:block;font-size:11px;line-height:1.2;color:var(--message-ink);opacity:.8;margin:0 18px 4px 0}
+#mainWebsite .messageBubble .messageBody{font-size:14px;line-height:1.45}
+#mainWebsite .messageBubble .messageMeta{font-size:10px;line-height:1.2;margin:4px 0 0;gap:3px;white-space:nowrap}
+#mainWebsite .messageBubble .messageEditButton{position:absolute;right:4px;top:3px;padding:0;width:20px;height:20px;font-size:14px;margin:0;border:0;background:transparent;color:var(--message-ink);opacity:.5}
+#mainWebsite .messageBubble .messageEditButton:hover{opacity:1}
+#mainWebsite .chatMessageActions{flex:0 0 28px;align-self:center}
+#mainWebsite .chatReactionTrigger{width:28px;height:28px;border:0;border-radius:50%;background:transparent;color:var(--message-ink);padding:4px;cursor:pointer;opacity:.55}
+#mainWebsite .chatReactionTrigger:hover,#mainWebsite .chatReactionTrigger:focus-visible,#mainWebsite .chatReactionTrigger[aria-expanded=true]{opacity:1;background:color-mix(in srgb,var(--message-accent) 18%,transparent)}
+.chatReactionTrigger svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.chatReactionPicker{position:fixed;z-index:1000;display:flex;gap:2px;padding:6px;border-radius:999px;border:1px solid var(--message-border);background:var(--message-surface);color:var(--message-ink);box-shadow:0 6px 24px #0004;max-width:calc(100vw - 16px);box-sizing:border-box}
+.chatReactionPicker button{flex:0 1 34px;min-width:0;width:34px;height:34px;padding:3px;border:0;border-radius:50%;background:transparent;font-size:22px;cursor:pointer}
+.chatReactionPicker button:hover,.chatReactionPicker button:focus-visible,.chatReactionPicker button[aria-pressed=true]{background:color-mix(in srgb,var(--message-accent) 28%,transparent);transform:scale(1.08)}
+#mainWebsite .chatReactionSummary{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap}
+#mainWebsite .chatReactionSummary button{border-radius:999px;border:1px solid var(--message-border);background:color-mix(in srgb,var(--message-accent) 12%,var(--message-surface));color:var(--message-ink);font-size:12px;line-height:1;padding:4px 6px;cursor:pointer}
+#mainWebsite .chatReactionSummary button[aria-pressed=true]{border-color:var(--message-accent);background:color-mix(in srgb,var(--message-accent) 30%,var(--message-surface))}
+@media(max-width:620px){#mainWebsite .chatMessageRow{gap:6px}#mainWebsite .chatMessageRow .messageBubble{max-width:calc(100% - 80px)}#mainWebsite .chatMessageAvatar{flex-basis:30px;width:30px}#mainWebsite .chatMessageAvatar .avatarRing{width:28px;height:28px}}
 </style></head>
 <body>
   <div id="intro">
@@ -3077,7 +3101,7 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
         name.textContent = `${video.title} · ${video.published ? "Published" : "Draft"}`;
         const actions = document.createElement("div");
         const edit = document.createElement("button");
-        edit.type = "button"; edit.textContent = "Edit";
+        edit.type = "button"; edit.textContent = "✎"; edit.title = "Edit message";
         edit.addEventListener("click", () => {
           editingVideoId = video.id;
           videoTitleInput.value = video.title;
@@ -3697,7 +3721,7 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
     const pendingReactions = new Set();
     async function toggleMessageReaction(item, reaction, button) {
       if (!accountClient || !accountUser || !reactionsReady || pendingReactions.has(item.id)) return;
-      if (!["heart", "like", "dislike"].includes(reaction)) return;
+      if (!chatReactionOptions.some(option => option[0] === reaction)) return;
       const userId = accountUser.id;
       pendingReactions.add(item.id);
       button.disabled = true;
@@ -3732,7 +3756,24 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
         button.disabled = false;
       }
     }
+    const chatReactionOptions = [["heart","❤️","Love"],["like","👍","Like"],["dislike","👎","Dislike"],["laugh","😂","Laugh"],["wow","😮","Wow"],["sad","😢","Sad"],["angry","😠","Angry"]];
+    let activeReactionPicker = null;
+    function closeReactionPicker(restoreFocus=false) { if(!activeReactionPicker)return;const {panel,trigger}=activeReactionPicker;panel.remove();trigger.setAttribute('aria-expanded','false');activeReactionPicker=null;if(restoreFocus&&trigger.isConnected)trigger.focus(); }
+    function openReactionPicker(item,trigger) {
+      if(activeReactionPicker?.trigger===trigger){closeReactionPicker();return;}closeReactionPicker();
+      const panel=document.createElement('div');panel.className='chatReactionPicker';panel.setAttribute('role','dialog');panel.setAttribute('aria-label','Choose a message reaction');panel.addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const buttons=[...panel.querySelectorAll('button')],index=buttons.indexOf(document.activeElement);buttons[event.key==='Home'?0:event.key==='End'?buttons.length-1:(index+(event.key==='ArrowRight'?1:-1)+buttons.length)%buttons.length].focus();});
+      const chosen=messageReactions.get(item.id)||[];
+      for(const [kind,symbol,label] of chatReactionOptions){const button=document.createElement('button');button.type='button';button.textContent=symbol;button.title=label;button.setAttribute('aria-label',label);button.setAttribute('aria-pressed',String(chosen.some(r=>r.user_id===accountUser?.id&&r.reaction===kind)));button.onclick=()=>{closeReactionPicker(true);toggleMessageReaction(item,kind,trigger);};panel.append(button);}
+      const theme=getComputedStyle(messagePanel);for(const name of ['--message-surface','--message-ink','--message-border','--message-accent'])panel.style.setProperty(name,theme.getPropertyValue(name));
+      (document.fullscreenElement||document.body).append(panel);activeReactionPicker={panel,trigger};trigger.setAttribute('aria-expanded','true');
+      const box=trigger.getBoundingClientRect(),size=panel.getBoundingClientRect();panel.style.left=Math.max(8,Math.min(innerWidth-size.width-8,box.right-size.width))+'px';panel.style.top=Math.max(8,box.top-size.height-8<8?Math.min(innerHeight-size.height-8,box.bottom+8):box.top-size.height-8)+'px';panel.querySelector('button').focus();
+    }
+    document.addEventListener('pointerdown',event=>{if(activeReactionPicker&&!activeReactionPicker.panel.contains(event.target)&&!activeReactionPicker.trigger.contains(event.target))closeReactionPicker();});
+    document.addEventListener('keydown',event=>{if(activeReactionPicker&&event.key==='Escape'){event.preventDefault();closeReactionPicker(true);}});
+    window.addEventListener('resize',()=>closeReactionPicker());
+    messageHistory.addEventListener('scroll',()=>closeReactionPicker(),{passive:true});
     function renderMessages() {
+      closeReactionPicker();
       const userId = accountUser?.id;
       messageBadge.hidden = !messageUnreadCount;
       messageDockBadge.hidden = !messageUnreadCount;
@@ -3747,12 +3788,14 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
         (item.recipient_id === userId && item.sender_id === recipient));
       if (!conversation.length) { messageHistory.textContent = "No messages yet. Say hello ♡"; return; }
       for (const item of conversation) {
+        const row = document.createElement('div');row.className='chatMessageRow'+(item.sender_id===userId?' mine':'');
+        const avatarButton=document.createElement('button');avatarButton.type='button';avatarButton.className='chatMessageAvatar';const avatarName=messageNames.get(item.sender_id)||accountUser?.user_metadata?.username||'Profile';avatarButton.setAttribute('aria-label',`View ${avatarName}'s profile`);avatarButton.append(createAvatar(item.sender_id,avatarName,true));avatarButton.onclick=()=>openProfile(item.sender_id,false,avatarButton);
         const bubble = document.createElement("div");
         bubble.className = `messageBubble${item.sender_id === userId ? " mine" : ""}`;
         const byline = document.createElement("small");
         byline.className = "messageByline";
         const senderName = messageNames.get(item.sender_id) || (item.sender_id === userId ? accountUser?.user_metadata?.username : "Someone") || "Someone";
-        byline.append(createAvatar(item.sender_id, senderName, true));
+
         byline.append(document.createTextNode(senderName));
         byline.title = `View ${senderName}'s profile`;
         byline.tabIndex = 0;
@@ -3814,7 +3857,7 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
         bubble.append(meta);
         if (item.sender_id === userId && item.kind === "text" && editingMessageId !== item.id) {
           const edit = document.createElement("button");
-          edit.type = "button"; edit.className = "messageEditButton"; edit.textContent = "Edit";
+          edit.type = "button"; edit.className = "messageEditButton"; edit.textContent = "✎"; edit.title = "Edit message";
           edit.setAttribute("aria-label", "Edit your message");
           edit.addEventListener("click", () => {
             editingMessageId = item.id; editingMessageDraft = item.body; renderMessages();
@@ -3822,21 +3865,13 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
           });
           bubble.append(edit);
         }
+        const actions=document.createElement('div');actions.className='chatMessageActions';
         if (reactionsReady) {
-          const reactions = document.createElement("div"); reactions.className = "messageReactions";
-          const chosen = messageReactions.get(item.id) || [];
-          for (const [kind, symbol, label] of [["heart","♥","Love"],["like","👍","Like"],["dislike","👎","Dislike"]]) {
-            const button = document.createElement("button"); button.type = "button";
-            const count = chosen.filter(entry => entry.reaction === kind).length;
-            button.textContent = `${symbol}${count ? ` ${count}` : ""}`;
-            button.setAttribute("aria-label", `${label} reaction${count ? `, ${count}` : ""}`);
-            button.setAttribute("aria-pressed", String(chosen.some(entry => entry.user_id === userId && entry.reaction === kind)));
-            button.addEventListener("click", () => toggleMessageReaction(item, kind, button));
-            reactions.append(button);
-          }
-          bubble.append(reactions);
+          const trigger=document.createElement('button');trigger.type='button';trigger.className='chatReactionTrigger';trigger.setAttribute('aria-label','Add a reaction');trigger.title='React';trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-haspopup','dialog');trigger.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-8-8"/><path d="M8 14c1.8 2 4.2 2 6 0M8.5 9h.01M14 9h.01M18 3v6M15 6h6"/></svg>';trigger.onclick=()=>openReactionPicker(item,trigger);actions.append(trigger);
+          const chosen=messageReactions.get(item.id)||[],summary=document.createElement('div');summary.className='chatReactionSummary';
+          for(const [kind,symbol,label]of chatReactionOptions){const entries=chosen.filter(r=>r.reaction===kind);if(!entries.length)continue;const button=document.createElement('button');button.type='button';button.textContent=symbol+(entries.length>1?' '+entries.length:'');button.setAttribute('aria-label',`${label}, ${entries.length} reaction${entries.length>1?'s':''}`);button.title=entries.map(r=>messageNames.get(r.user_id)||'Member').join(', ');button.setAttribute('aria-pressed',String(entries.some(r=>r.user_id===userId)));button.onclick=()=>toggleMessageReaction(item,kind,button);summary.append(button);}if(summary.children.length)bubble.append(summary);
         }
-        messageHistory.append(bubble);
+        row.append(avatarButton,bubble,actions);messageHistory.append(row);
       }
       messageHistory.scrollTop = stayScrolled ? messageHistory.scrollHeight : previousScroll;
     }
@@ -3979,7 +4014,7 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
       loadMessages().then(() => (messagePeople.querySelector(".messagePerson") || messageClose).focus());
       messageCompactTimer = setTimeout(updateMessageSize, 850);
     }
-    function closeMessages(restoreFocus = true) { clearTimeout(messageCompactTimer); messagePanel.hidden = true; messagePanel.classList.remove("chatCompact"); messagePointerInside = false; messageDock.setAttribute("aria-expanded", "false"); document.getElementById("taskbarMessages").setAttribute("aria-expanded", "false"); if (restoreFocus) document.getElementById("taskbarMessages").focus(); }
+    function closeMessages(restoreFocus = true) { closeReactionPicker(); clearTimeout(messageCompactTimer); messagePanel.hidden = true; messagePanel.classList.remove("chatCompact"); messagePointerInside = false; messageDock.setAttribute("aria-expanded", "false"); document.getElementById("taskbarMessages").setAttribute("aria-expanded", "false"); if (restoreFocus) document.getElementById("taskbarMessages").focus(); }
     messageOpen.addEventListener("click", openMessages);
     messageDock.addEventListener("click", () => messagePanel.hidden ? openMessages() : closeMessages());
     messageClose.addEventListener("click", () => closeMessages());

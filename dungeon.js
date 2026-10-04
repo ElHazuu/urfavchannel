@@ -1,4 +1,4 @@
-// Cinta Kita v85 — sign-in and dungeon game logic
+// Cinta Kita v87 — sign-in and dungeon game logic
 const DUNGEON_SUPABASE_URL="https://djhhwdjgokzofkaemrpf.supabase.co";
 const DUNGEON_SUPABASE_KEY="sb_publishable_74Fr4c8T4OIKBgXED-sgsg_iUPBviG0";
 // Reuses the main website's Supabase project and browser session.
@@ -50,31 +50,33 @@ function dungeonInitializeAuth(){
   });
 }
 
-/* Cinta Kita v85: authoritative online co-op, placeholder art. */
+/* Cinta Kita v87: authoritative online co-op, distinct enemy art and paced combat. */
 (() => {
   'use strict';
   const el=id=>document.getElementById(id), panel=el('dungeonPanel'), toggle=el('dungeonToggle');
   let run=null, channel=null, timer=null, busy=false, loading=false, generation=0, authId=null, lastVersion=-1, lastRunId=null;
+  let presentationRun=null, presenting=false, pendingSnapshot=null, playbackEpoch=0;
   const statusLabels={lobby:'Ready to enter',active:'In battle',room_clear:'Room cleared',won:'Dungeon complete',lost:'Defeated'};
   const feedback=(message='',error=false)=>{el('dungeonFeedback').textContent=message;el('dungeonFeedback').dataset.error=String(error);};
   const myId=()=>accountUser?.id;
   const node=(tag,content,className)=>{const n=document.createElement(tag);if(content!==undefined)n.textContent=content;if(className)n.className=className;return n;};
   function setBusy(value){busy=value;panel.setAttribute('aria-busy',String(value));render();}
   function errorText(error){
-    if(['42P01','42883','PGRST202','PGRST205'].includes(error?.code))return 'Dungeon setup is not ready yet. Please finish the database update supplied with v85.';
+    if(['42P01','42883','PGRST202','PGRST205'].includes(error?.code))return 'Dungeon setup is not ready yet. Please finish the database update supplied with v87.';
     return error?.message||'Connection interrupted. Please try again.';
   }
   function stopLive(){if(channel){accountClient?.removeChannel(channel);channel=null;}clearInterval(timer);timer=null;}
   function remember(){try{if(run)localStorage.setItem(`cintaDungeonRun:${myId()}`,run.id);}catch{}}
-  function apply(data){
+  function apply(data,animate=true){
     if(!data||!data.members?.includes(myId()))return;
+    if(presenting){if(!pendingSnapshot||Number(data.version)>Number(pendingSnapshot.version))pendingSnapshot=data;return;}
     if(run?.id===data.id&&Number(data.version)<Number(run.version))return;
     const changed=run?.id===data.id&&Number(data.version)>Number(run.version);
-    const before=run;run=data;remember();render();animateChanges(before,data);
+    const before=run;run=data;remember();render();if(animate)animateChanges(before,data);
 
   }
   async function fetchRun(){
-    if(!run||loading||panel.hidden||!myId())return;
+    if(!run||loading||busy||presenting||panel.hidden||!myId())return;
     const id=run.id,uid=myId(),token=generation;loading=true;
     try{
       const {data,error}=await accountClient.from('cinta_dungeon_runs').select('*').eq('id',id).maybeSingle();
@@ -141,7 +143,12 @@ function dungeonInitializeAuth(){
         args={...args,p_version:fresh.data.version};
       }
       if(response.error)throw response.error;
-      const previous=run?.id;apply(Array.isArray(response.data)?response.data[0]:response.data);
+      const previous=run?.id;
+      const result=Array.isArray(response.data)?response.data[0]:response.data;
+      const played=name==='cinta_dungeon_command'&&await playAction(run,result,args.p_action,uid,token);
+      if(token!==generation||uid!==myId())return;
+      apply(result,!played);
+      if(pendingSnapshot){const latest=pendingSnapshot;pendingSnapshot=null;apply(latest);}
       if(run?.id!==previous)subscribe();
     }catch(error){if(token===generation&&uid===myId()){feedback(errorText(error),true);await fetchRun();}}
     finally{if(token===generation)setBusy(false);}
@@ -179,16 +186,77 @@ function dungeonInitializeAuth(){
       }
     },0);
   }
+  // The server saves the entire exchange atomically. Playback only stages its
+  // confirmed result; it never sends a second request to make the enemy respond.
+  async function playAction(before,after,action,uid,token){
+    if(!before||!after||before.id!==after.id||before.status!=='active'||before.state.room!==after.state.room||!['attack','skill','defend','heal','revive'].includes(action)||Number(after.version)!==Number(before.version)+1)return false;
+    const actor=before.state.players.find(p=>p.id===uid);if(!actor)return false;
+    const epoch=++playbackEpoch;presenting=true;
+    const valid=()=>epoch===playbackEpoch&&token===generation&&uid===myId()&&!panel.hidden;
+    const wait=ms=>new Promise(resolve=>setTimeout(()=>resolve(valid()),ms));
+    const clone=value=>JSON.parse(JSON.stringify(value));
+    const intermediate=clone(before),st=intermediate.state;
+    st.enemy=clone(after.state.enemy);
+    const updated=after.state.players.find(p=>p.id===uid);
+    const own=st.players.find(p=>p.id===uid);
+    if(updated){own.potions=updated.potions;own.skills=updated.skills;}
+    if(action==='heal')own.hp=Math.min(own.max_hp,own.hp+16);
+    if(action==='defend')own.guard=true;
+    if(action==='revive'){
+      const fallen=st.players.find(p=>p.id!==uid&&p.hp<=0);
+      if(fallen)fallen.hp=12;
+    }
+    function phase(text,kind){const banner=el('dungeonPhase');banner.textContent=text;banner.dataset.phase=kind;banner.hidden=false;el('dungeonTurn').textContent=text;}
+    function card(id){return [...el('dungeonPlayers').children].find(n=>n.dataset.playerId===id);}
+    function effect(target,motion,amount=0){
+      if(!target)return;
+      const image=target.querySelector('.ckSprite');if(image){image.dataset.motion=motion;setTimeout(()=>{if(image.isConnected)delete image.dataset.motion;},650);}
+      if(amount){const n=node('span',amount>0?`+${amount}`:String(amount),'ckFloatingNumber');n.dataset.heal=String(amount>0);target.append(n);setTimeout(()=>n.remove(),900);}
+    }
+    try{
+      phase(action==='heal'?`${actor.name} prepares a potion…`:action==='revive'?`${actor.name} helps a fallen ally…`:action==='defend'?`${actor.name} raises their guard…`:action==='skill'?`${actor.name} prepares ${actor.class==='knight'?'Power Strike':'Aimed Shot'}…`:`${actor.name} prepares an attack…`,'hero');
+      effect(card(uid),'ready');
+      if(!await wait(300))return true;
+      presentationRun=intermediate;render();
+      if(action==='attack'||action==='skill'){
+        effect(card(uid),action==='skill'?'skill':'attack');
+        effect(el('dungeonEnemy'),'hurt',st.enemy.hp-before.state.enemy.hp);
+        phase(`${actor.name} ${action==='skill'?'uses '+(actor.class==='knight'?'Power Strike':'Aimed Shot'):'attacks'}.`,'hero');
+      }else if(action==='heal'){effect(card(uid),'heal',own.hp-actor.hp);phase(`${actor.name} restores health.`,'hero');}
+      else if(action==='revive'){const p=st.players.find(p=>before.state.players.find(old=>old.id===p.id)?.hp<=0&&p.hp>0);if(p)effect(card(p.id),'heal',p.hp);phase('Your ally is back on their feet.','hero');}
+      else{effect(card(uid),'defend');phase(`${actor.name} braces for the enemy’s attack.`,'hero');}
+      if(!await wait(650))return true;
+      if(st.enemy.hp>0){
+        const heavy=st.room===3&&before.state.round%3===0;
+        phase(heavy?`${st.enemy.name} prepares a sweeping attack…`:`${st.enemy.name} prepares to strike…`,'enemy');
+        effect(el('dungeonEnemy'),'ready');
+        if(!await wait(650))return true;
+        presentationRun=clone(after);render();phase(heavy?'The king strikes the party!':`${st.enemy.name} strikes back.`,'enemy');
+        effect(el('dungeonEnemy'),'enemyAttack');
+        for(const p of after.state.players){const old=st.players.find(x=>x.id===p.id);if(old&&p.hp<old.hp)effect(card(p.id),'hurt',p.hp-old.hp);}
+        if(!await wait(600))return true;
+      }else{
+        phase(`${st.enemy.name} is defeated.`,'recover');
+        if(!await wait(600))return true;
+      }
+      phase(after.status==='active'?'Choose your next action.':after.status==='won'?'Dungeon complete.':'Room cleared.','recover');
+      await wait(250);
+      return true;
+    }finally{
+      if(epoch===playbackEpoch){presentationRun=null;presenting=false;el('dungeonPhase').hidden=true;}
+    }
+  }
   function render(){
-    el('dungeonLobby').hidden=!!run;el('dungeonRun').hidden=!run;
+    const shown=presentationRun||run;
+    el('dungeonLobby').hidden=!!shown;el('dungeonRun').hidden=!shown;
     el('dungeonCreate').disabled=busy;el('dungeonClass').disabled=busy;el('dungeonCode').disabled=busy;
     el('dungeonJoinForm').querySelector('button').disabled=busy;el('dungeonRefresh').disabled=busy;
-    if(!run)return;
-    const st=run.state,me=st.players.find(p=>p.id===myId()),fallen=st.players.find(p=>p.id!==myId()&&p.hp<=0);
-    const mine=run.status==='active'&&me?.hp>0;
-    el('dungeonRoom').textContent=`Room ${st.room} / 3 · ${statusLabels[run.status]} · ${st.players.length} ${st.players.length===1?'player':'players'}`;
+    if(!shown)return;
+    const st=shown.state,me=st.players.find(p=>p.id===myId()),fallen=st.players.find(p=>p.id!==myId()&&p.hp<=0);
+    const mine=shown.status==='active'&&me?.hp>0;
+    el('dungeonRoom').textContent=`Room ${st.room} / 3 · ${statusLabels[shown.status]} · ${st.players.length} ${st.players.length===1?'player':'players'}`;
     el('dungeonCoins').textContent=`Party treasure: ${st.coins} coins`;
-    el('dungeonInvite').hidden=!['lobby','active','room_clear'].includes(run.status);el('dungeonInviteCode').value=run.join_code;
+    el('dungeonInvite').hidden=!['lobby','active','room_clear'].includes(shown.status);el('dungeonInviteCode').value=shown.join_code;
     el('dungeonBattleRoom').textContent=`Goblin Hollow · Room ${st.room} / 3`;
     const players=el('dungeonPlayers');
     const featured=[...st.players].sort((a,b)=>Number(b.id===myId())-Number(a.id===myId())).slice(0,4);
@@ -197,35 +265,34 @@ function dungeonInitializeAuth(){
     for(const p of st.players){const card=node('div',undefined,'ckRosterEntry');card.append(node('strong',`${p.name}${p.id===myId()?' · You':''}`),node('p',`${p.class==='knight'?'Knight':'Ranger'} · ${p.hp} / ${p.max_hp} HP`),node('p',`${p.potions} potions · ${p.skills} skill charges${p.hp<=0?' · Down':''}`));roster.append(card);}
     el('dungeonRosterTitle').textContent=`Party details · ${st.players.length} ${st.players.length===1?'player':'players'}`;
     const enemy=el('dungeonEnemy');enemy.hidden=!st.enemy;
-    el('dungeonIntent').hidden=!st.enemy||run.status!=='active';
+    el('dungeonIntent').hidden=!st.enemy||shown.status!=='active';
     if(st.enemy){
       enemy.dataset.defeated=String(st.enemy.hp<=0);enemy.dataset.room=String(st.room);
       const plate=node('div',undefined,'ckBattleNameplate');plate.append(node('h3',st.enemy.name));
       const bar=node('div',undefined,'ckDungeonBar'),fill=node('span');fill.style.width=`${100*st.enemy.hp/st.enemy.max_hp}%`;bar.append(fill);
-      plate.append(bar,node('p',`${st.enemy.hp} / ${st.enemy.max_hp} HP`));enemy.replaceChildren(plate,sprite('goblin'));
-      if(st.room===3)enemy.append(node('span','♛','ckEnemyCrown'));
+      plate.append(bar,node('p',`${st.enemy.hp} / ${st.enemy.max_hp} HP`));enemy.replaceChildren(plate,sprite(st.room===3?'king':st.room===2?'guard':'scout'));
       el('dungeonIntent').textContent=st.room===3&&st.round%3===0?`Heavy attack next: ${st.enemy.attack+2} damage to every standing player.`:`Enemy response: ${st.enemy.attack} damage to the player who acts.`;
     }
     el('dungeonSupplies').textContent=me?`Your supplies: ${me.potions} ${me.potions===1?'potion':'potions'} · ${me.skills} skill charges · ${me.hp} / ${me.max_hp} HP`:'';
     const turn=el('dungeonTurn');
-    if(run.status==='lobby')turn.textContent='Enter when you are ready. Other players can join while you explore.';
-    else if(run.status==='active')turn.textContent=busy?'Resolving your action…':mine?'Choose an action. The enemy will respond.':'Your character is down. Another player can revive you, or you can start a new adventure.';
-    else if(run.status==='room_clear')turn.textContent='Room cleared. Continue when you are ready; everyone recovers 8 HP and one skill charge.';
-    else if(run.status==='won')turn.textContent='The Goblin King is defeated. Your party earned 120 coins.';
+    if(shown.status==='lobby')turn.textContent='Enter when you are ready. Other players can join while you explore.';
+    else if(shown.status==='active')turn.textContent=busy?'Resolving your action…':mine?'Choose an action. The enemy will respond.':'Your character is down. Another player can revive you, or you can start a new adventure.';
+    else if(shown.status==='room_clear')turn.textContent='Room cleared. Continue when you are ready; everyone recovers 8 HP and one skill charge.';
+    else if(shown.status==='won')turn.textContent='The Goblin King is defeated. Your party earned 120 coins.';
     else turn.textContent='Your party has fallen. Create a new adventure to try again.';
-    el('dungeonActions').hidden=run.status!=='active';
+    el('dungeonActions').hidden=shown.status!=='active';
     el('dungeonAttackInfo').textContent=`${me?.class==='knight'?9:8} damage`;
     el('dungeonSkillInfo').textContent=`${me?.class==='knight'?'Power Strike · 15':'Aimed Shot · 17'} damage · ${me?.skills||0} left`;
     for(const b of panel.querySelectorAll('[data-dungeon-action]')){
       const action=b.dataset.dungeonAction;b.disabled=busy||!mine||(action==='skill'&&me.skills<=0)||(action==='heal'&&(me.potions<=0||me.hp>=me.max_hp))||(action==='revive'&&(me.potions<=0||!fallen));
     }
-    el('dungeonStart').hidden=run.status!=='lobby';el('dungeonStart').disabled=busy;
-    el('dungeonNext').hidden=run.status!=='room_clear';el('dungeonNext').disabled=busy;
-    el('dungeonAgain').hidden=!['won','lost'].includes(run.status)&&me?.hp>0;el('dungeonAgain').disabled=busy;
-    if(lastVersion!==run.version||lastRunId!==run.id){el('dungeonLog').replaceChildren(...st.log.map(line=>node('li',line)));el('dungeonLog').scrollTop=el('dungeonLog').scrollHeight;lastVersion=run.version;lastRunId=run.id;}
+    el('dungeonStart').hidden=shown.status!=='lobby';el('dungeonStart').disabled=busy;
+    el('dungeonNext').hidden=shown.status!=='room_clear';el('dungeonNext').disabled=busy;
+    el('dungeonAgain').hidden=!['won','lost'].includes(shown.status)&&me?.hp>0;el('dungeonAgain').disabled=busy;
+    if(lastVersion!==shown.version||lastRunId!==shown.id){el('dungeonLog').replaceChildren(...st.log.map(line=>node('li',line)));el('dungeonLog').scrollTop=el('dungeonLog').scrollHeight;lastVersion=shown.version;lastRunId=shown.id;}
   }
   function syncAuth(){
-    const id=myId()||null;if(id===authId)return;authId=id;generation++;stopLive();run=null;busy=false;lastVersion=-1;lastRunId=null;feedback();render();if(!id)close();else if(!panel.hidden){saved();browse();}
+    const id=myId()||null;if(id===authId)return;authId=id;generation++;playbackEpoch++;presentationRun=null;presenting=false;pendingSnapshot=null;el('dungeonPhase').hidden=true;stopLive();run=null;busy=false;lastVersion=-1;lastRunId=null;feedback();render();if(!id)close();else if(!panel.hidden){saved();browse();}
   }
   async function open(event){
     event?.preventDefault();if(!myId()){openAccount(toggle);return;}
@@ -235,7 +302,7 @@ function dungeonInitializeAuth(){
     if(run){subscribe();fetchRun();}else{saved();browse();}
   }
   function close(){
-    if(panel.hidden)return;panel.hidden=true;if(myId())el('dungeonLanding').hidden=false;document.body.classList.remove('ckDungeonOpen');toggle.setAttribute('aria-expanded','false');stopLive();
+    if(panel.hidden)return;playbackEpoch++;presentationRun=null;presenting=false;pendingSnapshot=null;el('dungeonPhase').hidden=true;panel.hidden=true;if(myId())el('dungeonLanding').hidden=false;document.body.classList.remove('ckDungeonOpen');toggle.setAttribute('aria-expanded','false');stopLive();
     if(location.hash==='#dungeon')history.replaceState(null,'',mainWebsite.dataset.wallpaper==='berserk'?'#berserk':'#home');toggle.focus();
   }
   toggle.addEventListener('click',open);el('dungeonClose').onclick=()=>{close();location.href='./index.html';};

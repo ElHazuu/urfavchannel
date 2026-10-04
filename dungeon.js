@@ -5,6 +5,7 @@
  const client=window.supabase?.createClient('https://djhhwdjgokzofkaemrpf.supabase.co','sb_publishable_74Fr4c8T4OIKBgXED-sgsg_iUPBviG0')||null;
  const stages=[['Moss Gate','The lanterns lead beneath the roots.','⚔'],['Guard Hall','Steel and stone guard the path ahead.','◇'],['Lantern Camp','A quiet moment before the deeper halls.','♨'],['Crossroads','Two sentries. Choose your target carefully.','⚔'],['Forgotten Treasury','A relic waits beneath the dust.','✦'],['Royal Sentries','The crown’s last defenders stand together.','⚔'],['The Hollow Throne','Break the crown. Bring the lanterns home.','♛']];
  let user=null,run=null,view=null,selectedClass='knight',enemyTarget=null,allyTarget=null,busy=false,playing=false,loading=false,generation=0,epoch=0,channel=null,timer=null,pending=null,authGeneration=0;
+ let lobbySnapshot="",listing=false,lastListAt=0;
  let speed=1,motion=!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  try{const pref=JSON.parse(localStorage.getItem('cinta88Settings')||'{}');if([.65,1,1.25].includes(pref.speed))speed=pref.speed;if(typeof pref.motion==='boolean')motion=pref.motion;}catch{}
  document.documentElement.dataset.motion=String(motion);$('battleSpeed').value=String(speed);$('motion').checked=motion;$('volume').value=String(audio.volume*100);
@@ -25,7 +26,7 @@
   user=next;generation++;busy=false;run=null;enemyTarget=null;allyTarget=next?.id||null;resetPlayback();stopLive();
   $('authGate').hidden=!!user;$('game').hidden=!user;$('signOut').hidden=!user;
   $('authFeedback').textContent='Sign in with the same account you use on Cinta Kita.';
-  $('connection').textContent=user?'Online':'Sign in to explore';render();if(user){listRuns();subscribe();}
+  $('connection').textContent=user?'Online':'Sign in to explore';lobbySnapshot='';listing=false;render();if(user){$('homeQuick').hidden=false;$('tutorialQuick').hidden=false;listRuns();subscribe();}else{$('homeQuick').hidden=true;$('tutorialQuick').hidden=true;}window.dispatchEvent(new CustomEvent('cinta-dungeon-auth',{detail:{user}}));
  }
  async function initializeAuth(){
   const status=$('authFeedback');
@@ -73,30 +74,33 @@
  function subscribe(){
   stopLive();if(!user)return;const token=generation;
   const subscription=run?{event:'UPDATE',schema:'public',table:'cinta_dungeon_runs',filter:`id=eq.${run.id}`}:{event:'*',schema:'public',table:'cinta_dungeon_runs'};
-  channel=client.channel(`cinta88-${run?.id||user.id}-${token}`).on('postgres_changes',subscription,()=>{if(token!==generation)return;run?fetchRun():listRuns();}).subscribe(status=>{if(token===generation)$('connection').textContent=status==='SUBSCRIBED'?'Live co-op':'Online · syncing';});
-  timer=setInterval(()=>{if(!document.hidden&&!locked())run?fetchRun():listRuns();},run?3500:6000);
+  channel=client.channel(`cinta90-${run?.id||user.id}-${token}`).on('postgres_changes',subscription,()=>{if(token!==generation)return;run?fetchRun():listRuns();}).subscribe(status=>{if(token===generation)$('connection').textContent=status==='SUBSCRIBED'?'Live co-op':'Online · syncing';});
+  timer=setInterval(()=>{if(!document.hidden&&!locked())run?fetchRun():listRuns();},run?5000:20000);
  }
  async function listRuns(){
-  if(!user||run||locked())return;const uid=user.id,token=generation;
-  $('openRuns').textContent='Looking for expeditions…';$('savedRuns').textContent='Loading adventures…';
+  if(!user||run||locked()||listing||document.getElementById('homePanel')?.hidden===false)return;const uid=user.id,token=generation;listing=true;
+  if(!lastListAt){$('openRuns').textContent='Looking for expeditions…';$('savedRuns').textContent='Loading adventures…';}
   try{
    // Query owned adventures separately so they are not displaced by public lobbies.
    const [owned,available]=await Promise.all([
     client.from('cinta_dungeon_runs').select('*').contains('members',[uid]).order('updated_at',{ascending:false}).limit(24),
     client.from('cinta_dungeon_runs').select('*').in('status',['lobby','active','room_clear']).order('updated_at',{ascending:false}).limit(24)
    ]);
-   if(token!==generation||uid!==user?.id||run)return;if(owned.error)throw owned.error;if(available.error)throw available.error;
+   if(token!==generation||uid!==user?.id||run||document.getElementById('homePanel')?.hidden===false)return;if(owned.error)throw owned.error;if(available.error)throw available.error;
+   const signature=JSON.stringify([(owned.data||[]).map(r=>[r.id,r.version,r.status]),(available.data||[]).map(r=>[r.id,r.version,r.status])]);
+   if(signature===lobbySnapshot)return;lobbySnapshot=signature;lastListAt=Date.now();
    $('openRuns').replaceChildren();$('savedRuns').replaceChildren();
    for(const r of owned.data||[])addRun(r,$('savedRuns'),true);
    for(const r of available.data||[])if(!r.members.includes(uid))addRun(r,$('openRuns'),false);
    if(!$('openRuns').childElementCount)$('openRuns').append(node('p','No open expeditions yet. Start one and invite a friend.','muted'));
    if(!$('savedRuns').childElementCount)$('savedRuns').append(node('p','Your adventures will appear here.','muted'));
-  }catch(e){if(token===generation){$('openRuns').textContent='Could not load expeditions.';$('savedRuns').textContent='Could not load saved adventures.';feedback(errorText(e),true);}}
+  }catch(e){if(token===generation){$('openRuns').textContent='Could not load expeditions.';$('savedRuns').textContent='Could not load saved adventures.';feedback(errorText(e),true);}}finally{listing=false;}
  }
  function addRun(r,container,member){
   const row=node('div',undefined,'run-entry'),copy=node('div'),button=node('button',member?'Resume':'Join');button.type='button';
   copy.append(node('strong',`${statusLabel(r)} · Stage ${r.state.room}/${maxStages(r)}`),node('small',`${r.state.players.map(p=>p.name).join(', ')} · ${r.members.length} ${r.members.length===1?'adventurer':'adventurers'}${modern(r)?'':' · Classic adventure'}`));
-  button.onclick=()=>{if(locked())return;if(member)enter(r);else request('cinta_dungeon_join_v88',{p_code:r.join_code,p_class:selectedClass});};row.append(copy,button);container.append(row);
+  button.onclick=()=>{if(locked())return;if(member)enter(r);else request('cinta_dungeon_join_v88',{p_code:r.join_code,p_class:selectedClass});};
+  const controls=node('div',undefined,'run-controls');controls.append(button);if(member&&r.host_id===user?.id){const remove=node('button','Delete','danger');remove.type='button';remove.title='Permanently delete this expedition for all party members';remove.onclick=async()=>{if(!window.confirm('Permanently delete this adventure for everyone? This cannot be undone.'))return;remove.disabled=true;try{const {error}=await client.rpc('cinta_dungeon_delete_v90',{p_run:r.id});if(error)throw error;try{localStorage.removeItem(`cintaDungeonRun:${user.id}`);}catch{}lobbySnapshot='';await listRuns();feedback('Adventure deleted.');}catch(e){remove.disabled=false;feedback(errorText(e),true);}};controls.append(remove);}row.append(copy,controls);container.append(row);
  }
  function enter(r){generation++;resetPlayback();run=r;enemyTarget=null;allyTarget=user.id;feedback();remember();render();subscribe();fetchRun();$('stageTitle').scrollIntoView({block:'start',behavior:motion?'smooth':'auto'});}
  async function fetchRun(){
@@ -192,7 +196,9 @@
    if(a==='attack')b.querySelector('small').textContent=`${(me?.class==='knight'?9:8)+(me?.boost||0)} damage${isModern?' · +1 Focus':''}`;
    if(a==='skill')b.querySelector('small').textContent=isModern?me?.class==='knight'?'15 + power · break shield · 2 Focus':'12 + power · poison & weaken · 2 Focus':`${me?.class==='knight'?15:17} damage · ${me?.skills||0} charges`;
    if(a==='skill')b.title=isModern?(me?.class==='knight'?'Removes the shield, deals 15 plus attack power, and skips the enemy’s next response. Costs 2 Focus.':'Deals 12 plus attack power through shields, applies 3 poison ticks, and reduces the next two strikes by 2 damage. Costs 2 Focus.'):'Use one skill charge.';
-   if(a==='defend')b.querySelector('small').textContent=isModern?'12 shield · +1 Focus':'Reduce the response by half';
+   if(a==='defend')b.querySelector('small').textContent=isModern?'12 shield this turn · no repeat':'Reduce the response by half';
+   if(a==='focus')b.querySelector('small').textContent='Gain 2 Focus · 5 shield · no repeat';
+   if(isModern&&['defend','focus','protect'].includes(a)&&me?.last_defensive)b.disabled=true;
    if(a==='heal')b.querySelector('small').textContent=isModern?'Restore 18 HP · cure poison':'Restore 16 HP · 1 potion';
    if(a==='revive')b.querySelector('small').textContent=isModern?'Restore 16 HP · 1 potion':'Revive a fallen ally · 12 HP';
    if(a==='combo')b.dataset.ready=String(st.combo>=6);

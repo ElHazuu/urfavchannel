@@ -3254,6 +3254,21 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
       if(tier==='ocean'){badge.title='Play a little ocean sound';badge.addEventListener('click',playOceanBadgeSound);}
       badge.append(img, tooltip); return badge;
     }
+    const puzzleAchievementRanks = [
+      { name: "bronze", at: 10, image: "Bronze.png" },
+      { name: "silver", at: 50, image: "Silver.png" },
+      { name: "gold", at: 80, image: "Gold.png" },
+      { name: "platinum", at: 150, image: "Platinum.png" }
+    ];
+    function renderPuzzleAchievements(slot) {
+      const completed = puzzleRooms.filter(room => room.completed_at).length;
+      for (const rank of puzzleAchievementRanks) {
+        if (completed < rank.at) continue;
+        const name = rank.name[0].toUpperCase() + rank.name.slice(1);
+        slot.append(makeProfileBadge(rank.name, `Puzzle Master · ${name}`,
+          `Complete ${rank.at} puzzles together. ${completed} completed in our shared collection.`, [rank.image]));
+      }
+    }
     function renderVisitBadge() {
       const slot = document.getElementById("profileVisitBadge");
       slot.replaceChildren();
@@ -3270,6 +3285,7 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
       if (anniversary) slot.append(makeProfileBadge(anniversary.name, `Our Anniversary · ${anniversary.name[0].toUpperCase() + anniversary.name.slice(1)}`,
         `Together for ${anniversary.months === 12 ? "one year" : `${anniversary.months} ${anniversary.months === 1 ? "month" : "months"}`}.`, anniversary.images));
       if (extra?.shell_unlocked) slot.append(makeProfileBadge("ocean", "Ocean Explorer", "You found the hidden shell and its ocean message!", ["Shell Badge.png"]));
+      renderPuzzleAchievements(slot);
     }
     let achievementRequestBusy = false;
     let pendingShellDiscovery = false;
@@ -4491,7 +4507,7 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
     function puzzleLayout(count,width,height){count=Math.max(4,Math.min(1000,Math.round(Number(count)||48)));let best=null;for(let rows=2;rows<=Math.min(100,Math.ceil(count/2));rows++){const cols=Math.max(2,Math.round(count/rows)),actual=rows*cols;if(actual>1000)continue;const cost=Math.abs(Math.log((cols/rows)/(width/height)))+.9*Math.abs(actual-count)/count;if(!best||cost<best.cost)best={rows,cols,actual,cost};}return best;}
     function updatePuzzlePreview(){const layout=puzzleLayout(document.getElementById('puzzleCount').value,puzzlePreviewImage?.width||4,puzzlePreviewImage?.height||3);document.getElementById('puzzleCountPreview').textContent=`Preview: ${layout.actual} pieces · ${layout.cols} × ${layout.rows}. Counts adjust to a grid that suits your picture.`;}
     function puzzleError(error){puzzleStatus.classList.add('puzzleError');puzzleStatus.textContent=error?.message||'Puzzle connection failed. Please try again.';}
-    async function loadPuzzleCollection(){if(!accountUser||!accountClient)return;const id=accountUser.id;const {data,error}=await accountClient.from('site_puzzles').select('*').eq('deleted',false).order('created_at',{ascending:false});if(accountUser?.id!==id)return;if(error){puzzleStatus.textContent='Run the one-time live puzzle SQL setup in Supabase first.';return;}puzzleRooms=data||[];if(puzzleRoom){const current=puzzleRooms.find(r=>r.id===puzzleRoom.id);if(current){puzzleRoom.title=current.title;document.getElementById('puzzleRoomTitle').textContent=current.title;}}const updatedRoom=puzzleRoom&&puzzleRooms.find(r=>r.id===puzzleRoom.id);if(updatedRoom?.spotify_url&&updatedRoom.spotify_url!==puzzleRoom.spotify_url){puzzleRoom.spotify_url=updatedRoom.spotify_url;applyPuzzleSpotify(updatedRoom.spotify_url);}if(puzzleRoom&&!puzzleRooms.some(r=>r.id===puzzleRoom.id))leavePuzzleRoom();renderPuzzleCollection();}
+    async function loadPuzzleCollection(){if(!accountUser||!accountClient)return;const id=accountUser.id;const {data,error}=await accountClient.from('site_puzzles').select('*').eq('deleted',false).order('created_at',{ascending:false});if(accountUser?.id!==id)return;if(error){puzzleStatus.textContent='Run the one-time live puzzle SQL setup in Supabase first.';return;}puzzleRooms=data||[];if(puzzleRoom){const current=puzzleRooms.find(r=>r.id===puzzleRoom.id);if(current){puzzleRoom.title=current.title;document.getElementById('puzzleRoomTitle').textContent=current.title;}}const updatedRoom=puzzleRoom&&puzzleRooms.find(r=>r.id===puzzleRoom.id);if(updatedRoom?.spotify_url&&updatedRoom.spotify_url!==puzzleRoom.spotify_url){puzzleRoom.spotify_url=updatedRoom.spotify_url;applyPuzzleSpotify(updatedRoom.spotify_url);}if(puzzleRoom&&!puzzleRooms.some(r=>r.id===puzzleRoom.id))leavePuzzleRoom();renderPuzzleCollection();if(!profileDialog.hidden)renderVisitBadge();}
     function renderPuzzleCollection(){
       const list=document.getElementById('puzzleCollection');list.replaceChildren();
       for(const room of puzzleRooms.filter(r=>puzzleFilter==='completed'?r.completed_at:!r.completed_at)){

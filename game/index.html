@@ -2,10 +2,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Our RPG Game</title>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+  <title>Our Fantasy RPG</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: #202b24;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+  </style>
 </head>
 <body>
-    <h1>Welcome to Our RPG!</h1>
+<script>
+const config = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 500,
+  backgroundColor: '#79b86b',
+  physics: {
+    default: 'arcade',
+    arcade: { debug: false }
+  },
+  scene: {
+    create: create,
+    update: update
+  }
+};
+
+const game = new Phaser.Game(config);
+
+let player;
+let cursors;
+let keys;
+
+function create() {
+  const g = this.add.graphics();
+
+  // Grass and walking path
+  g.fillStyle(0x79b86b);
+  g.fillRect(0, 0, 800, 500);
+
+  g.fillStyle(0xd9bd86);
+  g.fillRect(0, 290, 800, 75);
+  g.fillRect(360, 180, 75, 200);
+
+  // House
+  g.fillStyle(0xa87448);
+  g.fillRect(310, 85, 180, 120);
+
+  g.fillStyle(0x934b40);
+  g.fillTriangle(290, 100, 400, 20, 510, 100);
+
+  g.fillStyle(0x5c3926);
+  g.fillRect(380, 155, 40, 50);
+
+  // Character
+  g.fillStyle(0x446bb0);
+  g.fillRect(0, 0, 24, 30);
+
+  g.generateTexture('hero', 24, 30);
+  g.destroy();
+
+  player = this.physics.add.sprite(400, 330, 'hero');
+
+  player.setCollideWorldBounds(true);
+
+  cursors = this.input.keyboard.createCursorKeys();
+
+  keys = this.input.keyboard.addKeys('W,A,S,D');
+
+  this.add.text(15, 15,
+    'Our Fantasy RPG | WASD or Arrow Keys',
+    {
+      fontSize: '18px',
+      color: '#ffffff',
+      backgroundColor: '#304e30',
+      padding: { x: 10, y: 8 }
+    }
+  );
+}
+
+function update() {
+  const speed = 180;
+
+  player.setVelocity(0);
+
+  if (cursors.left.isDown || keys.A.isDown) {
+    player.setVelocityX(-speed);
+  }
+  else if (cursors.right.isDown || keys.D.isDown) {
+    player.setVelocityX(speed);
+  }
+
+  if (cursors.up.isDown || keys.W.isDown) {
+    player.setVelocityY(-speed);
+  }
+  else if (cursors.down.isDown || keys.S.isDown) {
+    player.setVelocityY(speed);
+  }
+
+  player.body.velocity.normalize().scale(speed);
+}
+</script>
 </body>
 </html>

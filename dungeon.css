@@ -1,6 +1,6 @@
 
-/* Cinta Kita v86 — dungeon styling */
-/* Cinta Kita v86: scoped dungeon styles. */
+/* Cinta Kita v87 — dungeon styling */
+/* Cinta Kita v87: scoped dungeon styles. */
 .ckDungeon[hidden],.ckDungeon [hidden]{display:none!important}
 .ckDungeon{position:fixed;inset:0;z-index:150;overflow:auto;overscroll-behavior:contain;background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--ui-accent,#b98bbb) 16%,transparent),transparent 70%),var(--ui-surface,#211b29);color:var(--ui-ink,#fff3f8);padding:28px 20px;box-sizing:border-box;text-align:left}
 body.ckDungeonOpen{overflow:hidden}
@@ -54,7 +54,7 @@ body.ckDungeonOpen{overflow:hidden}
 @media(max-width:640px){.ckDungeon{padding:18px 12px}.ckDungeonGrid{grid-template-columns:1fr}.ckDungeonPlayers{gap:10px}.ckDungeonPlayer{padding:14px}.ckDungeonActions{grid-template-columns:repeat(2,minmax(0,1fr))}.ckDungeonActions button:last-child{grid-column:1/-1}.ckDungeonCard{padding:18px}.ckDungeonHead h2{font-size:32px}}
 @media(prefers-reduced-motion:reduce){.ckDungeon *{animation:none!important;transition:none!important}}
 
-:root{--ui-surface:#211b29;--ui-ink:#fff3f8;--ui-accent:#d6aad2;--ui-line:#655466;color-scheme:dark}body{margin:0;background:var(--ui-surface);color:var(--ui-ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.ckGate[hidden]{display:none}.ckGate{max-width:430px;margin:10vh auto;padding:24px}.ckGate h1{font-size:36px;margin:12px 0}.ckGate p{line-height:1.6;opacity:.8}.ckGate label{display:block;margin:16px 0 7px}.ckGate input,.ckGate button{width:100%;box-sizing:border-box;padding:13px;border:1px solid var(--ui-line);border-radius:12px;color:var(--ui-ink);background:#302739;font:inherit}.ckGate button{margin-top:18px;cursor:pointer;background:#614563}.ckGate a{color:var(--ui-accent)}.ckGate input:focus-visible,.ckGate button:focus-visible{outline:3px solid var(--ui-accent);outline-offset:3px}#dungeonSignOut{font-size:13px}#dungeonAuthFeedback{min-height:48px} @media(max-width:480px){.ckGate{margin:5vh 12px;padding:18px}}/* Cinta Kita v86: live battle scene, using separate background and sprite layers. */
+:root{--ui-surface:#211b29;--ui-ink:#fff3f8;--ui-accent:#d6aad2;--ui-line:#655466;color-scheme:dark}body{margin:0;background:var(--ui-surface);color:var(--ui-ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.ckGate[hidden]{display:none}.ckGate{max-width:430px;margin:10vh auto;padding:24px}.ckGate h1{font-size:36px;margin:12px 0}.ckGate p{line-height:1.6;opacity:.8}.ckGate label{display:block;margin:16px 0 7px}.ckGate input,.ckGate button{width:100%;box-sizing:border-box;padding:13px;border:1px solid var(--ui-line);border-radius:12px;color:var(--ui-ink);background:#302739;font:inherit}.ckGate button{margin-top:18px;cursor:pointer;background:#614563}.ckGate a{color:var(--ui-accent)}.ckGate input:focus-visible,.ckGate button:focus-visible{outline:3px solid var(--ui-accent);outline-offset:3px}#dungeonSignOut{font-size:13px}#dungeonAuthFeedback{min-height:48px} @media(max-width:480px){.ckGate{margin:5vh 12px;padding:18px}}/* Cinta Kita v87: live battle scene, using separate background and sprite layers. */
 :root{--ui-accent:#e7b86d;--ui-line:#735347;--ui-surface:#211822;--ui-ink:#fff2d5}
 .ckDungeon{background:radial-gradient(ellipse at 50% 0%,#67403355,transparent 65%),#18131c}
 .ckDungeonWrap{max-width:1180px}
@@ -112,4 +112,23 @@ body.ckDungeonOpen{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.ckSprite,.ckFloatingNumber,.ckBattleFlash{animation:none!important}.ckFloatingNumber,.ckBattleFlash{display:none}}
 
 .ckActionIcon{width:21px;height:21px;vertical-align:middle;margin-right:8px;fill:none;stroke:#f5d49a;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}.ckBattleDock .ckDungeonActions strong{font-weight:600}
-.ckBattleArena{background-image:url("./dungeon-background.png?v=86")}.ckSprite{background-image:url("./dungeon-characters.png?v=86")}
+.ckBattleArena{background-image:url("./dungeon-background.png?v=87")}.ckSprite{background-image:url("./dungeon-characters.png?v=87")}
+
+/* Cinta Kita v87: distinct enemies and readable action sequences. */
+.ckSprite[data-sprite="scout"],.ckSprite[data-sprite="guard"],.ckSprite[data-sprite="king"]{background-image:url("./dungeon-enemies-v87.png?v=87");background-size:300% 100%}
+/* Sample padded square regions so neighboring weapons never bleed into a sprite. */
+.ckSprite[data-sprite="scout"]{background-size:362% 120.6667%;background-position:2.8626% 80.6452%}
+.ckSprite[data-sprite="guard"]{background-size:300% 100%;background-position:44.5442% 0}
+.ckSprite[data-sprite="king"]{background-size:278.4615% 92.8205%;background-position:98.7787% 0}
+.ckBattleEnemy[data-room="2"] .ckSprite,.ckBattleEnemy[data-room="3"] .ckSprite{filter:drop-shadow(0 6px 3px #1c132950)}
+.ckBattleEnemy[data-room="3"] .ckSprite{width:clamp(115px,16vw,190px)}
+.ckBattleFrame{position:relative}
+.ckBattlePhase{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:6;max-width:90%;width:max-content;margin:0;padding:9px 16px;border:1px solid #dfb96c;border-radius:12px;background:#281d2bf5;color:#ffe4aa;box-shadow:0 4px 18px #0005;text-align:center;font-size:13px;pointer-events:none}
+.ckBattlePhase[data-phase="enemy"]{border-color:#ed8f79;color:#ffd0c4}
+.ckBattlePhase[data-phase="recover"]{border-color:#9cce8a;color:#d1edc0}
+.ckSprite[data-motion="enemyAttack"]{animation:ckEnemyStrike .55s ease}
+.ckSprite[data-motion="ready"]{animation:ckReady .3s ease}
+.ckSprite[data-motion="skill"]{animation:ckStrike .55s ease;filter:drop-shadow(0 0 10px #ffe4a0)}
+@keyframes ckEnemyStrike{35%{transform:translateX(-24px) rotate(-5deg)}75%{transform:translateX(4px)}}
+@keyframes ckReady{50%{transform:translateY(-5px)}}
+@media(prefers-reduced-motion:reduce){.ckSprite[data-motion]{animation:none}.ckFloatingNumber{animation:none;opacity:1}.ckDungeonBar span{transition:none}}

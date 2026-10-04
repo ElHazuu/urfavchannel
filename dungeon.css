@@ -1,1 +1,115 @@
 
+/* Cinta Kita v85 — dungeon styling */
+/* Cinta Kita v85: scoped dungeon styles. */
+.ckDungeon[hidden],.ckDungeon [hidden]{display:none!important}
+.ckDungeon{position:fixed;inset:0;z-index:150;overflow:auto;overscroll-behavior:contain;background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--ui-accent,#b98bbb) 16%,transparent),transparent 70%),var(--ui-surface,#211b29);color:var(--ui-ink,#fff3f8);padding:28px 20px;box-sizing:border-box;text-align:left}
+body.ckDungeonOpen{overflow:hidden}
+.ckDungeon *{box-sizing:border-box}
+.ckDungeonWrap{max-width:980px;margin:auto}
+.ckDungeonHead,.ckDungeonRow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ckDungeonHead{margin-bottom:20px;align-items:flex-start}
+.ckDungeonHead small{font-size:11px;letter-spacing:.14em;color:var(--ui-accent,#dbabd4)}
+.ckDungeonHead h2{font-size:clamp(30px,6vw,48px);margin:8px 0}
+.ckDungeonHead p,.ckDungeonCard p,.ckDungeonHelp{opacity:.8;line-height:1.6}
+.ckDungeon h3{font-size:19px;margin:0 0 14px}
+.ckDungeon button,.ckDungeon select,.ckDungeon input{font:inherit;color:inherit;border:1px solid var(--ui-line,#736273);border-radius:12px;padding:12px 15px;background:color-mix(in srgb,var(--ui-surface,#211b29) 90%,var(--ui-accent,#b98bbb));max-width:100%}
+.ckDungeon button{cursor:pointer;min-height:44px;transition:background .15s,transform .15s}
+.ckDungeon button:hover:not(:disabled){background:color-mix(in srgb,var(--ui-accent,#b98bbb) 30%,var(--ui-surface,#211b29));transform:translateY(-1px)}
+.ckDungeon button:disabled{opacity:.45;cursor:default}
+.ckDungeon :focus-visible{outline:3px solid var(--ui-accent,#dbabd4);outline-offset:3px}
+.ckDungeon label{display:block;margin:10px 0}
+.ckDungeon select,.ckDungeon input{width:100%}
+.ckDungeon select option{background:var(--ui-surface,#211b29)}
+.ckDungeonGrid,.ckDungeonPlayers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:18px}
+.ckDungeonCard{padding:22px;border:1px solid var(--ui-line,#736273);border-radius:20px;background:color-mix(in srgb,var(--ui-surface,#211b29) 94%,var(--ui-accent,#b98bbb));margin-bottom:16px}
+.ckDungeonGrid .ckDungeonCard{margin-bottom:0}
+.ckDungeonFeedback:empty{display:none}
+.ckDungeonFeedback{padding:12px 16px;border-radius:12px;border:1px solid var(--ui-line,#736273);line-height:1.5}
+.ckDungeonFeedback[data-error="true"]{color:#ffb8bb}
+.ckDungeonMeta{margin-bottom:18px;font-size:14px}
+.ckDungeonPlayer{padding:20px;border:1px solid var(--ui-line,#736273);border-radius:20px;position:relative;background:color-mix(in srgb,var(--ui-surface,#211b29) 92%,var(--ui-accent,#b98bbb))}
+.ckDungeonPlayer[data-current="true"]{outline:2px solid var(--ui-accent,#dbabd4);outline-offset:2px}
+.ckDungeonPlayer[data-down="true"]{opacity:.6}
+.ckDungeonAvatar{display:block;font-size:46px;margin-bottom:8px}
+.ckDungeonPlayer h3{margin:4px 0;overflow-wrap:anywhere}
+.ckDungeonPlayer p{font-size:13px;opacity:.85;margin:8px 0}
+.ckDungeonBar{height:10px;background:#8883;border-radius:20px;overflow:hidden;margin:10px 0}
+.ckDungeonBar span{display:block;height:100%;background:var(--ui-accent,#dbabd4);border-radius:inherit;transition:width .35s ease}
+.ckDungeonEnemy{text-align:center;margin:8px 0 20px;max-width:540px;margin-inline:auto}
+.ckDungeonEnemy .ckDungeonAvatar{font-size:58px}
+.ckDungeonEnemy h3{font-size:25px}
+.ckDungeonEnemy p{margin:8px 0}
+.ckDungeonTurn{text-align:center;font-size:19px;line-height:1.6;font-weight:600;min-height:30px}
+.ckDungeonActions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:18px 0}
+.ckDungeonActions button{font-weight:600;text-align:left;padding:14px 12px}
+.ckDungeonActions span{display:block;font-size:11px;line-height:1.5;font-weight:400;opacity:.8;margin-top:6px}
+.ckDungeonContinue{justify-content:center;margin:20px 0}
+.ckDungeonJournal ol{margin:0;padding-left:22px;max-height:240px;overflow:auto;line-height:1.8;font-size:14px}
+.ckDungeonSavedRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-top:1px solid var(--ui-line,#736273)}
+.ckDungeonSavedRow small{display:block;opacity:.7;margin-top:5px}
+#dungeonInviteCode{max-width:320px;letter-spacing:.14em;font-family:monospace;font-size:19px}
+.ckDungeonFooter{opacity:.55;text-align:center;font-size:12px;margin:30px 0 8px}
+.ckDungeonPulse{animation:ckDungeonPulse .35s ease}
+@keyframes ckDungeonPulse{50%{transform:translateY(-3px)}}
+@media(max-width:640px){.ckDungeon{padding:18px 12px}.ckDungeonGrid{grid-template-columns:1fr}.ckDungeonPlayers{gap:10px}.ckDungeonPlayer{padding:14px}.ckDungeonActions{grid-template-columns:repeat(2,minmax(0,1fr))}.ckDungeonActions button:last-child{grid-column:1/-1}.ckDungeonCard{padding:18px}.ckDungeonHead h2{font-size:32px}}
+@media(prefers-reduced-motion:reduce){.ckDungeon *{animation:none!important;transition:none!important}}
+
+:root{--ui-surface:#211b29;--ui-ink:#fff3f8;--ui-accent:#d6aad2;--ui-line:#655466;color-scheme:dark}body{margin:0;background:var(--ui-surface);color:var(--ui-ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.ckGate[hidden]{display:none}.ckGate{max-width:430px;margin:10vh auto;padding:24px}.ckGate h1{font-size:36px;margin:12px 0}.ckGate p{line-height:1.6;opacity:.8}.ckGate label{display:block;margin:16px 0 7px}.ckGate input,.ckGate button{width:100%;box-sizing:border-box;padding:13px;border:1px solid var(--ui-line);border-radius:12px;color:var(--ui-ink);background:#302739;font:inherit}.ckGate button{margin-top:18px;cursor:pointer;background:#614563}.ckGate a{color:var(--ui-accent)}.ckGate input:focus-visible,.ckGate button:focus-visible{outline:3px solid var(--ui-accent);outline-offset:3px}#dungeonSignOut{font-size:13px}#dungeonAuthFeedback{min-height:48px} @media(max-width:480px){.ckGate{margin:5vh 12px;padding:18px}}/* Cinta Kita v85: live battle scene, using separate background and sprite layers. */
+:root{--ui-accent:#e7b86d;--ui-line:#735347;--ui-surface:#211822;--ui-ink:#fff2d5}
+.ckDungeon{background:radial-gradient(ellipse at 50% 0%,#67403355,transparent 65%),#18131c}
+.ckDungeonWrap{max-width:1180px}
+.ckDungeonHead{margin-bottom:12px}.ckDungeonHead h2{font-family:Georgia,serif;font-size:34px;margin:6px 0}.ckDungeonHead p{margin:0;font-size:14px}
+.ckDungeon button{border-color:#9c704c;background:linear-gradient(#382832,#291e29);color:#fff0d0}
+.ckDungeon button:hover:not(:disabled){background:linear-gradient(#76502b,#483125);box-shadow:0 0 12px #dbab5733}
+.ckDungeonCard{border-color:#755348;background:linear-gradient(135deg,#312330,#221b26)}
+.ckBattleFrame{border:1px solid #9d7452;border-radius:20px;overflow:hidden;box-shadow:0 16px 50px #0006;background:#211722;margin:14px 0 20px}
+.ckBattleArena{position:relative;height:clamp(380px,44vw,570px);background-size:cover;background-position:center 57%;isolation:isolate;overflow:hidden}
+.ckBattleArena::after{content:"";position:absolute;inset:0;background:linear-gradient(#0003,transparent 30%,transparent 75%,#100c1b88);pointer-events:none;z-index:-1}
+.ckBattleRoom{position:absolute;top:18px;left:50%;transform:translateX(-50%);margin:0;padding:8px 25px;border:1px solid #ce975e;border-radius:9px;background:#271a26e8;color:#fff0d2;font-family:Georgia,serif;font-size:17px;white-space:nowrap}
+#dungeonPlayers.ckBattleParty{position:absolute;left:7%;bottom:17%;width:45%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:end;gap:16px 22px;margin:0}
+.ckBattleFighter{position:relative;min-width:0;text-align:center;display:flex;flex-direction:column;align-items:center}
+.ckBattleNameplate{background:#251a24ee;border:1px solid #c68c58;border-radius:9px;padding:8px 10px;min-width:100px;max-width:155px;width:100%;box-shadow:0 4px 14px #0004;z-index:2}
+.ckBattleNameplate h3{font-family:Georgia,serif;font-size:16px;margin:0;overflow-wrap:anywhere}.ckBattleNameplate p{font-size:11px;margin:4px 0;color:#fff0d2}
+.ckBattleNameplate .ckDungeonBar{height:7px;margin:7px 0 5px;background:#100d18}
+.ckBattleNameplate .ckDungeonBar span{background:linear-gradient(#ea797e,#c63749);border:1px solid #ffb0a0}
+.ckBattleFighter[data-class="ranger"] .ckDungeonBar span{background:linear-gradient(#81cf62,#3c8f3d);border-color:#d0ec9c}
+.ckBattleFighter[data-current="true"] .ckBattleNameplate{border-color:#f4d38d;box-shadow:0 0 14px #f4d38d38}
+.ckBattleFighter[data-down="true"] .ckSprite{opacity:.35;filter:grayscale(1);transform:rotate(-12deg)}
+.ckSprite{width:clamp(95px,13vw,165px);aspect-ratio:1;background-size:300% 100%;background-repeat:no-repeat;background-position:0 0;filter:drop-shadow(0 6px 3px #1c132950);transform-origin:50% 90%}
+.ckSprite[data-sprite="ranger"]{background-position:50% 0}
+.ckSprite[data-sprite="goblin"]{background-position:100% 0}
+#dungeonEnemy.ckBattleEnemy{position:absolute;right:8%;bottom:17%;width:clamp(110px,18vw,175px);text-align:center;margin:0;padding:0;border:0;background:none}
+.ckBattleEnemy .ckSprite{width:clamp(100px,14vw,175px)}
+.ckBattleEnemy[data-defeated="true"] .ckSprite{opacity:.25;filter:grayscale(1)}
+.ckBattleEnemy[data-room="2"] .ckSprite{filter:drop-shadow(0 5px 3px #15101b55) saturate(.75)}
+.ckBattleEnemy[data-room="3"] .ckSprite{filter:drop-shadow(0 0 8px #dc965666)}
+.ckEnemyCrown{position:absolute;bottom:43%;left:50%;transform:translateX(-50%);color:#f2c665;font-size:28px;z-index:2;text-shadow:0 2px 5px #000}
+.ckBattleDock{position:relative;padding:14px 18px 16px;background:linear-gradient(#33212f,#241a25);border-top:1px solid #bb8659}
+.ckBattleDock::before,.ckBattleDock::after{content:"✦";position:absolute;top:14px;color:#d7a86b;font-size:13px}.ckBattleDock::before{left:18px}.ckBattleDock::after{right:18px}
+.ckBattleDock .ckDungeonTurn{font-family:Georgia,serif;font-size:16px;line-height:1.5;margin:0 25px 10px;min-height:24px;font-weight:400}
+.ckBattleDock .ckDungeonActions{grid-template-columns:repeat(5,minmax(0,1fr));margin:0;gap:10px}
+.ckBattleDock .ckDungeonActions button{font-family:Georgia,serif;text-align:center;font-size:19px;padding:11px 8px;border-radius:10px;border:1px solid #c38b5c;box-shadow:inset 0 1px 0 #d4a76b25}
+.ckBattleDock .ckDungeonActions button:first-child:not(:disabled){background:linear-gradient(#7c552c,#493126);border-color:#e9c779;box-shadow:0 0 12px #e3ab4e33}
+.ckBattleDock .ckDungeonActions span{font-family:system-ui,sans-serif;font-size:10px;line-height:1.5;margin-top:6px;color:#ead8c4}
+.ckBattleSupplies{text-align:center;font-size:12px;color:#d9c2b2;margin:10px 0 0;line-height:1.5}
+.ckBattleIntent{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);margin:0;padding:7px 14px;background:#241925de;color:#ffefcd;border:1px solid #886348;border-radius:8px;font-size:12px;max-width:90%;width:max-content;text-align:center;z-index:3}
+.ckDungeonInvite summary,.ckPartyDetails summary{cursor:pointer;font-size:14px;color:#ecc995;padding:2px 0;min-height:28px}
+.ckDungeonInvite{margin-top:18px}.ckPartyDetails{margin:12px 0}.ckPartyRoster{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:12px}.ckRosterEntry{border:1px solid #755348;border-radius:12px;padding:12px;font-size:13px}.ckRosterEntry p{margin:6px 0;opacity:.8}
+.ckDungeonJournal{margin-top:16px}
+.ckSprite[data-motion="attack"]{animation:ckStrike .5s ease}.ckSprite[data-motion="hurt"]{animation:ckHurt .5s ease}.ckSprite[data-motion="heal"]{animation:ckHeal .65s ease}.ckSprite[data-motion="defend"]{animation:ckGuard .55s ease}
+.ckFloatingNumber{position:absolute;top:45%;left:50%;z-index:5;color:#ffe3a8;font-weight:800;font-size:24px;text-shadow:0 2px 3px #27131b;pointer-events:none;animation:ckFloat .85s ease forwards}
+.ckFloatingNumber[data-heal="true"]{color:#a5f4aa}
+.ckBattleFlash{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 75% 65%,#e1a16266,transparent 45%);animation:ckFlash .5s ease forwards}
+.ckHeroYou{font-family:system-ui,sans-serif;font-size:9px;letter-spacing:.08em;color:#f7d58e;display:block;margin-top:3px}
+@keyframes ckStrike{35%{transform:translateX(18px) rotate(3deg)}75%{transform:translateX(-3px)}}
+@keyframes ckHurt{25%,65%{filter:drop-shadow(0 0 7px #fd5f56) brightness(1.4);transform:translateX(-5px)}45%{transform:translateX(5px)}}
+@keyframes ckHeal{40%{filter:drop-shadow(0 0 13px #90e8a0) brightness(1.15);transform:translateY(-3px)}}
+@keyframes ckGuard{40%{filter:drop-shadow(0 0 12px #9bc7ff)}}
+@keyframes ckFloat{0%{opacity:0;transform:translate(-50%,10px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-45px)}}
+@keyframes ckFlash{to{opacity:0}}
+@media(min-width:800px){#dungeonPlayers[data-many="true"]{bottom:15%;gap:2px 18px}.ckBattleParty[data-many="true"] .ckSprite{width:105px}.ckBattleParty[data-many="true"] .ckBattleNameplate{padding:5px 8px}.ckBattleParty[data-many="true"] .ckBattleNameplate h3{font-size:13px}}
+@media(max-width:640px){.ckDungeon{padding:14px 8px}.ckDungeonHead h2{font-size:28px}.ckDungeonHead{gap:8px}.ckBattleFrame{border-radius:14px}.ckBattleArena{height:350px;background-position:58% center}#dungeonPlayers.ckBattleParty{left:3%;width:53%;bottom:18%;gap:4px}.ckBattleNameplate{min-width:0;padding:6px 5px;width:100%}.ckBattleNameplate h3{font-size:12px}.ckBattleNameplate p{font-size:10px}.ckSprite{width:100px}#dungeonEnemy.ckBattleEnemy{right:3%;width:105px;bottom:18%}.ckBattleEnemy .ckSprite{width:110px}.ckBattleIntent{font-size:10px;padding:6px 8px;white-space:normal;width:90%;bottom:8px}.ckBattleRoom{font-size:14px;top:12px;padding:7px 18px}.ckBattleDock{padding:12px 10px}.ckBattleDock .ckDungeonTurn{font-size:14px;margin:0 12px 12px}.ckBattleDock::before,.ckBattleDock::after{display:none}.ckBattleDock .ckDungeonActions{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.ckBattleDock .ckDungeonActions button{font-size:15px;padding:10px 4px;min-height:70px}.ckBattleDock .ckDungeonActions button:last-child{grid-column:auto}.ckBattleSupplies{font-size:11px}#dungeonPlayers[data-many="true"]{bottom:15%}.ckBattleParty[data-many="true"] .ckSprite{width:75px}.ckBattleParty[data-many="true"] .ckBattleNameplate{padding:4px}.ckBattleParty[data-many="true"] .ckBattleNameplate h3{font-size:10px}.ckEnemyCrown{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.ckSprite,.ckFloatingNumber,.ckBattleFlash{animation:none!important}.ckFloatingNumber,.ckBattleFlash{display:none}}
+
+.ckActionIcon{width:21px;height:21px;vertical-align:middle;margin-right:8px;fill:none;stroke:#f5d49a;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}.ckBattleDock .ckDungeonActions strong{font-weight:600}
+.ckBattleArena{background-image:url("./assets/dungeon-background.png?v=85")}.ckSprite{background-image:url("./assets/dungeon-characters.png?v=85")}

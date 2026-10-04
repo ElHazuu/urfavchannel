@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="site-build" content="cinta-kita-dungeon-v86"><title>Goblin Hollow · Cinta Kita v86</title><link rel="stylesheet" href="./dungeon.css?v=86"></head><body>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="site-build" content="cinta-kita-dungeon-v87"><title>Goblin Hollow · Cinta Kita v87</title><link rel="stylesheet" href="./dungeon.css?v=87"></head><body>
 <main id="mainWebsite">
-<section id="dungeonAuthGate" class="ckGate" aria-labelledby="dungeonGateTitle"><small>CINTA KITA v86 · DUNGEON</small><h1 id="dungeonGateTitle">Goblin Hollow</h1><p>Enter a dungeon alone, or join other players already exploring.</p><form id="dungeonLoginForm"><label for="dungeonEmail">Email</label><input id="dungeonEmail" type="email" autocomplete="username" required><label for="dungeonPassword">Password</label><input id="dungeonPassword" type="password" autocomplete="current-password" required><button id="dungeonSignIn" type="submit">Sign in &amp; play</button></form><p id="dungeonAuthFeedback" role="status" aria-live="polite">Checking your Cinta Kita sign-in…</p><a href="./index.html">← Back to Cinta Kita</a></section>
+<section id="dungeonAuthGate" class="ckGate" aria-labelledby="dungeonGateTitle"><small>CINTA KITA v87 · DUNGEON</small><h1 id="dungeonGateTitle">Goblin Hollow</h1><p>Enter a dungeon alone, or join other players already exploring.</p><form id="dungeonLoginForm"><label for="dungeonEmail">Email</label><input id="dungeonEmail" type="email" autocomplete="username" required><label for="dungeonPassword">Password</label><input id="dungeonPassword" type="password" autocomplete="current-password" required><button id="dungeonSignIn" type="submit">Sign in &amp; play</button></form><p id="dungeonAuthFeedback" role="status" aria-live="polite">Checking your Cinta Kita sign-in…</p><a href="./index.html">← Back to Cinta Kita</a></section>
 <section id="dungeonLanding" class="ckGate" hidden><h1>Adventure paused</h1><p>Your saved run is waiting for you.</p><button id="dungeonToggle" type="button" aria-expanded="false" aria-controls="dungeonPanel">Open dungeon</button><p><a href="./index.html">← Back to Cinta Kita</a></p></section>
 <section id="dungeonPanel" class="ckDungeon" role="dialog" aria-modal="true" aria-labelledby="dungeonTitle" hidden>
   <div class="ckDungeonWrap">
@@ -18,7 +18,7 @@
     </div>
     <div id="dungeonRun" hidden>
       <div class="ckDungeonRow ckDungeonMeta"><button id="dungeonCollection" type="button">← Adventures</button><span id="dungeonRoom"></span><span id="dungeonCoins"></span><span id="dungeonConnection" role="status"></span></div>
-      <div class="ckBattleFrame"><section id="dungeonArena" class="ckBattleArena" aria-label="Dungeon battle scene"><h3 id="dungeonBattleRoom" class="ckBattleRoom"></h3><div id="dungeonPlayers" class="ckBattleParty"></div><div id="dungeonEnemy" class="ckBattleEnemy ckBattleFighter" hidden></div><p id="dungeonIntent" class="ckBattleIntent" hidden></p></section><div class="ckBattleDock">      <p id="dungeonTurn" class="ckDungeonTurn" role="status" aria-live="polite"></p>
+      <div class="ckBattleFrame"><p id="dungeonPhase" class="ckBattlePhase" role="status" aria-live="polite" hidden></p><section id="dungeonArena" class="ckBattleArena" aria-label="Dungeon battle scene"><h3 id="dungeonBattleRoom" class="ckBattleRoom"></h3><div id="dungeonPlayers" class="ckBattleParty"></div><div id="dungeonEnemy" class="ckBattleEnemy ckBattleFighter" hidden></div><p id="dungeonIntent" class="ckBattleIntent" hidden></p></section><div class="ckBattleDock">      <p id="dungeonTurn" class="ckDungeonTurn" role="status" aria-live="polite"></p>
       <div id="dungeonActions" class="ckDungeonActions">
         <button type="button" data-dungeon-action="attack"><svg aria-hidden="true" viewBox="0 0 24 24" class="ckActionIcon"><path d="m5 3 5 2 8 8-4 4-8-8-1-6Zm8 15 5-5M12 18l-4 4-3-3 4-4"/></svg><strong>Attack</strong><span id="dungeonAttackInfo"></span></button>
         <button type="button" data-dungeon-action="skill"><svg aria-hidden="true" viewBox="0 0 24 24" class="ckActionIcon"><path d="m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3Z"/></svg><strong>Skill</strong><span id="dungeonSkillInfo"></span></button>
@@ -32,7 +32,7 @@
 <details class="ckPartyDetails ckDungeonCard"><summary id="dungeonRosterTitle">Party details</summary><div id="dungeonRoster" class="ckPartyRoster"></div></details>
       <section class="ckDungeonCard ckDungeonJournal"><h3>Adventure journal</h3><ol id="dungeonLog"></ol></section>
     </div>
-    <footer class="ckDungeonFooter">Cinta Kita v86 · Drop-in co-op dungeon</footer>
+    <footer class="ckDungeonFooter">Cinta Kita v87 · Drop-in co-op dungeon</footer>
   </div>
 </section>
 
@@ -41,5 +41,5 @@
 
 
 
-<script src="./dungeon.js?v=86"></script>
+<script src="./dungeon.js?v=87"></script>
 </body></html>

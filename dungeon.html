@@ -1,6 +1,5 @@
-
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="site-build" content="cinta-kita-dungeon-v82"><title>Goblin Hollow · Cinta Kita v82</title><style>/* Cinta Kita v81: scoped dungeon styles. */
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="site-build" content="cinta-kita-dungeon-v83"><title>Goblin Hollow · Cinta Kita v83</title><style>/* Cinta Kita v83: scoped dungeon styles. */
 .ckDungeon[hidden],.ckDungeon [hidden]{display:none!important}
 .ckDungeon{position:fixed;inset:0;z-index:150;overflow:auto;overscroll-behavior:contain;background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--ui-accent,#b98bbb) 16%,transparent),transparent 70%),var(--ui-surface,#211b29);color:var(--ui-ink,#fff3f8);padding:28px 20px;box-sizing:border-box;text-align:left}
 body.ckDungeonOpen{overflow:hidden}
@@ -56,37 +55,38 @@ body.ckDungeonOpen{overflow:hidden}
 
 :root{--ui-surface:#211b29;--ui-ink:#fff3f8;--ui-accent:#d6aad2;--ui-line:#655466;color-scheme:dark}body{margin:0;background:var(--ui-surface);color:var(--ui-ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.ckGate[hidden]{display:none}.ckGate{max-width:430px;margin:10vh auto;padding:24px}.ckGate h1{font-size:36px;margin:12px 0}.ckGate p{line-height:1.6;opacity:.8}.ckGate label{display:block;margin:16px 0 7px}.ckGate input,.ckGate button{width:100%;box-sizing:border-box;padding:13px;border:1px solid var(--ui-line);border-radius:12px;color:var(--ui-ink);background:#302739;font:inherit}.ckGate button{margin-top:18px;cursor:pointer;background:#614563}.ckGate a{color:var(--ui-accent)}.ckGate input:focus-visible,.ckGate button:focus-visible{outline:3px solid var(--ui-accent);outline-offset:3px}#dungeonSignOut{font-size:13px}#dungeonAuthFeedback{min-height:48px} @media(max-width:480px){.ckGate{margin:5vh 12px;padding:18px}}</style></head><body>
 <main id="mainWebsite">
-<section id="dungeonAuthGate" class="ckGate" aria-labelledby="dungeonGateTitle"><small>CINTA KITA v82 · DUNGEON</small><h1 id="dungeonGateTitle">Goblin Hollow</h1><p>Two adventurers. Three rooms. One goblin king.</p><form id="dungeonLoginForm"><label for="dungeonEmail">Email</label><input id="dungeonEmail" type="email" autocomplete="username" required><label for="dungeonPassword">Password</label><input id="dungeonPassword" type="password" autocomplete="current-password" required><button id="dungeonSignIn" type="submit">Sign in &amp; play</button></form><p id="dungeonAuthFeedback" role="status" aria-live="polite">Checking your Cinta Kita sign-in…</p><a href="./index.html">← Back to Cinta Kita</a></section>
+<section id="dungeonAuthGate" class="ckGate" aria-labelledby="dungeonGateTitle"><small>CINTA KITA v83 · DUNGEON</small><h1 id="dungeonGateTitle">Goblin Hollow</h1><p>Enter a dungeon alone, or join other players already exploring.</p><form id="dungeonLoginForm"><label for="dungeonEmail">Email</label><input id="dungeonEmail" type="email" autocomplete="username" required><label for="dungeonPassword">Password</label><input id="dungeonPassword" type="password" autocomplete="current-password" required><button id="dungeonSignIn" type="submit">Sign in &amp; play</button></form><p id="dungeonAuthFeedback" role="status" aria-live="polite">Checking your Cinta Kita sign-in…</p><a href="./index.html">← Back to Cinta Kita</a></section>
 <section id="dungeonLanding" class="ckGate" hidden><h1>Adventure paused</h1><p>Your saved run is waiting for you.</p><button id="dungeonToggle" type="button" aria-expanded="false" aria-controls="dungeonPanel">Open dungeon</button><p><a href="./index.html">← Back to Cinta Kita</a></p></section>
 <section id="dungeonPanel" class="ckDungeon" role="dialog" aria-modal="true" aria-labelledby="dungeonTitle" hidden>
   <div class="ckDungeonWrap">
-    <header class="ckDungeonHead"><div><small>CINTA KITA · TWO ADVENTURERS</small><h2 id="dungeonTitle">Goblin Hollow</h2><p>A little adventure, together.</p></div><div class="ckDungeonRow"><button id="dungeonSignOut" type="button" hidden>Sign out</button><button id="dungeonClose" type="button">← Website</button></div></header>
+    <header class="ckDungeonHead"><div><small>CINTA KITA · ONLINE DUNGEON</small><h2 id="dungeonTitle">Goblin Hollow</h2><p>Explore alone or team up with other players.</p></div><div class="ckDungeonRow"><button id="dungeonSignOut" type="button" hidden>Sign out</button><button id="dungeonClose" type="button">← Website</button></div></header>
     <p id="dungeonFeedback" class="ckDungeonFeedback" role="status" aria-live="polite"></p>
     <div id="dungeonLobby">
       <div class="ckDungeonGrid">
-        <div class="ckDungeonCard"><h3>Choose your class</h3><label for="dungeonClass">Your adventurer</label><select id="dungeonClass"><option value="knight">Knight · 44 HP · sturdy fighter</option><option value="ranger">Ranger · 36 HP · powerful bow skills</option></select><p>Pick a class when creating or joining a run. Both players may choose the same class.</p><button id="dungeonCreate" type="button">Create an adventure</button></div>
-        <form id="dungeonJoinForm" class="ckDungeonCard"><h3>Join your partner</h3><label for="dungeonCode">Their join code</label><input id="dungeonCode" maxlength="12" minlength="12" pattern="[A-Fa-f0-9]{12}" placeholder="12-character code" autocomplete="off" spellcheck="false" required><p>Sign in to your own account, paste their code, and join.</p><button type="submit">Join adventure</button></form>
+        <div class="ckDungeonCard"><h3>Choose your class</h3><label for="dungeonClass">Your adventurer</label><select id="dungeonClass"><option value="knight">Knight · 44 HP · sword and shield</option><option value="ranger">Ranger · 36 HP · bow and arrows</option></select><p>Choose a class before creating or joining an adventure. You can enter alone, and other players can join at any time.</p><button id="dungeonCreate" type="button">Create an adventure</button></div>
+        <form id="dungeonJoinForm" class="ckDungeonCard"><h3>Join an adventure</h3><label for="dungeonCode">Adventure code</label><input id="dungeonCode" maxlength="12" minlength="12" pattern="[A-Fa-f0-9]{12}" placeholder="12-character code" autocomplete="off" spellcheck="false" required><p>Enter a shared code, or choose an open adventure below.</p><button type="submit">Join adventure</button></form>
       </div>
+      <section class="ckDungeonCard"><h3>Open adventures</h3><p>Join other players, including adventures already in progress.</p><div id="dungeonOpenAdventures"></div></section>
       <section class="ckDungeonCard"><div class="ckDungeonRow"><h3>Your saved adventures</h3><button id="dungeonRefresh" type="button">Refresh</button></div><div id="dungeonSaved"></div></section>
-      <p class="ckDungeonHelp">Three rooms. One goblin king. Each living player takes a turn, then the enemy attacks. Every action saves automatically; you can close this page and resume later.</p>
+      <p class="ckDungeonHelp">Three rooms lead to the Goblin King. Choose an action, then the enemy responds. You can keep playing without waiting for other players. Progress saves after every action.</p>
     </div>
     <div id="dungeonRun" hidden>
       <div class="ckDungeonRow ckDungeonMeta"><button id="dungeonCollection" type="button">← Adventures</button><span id="dungeonRoom"></span><span id="dungeonCoins"></span><span id="dungeonConnection" role="status"></span></div>
-      <div id="dungeonInvite" class="ckDungeonCard"><h3>Invite your partner</h3><div class="ckDungeonRow"><input id="dungeonInviteCode" aria-label="Adventure join code" readonly><button id="dungeonCopy" type="button">Copy code</button></div><p>Your partner opens Dungeon on their own account and enters this code.</p></div>
+      <div id="dungeonInvite" class="ckDungeonCard"><h3>Invite other players</h3><div class="ckDungeonRow"><input id="dungeonInviteCode" aria-label="Adventure join code" readonly><button id="dungeonCopy" type="button">Copy code</button></div><p>Other players can join from the lobby or enter this code on their own account.</p></div>
       <div id="dungeonPlayers" class="ckDungeonPlayers"></div>
       <div id="dungeonEnemy" class="ckDungeonEnemy ckDungeonCard" hidden></div>
       <p id="dungeonTurn" class="ckDungeonTurn" role="status" aria-live="polite"></p>
       <div id="dungeonActions" class="ckDungeonActions">
         <button type="button" data-dungeon-action="attack">⚔ Attack<span id="dungeonAttackInfo"></span></button>
         <button type="button" data-dungeon-action="skill">✦ Skill<span id="dungeonSkillInfo"></span></button>
-        <button type="button" data-dungeon-action="defend">🛡 Defend<span>Halve the next enemy hit</span></button>
+        <button type="button" data-dungeon-action="defend">🛡 Defend<span>Reduce the enemy’s response by half</span></button>
         <button type="button" data-dungeon-action="heal">♥ Heal<span>Restore up to 16 HP · 1 potion</span></button>
-        <button type="button" data-dungeon-action="revive">♡ Revive<span>Restore partner to 12 HP · 1 potion</span></button>
+        <button type="button" data-dungeon-action="revive">♡ Revive<span>Revive a fallen player · 1 potion</span></button>
       </div>
-      <div class="ckDungeonRow ckDungeonContinue"><button id="dungeonStart" type="button" hidden>Enter the dungeon</button><button id="dungeonNext" type="button" hidden>Rest &amp; enter next room</button><button id="dungeonAgain" type="button" hidden>New adventure</button></div>
+      <div class="ckDungeonRow ckDungeonContinue"><button id="dungeonStart" type="button" hidden>Enter the dungeon</button><button id="dungeonNext" type="button" hidden>Rest and continue</button><button id="dungeonAgain" type="button" hidden>New adventure</button></div>
       <section class="ckDungeonCard ckDungeonJournal"><h3>Adventure journal</h3><ol id="dungeonLog"></ol></section>
     </div>
-    <footer class="ckDungeonFooter">Cinta Kita v82 · Basic co-op dungeon</footer>
+    <footer class="ckDungeonFooter">Cinta Kita v83 · Drop-in co-op dungeon</footer>
   </div>
 </section>
 
@@ -143,18 +143,18 @@ function dungeonInitializeAuth(){
   });
 }
 </script>
-<script>/* Cinta Kita v82: authoritative online co-op, placeholder art. */
+<script>/* Cinta Kita v83: authoritative online co-op, placeholder art. */
 (() => {
   'use strict';
   const el=id=>document.getElementById(id), panel=el('dungeonPanel'), toggle=el('dungeonToggle');
   let run=null, channel=null, timer=null, busy=false, loading=false, generation=0, authId=null, lastVersion=-1, lastRunId=null;
-  const statusLabels={lobby:'Waiting for partner',active:'In battle',room_clear:'Room cleared',won:'Dungeon complete',lost:'Defeated'};
+  const statusLabels={lobby:'Ready to enter',active:'In battle',room_clear:'Room cleared',won:'Dungeon complete',lost:'Defeated'};
   const feedback=(message='',error=false)=>{el('dungeonFeedback').textContent=message;el('dungeonFeedback').dataset.error=String(error);};
   const myId=()=>accountUser?.id;
   const node=(tag,content,className)=>{const n=document.createElement(tag);if(content!==undefined)n.textContent=content;if(className)n.className=className;return n;};
   function setBusy(value){busy=value;panel.setAttribute('aria-busy',String(value));render();}
   function errorText(error){
-    if(['42P01','42883','PGRST202','PGRST205'].includes(error?.code))return 'Dungeon setup is not ready yet. Please finish the one-time setup supplied with v81.';
+    if(['42P01','42883','PGRST202','PGRST205'].includes(error?.code))return 'Dungeon setup is not ready yet. Please finish the database update supplied with v83.';
     return error?.message||'Connection interrupted. Please try again.';
   }
   function stopLive(){if(channel){accountClient?.removeChannel(channel);channel=null;}clearInterval(timer);timer=null;}
@@ -187,38 +187,64 @@ function dungeonInitializeAuth(){
       .subscribe(status=>{if(token===generation&&run?.id===id)el('dungeonConnection').textContent=status==='SUBSCRIBED'?'Live · saved automatically':'Syncing…';});
     timer=setInterval(()=>{if(!document.hidden)fetchRun();},4000);
   }
+  function browse(){
+    stopLive();if(panel.hidden||!myId())return;
+    channel=accountClient.channel(`cinta-dungeon-lobby-${myId()}-${generation}`)
+      .on('postgres_changes',{event:'*',schema:'public',table:'cinta_dungeon_runs'},()=>{if(!run&&!busy&&!panel.hidden)saved();}).subscribe();
+    timer=setInterval(()=>{if(!run&&!busy&&!document.hidden)saved();},6000);
+  }
   async function saved(){
     if(!myId()||!accountClient)return;
     const uid=myId(),token=generation;el('dungeonSaved').textContent='Loading saved adventures…';
     try{
-      const {data,error}=await accountClient.from('cinta_dungeon_runs').select('*').contains('members',[uid]).order('updated_at',{ascending:false}).limit(12);
+      const {data,error}=await accountClient.from('cinta_dungeon_runs').select('*').order('updated_at',{ascending:false}).limit(12);
       if(token!==generation||uid!==myId())return;if(error)throw error;
-      const box=el('dungeonSaved');box.replaceChildren();
-      if(!data?.length){box.textContent='Your first adventure starts here.';return;}
-      for(const item of data){
+      const own=el('dungeonSaved'),open=el('dungeonOpenAdventures');own.replaceChildren();open.replaceChildren();
+      for(const item of data||[]){
+        const member=item.members.includes(uid);
+        if(!member&&!['lobby','active','room_clear'].includes(item.status))continue;
         const row=node('div',undefined,'ckDungeonSavedRow'),text=node('div');
-        text.append(node('strong',`${statusLabels[item.status]||'Adventure'} · Room ${item.state.room}/3`),node('small',`${item.state.players.map(p=>p.name).join(' & ')} · ${new Date(item.updated_at).toLocaleString()}`));
-        const button=node('button','Open');button.type='button';button.onclick=()=>{if(busy)return;generation++;apply(item);subscribe();fetchRun();feedback();};row.append(text,button);box.append(row);
+        text.append(node('strong',`${statusLabels[item.status]||'Adventure'} · Room ${item.state.room}/3`),node('small',`${item.state.players.map(p=>p.name).join(', ')} · ${item.members.length} ${item.members.length===1?'player':'players'}`));
+        const button=node('button',member?'Resume':'Join');button.type='button';button.disabled=busy;
+        button.onclick=()=>{
+          if(busy)return;
+          if(!member){rpc('cinta_dungeon_join',{p_code:item.join_code,p_class:el('dungeonClass').value});return;}
+          generation++;apply(item);subscribe();fetchRun();feedback();
+        };
+        row.append(text,button);(member?own:open).append(row);
       }
+      if(!own.childElementCount)own.textContent='You have no saved adventures yet.';
+      if(!open.childElementCount)open.textContent='No open adventures right now. Create one and start exploring.';
     }catch(error){if(token===generation){el('dungeonSaved').textContent='Could not load adventures.';feedback(errorText(error),true);}}
   }
   async function rpc(name,args){
     if(busy||!myId()||!accountClient)return;
     const uid=myId(),token=generation;setBusy(true);feedback();
     try{
-      const {data,error}=await accountClient.rpc(name,args);if(error)throw error;
-      if(token!==generation||uid!==myId())return;
-      const previous=run?.id;apply(Array.isArray(data)?data[0]:data);
+      let response;
+      for(let attempt=0;attempt<3;attempt++){
+        response=await accountClient.rpc(name,args);
+        if(token!==generation||uid!==myId())return;
+        if(!response.error||name!=='cinta_dungeon_command'||!response.error.message?.startsWith('The adventure changed')||attempt===2)break;
+        const fresh=await accountClient.from('cinta_dungeon_runs').select('*').eq('id',args.p_run).maybeSingle();
+        if(token!==generation||uid!==myId())return;
+        if(fresh.error||!fresh.data)break;
+        apply(fresh.data);
+        if((['attack','skill','defend','heal','revive'].includes(args.p_action)&&fresh.data.status!=='active')||(args.p_action==='start'&&fresh.data.status!=='lobby')||(args.p_action==='next'&&fresh.data.status!=='room_clear')){response={data:fresh.data,error:null};break;}
+        args={...args,p_version:fresh.data.version};
+      }
+      if(response.error)throw response.error;
+      const previous=run?.id;apply(Array.isArray(response.data)?response.data[0]:response.data);
       if(run?.id!==previous)subscribe();
     }catch(error){if(token===generation&&uid===myId()){feedback(errorText(error),true);await fetchRun();}}
     finally{if(token===generation)setBusy(false);}
   }
   function healthCard(player,index){
-    const card=node('div',undefined,'ckDungeonPlayer');card.dataset.current=String(run.status==='active'&&run.state.turn===index);card.dataset.down=String(player.hp<=0);
+    const card=node('div',undefined,'ckDungeonPlayer');card.dataset.current=String(run.status==='active'&&player.id===myId());card.dataset.down=String(player.hp<=0);
     card.append(node('span',index===0?'🐈‍⬛':'🐈','ckDungeonAvatar'),node('h3',player.name+(player.id===myId()?' · You':'')),node('p',player.class==='knight'?'Knight · sword & shield':'Ranger · wooden bow'));
     const bar=node('div',undefined,'ckDungeonBar'),fill=node('span');fill.style.width=`${Math.max(0,Math.min(100,100*player.hp/player.max_hp))}%`;bar.append(fill);
     card.append(bar,node('p',`${player.hp} / ${player.max_hp} HP · ${player.potions} potions · ${player.skills} skills`));
-    if(player.hp<=0)card.append(node('p','Down · your partner can revive you'));
+    if(player.hp<=0)card.append(node('p','Down · another player can revive you'));
     else if(player.guard)card.append(node('p','Shield raised · guarding'));
     return card;
   }
@@ -227,45 +253,44 @@ function dungeonInitializeAuth(){
     el('dungeonCreate').disabled=busy;el('dungeonClass').disabled=busy;el('dungeonCode').disabled=busy;
     el('dungeonJoinForm').querySelector('button').disabled=busy;el('dungeonRefresh').disabled=busy;
     if(!run)return;
-    const st=run.state,me=st.players.find(p=>p.id===myId()),partner=st.players.find(p=>p.id!==myId());
-    const mine=run.status==='active'&&st.players[st.turn]?.id===myId()&&me?.hp>0;
-    el('dungeonRoom').textContent=`Room ${st.room} / 3 · ${statusLabels[run.status]}`;
+    const st=run.state,me=st.players.find(p=>p.id===myId()),fallen=st.players.find(p=>p.id!==myId()&&p.hp<=0);
+    const mine=run.status==='active'&&me?.hp>0;
+    el('dungeonRoom').textContent=`Room ${st.room} / 3 · ${statusLabels[run.status]} · ${st.players.length} ${st.players.length===1?'player':'players'}`;
     el('dungeonCoins').textContent=`Party treasure: ${st.coins} coins`;
-    el('dungeonInvite').hidden=run.status!=='lobby';el('dungeonInviteCode').value=run.join_code;
+    el('dungeonInvite').hidden=!['lobby','active','room_clear'].includes(run.status);el('dungeonInviteCode').value=run.join_code;
     const players=el('dungeonPlayers');players.replaceChildren(...st.players.map(healthCard));
-    if(st.players.length<2){const waiting=node('div',undefined,'ckDungeonPlayer');waiting.append(node('span','♡','ckDungeonAvatar'),node('h3','Waiting for your partner'),node('p','Share the code above to team up.'));players.append(waiting);}
     const enemy=el('dungeonEnemy');enemy.hidden=!st.enemy;
     if(st.enemy){
       enemy.replaceChildren(node('span',st.enemy.icon,'ckDungeonAvatar'),node('h3',st.enemy.name));
       const bar=node('div',undefined,'ckDungeonBar'),fill=node('span');fill.style.width=`${100*st.enemy.hp/st.enemy.max_hp}%`;bar.append(fill);enemy.append(bar,node('p',`${st.enemy.hp} / ${st.enemy.max_hp} HP`));
-      if(run.status==='active')enemy.append(node('p',st.room===3&&st.round%3===0?'⚠ Heavy attack next: 12 damage to both players. Defend to reduce it!':`Next attack: ${st.enemy.attack} damage to one adventurer.`));
+      if(run.status==='active')enemy.append(node('p',st.room===3&&st.round%3===0?`⚠ Next response: a heavy attack for ${st.enemy.attack+2} damage to every standing player.`:`Enemy response: ${st.enemy.attack} damage to the player who acts.`));
     }
     const turn=el('dungeonTurn');
-    if(run.status==='lobby')turn.textContent=partner?'Both adventurers are ready. The host can start.':'Waiting for a second adventurer…';
-    else if(run.status==='active')turn.textContent=busy?'Saving your action…':mine?'Your turn · choose an action':`${st.players[st.turn]?.name}'s turn · waiting for your partner`;
-    else if(run.status==='room_clear')turn.textContent='Room cleared! Rest restores 8 HP and one skill charge for each player.';
-    else if(run.status==='won')turn.textContent='You defeated the Goblin King together! 120 party coins earned.';
-    else turn.textContent='Your party fell. A new adventure awaits.';
+    if(run.status==='lobby')turn.textContent='Enter when you are ready. Other players can join while you explore.';
+    else if(run.status==='active')turn.textContent=busy?'Resolving your action…':mine?'Choose an action. The enemy will respond.':'Your character is down. Another player can revive you, or you can start a new adventure.';
+    else if(run.status==='room_clear')turn.textContent='Room cleared. Continue when you are ready; everyone recovers 8 HP and one skill charge.';
+    else if(run.status==='won')turn.textContent='The Goblin King is defeated. Your party earned 120 coins.';
+    else turn.textContent='Your party has fallen. Create a new adventure to try again.';
     el('dungeonActions').hidden=run.status!=='active';
     el('dungeonAttackInfo').textContent=`${me?.class==='knight'?9:8} damage`;
-    el('dungeonSkillInfo').textContent=`${me?.class==='knight'?'Power strike · 15':'Aimed shot · 17'} damage · ${me?.skills||0} left`;
+    el('dungeonSkillInfo').textContent=`${me?.class==='knight'?'Power Strike · 15':'Aimed Shot · 17'} damage · ${me?.skills||0} left`;
     for(const b of panel.querySelectorAll('[data-dungeon-action]')){
-      const action=b.dataset.dungeonAction;b.disabled=busy||!mine||(action==='skill'&&me.skills<=0)||(action==='heal'&&(me.potions<=0||me.hp>=me.max_hp))||(action==='revive'&&(me.potions<=0||!partner||partner.hp>0));
+      const action=b.dataset.dungeonAction;b.disabled=busy||!mine||(action==='skill'&&me.skills<=0)||(action==='heal'&&(me.potions<=0||me.hp>=me.max_hp))||(action==='revive'&&(me.potions<=0||!fallen));
     }
-    el('dungeonStart').hidden=run.status!=='lobby'||run.host_id!==myId();el('dungeonStart').disabled=busy||st.players.length!==2;
-    el('dungeonNext').hidden=run.status!=='room_clear'||run.host_id!==myId();el('dungeonNext').disabled=busy;
-    el('dungeonAgain').hidden=!['won','lost'].includes(run.status);el('dungeonAgain').disabled=busy;
+    el('dungeonStart').hidden=run.status!=='lobby';el('dungeonStart').disabled=busy;
+    el('dungeonNext').hidden=run.status!=='room_clear';el('dungeonNext').disabled=busy;
+    el('dungeonAgain').hidden=!['won','lost'].includes(run.status)&&me?.hp>0;el('dungeonAgain').disabled=busy;
     if(lastVersion!==run.version||lastRunId!==run.id){el('dungeonLog').replaceChildren(...st.log.map(line=>node('li',line)));el('dungeonLog').scrollTop=el('dungeonLog').scrollHeight;lastVersion=run.version;lastRunId=run.id;}
   }
   function syncAuth(){
-    const id=myId()||null;if(id===authId)return;authId=id;generation++;stopLive();run=null;busy=false;lastVersion=-1;lastRunId=null;feedback();render();if(!id)close();else if(!panel.hidden)saved();
+    const id=myId()||null;if(id===authId)return;authId=id;generation++;stopLive();run=null;busy=false;lastVersion=-1;lastRunId=null;feedback();render();if(!id)close();else if(!panel.hidden){saved();browse();}
   }
   async function open(event){
     event?.preventDefault();if(!myId()){openAccount(toggle);return;}
     syncAuth();closePuzzle();closeCalendar();closeMenu();closeActivity();closeUpdates();
     el('dungeonLanding').hidden=true;panel.hidden=false;document.body.classList.add('ckDungeonOpen');toggle.setAttribute('aria-expanded','true');
     history.pushState(null,'','#dungeon');el('dungeonClose').focus();render();
-    if(run){subscribe();fetchRun();}else saved();
+    if(run){subscribe();fetchRun();}else{saved();browse();}
   }
   function close(){
     if(panel.hidden)return;panel.hidden=true;if(myId())el('dungeonLanding').hidden=false;document.body.classList.remove('ckDungeonOpen');toggle.setAttribute('aria-expanded','false');stopLive();
@@ -276,12 +301,12 @@ function dungeonInitializeAuth(){
   el('dungeonJoinForm').onsubmit=e=>{e.preventDefault();rpc('cinta_dungeon_join',{p_code:el('dungeonCode').value.trim().toUpperCase(),p_class:el('dungeonClass').value});};
   el('dungeonCode').addEventListener('input',()=>{el('dungeonCode').value=el('dungeonCode').value.replace(/\s/g,'').toUpperCase();});
   el('dungeonRefresh').onclick=saved;
-  el('dungeonCollection').onclick=()=>{if(busy)return;generation++;stopLive();run=null;render();feedback();saved();};
-  el('dungeonAgain').onclick=()=>{if(busy)return;generation++;stopLive();run=null;render();feedback('Choose a class and create or join your next adventure.');saved();};
+  el('dungeonCollection').onclick=()=>{if(busy)return;generation++;stopLive();run=null;render();feedback();saved();browse();};
+  el('dungeonAgain').onclick=()=>{if(busy)return;generation++;stopLive();run=null;render();feedback('Choose a class, then create or join an adventure.');saved();browse();};
   const command=action=>{if(run)rpc('cinta_dungeon_command',{p_run:run.id,p_action:action,p_version:run.version});};
   el('dungeonStart').onclick=()=>command('start');el('dungeonNext').onclick=()=>command('next');
   for(const b of panel.querySelectorAll('[data-dungeon-action]'))b.onclick=()=>command(b.dataset.dungeonAction);
-  el('dungeonCopy').onclick=async()=>{try{await navigator.clipboard.writeText(el('dungeonInviteCode').value);feedback('Join code copied.');}catch{el('dungeonInviteCode').focus();el('dungeonInviteCode').select();feedback('Select and copy this code to invite your partner.');}};
+  el('dungeonCopy').onclick=async()=>{try{await navigator.clipboard.writeText(el('dungeonInviteCode').value);feedback('Adventure code copied.');}catch{el('dungeonInviteCode').focus();el('dungeonInviteCode').select();feedback('Copy this adventure code to invite another player.');}};
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!panel.hidden)fetchRun();});
   window.addEventListener('online',()=>{if(!panel.hidden)fetchRun();});
   window.addEventListener('popstate',()=>{if(!panel.hidden&&location.hash!=='#dungeon')close();});

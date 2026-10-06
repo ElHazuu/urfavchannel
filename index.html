@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v80">
+<meta name="site-build" content="cinta-kita-v92">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1410,7 +1410,110 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
 #mainWebsite .chatReceipt.isRead{opacity:1;color:var(--message-accent);filter:brightness(1.25)}
 #mainWebsite .chatReceipt svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 #mainWebsite .messageBubble .messageMeta{align-items:center;gap:4px}
-</style></head>
+</style><style>
+/* Cinta Kita v81: scoped dungeon styles. */
+.ckDungeon[hidden],.ckDungeon [hidden]{display:none!important}
+.ckDungeon{position:fixed;inset:0;z-index:150;overflow:auto;overscroll-behavior:contain;background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--ui-accent,#b98bbb) 16%,transparent),transparent 70%),var(--ui-surface,#211b29);color:var(--ui-ink,#fff3f8);padding:28px 20px;box-sizing:border-box;text-align:left}
+body.ckDungeonOpen{overflow:hidden}
+.ckDungeon *{box-sizing:border-box}
+.ckDungeonWrap{max-width:980px;margin:auto}
+.ckDungeonHead,.ckDungeonRow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ckDungeonHead{margin-bottom:20px;align-items:flex-start}
+.ckDungeonHead small{font-size:11px;letter-spacing:.14em;color:var(--ui-accent,#dbabd4)}
+.ckDungeonHead h2{font-size:clamp(30px,6vw,48px);margin:8px 0}
+.ckDungeonHead p,.ckDungeonCard p,.ckDungeonHelp{opacity:.8;line-height:1.6}
+.ckDungeon h3{font-size:19px;margin:0 0 14px}
+.ckDungeon button,.ckDungeon select,.ckDungeon input{font:inherit;color:inherit;border:1px solid var(--ui-line,#736273);border-radius:12px;padding:12px 15px;background:color-mix(in srgb,var(--ui-surface,#211b29) 90%,var(--ui-accent,#b98bbb));max-width:100%}
+.ckDungeon button{cursor:pointer;min-height:44px;transition:background .15s,transform .15s}
+.ckDungeon button:hover:not(:disabled){background:color-mix(in srgb,var(--ui-accent,#b98bbb) 30%,var(--ui-surface,#211b29));transform:translateY(-1px)}
+.ckDungeon button:disabled{opacity:.45;cursor:default}
+.ckDungeon :focus-visible{outline:3px solid var(--ui-accent,#dbabd4);outline-offset:3px}
+.ckDungeon label{display:block;margin:10px 0}
+.ckDungeon select,.ckDungeon input{width:100%}
+.ckDungeon select option{background:var(--ui-surface,#211b29)}
+.ckDungeonGrid,.ckDungeonPlayers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:18px}
+.ckDungeonCard{padding:22px;border:1px solid var(--ui-line,#736273);border-radius:20px;background:color-mix(in srgb,var(--ui-surface,#211b29) 94%,var(--ui-accent,#b98bbb));margin-bottom:16px}
+.ckDungeonGrid .ckDungeonCard{margin-bottom:0}
+.ckDungeonFeedback:empty{display:none}
+.ckDungeonFeedback{padding:12px 16px;border-radius:12px;border:1px solid var(--ui-line,#736273);line-height:1.5}
+.ckDungeonFeedback[data-error="true"]{color:#ffb8bb}
+.ckDungeonMeta{margin-bottom:18px;font-size:14px}
+.ckDungeonPlayer{padding:20px;border:1px solid var(--ui-line,#736273);border-radius:20px;position:relative;background:color-mix(in srgb,var(--ui-surface,#211b29) 92%,var(--ui-accent,#b98bbb))}
+.ckDungeonPlayer[data-current="true"]{outline:2px solid var(--ui-accent,#dbabd4);outline-offset:2px}
+.ckDungeonPlayer[data-down="true"]{opacity:.6}
+.ckDungeonAvatar{display:block;font-size:46px;margin-bottom:8px}
+.ckDungeonPlayer h3{margin:4px 0;overflow-wrap:anywhere}
+.ckDungeonPlayer p{font-size:13px;opacity:.85;margin:8px 0}
+.ckDungeonBar{height:10px;background:#8883;border-radius:20px;overflow:hidden;margin:10px 0}
+.ckDungeonBar span{display:block;height:100%;background:var(--ui-accent,#dbabd4);border-radius:inherit;transition:width .35s ease}
+.ckDungeonEnemy{text-align:center;margin:8px 0 20px;max-width:540px;margin-inline:auto}
+.ckDungeonEnemy .ckDungeonAvatar{font-size:58px}
+.ckDungeonEnemy h3{font-size:25px}
+.ckDungeonEnemy p{margin:8px 0}
+.ckDungeonTurn{text-align:center;font-size:19px;line-height:1.6;font-weight:600;min-height:30px}
+.ckDungeonActions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:18px 0}
+.ckDungeonActions button{font-weight:600;text-align:left;padding:14px 12px}
+.ckDungeonActions span{display:block;font-size:11px;line-height:1.5;font-weight:400;opacity:.8;margin-top:6px}
+.ckDungeonContinue{justify-content:center;margin:20px 0}
+.ckDungeonJournal ol{margin:0;padding-left:22px;max-height:240px;overflow:auto;line-height:1.8;font-size:14px}
+.ckDungeonSavedRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-top:1px solid var(--ui-line,#736273)}
+.ckDungeonSavedRow small{display:block;opacity:.7;margin-top:5px}
+#dungeonInviteCode{max-width:320px;letter-spacing:.14em;font-family:monospace;font-size:19px}
+.ckDungeonFooter{opacity:.55;text-align:center;font-size:12px;margin:30px 0 8px}
+.ckDungeonPulse{animation:ckDungeonPulse .35s ease}
+@keyframes ckDungeonPulse{50%{transform:translateY(-3px)}}
+@media(max-width:640px){.ckDungeon{padding:18px 12px}.ckDungeonGrid{grid-template-columns:1fr}.ckDungeonPlayers{gap:10px}.ckDungeonPlayer{padding:14px}.ckDungeonActions{grid-template-columns:repeat(2,minmax(0,1fr))}.ckDungeonActions button:last-child{grid-column:1/-1}.ckDungeonCard{padding:18px}.ckDungeonHead h2{font-size:32px}}
+@media(prefers-reduced-motion:reduce){.ckDungeon *{animation:none!important;transition:none!important}}
+
+</style>
+<style>
+/* v92: one continuous sunlit shallow ocean, light mode only. */
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] {
+  --scene-bg: radial-gradient(ellipse at 48% -10%, #e0fcf480 0%, transparent 63%),
+    linear-gradient(180deg, #9de5e7 0%, #77d5dc 30%, #58c2ce 68%, #43b2c2 100%);
+  background: var(--scene-bg);
+  background-size: 100% 100vh;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #43b2c2;
+}
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeSection,
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] .contentSection,
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] .storySection,
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] footer {
+  background: transparent !important;
+}
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeSection::before {
+  background: none; opacity: 0;
+}
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] .underseaBackdrop::before {
+  position: fixed; inset: 0; transform: none; opacity: .38;
+  background: linear-gradient(112deg, transparent 8%, #edffef30 22%, transparent 42%),
+    linear-gradient(76deg, transparent 32%, #e9fff43d 48%, transparent 66%);
+  mask-image: linear-gradient(#000 0%, #0009 40%, transparent 90%);
+  animation: none;
+}
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] .underseaBackdrop::after {
+  position: fixed; inset: 0; opacity: .3;
+  background: radial-gradient(ellipse at 20% 20%, #e1fff64d, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, #caffef30, transparent 55%);
+  transform: none; animation: none;
+}
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeGlow {
+  background: transparent; box-shadow: none;
+}
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeSection h1,
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeSection h1 span {
+  color: #103e58; text-shadow: 0 1px 0 #e9ffff60;
+}
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"] footer {
+  color: #184e61; border-color: transparent;
+}
+#mainWebsite[data-wallpaper="underwater"][data-theme="light"][data-page="puzzles"] #puzzlePanel {
+  background: var(--scene-bg); background-size: cover;
+}
+</style>
+</head>
 <body>
   <div id="intro">
     <button id="catButton" type="button" aria-label="Enter the website">
@@ -1507,6 +1610,7 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
           <a href="#videos"><small>02</small>Videos<span>↗</span></a>
           <a href="#story"><small>03</small>Our Story<span>↗</span></a>
 <a id="puzzleToggle" href="#puzzles" aria-expanded="false" aria-controls="puzzlePanel"><small>04</small>Puzzles<span>↗</span></a>
+<a id="dungeonToggle" href="#dungeon" aria-expanded="false" aria-controls="dungeonPanel"><small>06</small>Dungeon<span>↗</span></a>
 <a id="calendarToggle" href="#calendar" aria-expanded="false" aria-controls="calendarPanel"><small>05</small>Calendar<span>↗</span></a>
 
         </div>
@@ -1532,6 +1636,38 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
       <p class="notificationFeedback" id="notificationFeedback" role="status"></p>
       <div id="notificationList"></div>
     </div>
+<section id="dungeonPanel" class="ckDungeon" role="dialog" aria-modal="true" aria-labelledby="dungeonTitle" hidden>
+  <div class="ckDungeonWrap">
+    <header class="ckDungeonHead"><div><small>CINTA KITA · TWO ADVENTURERS</small><h2 id="dungeonTitle">Goblin Hollow</h2><p>A little adventure, together.</p></div><button id="dungeonClose" type="button">← Website</button></header>
+    <p id="dungeonFeedback" class="ckDungeonFeedback" role="status" aria-live="polite"></p>
+    <div id="dungeonLobby">
+      <div class="ckDungeonGrid">
+        <div class="ckDungeonCard"><h3>Choose your class</h3><label for="dungeonClass">Your adventurer</label><select id="dungeonClass"><option value="knight">Knight · 44 HP · sturdy fighter</option><option value="ranger">Ranger · 36 HP · powerful bow skills</option></select><p>Pick a class when creating or joining a run. Both players may choose the same class.</p><button id="dungeonCreate" type="button">Create an adventure</button></div>
+        <form id="dungeonJoinForm" class="ckDungeonCard"><h3>Join your partner</h3><label for="dungeonCode">Their join code</label><input id="dungeonCode" maxlength="12" minlength="12" pattern="[A-Fa-f0-9]{12}" placeholder="12-character code" autocomplete="off" spellcheck="false" required><p>Sign in to your own account, paste their code, and join.</p><button type="submit">Join adventure</button></form>
+      </div>
+      <section class="ckDungeonCard"><div class="ckDungeonRow"><h3>Your saved adventures</h3><button id="dungeonRefresh" type="button">Refresh</button></div><div id="dungeonSaved"></div></section>
+      <p class="ckDungeonHelp">Three rooms. One goblin king. Each living player takes a turn, then the enemy attacks. Every action saves automatically; you can close this page and resume later.</p>
+    </div>
+    <div id="dungeonRun" hidden>
+      <div class="ckDungeonRow ckDungeonMeta"><button id="dungeonCollection" type="button">← Adventures</button><span id="dungeonRoom"></span><span id="dungeonCoins"></span><span id="dungeonConnection" role="status"></span></div>
+      <div id="dungeonInvite" class="ckDungeonCard"><h3>Invite your partner</h3><div class="ckDungeonRow"><input id="dungeonInviteCode" aria-label="Adventure join code" readonly><button id="dungeonCopy" type="button">Copy code</button></div><p>Your partner opens Dungeon on their own account and enters this code.</p></div>
+      <div id="dungeonPlayers" class="ckDungeonPlayers"></div>
+      <div id="dungeonEnemy" class="ckDungeonEnemy ckDungeonCard" hidden></div>
+      <p id="dungeonTurn" class="ckDungeonTurn" role="status" aria-live="polite"></p>
+      <div id="dungeonActions" class="ckDungeonActions">
+        <button type="button" data-dungeon-action="attack">⚔ Attack<span id="dungeonAttackInfo"></span></button>
+        <button type="button" data-dungeon-action="skill">✦ Skill<span id="dungeonSkillInfo"></span></button>
+        <button type="button" data-dungeon-action="defend">🛡 Defend<span>Halve the next enemy hit</span></button>
+        <button type="button" data-dungeon-action="heal">♥ Heal<span>Restore up to 16 HP · 1 potion</span></button>
+        <button type="button" data-dungeon-action="revive">♡ Revive<span>Restore partner to 12 HP · 1 potion</span></button>
+      </div>
+      <div class="ckDungeonRow ckDungeonContinue"><button id="dungeonStart" type="button" hidden>Enter the dungeon</button><button id="dungeonNext" type="button" hidden>Rest &amp; enter next room</button><button id="dungeonAgain" type="button" hidden>New adventure</button></div>
+      <section class="ckDungeonCard ckDungeonJournal"><h3>Adventure journal</h3><ol id="dungeonLog"></ol></section>
+    </div>
+    <footer class="ckDungeonFooter">Cinta Kita v81 · Basic co-op dungeon</footer>
+  </div>
+</section>
+
 <section id="puzzlePanel" class="puzzlePanel" aria-label="Shared puzzles" hidden>
 <header class="puzzleHeading"><div><small>PIECE BY PIECE, TOGETHER</small><h2>Our puzzles</h2></div><button id="puzzleClose" type="button" aria-label="Back to website">← Back to website</button></header>
 <div id="puzzleLibrary"><form id="puzzleCreateForm" class="puzzleCreateForm"><h3>Create a puzzle</h3><label for="puzzleTitle">Name</label><input id="puzzleTitle" maxlength="80" placeholder="A memory together"><label for="puzzlePhoto">Your picture</label><input id="puzzlePhoto" type="file" accept="image/png,image/jpeg,image/webp" required><img id="puzzlePhotoPreview" alt="Your chosen puzzle picture" hidden><label for="puzzleCount">How many pieces?</label><input id="puzzleCount" type="number" min="4" max="1000" step="1" value="48" required><small id="puzzleCountPreview"></small><button id="puzzleCreate" type="submit">Create shared puzzle</button><p>All registered members can join the same puzzle. Your progress saves automatically.</p></form><div class="puzzleCollectionHeading"><h3>Our collection</h3><div><button id="puzzleIncomplete" type="button" aria-pressed="true">Not Completed</button><button id="puzzleCompleted" type="button" aria-pressed="false">Completed</button></div></div><div id="puzzleCollection" class="puzzleCollection"></div></div>
@@ -4674,6 +4810,7 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
       setTimeout(syncMessages, 0);
       setTimeout(syncCalendar, 0);
       setTimeout(syncPuzzles, 0);
+      setTimeout(() => window.cintaDungeon?.syncAuth(), 0);
       if(user)setTimeout(syncPuzzleRoute,0);
     }
     syncSiteLock();
@@ -4989,5 +5126,162 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
       });
     })();
   </script>
+<script>
+/* Cinta Kita v81: authoritative online co-op, placeholder art. */
+(() => {
+  'use strict';
+  const el=id=>document.getElementById(id), panel=el('dungeonPanel'), toggle=el('dungeonToggle');
+  let run=null, channel=null, timer=null, busy=false, loading=false, generation=0, authId=null, lastVersion=-1, lastRunId=null;
+  const statusLabels={lobby:'Waiting for partner',active:'In battle',room_clear:'Room cleared',won:'Dungeon complete',lost:'Defeated'};
+  const feedback=(message='',error=false)=>{el('dungeonFeedback').textContent=message;el('dungeonFeedback').dataset.error=String(error);};
+  const myId=()=>accountUser?.id;
+  const node=(tag,content,className)=>{const n=document.createElement(tag);if(content!==undefined)n.textContent=content;if(className)n.className=className;return n;};
+  function setBusy(value){busy=value;panel.setAttribute('aria-busy',String(value));render();}
+  function errorText(error){
+    if(['42P01','42883','PGRST202','PGRST205'].includes(error?.code))return 'Dungeon setup is not ready yet. Please finish the one-time setup supplied with v81.';
+    return error?.message||'Connection interrupted. Please try again.';
+  }
+  function stopLive(){if(channel){accountClient?.removeChannel(channel);channel=null;}clearInterval(timer);timer=null;}
+  function remember(){try{if(run)localStorage.setItem(`cintaDungeonRun:${myId()}`,run.id);}catch{}}
+  function apply(data){
+    if(!data||!data.members?.includes(myId()))return;
+    if(run?.id===data.id&&Number(data.version)<Number(run.version))return;
+    const changed=run?.id===data.id&&Number(data.version)>Number(run.version);
+    run=data;remember();render();
+    if(changed){el('dungeonPlayers').classList.remove('ckDungeonPulse');requestAnimationFrame(()=>el('dungeonPlayers').classList.add('ckDungeonPulse'));}
+  }
+  async function fetchRun(){
+    if(!run||loading||panel.hidden||!myId())return;
+    const id=run.id,uid=myId(),token=generation;loading=true;
+    try{
+      const {data,error}=await accountClient.from('cinta_dungeon_runs').select('*').eq('id',id).maybeSingle();
+      if(token!==generation||uid!==myId()||run?.id!==id)return;
+      if(error)throw error;
+      if(data){apply(data);el('dungeonConnection').textContent='Synced · saved automatically';}
+      else{stopLive();run=null;render();feedback('This adventure is no longer available.',true);}
+    }catch(error){if(token===generation){el('dungeonConnection').textContent='Reconnecting…';feedback(errorText(error),true);}}
+    finally{loading=false;}
+  }
+  function subscribe(){
+    stopLive();if(!run||panel.hidden)return;
+    const id=run.id,token=generation;
+    el('dungeonConnection').textContent='Connecting…';
+    channel=accountClient.channel(`cinta-dungeon-${id}-${token}`)
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'cinta_dungeon_runs',filter:`id=eq.${id}`},()=>{if(token===generation&&run?.id===id)fetchRun();})
+      .subscribe(status=>{if(token===generation&&run?.id===id)el('dungeonConnection').textContent=status==='SUBSCRIBED'?'Live · saved automatically':'Syncing…';});
+    timer=setInterval(()=>{if(!document.hidden)fetchRun();},4000);
+  }
+  async function saved(){
+    if(!myId()||!accountClient)return;
+    const uid=myId(),token=generation;el('dungeonSaved').textContent='Loading saved adventures…';
+    try{
+      const {data,error}=await accountClient.from('cinta_dungeon_runs').select('*').contains('members',[uid]).order('updated_at',{ascending:false}).limit(12);
+      if(token!==generation||uid!==myId())return;if(error)throw error;
+      const box=el('dungeonSaved');box.replaceChildren();
+      if(!data?.length){box.textContent='Your first adventure starts here.';return;}
+      for(const item of data){
+        const row=node('div',undefined,'ckDungeonSavedRow'),text=node('div');
+        text.append(node('strong',`${statusLabels[item.status]||'Adventure'} · Room ${item.state.room}/3`),node('small',`${item.state.players.map(p=>p.name).join(' & ')} · ${new Date(item.updated_at).toLocaleString()}`));
+        const button=node('button','Open');button.type='button';button.onclick=()=>{if(busy)return;generation++;apply(item);subscribe();fetchRun();feedback();};row.append(text,button);box.append(row);
+      }
+    }catch(error){if(token===generation){el('dungeonSaved').textContent='Could not load adventures.';feedback(errorText(error),true);}}
+  }
+  async function rpc(name,args){
+    if(busy||!myId()||!accountClient)return;
+    const uid=myId(),token=generation;setBusy(true);feedback();
+    try{
+      const {data,error}=await accountClient.rpc(name,args);if(error)throw error;
+      if(token!==generation||uid!==myId())return;
+      const previous=run?.id;apply(Array.isArray(data)?data[0]:data);
+      if(run?.id!==previous)subscribe();
+    }catch(error){if(token===generation&&uid===myId()){feedback(errorText(error),true);await fetchRun();}}
+    finally{if(token===generation)setBusy(false);}
+  }
+  function healthCard(player,index){
+    const card=node('div',undefined,'ckDungeonPlayer');card.dataset.current=String(run.status==='active'&&run.state.turn===index);card.dataset.down=String(player.hp<=0);
+    card.append(node('span',index===0?'🐈‍⬛':'🐈','ckDungeonAvatar'),node('h3',player.name+(player.id===myId()?' · You':'')),node('p',player.class==='knight'?'Knight · sword & shield':'Ranger · wooden bow'));
+    const bar=node('div',undefined,'ckDungeonBar'),fill=node('span');fill.style.width=`${Math.max(0,Math.min(100,100*player.hp/player.max_hp))}%`;bar.append(fill);
+    card.append(bar,node('p',`${player.hp} / ${player.max_hp} HP · ${player.potions} potions · ${player.skills} skills`));
+    if(player.hp<=0)card.append(node('p','Down · your partner can revive you'));
+    else if(player.guard)card.append(node('p','Shield raised · guarding'));
+    return card;
+  }
+  function render(){
+    el('dungeonLobby').hidden=!!run;el('dungeonRun').hidden=!run;
+    el('dungeonCreate').disabled=busy;el('dungeonClass').disabled=busy;el('dungeonCode').disabled=busy;
+    el('dungeonJoinForm').querySelector('button').disabled=busy;el('dungeonRefresh').disabled=busy;
+    if(!run)return;
+    const st=run.state,me=st.players.find(p=>p.id===myId()),partner=st.players.find(p=>p.id!==myId());
+    const mine=run.status==='active'&&st.players[st.turn]?.id===myId()&&me?.hp>0;
+    el('dungeonRoom').textContent=`Room ${st.room} / 3 · ${statusLabels[run.status]}`;
+    el('dungeonCoins').textContent=`Party treasure: ${st.coins} coins`;
+    el('dungeonInvite').hidden=run.status!=='lobby';el('dungeonInviteCode').value=run.join_code;
+    const players=el('dungeonPlayers');players.replaceChildren(...st.players.map(healthCard));
+    if(st.players.length<2){const waiting=node('div',undefined,'ckDungeonPlayer');waiting.append(node('span','♡','ckDungeonAvatar'),node('h3','Waiting for your partner'),node('p','Share the code above to team up.'));players.append(waiting);}
+    const enemy=el('dungeonEnemy');enemy.hidden=!st.enemy;
+    if(st.enemy){
+      enemy.replaceChildren(node('span',st.enemy.icon,'ckDungeonAvatar'),node('h3',st.enemy.name));
+      const bar=node('div',undefined,'ckDungeonBar'),fill=node('span');fill.style.width=`${100*st.enemy.hp/st.enemy.max_hp}%`;bar.append(fill);enemy.append(bar,node('p',`${st.enemy.hp} / ${st.enemy.max_hp} HP`));
+      if(run.status==='active')enemy.append(node('p',st.room===3&&st.round%3===0?'⚠ Heavy attack next: 12 damage to both players. Defend to reduce it!':`Next attack: ${st.enemy.attack} damage to one adventurer.`));
+    }
+    const turn=el('dungeonTurn');
+    if(run.status==='lobby')turn.textContent=partner?'Both adventurers are ready. The host can start.':'Waiting for a second adventurer…';
+    else if(run.status==='active')turn.textContent=busy?'Saving your action…':mine?'Your turn · choose an action':`${st.players[st.turn]?.name}'s turn · waiting for your partner`;
+    else if(run.status==='room_clear')turn.textContent='Room cleared! Rest restores 8 HP and one skill charge for each player.';
+    else if(run.status==='won')turn.textContent='You defeated the Goblin King together! 120 party coins earned.';
+    else turn.textContent='Your party fell. A new adventure awaits.';
+    el('dungeonActions').hidden=run.status!=='active';
+    el('dungeonAttackInfo').textContent=`${me?.class==='knight'?9:8} damage`;
+    el('dungeonSkillInfo').textContent=`${me?.class==='knight'?'Power strike · 15':'Aimed shot · 17'} damage · ${me?.skills||0} left`;
+    for(const b of panel.querySelectorAll('[data-dungeon-action]')){
+      const action=b.dataset.dungeonAction;b.disabled=busy||!mine||(action==='skill'&&me.skills<=0)||(action==='heal'&&(me.potions<=0||me.hp>=me.max_hp))||(action==='revive'&&(me.potions<=0||!partner||partner.hp>0));
+    }
+    el('dungeonStart').hidden=run.status!=='lobby'||run.host_id!==myId();el('dungeonStart').disabled=busy||st.players.length!==2;
+    el('dungeonNext').hidden=run.status!=='room_clear'||run.host_id!==myId();el('dungeonNext').disabled=busy;
+    el('dungeonAgain').hidden=!['won','lost'].includes(run.status);el('dungeonAgain').disabled=busy;
+    if(lastVersion!==run.version||lastRunId!==run.id){el('dungeonLog').replaceChildren(...st.log.map(line=>node('li',line)));el('dungeonLog').scrollTop=el('dungeonLog').scrollHeight;lastVersion=run.version;lastRunId=run.id;}
+  }
+  function syncAuth(){
+    const id=myId()||null;if(id===authId)return;authId=id;generation++;stopLive();run=null;busy=false;lastVersion=-1;lastRunId=null;feedback();render();if(!id)close();else if(!panel.hidden)saved();
+  }
+  async function open(event){
+    event?.preventDefault();if(!myId()){openAccount(toggle);return;}
+    syncAuth();closePuzzle();closeCalendar();closeMenu();closeActivity();closeUpdates();
+    panel.hidden=false;document.body.classList.add('ckDungeonOpen');toggle.setAttribute('aria-expanded','true');
+    history.pushState(null,'','#dungeon');el('dungeonClose').focus();render();
+    if(run){subscribe();fetchRun();}else saved();
+  }
+  function close(){
+    if(panel.hidden)return;panel.hidden=true;document.body.classList.remove('ckDungeonOpen');toggle.setAttribute('aria-expanded','false');stopLive();
+    if(location.hash==='#dungeon')history.replaceState(null,'',mainWebsite.dataset.wallpaper==='berserk'?'#berserk':'#home');toggle.focus();
+  }
+  toggle.addEventListener('click',open);el('dungeonClose').onclick=close;
+  el('dungeonCreate').onclick=()=>rpc('cinta_dungeon_create',{p_class:el('dungeonClass').value});
+  el('dungeonJoinForm').onsubmit=e=>{e.preventDefault();rpc('cinta_dungeon_join',{p_code:el('dungeonCode').value.trim().toUpperCase(),p_class:el('dungeonClass').value});};
+  el('dungeonCode').addEventListener('input',()=>{el('dungeonCode').value=el('dungeonCode').value.replace(/\s/g,'').toUpperCase();});
+  el('dungeonRefresh').onclick=saved;
+  el('dungeonCollection').onclick=()=>{if(busy)return;generation++;stopLive();run=null;render();feedback();saved();};
+  el('dungeonAgain').onclick=()=>{if(busy)return;generation++;stopLive();run=null;render();feedback('Choose a class and create or join your next adventure.');saved();};
+  const command=action=>{if(run)rpc('cinta_dungeon_command',{p_run:run.id,p_action:action,p_version:run.version});};
+  el('dungeonStart').onclick=()=>command('start');el('dungeonNext').onclick=()=>command('next');
+  for(const b of panel.querySelectorAll('[data-dungeon-action]'))b.onclick=()=>command(b.dataset.dungeonAction);
+  el('dungeonCopy').onclick=async()=>{try{await navigator.clipboard.writeText(el('dungeonInviteCode').value);feedback('Join code copied.');}catch{el('dungeonInviteCode').focus();el('dungeonInviteCode').select();feedback('Select and copy this code to invite your partner.');}};
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!panel.hidden)fetchRun();});
+  window.addEventListener('online',()=>{if(!panel.hidden)fetchRun();});
+  window.addEventListener('popstate',()=>{if(!panel.hidden&&location.hash!=='#dungeon')close();});
+  document.addEventListener('keydown',event=>{
+    if(panel.hidden)return;
+    if(event.key==='Escape'){event.preventDefault();close();}
+    if(event.key==='Tab'){
+      const focusable=[...panel.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),[tabindex="0"]')].filter(n=>n.getClientRects().length);
+      const first=focusable[0],last=focusable[focusable.length-1];
+      if(event.shiftKey&&(document.activeElement===first||!panel.contains(document.activeElement))){event.preventDefault();last?.focus();}
+      else if(!event.shiftKey&&(document.activeElement===last||!panel.contains(document.activeElement))){event.preventDefault();first?.focus();}
+    }
+  });
+  window.cintaDungeon={syncAuth,close};syncAuth();
+})();
+
+</script>
 </body>
 </html>

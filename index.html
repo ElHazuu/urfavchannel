@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v98">
+<meta name="site-build" content="cinta-kita-v99">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1494,6 +1494,11 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
 #mainWebsite[data-wallpaper="original"] .storySection,
 #mainWebsite[data-wallpaper="original"] footer {background:transparent!important}
 #mainWebsite[data-wallpaper="original"] footer{border-top:0}
+</style><style>
+.ownerThemeChoices{display:flex;gap:6px;margin-top:10px}
+#mainWebsite .ownerThemeChoices button{flex:1;padding:8px 5px;border-radius:9px;border:1px solid var(--ui-line);background:var(--ui-surface);color:var(--ui-ink);font:inherit;cursor:pointer}
+#mainWebsite .ownerThemeChoices button[aria-pressed="true"]{background:color-mix(in srgb,var(--ui-accent) 30%,var(--ui-surface));border-color:var(--ui-accent)}
+#mainWebsite .wallpaperPanel{max-height:calc(100dvh - 140px);overflow-y:auto;overscroll-behavior:contain}
 </style></head>
 <body>
   <div id="intro">
@@ -5087,8 +5092,10 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
  const toggle=document.createElement('button');toggle.type='button';toggle.className='seasonToggle';toggle.setAttribute('role','switch');settings.append(toggle);picker.append(settings);
  const ownerId='7a5e0845-24be-4ac0-b881-6aff2a8332f5';let preview='auto';
  const ownerControls=document.createElement('div');ownerControls.hidden=true;ownerControls.innerHTML='<label for="ownerSeasonPreview">Owner · event preview</label><select id="ownerSeasonPreview"><option value="auto">Current event · automatic</option><option value="none">Normal wallpaper</option><option value="halloween">Halloween</option><option value="christmas">Christmas</option><option value="newyear">New Year</option><option value="indonesia">Hari Kemerdekaan</option><option value="kartini">Hari Kartini</option></select>';settings.append(ownerControls);const previewSelect=ownerControls.querySelector('select');previewSelect.onchange=()=>{if(accountUser?.id!==ownerId){preview='auto';previewSelect.value=preview;return;}preview=previewSelect.value;apply();};
+ const appearance=document.createElement('div');appearance.className='ownerThemeChoices';appearance.setAttribute('role','group');appearance.setAttribute('aria-label','Preview appearance');
+ for(const theme of ['light','dark']){const button=document.createElement('button');button.type='button';button.dataset.ownerTheme=theme;button.textContent=theme==='light'?'☼ Light mode':'☾ Dark mode';button.onclick=()=>{if(accountUser?.id!==ownerId)return;if(site.dataset.theme!==theme)document.getElementById('themeMode').click();apply();};appearance.append(button);}ownerControls.append(appearance);
  const effects=document.createElement('div');effects.id='seasonEffects';effects.setAttribute('aria-hidden','true');effects.hidden=true;site.append(effects);let last='';
- function apply(){const owner=accountUser?.id===ownerId;if(!owner){preview='auto';previewSelect.value='auto';}ownerControls.hidden=!owner;const ongoing=seasonAt(new Date(),zone),selected=owner&&preview!=='auto'?preview:ongoing,season=enabled?selected:'none';settings.hidden=!owner&&ongoing==='none';toggle.textContent=enabled?'On':'Off';toggle.setAttribute('aria-checked',String(enabled));toggle.setAttribute('aria-label',selected==='none'?'Seasonal effects':definitions[selected]?.name+' effects');toggle.title=selected==='none'?'':definitions[selected].name;site.dataset.season=season;const puzzle=site.dataset.page==='puzzles',parent=puzzle?document.getElementById('puzzlePanel'):site;if(effects.parentElement!==parent)parent.append(effects);const wallpaper=site.dataset.wallpaper||'original',key=season+':'+wallpaper;effects.hidden=season==='none'||!site.classList.contains('show');
+ function apply(){const owner=accountUser?.id===ownerId;if(!owner){preview='auto';previewSelect.value='auto';}ownerControls.hidden=!owner;for(const button of appearance.children)button.setAttribute('aria-pressed',String(button.dataset.ownerTheme===site.dataset.theme));const ongoing=seasonAt(new Date(),zone),selected=owner&&preview!=='auto'?preview:ongoing,season=enabled?selected:'none';settings.hidden=!owner&&ongoing==='none';toggle.textContent=enabled?'On':'Off';toggle.setAttribute('aria-checked',String(enabled));toggle.setAttribute('aria-label',selected==='none'?'Seasonal effects':definitions[selected]?.name+' effects');toggle.title=selected==='none'?'':definitions[selected].name;site.dataset.season=season;const puzzle=site.dataset.page==='puzzles',parent=puzzle?document.getElementById('puzzlePanel'):site;if(effects.parentElement!==parent)parent.append(effects);const wallpaper=site.dataset.wallpaper||'original',key=season+':'+wallpaper;effects.hidden=season==='none'||!site.classList.contains('show');
  if(key===last)return;last=key;effects.replaceChildren();if(season==='none')return;const def=definitions[season],berserk=wallpaper==='berserk';for(let i=0;i<18;i++){const particle=document.createElement('span');particle.className='seasonParticle';const symbol=berserk?(season==='christmas'?'·':'✦'):def.symbols[i%def.symbols.length];if(symbol==='flag'){const flag=document.createElement('i');flag.className='seasonFlag';particle.append(flag);}else particle.textContent=symbol;particle.style.setProperty('--x',((i*47+11)%100)+'%');particle.style.setProperty('--size',(berserk?5:9+i%5*2)+'px');particle.style.setProperty('--duration',(18+i%7*3)+'s');particle.style.setProperty('--delay',(-i*2.7)+'s');particle.style.setProperty('--drift',((i%2?1:-1)*(12+i%4*9))+'px');effects.append(particle);}if(!berserk)for(const x of ['3%','94%']){const decor=document.createElement('span');decor.className='seasonDecor';decor.style.setProperty('--x',x);if(def.decor==='flag'){decor.classList.add('seasonFlag');}else decor.textContent=def.decor;effects.append(decor);}}
  toggle.onclick=()=>{if(!accountUser)return;enabled=!enabled;try{localStorage.setItem('cintaSeasonEnabled',String(enabled));}catch{}apply();};
  new MutationObserver(apply).observe(site,{attributes:true,attributeFilter:['data-wallpaper','data-theme','data-page','class']});

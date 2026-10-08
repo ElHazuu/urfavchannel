@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v104">
+<meta name="site-build" content="cinta-kita-v105">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1699,6 +1699,29 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
 @keyframes independenceFlagWave{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
 @media(max-width:620px){#mainWebsite[data-season="indonesia"] .siteMenu>.seasonMenuBanner{display:flex!important;flex-direction:column!important;align-items:flex-start!important;min-height:260px!important;padding:20px!important}#mainWebsite[data-season="indonesia"] .eventIllustration{width:95px!important;margin-top:auto!important}#mainWebsite[data-season="indonesia"] .seasonMenuBanner strong{font-size:32px!important}.independenceBunting{top:74px}}
 @media(prefers-reduced-motion:reduce){.independenceBunting .seasonFlag{animation:none}}
+
+
+/* v105 strict flag palette, scoped to Independence Day only. */
+#mainWebsite[data-season="indonesia"]{--flag-surface:#a50f20;--flag-text:#fff;--flag-field:#8c0d1b;--flag-line:#ffffff70;--flag-accent:#fff;--theme-bg:var(--flag-surface)!important;--scene-bg:var(--flag-surface)!important;--theme-surface:var(--flag-surface)!important;--scene-surface:var(--flag-surface)!important;--ui-surface:var(--flag-surface)!important;--ui-field:var(--flag-field)!important;--theme-text:var(--flag-text)!important;--theme-muted:var(--flag-text)!important;--ui-ink:var(--flag-text)!important;--theme-line:var(--flag-line)!important;--ui-line:var(--flag-line)!important}
+#mainWebsite[data-season="indonesia"][data-theme="light"]{--flag-surface:#fff;--flag-text:#b30e22;--flag-field:#fff;--flag-line:#b30e2266;--flag-accent:#b30e22}
+#mainWebsite[data-season="indonesia"] :is(h1,h2,h3,h4,h5,h6,p,label,small,strong,blockquote,figcaption,summary,a,button,input,textarea,select){color:var(--flag-text)!important;text-shadow:none!important}
+#mainWebsite[data-season="indonesia"] :is(.siteMenu,.menuTaskbar,.activityPanel,.notificationPanel,.calendarPanel,.messagePanel,.profileCard,.accountCard,.wallpaperPanel,.puzzleCard,.puzzleMusicPopover,#puzzleWallpaperPicker,.coralMessageCard,.themePanel,.videoCard,.storyCard){background:var(--flag-surface)!important;color:var(--flag-text)!important;border-color:var(--flag-line)!important}
+#mainWebsite[data-season="indonesia"] :is(button,input,textarea,select,.menuLinks a){background-color:var(--flag-field)!important;background-image:none!important;color:var(--flag-text)!important;border-color:var(--flag-line)!important}
+#mainWebsite[data-season="indonesia"] :is(button,a):hover{outline-color:var(--flag-text);box-shadow:0 0 0 1px var(--flag-text)}
+#mainWebsite[data-season="indonesia"] :is(input,textarea)::placeholder{color:var(--flag-text)!important;opacity:.75}
+#mainWebsite[data-season="indonesia"] :is(.taskbarGlyph,.menuLinks a small,.messageTime,.messageChecks,.messageReaction,.messageBadge,.puzzleBadge){color:var(--flag-text)!important}
+#mainWebsite[data-season="indonesia"] :is(.messageBubble,.messageText,.messageComposer,.messageComposer textarea,.reactionPicker,.profileDescription){background-color:var(--flag-field)!important;color:var(--flag-text)!important;border-color:var(--flag-line)!important}
+#mainWebsite[data-season="indonesia"] .seasonMenuBanner :is(strong,small){color:#fff!important}
+#mainWebsite[data-season="indonesia"] .seasonMenuBanner{background:linear-gradient(to bottom,#cf1829 0 50%,#fff 50% 100%)!important}
+#mainWebsite[data-season="indonesia"] .eventIllustration{color:#cf1829!important}
+#mainWebsite[data-season="indonesia"] :is(.themeMode,.themeButton,#themeMode,#themeButton,#puzzleThemeToggle,.seasonToggle,.ownerThemeChoices button){background:var(--flag-field)!important;color:var(--flag-text)!important;border-color:var(--flag-text)!important}
+body:has(#mainWebsite[data-season="indonesia"]){--overlay-surface:#a50f20!important;--overlay-accent:#fff!important;--overlay-ink:#fff!important;--account-surface:#a50f20!important;--account-ink:#fff!important;--profile-field:#8c0d1b!important;--profile-ink:#fff!important}
+body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]){--overlay-surface:#fff!important;--overlay-accent:#b30e22!important;--overlay-ink:#b30e22!important;--account-surface:#fff!important;--account-ink:#b30e22!important;--profile-field:#fff!important;--profile-ink:#b30e22!important}
+body:has(#mainWebsite[data-season="indonesia"]) :is(.accountDialog,.profileDialog,.profileUnsavedDialog,.coralMessageDialog){--flag-surface:#a50f20;--flag-text:#fff;--flag-field:#8c0d1b;--flag-line:#ffffff70;--account-surface:var(--flag-surface)!important;--account-ink:var(--flag-text)!important;--profile-field:var(--flag-field)!important;--profile-ink:var(--flag-text)!important}
+body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.accountDialog,.profileDialog,.profileUnsavedDialog,.coralMessageDialog){--flag-surface:#fff;--flag-text:#b30e22;--flag-field:#fff;--flag-line:#b30e2266}
+body:has(#mainWebsite[data-season="indonesia"]) :is(.accountCard,.profileCard,.profileUnsavedCard,.coralMessageCard){background:var(--flag-surface,var(--overlay-surface))!important;border-color:var(--flag-line)!important;color:var(--flag-text,var(--overlay-ink))!important}
+body:has(#mainWebsite[data-season="indonesia"]) :is(.accountCard,.profileCard,.profileUnsavedCard,.coralMessageCard) :is(h1,h2,h3,p,strong,small,label,a,button,input,textarea,select){color:var(--flag-text,var(--overlay-ink))!important;text-shadow:none!important}
+body:has(#mainWebsite[data-season="indonesia"]) :is(.accountCard,.profileCard,.profileUnsavedCard,.coralMessageCard) :is(button,input,textarea,select){background:var(--flag-field,var(--overlay-surface))!important;border-color:var(--flag-line)!important}
 
 </style></head>
 <body>

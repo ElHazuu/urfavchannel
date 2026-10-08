@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v99">
+<meta name="site-build" content="cinta-kita-v100">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1499,6 +1499,52 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
 #mainWebsite .ownerThemeChoices button{flex:1;padding:8px 5px;border-radius:9px;border:1px solid var(--ui-line);background:var(--ui-surface);color:var(--ui-ink);font:inherit;cursor:pointer}
 #mainWebsite .ownerThemeChoices button[aria-pressed="true"]{background:color-mix(in srgb,var(--ui-accent) 30%,var(--ui-surface));border-color:var(--ui-accent)}
 #mainWebsite .wallpaperPanel{max-height:calc(100dvh - 140px);overflow-y:auto;overscroll-behavior:contain}
+</style><style>
+/* v100: theme controls visibly follow both appearance modes in every scene. */
+#mainWebsite[data-theme="light"] {
+ --mode-control-bg:color-mix(in srgb,var(--ui-accent) 12%,#f7f8f5);
+ --mode-control-active:color-mix(in srgb,var(--ui-accent) 40%,#f7f8f5);
+ --mode-control-ink:#183039;
+ --mode-control-line:color-mix(in srgb,var(--ui-accent) 52%,#4b6066);
+}
+#mainWebsite[data-theme="dark"] {
+ --mode-control-bg:color-mix(in srgb,var(--ui-accent) 10%,#10171e);
+ --mode-control-active:color-mix(in srgb,var(--ui-accent) 28%,#10171e);
+ --mode-control-ink:#f1f5f6;
+ --mode-control-line:color-mix(in srgb,var(--ui-accent) 65%,#35444d);
+}
+#mainWebsite[data-wallpaper="berserk"][data-theme="light"]{--mode-control-ink:#3c171b}
+#mainWebsite .ownerThemeChoices button,
+#mainWebsite .themeMode,
+#mainWebsite .themeButton,
+#mainWebsite #puzzleThemeToggle,
+#mainWebsite .seasonToggle {
+ background:var(--mode-control-bg)!important;
+ color:var(--mode-control-ink)!important;
+ border:1px solid var(--mode-control-line)!important;
+ box-shadow:0 2px 7px #0002;
+}
+#mainWebsite .ownerThemeChoices button[aria-pressed="true"],
+#mainWebsite .themeMode[aria-checked="true"],
+#mainWebsite .seasonToggle[aria-checked="true"] {
+ background:var(--mode-control-active)!important;
+ border-color:var(--ui-accent)!important;
+}
+#mainWebsite .themeMode::after {
+ background:var(--mode-control-ink)!important;
+ box-shadow:none!important;
+}
+#mainWebsite .ownerThemeChoices button:hover,
+#mainWebsite .themeMode:hover,
+#mainWebsite .themeButton:hover,
+#mainWebsite #puzzleThemeToggle:hover {
+ background:var(--mode-control-active)!important;
+}
+#mainWebsite .ownerThemeChoices button:focus-visible,
+#mainWebsite .themeMode:focus-visible,
+#mainWebsite #puzzleThemeToggle:focus-visible {
+ outline:2px solid var(--ui-accent);outline-offset:3px;
+}
 </style></head>
 <body>
   <div id="intro">

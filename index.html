@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v102">
+<meta name="site-build" content="cinta-kita-v103">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1630,6 +1630,69 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
 #mainWebsite[data-season]:not([data-season="none"]) .puzzleCard{padding:9px;border:1px solid var(--ui-line);background:color-mix(in srgb,var(--season-accent) 5%,var(--ui-surface))}
 #mainWebsite[data-season]:not([data-season="none"]) .profileCard{border-top:3px solid var(--season-accent)!important}
 @media(max-width:620px){#mainWebsite[data-season]:not([data-season="none"]) .siteMenu{padding:13px;max-height:calc(100dvh - 100px)}#mainWebsite[data-season]:not([data-season="none"]) .menuLinks{grid-template-columns:1fr;gap:6px}#mainWebsite[data-season]:not([data-season="none"]) .menuLinks a{min-height:42px;padding:10px 12px}#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner{padding:13px 10px;gap:9px}#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner .seasonMenuIcon{font-size:25px;width:42px;height:42px}#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner strong{font-size:22px}}
+
+/* v103: five event compositions; original controls stay in place with their listeners. */
+#mainWebsite[data-season]:not([data-season="none"]) .siteMenu{width:min(860px,calc(100vw - 32px))!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:26px!important;isolation:isolate}
+#mainWebsite[data-season]:not([data-season="none"]) .siteMenu> .menuPanelHead{grid-column:1/-1;margin:0;padding-bottom:12px;border-bottom:1px solid var(--ui-line)}
+#mainWebsite[data-season]:not([data-season="none"]) .siteMenu> .seasonMenuBanner{grid-column:1;grid-row:2 / span 2;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;margin:0;min-height:285px;padding:24px!important}
+#mainWebsite[data-season]:not([data-season="none"]) .siteMenu> .menuLinks{grid-column:2;grid-row:2;display:grid;margin:0;gap:10px}
+#mainWebsite[data-season]:not([data-season="none"]) .siteMenu>button{margin:0;min-width:0;width:100%;align-self:stretch}
+#mainWebsite[data-season]:not([data-season="none"]) .siteMenu>#backToIntro{grid-column:1/-1}
+#mainWebsite[data-season]:not([data-season="none"]) .eventIllustration{width:min(190px,100%);align-self:center;color:var(--season-accent);margin-top:18px}
+.eventIllustration svg{display:block;width:100%;height:auto}
+#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner strong{font-size:clamp(30px,4vw,46px)!important;display:block;overflow-wrap:anywhere}
+#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuIcon{display:none!important}
+#mainWebsite[data-season]:not([data-season="none"]) .menuZone.open .siteMenu{display:grid!important}
+/* Haunted noticeboard: asymmetric tickets and a moonlit illustration. */
+#mainWebsite[data-season="halloween"] .siteMenu{grid-template-columns:1.1fr 1fr;border-radius:4px!important;box-shadow:0 20px 70px #0005,inset 0 0 0 7px color-mix(in srgb,var(--season-accent) 16%,transparent)}
+#mainWebsite[data-season="halloween"] .seasonMenuBanner{border:0!important;background:radial-gradient(circle at 70% 20%,color-mix(in srgb,var(--season-accent) 20%,transparent),transparent 60%)!important}
+#mainWebsite[data-season="halloween"] .menuLinks{grid-template-columns:1fr!important;padding:8px}
+#mainWebsite[data-season="halloween"] .menuLinks a{min-height:57px!important;border-radius:2px!important;transform:rotate(-2deg)}
+#mainWebsite[data-season="halloween"] .menuLinks a:nth-child(even){transform:rotate(2deg)}
+#mainWebsite[data-season="halloween"] .menuLinks a:hover{transform:rotate(0deg) translateX(3px)}
+/* Gift box: centred tree card above a ribbon-crossed navigation grid. */
+#mainWebsite[data-season="christmas"] .siteMenu{grid-template-columns:repeat(3,minmax(0,1fr));border-radius:28px!important}
+#mainWebsite[data-season="christmas"] .siteMenu>.seasonMenuBanner{grid-column:1/-1;grid-row:2;min-height:150px;display:grid;grid-template-columns:1fr 155px;align-items:center;background:linear-gradient(90deg,transparent 48%,color-mix(in srgb,var(--season-accent) 15%,transparent) 48% 52%,transparent 52%)!important}
+#mainWebsite[data-season="christmas"] .eventIllustration{margin:0;width:150px}
+#mainWebsite[data-season="christmas"] .siteMenu>.menuLinks{grid-column:1/-1;grid-row:3;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+#mainWebsite[data-season="christmas"] .menuLinks a{min-height:92px!important;flex-direction:column;align-items:flex-start;border:1px solid var(--ui-line)!important;background:linear-gradient(90deg,transparent 45%,color-mix(in srgb,var(--season-accent) 12%,transparent) 45% 55%,transparent 55%),var(--ui-surface)!important}
+#mainWebsite[data-season="christmas"] .menuLinks a:last-child{grid-column:span 2}
+/* Midnight poster: tall typographic masthead and horizontal feature tiles. */
+#mainWebsite[data-season="newyear"] .siteMenu{grid-template-columns:repeat(2,minmax(0,1fr));border-radius:0!important;border:4px double var(--season-accent)!important}
+#mainWebsite[data-season="newyear"] .siteMenu>.seasonMenuBanner{grid-column:1/-1;grid-row:2;min-height:165px;flex-direction:row;align-items:center;text-align:left;border:0;border-bottom:3px double var(--season-accent)!important}
+#mainWebsite[data-season="newyear"] .seasonMenuBanner strong{font-size:clamp(36px,6vw,64px)!important;text-transform:uppercase;letter-spacing:-.055em;max-width:7ch}
+#mainWebsite[data-season="newyear"] .eventIllustration{width:150px;margin:0}
+#mainWebsite[data-season="newyear"] .siteMenu>.menuLinks{grid-column:1/-1;grid-row:3;grid-template-columns:repeat(5,minmax(0,1fr))!important}
+#mainWebsite[data-season="newyear"] .menuLinks a{grid-column:auto!important;min-height:106px!important;flex-direction:column;align-items:flex-start;justify-content:space-between;border-radius:0!important;font-size:14px}
+/* Independence: a flag masthead beside bold stacked navigation. */
+#mainWebsite[data-season="indonesia"] .siteMenu{grid-template-columns:1fr 1.4fr;border-radius:0!important;border-top:9px solid #c64049!important;border-bottom:9px solid #efe5df!important}
+#mainWebsite[data-season="indonesia"] .siteMenu>.seasonMenuBanner{border:0!important;box-shadow:none!important;background:linear-gradient(180deg,#c6404922 50%,#efe5df15 50%)!important}
+#mainWebsite[data-season="indonesia"] .siteMenu>.menuLinks{grid-template-columns:1fr!important;gap:0}
+#mainWebsite[data-season="indonesia"] .menuLinks a{border-radius:0!important;border:0!important;border-bottom:1px solid var(--ui-line)!important;min-height:62px!important;font-weight:700;font-size:20px!important;box-shadow:none}
+#mainWebsite[data-season="indonesia"] .menuLinks a small{font-size:20px;background:transparent!important;width:38px}
+/* Kartini: editorial book spread, oversized chapter numbers and a paper margin. */
+#mainWebsite[data-season="kartini"] .siteMenu{grid-template-columns:1fr 1.3fr;border-radius:3px!important;gap:24px;border-left:12px double var(--season-accent)!important}
+#mainWebsite[data-season="kartini"] .siteMenu>.seasonMenuBanner{border:0!important;box-shadow:none!important;border-right:1px solid var(--ui-line)!important;border-radius:0!important;background:transparent!important}
+#mainWebsite[data-season="kartini"] .seasonMenuBanner strong{font-style:italic;font-weight:500;line-height:1.05}
+#mainWebsite[data-season="kartini"] .siteMenu>.menuLinks{grid-template-columns:1fr!important;border:0!important}
+#mainWebsite[data-season="kartini"] .menuLinks a{font-family:Georgia,serif;font-size:21px!important;min-height:62px!important;background:transparent!important}
+#mainWebsite[data-season="kartini"] .menuLinks a small{font:italic 30px Georgia,serif;border:0!important;width:42px;color:var(--season-accent)!important}
+/* Adjacent panels inherit the event's distinctive construction. */
+#mainWebsite[data-season="halloween"] :is(.activityPanel,.notificationPanel,.calendarPanel){border-radius:3px!important;border-style:dashed!important;border-width:2px!important}
+#mainWebsite[data-season="christmas"] :is(.activityPanel,.notificationPanel,.calendarPanel){border-radius:28px!important;border-top:8px solid var(--season-accent)!important}
+#mainWebsite[data-season="newyear"] :is(.activityPanel,.notificationPanel,.calendarPanel){border-radius:0!important;border-width:4px!important;border-style:double!important}
+#mainWebsite[data-season="indonesia"] :is(.activityPanel,.notificationPanel,.calendarPanel){border-radius:0!important;border-top:7px solid #c64049!important;border-bottom:7px solid #efe5df!important}
+#mainWebsite[data-season="kartini"] :is(.activityPanel,.notificationPanel,.calendarPanel){border-radius:3px!important;border-left:8px double var(--season-accent)!important}
+@media(max-width:620px){
+#mainWebsite[data-season]:not([data-season="none"]) .siteMenu{grid-template-columns:1fr!important;width:calc(100vw - 24px)!important;padding:16px!important;gap:12px;max-height:calc(100dvh - 110px);overflow-y:auto}
+#mainWebsite[data-season]:not([data-season="none"]) .siteMenu>.seasonMenuBanner{grid-column:1!important;grid-row:auto!important;min-height:110px!important;display:grid!important;grid-template-columns:minmax(0,1fr) 85px!important;align-items:center!important;padding:14px!important;border-right:0!important}
+#mainWebsite[data-season]:not([data-season="none"]) .eventIllustration{width:85px!important;margin:0!important}
+#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner strong{font-size:30px!important;max-width:none}
+#mainWebsite[data-season]:not([data-season="none"]) .siteMenu>.menuLinks{grid-column:1!important;grid-row:auto!important;grid-template-columns:1fr!important}
+#mainWebsite[data-season]:not([data-season="none"]) .menuLinks a{min-height:48px!important;flex-direction:row!important;align-items:center!important;font-size:16px!important}
+#mainWebsite[data-season="christmas"] .menuLinks a:last-child{grid-column:auto}
+}
+
 </style></head>
 <body>
   <div id="intro">
@@ -5228,7 +5291,7 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
  const effects=document.createElement('div');effects.id='seasonEffects';effects.setAttribute('aria-hidden','true');effects.hidden=true;site.append(effects);let last='';
  const menuBanner=document.createElement('div');menuBanner.className='seasonMenuBanner';menuBanner.hidden=true;document.getElementById('siteMenu').prepend(menuBanner);
  const eventDetails={halloween:['🎃','Halloween','A little mystery, warm autumn colours.'],christmas:['❄','Christmas','Warm lights and a little winter magic.'],newyear:['✦','Happy New Year','A new chapter, together.'],indonesia:['🇮🇩','Dirgahayu Indonesia','Merah putih · 17 Agustus'],kartini:['✎','Selamat Hari Kartini','Habis Gelap Terbitlah Terang · Education, courage and possibility.']};
- function renderSeasonMenu(season){menuBanner.hidden=season==='none';menuBanner.replaceChildren();if(season==='none')return;const [icon,title,detail]=eventDetails[season],mark=document.createElement('span'),copy=document.createElement('div'),heading=document.createElement('strong'),caption=document.createElement('small');mark.className='seasonMenuIcon';mark.setAttribute('aria-hidden','true');mark.textContent=icon;heading.textContent=title;caption.textContent=detail;copy.append(heading,caption);menuBanner.append(mark,copy);}
+ function renderSeasonMenu(season){menuBanner.hidden=season==='none';menuBanner.replaceChildren();if(season==='none')return;const [icon,title,detail]=eventDetails[season],mark=document.createElement('span'),copy=document.createElement('div'),heading=document.createElement('strong'),caption=document.createElement('small');mark.className='seasonMenuIcon';mark.setAttribute('aria-hidden','true');mark.textContent=icon;heading.textContent=title;caption.textContent=detail;copy.append(heading,caption);const art=document.createElement('div');art.className='eventIllustration';art.setAttribute('aria-hidden','true');const shapes={halloween:'<circle cx="100" cy="58" r="34"/><path d="M22 156V95l23-24 23 24v61M68 156V76l32-27 32 27v80M132 156V95l23-24 23 24v61M89 156v-32h22v32"/><path d="M32 30l10 8 10-8M151 48l10 8 10-8"/>',christmas:'<path d="M100 15L61 66h20L45 111h25L30 150h140l-40-39h25l-36-45h20Z"/><path d="M89 150v25h22v-25M30 150h140"/><circle cx="100" cy="70" r="5"/><circle cx="83" cy="105" r="5"/><circle cx="119" cy="126" r="5"/>',newyear:'<circle cx="100" cy="95" r="61"/><circle cx="100" cy="95" r="49"/><path d="M100 95V57M100 95l26 16M100 6v17M100 167v17M11 95h17M172 95h17M37 32l12 12M151 146l12 12M37 158l12-12M151 44l12-12"/>',indonesia:'<path d="M24 172V25h145l-25 36 25 36H24M24 61h120"/><path d="M43 142l22-30 22 30 22-30 22 30 22-30"/>',kartini:'<path d="M20 45q40-20 80 0 40-20 80 0v120q-40-20-80 0-40-20-80 0ZM100 45v120M37 67h44M37 86h44M37 105h44M119 67h44M119 86h44M119 105h44"/><path d="M72 25l28-18 28 18"/>'};art.innerHTML='<svg viewBox="0 0 200 190" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+shapes[season]+'</svg>';menuBanner.append(mark,copy,art);}
  function addFireworks(wallpaper){for(let burst=0;burst<5;burst++){const node=document.createElement('span');node.className='seasonFirework';node.style.setProperty('--burst-x',[15,36,58,78,91][burst]+'%');node.style.setProperty('--burst-y',(wallpaper==='underwater'?[12,21,10,25,16]:[23,38,16,33,20])[burst]+'%');node.style.setProperty('--burst-delay',(-burst*1.37)+'s');for(let ray=0;ray<20;ray++){const spark=document.createElement('i');spark.style.setProperty('--angle',(ray*18)+'deg');spark.style.setProperty('--reach',(45+ray%4*13)+'px');node.append(spark);}effects.append(node);}}
 
  function apply(){const owner=accountUser?.id===ownerId;if(!owner){preview='auto';previewSelect.value='auto';}ownerControls.hidden=!owner;for(const button of appearance.children)button.setAttribute('aria-pressed',String(button.dataset.ownerTheme===site.dataset.theme));const ongoing=seasonAt(new Date(),zone),selected=owner&&preview!=='auto'?preview:ongoing,season=enabled?selected:'none';settings.hidden=!owner&&ongoing==='none';toggle.textContent=enabled?'On':'Off';toggle.setAttribute('aria-checked',String(enabled));toggle.setAttribute('aria-label',selected==='none'?'Seasonal effects':definitions[selected]?.name+' effects');toggle.title=selected==='none'?'':definitions[selected].name;site.dataset.season=season;const puzzle=site.dataset.page==='puzzles',parent=puzzle?document.getElementById('puzzlePanel'):site;if(effects.parentElement!==parent)parent.append(effects);const wallpaper=site.dataset.wallpaper||'original',key=season+':'+wallpaper+':'+site.dataset.theme;effects.hidden=season==='none'||!site.classList.contains('show');

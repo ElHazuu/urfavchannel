@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v101">
+<meta name="site-build" content="cinta-kita-v102">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1587,6 +1587,49 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
 #mainWebsite[data-wallpaper="berserk"] .seasonFirework{color:#d4766d}
 .seasonPaused .seasonFirework i,.seasonPaused .seasonFirework::after{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.seasonFirework i,.seasonFirework::after{animation:none!important}.seasonFirework::after{opacity:.25;transform:scale(7)}}
+</style><style>
+/* v102 event layouts: all rules release when the active event becomes none. */
+#mainWebsite[data-season="halloween"]{--event-radius:19px 19px 9px 9px;--event-card-radius:13px;--event-outline:dashed;--event-header-font:'Cormorant Garamond',Georgia,serif}
+#mainWebsite[data-season="christmas"]{--event-radius:26px;--event-card-radius:18px;--event-outline:solid;--event-header-font:'Cormorant Garamond',Georgia,serif}
+#mainWebsite[data-season="newyear"]{--event-radius:8px 8px 24px 24px;--event-card-radius:8px;--event-outline:double;--event-header-font:'DM Sans',Arial,sans-serif}
+#mainWebsite[data-season="indonesia"]{--event-radius:16px;--event-card-radius:10px;--event-outline:solid;--event-header-font:'DM Sans',Arial,sans-serif}
+#mainWebsite[data-season="kartini"]{--event-radius:7px 24px 24px 7px;--event-card-radius:6px;--event-outline:double;--event-header-font:'Cormorant Garamond',Georgia,serif}
+#mainWebsite[data-season]:not([data-season="none"]) :is(.siteMenu,.activityPanel,.notificationPanel,.calendarPanel,.messagePanel,.profileCard,.accountCard){border-radius:var(--event-radius)!important;border-style:var(--event-outline)!important;border-color:color-mix(in srgb,var(--season-accent) 65%,transparent)!important}
+#mainWebsite[data-season]:not([data-season="none"]) :is(.messagePanel,.calendarPanel,.profileCard){background-image:radial-gradient(ellipse at 0% 0%,color-mix(in srgb,var(--season-accent) 9%,transparent),transparent 58%)}
+#mainWebsite[data-season]:not([data-season="none"]) :is(.messagePanelHead h2,.notificationPanelHead h2,.calendarHeading h2,.puzzleHeading h2,.activityPanel h2){font-family:var(--event-header-font);letter-spacing:.02em}
+#mainWebsite[data-season]:not([data-season="none"]) .siteMenu{padding:20px;max-height:min(80dvh,760px)}
+#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner{padding:20px 18px;margin-bottom:17px;border-radius:var(--event-card-radius);border-left-width:0;border-top:3px solid var(--season-accent);position:relative;overflow:hidden}
+#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner .seasonMenuIcon{font-size:36px;padding:8px;border:1px solid var(--ui-line);border-radius:50%;width:54px;height:54px;display:grid;place-items:center;box-sizing:border-box}
+#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner strong{font:600 clamp(22px,3vw,30px)/1.15 var(--event-header-font);color:var(--ui-ink)}
+#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner small{max-width:42ch;font-size:12px;line-height:1.5}
+#mainWebsite[data-season]:not([data-season="none"]) .menuLinks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+#mainWebsite[data-season]:not([data-season="none"]) .menuLinks a{min-width:0;flex-wrap:wrap;padding:16px 12px;gap:8px;border:1px solid var(--ui-line);border-radius:var(--event-card-radius);background:color-mix(in srgb,var(--season-accent) 7%,var(--ui-surface));font-size:15px;min-height:48px;box-sizing:border-box}
+#mainWebsite[data-season]:not([data-season="none"]) .menuLinks a small{display:grid;place-items:center;min-width:23px;min-height:23px;border-radius:50%;background:color-mix(in srgb,var(--season-accent) 16%,var(--ui-surface));color:var(--ui-ink)!important}
+#mainWebsite[data-season="halloween"] .menuLinks a{border-style:dashed;box-shadow:inset 0 -3px color-mix(in srgb,var(--season-accent) 20%,transparent)}
+#mainWebsite[data-season="halloween"] .seasonMenuBanner::after{content:'✦';position:absolute;right:12px;top:8px;color:var(--season-accent);opacity:.5;font-size:29px}
+#mainWebsite[data-season="christmas"] .menuLinks{grid-template-columns:1fr}
+#mainWebsite[data-season="christmas"] .menuLinks a{padding:12px 16px;border-left:4px solid var(--season-accent);min-height:44px}
+#mainWebsite[data-season="christmas"] .seasonMenuBanner{border:1px solid var(--ui-line);box-shadow:inset 0 3px var(--season-accent),inset 0 -3px color-mix(in srgb,var(--season-accent) 55%,transparent)}
+#mainWebsite[data-season="christmas"] .menuTaskbar{border-radius:0 0 28px 28px;padding-bottom:12px}
+#mainWebsite[data-season="newyear"] .menuLinks a{border-width:3px;border-style:double}
+#mainWebsite[data-season="newyear"] .menuLinks a:first-child{grid-column:1/-1;min-height:56px}
+#mainWebsite[data-season="newyear"] .seasonMenuBanner{border:3px double var(--season-accent);text-align:center;justify-content:center}
+#mainWebsite[data-season="newyear"] .menuTaskbar{border-radius:0 0 8px 8px;border-bottom:3px double var(--season-accent)}
+#mainWebsite[data-season="indonesia"] .menuLinks a{border-left:4px solid #d65e65;box-shadow:inset 0 -2px #f9ebe64d}
+#mainWebsite[data-season="indonesia"] .seasonMenuBanner{border-top:4px solid #d45e65;box-shadow:inset 0 4px #f4e5df}
+#mainWebsite[data-season="kartini"] .menuLinks{grid-template-columns:1fr;gap:0;border:1px solid var(--ui-line);border-radius:7px;overflow:hidden}
+#mainWebsite[data-season="kartini"] .menuLinks a{border:0;border-bottom:1px solid var(--ui-line);border-radius:0;padding:13px 16px}
+#mainWebsite[data-season="kartini"] .menuLinks a:last-child{border-bottom:0}
+#mainWebsite[data-season="kartini"] .menuLinks a small{border-radius:3px;background:transparent;border:1px solid var(--ui-line)}
+#mainWebsite[data-season="kartini"] .seasonMenuBanner{border-top:0;border-left:4px double var(--season-accent);border-radius:3px 18px 18px 3px;box-shadow:inset 8px 0 color-mix(in srgb,var(--season-accent) 6%,transparent)}
+#mainWebsite[data-season="kartini"] .menuTaskbar{border-radius:0 0 6px 22px;border-bottom:3px double var(--season-accent)}
+#mainWebsite[data-wallpaper="underwater"][data-season]:not([data-season="none"]) .seasonMenuBanner{background:linear-gradient(135deg,color-mix(in srgb,var(--season-accent) 16%,var(--ui-surface)),var(--ui-surface))}
+#mainWebsite[data-wallpaper="berserk"][data-season]:not([data-season="none"]) :is(.seasonMenuBanner,.menuLinks a){border-radius:3px}
+#mainWebsite[data-season]:not([data-season="none"]) :is(.calendarEvent,.puzzleCard,.videoCard,.storyCard){border-radius:var(--event-card-radius);border-color:var(--ui-line)}
+#mainWebsite[data-season]:not([data-season="none"]) .puzzleCollection{gap:18px}
+#mainWebsite[data-season]:not([data-season="none"]) .puzzleCard{padding:9px;border:1px solid var(--ui-line);background:color-mix(in srgb,var(--season-accent) 5%,var(--ui-surface))}
+#mainWebsite[data-season]:not([data-season="none"]) .profileCard{border-top:3px solid var(--season-accent)!important}
+@media(max-width:620px){#mainWebsite[data-season]:not([data-season="none"]) .siteMenu{padding:13px;max-height:calc(100dvh - 100px)}#mainWebsite[data-season]:not([data-season="none"]) .menuLinks{grid-template-columns:1fr;gap:6px}#mainWebsite[data-season]:not([data-season="none"]) .menuLinks a{min-height:42px;padding:10px 12px}#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner{padding:13px 10px;gap:9px}#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner .seasonMenuIcon{font-size:25px;width:42px;height:42px}#mainWebsite[data-season]:not([data-season="none"]) .seasonMenuBanner strong{font-size:22px}}
 </style></head>
 <body>
   <div id="intro">

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v105">
+<meta name="site-build" content="cinta-kita-v106">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1723,6 +1723,20 @@ body:has(#mainWebsite[data-season="indonesia"]) :is(.accountCard,.profileCard,.p
 body:has(#mainWebsite[data-season="indonesia"]) :is(.accountCard,.profileCard,.profileUnsavedCard,.coralMessageCard) :is(h1,h2,h3,p,strong,small,label,a,button,input,textarea,select){color:var(--flag-text,var(--overlay-ink))!important;text-shadow:none!important}
 body:has(#mainWebsite[data-season="indonesia"]) :is(.accountCard,.profileCard,.profileUnsavedCard,.coralMessageCard) :is(button,input,textarea,select){background:var(--flag-field,var(--overlay-surface))!important;border-color:var(--flag-line)!important}
 
+
+/* v106 calm surfaces: flag red reserved for accents, ribbons and highlights. */
+#mainWebsite[data-season="indonesia"]{--flag-surface:#251d20;--flag-field:#30262a;--flag-text:#fff;--flag-line:#ffffff38}
+#mainWebsite[data-season="indonesia"][data-theme="light"]{--flag-surface:#fff;--flag-field:#fff;--flag-text:#a7192a;--flag-line:#a7192a35}
+body:has(#mainWebsite[data-season="indonesia"]){--overlay-surface:#251d20!important;--overlay-ink:#fff!important;--profile-field:#30262a!important;--account-surface:#251d20!important}
+body:has(#mainWebsite[data-season="indonesia"]) :is(.accountDialog,.profileDialog,.profileUnsavedDialog,.coralMessageDialog){--flag-surface:#251d20;--flag-field:#30262a;--flag-text:#fff;--flag-line:#ffffff38}
+body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]){--overlay-surface:#fff!important;--overlay-ink:#a7192a!important;--profile-field:#fff!important;--account-surface:#fff!important}
+body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.accountDialog,.profileDialog,.profileUnsavedDialog,.coralMessageDialog){--flag-surface:#fff;--flag-field:#fff;--flag-text:#a7192a;--flag-line:#a7192a35}
+#mainWebsite[data-season="indonesia"] .siteMenu>.seasonMenuBanner{background:linear-gradient(180deg,#bd2232 0 50%,#fff 50% 100%)!important;box-shadow:none!important}
+.indonesiaClickFlag{position:fixed;left:var(--flag-x);top:var(--flag-y);width:25px;height:17px;z-index:9999;pointer-events:none;background:linear-gradient(to bottom,#d61b2e 50%,#fff 50%);border:1px solid #62131e55;box-shadow:0 2px 7px #0003;transform-origin:left center;animation:indonesiaClickFloat 1.25s ease-out forwards}
+.indonesiaClickFlag::before{content:'';position:absolute;left:-3px;top:-2px;height:25px;width:2px;background:#fff;box-shadow:0 0 1px #52121b}
+@keyframes indonesiaClickFloat{0%{opacity:0;transform:translate(-50%,-50%) scale(.65) rotate(-9deg)}15%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--flag-drift)),-75px) scale(1) rotate(8deg)}}
+@media(prefers-reduced-motion:reduce){.indonesiaClickFlag{animation:none;transform:translate(-50%,-50%)}}
+
 </style></head>
 <body>
   <div id="intro">
@@ -1885,7 +1899,7 @@ body:has(#mainWebsite[data-season="indonesia"]) :is(.accountCard,.profileCard,.p
     <section class="welcomeSection" id="home" data-wallpaper="original">
       <span class="originalShootingStar" aria-hidden="true"></span>
       <div class="welcomeGlow"></div><button class="welcomeOrbit" id="heartMomentButton" type="button" aria-label="See our cats' little moment"><span class="orbitStar" aria-hidden="true"></span></button>
-      <div class="heroLine">A PLACE FOR OUR STORY</div>
+      
       <p class="eyebrow">✦ A little world for us ✦</p>
       <h1>Welcome to<br><span>Our World.</span></h1>
       <p class="heroSubtitle">A place for you to watch my videos and, whenever you visit, remember that I love you more.</p>
@@ -2669,7 +2683,7 @@ body:has(#mainWebsite[data-season="indonesia"]) :is(.accountCard,.profileCard,.p
           oscillator.stop(soundContext.currentTime + .14);
         } catch (error) {}
       }
-      if (screen === "website" && mainWebsite.dataset.wallpaper === "original" &&
+      if (screen === "website" && mainWebsite.dataset.season !== "indonesia" && mainWebsite.dataset.wallpaper === "original" &&
           (mainWebsite.contains(event.target) || document.getElementById("accountDialog").contains(event.target) || document.getElementById("profileDialog").contains(event.target))) {
         const color = getComputedStyle(mainWebsite).getPropertyValue("--theme-accent").trim() || "#d987b6";
         for (let i = 0; i < 3; i++) {
@@ -3142,7 +3156,7 @@ body:has(#mainWebsite[data-season="indonesia"]) :is(.accountCard,.profileCard,.p
   }
 
   site.addEventListener("click", event => {
-    if (site.dataset.wallpaper !== "underwater" || reducedMotion.matches) return;
+    if (site.dataset.season === "indonesia" || site.dataset.wallpaper !== "underwater" || reducedMotion.matches) return;
     if (!event.target.matches(".welcomeSection, .contentSection, .storySection")) return;
     for (let i = 0; i < 7; i++) {
       const bubble = document.createElement("span");
@@ -4875,7 +4889,7 @@ body:has(#mainWebsite[data-season="indonesia"]) :is(.accountCard,.profileCard,.p
     let puzzleClickAt=0;
     function playPuzzleClick(){if(!puzzleSound||Date.now()-puzzleClickAt<120)return;puzzleClickAt=Date.now();try{puzzleAudio=puzzleAudio||new(window.AudioContext||window.webkitAudioContext)();if(puzzleAudio.state!=='running')return;const t=puzzleAudio.currentTime,o=puzzleAudio.createOscillator(),g=puzzleAudio.createGain();o.type='sine';o.frequency.setValueAtTime(900,t);o.frequency.exponentialRampToValueAtTime(450,t+.025);g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.001,t+.035);o.connect(g);g.connect(puzzleAudio.destination);o.start(t);o.stop(t+.04);}catch(error){}}
     function puzzlePoint(event){const rect=puzzleCanvas.getBoundingClientRect();return{x:(event.clientX-rect.left-puzzlePan.x)/puzzleScale,y:(event.clientY-rect.top-puzzlePan.y)/puzzleScale};}
-    puzzleCanvas.addEventListener('pointerdown',event=>{if(mainWebsite.dataset.wallpaper!=='underwater'||matchMedia('(prefers-reduced-motion: reduce)').matches)return;for(let i=0;i<7;i++){const bubble=document.createElement('span');bubble.className='seaClickBubble puzzleClickBubble';bubble.style.setProperty('--x',(event.clientX+Math.random()*36-18)+'px');bubble.style.setProperty('--y',(event.clientY+Math.random()*20-10)+'px');bubble.style.setProperty('--size',(6+Math.random()*10)+'px');bubble.style.setProperty('--drift',(Math.random()*60-30)+'px');puzzlePanel.append(bubble);setTimeout(()=>bubble.remove(),1850);}});
+    puzzleCanvas.addEventListener('pointerdown',event=>{if(mainWebsite.dataset.season==='indonesia'||mainWebsite.dataset.wallpaper!=='underwater'||matchMedia('(prefers-reduced-motion: reduce)').matches)return;for(let i=0;i<7;i++){const bubble=document.createElement('span');bubble.className='seaClickBubble puzzleClickBubble';bubble.style.setProperty('--x',(event.clientX+Math.random()*36-18)+'px');bubble.style.setProperty('--y',(event.clientY+Math.random()*20-10)+'px');bubble.style.setProperty('--size',(6+Math.random()*10)+'px');bubble.style.setProperty('--drift',(Math.random()*60-30)+'px');puzzlePanel.append(bubble);setTimeout(()=>bubble.remove(),1850);}});
     puzzleCanvas.addEventListener('pointerdown',async event=>{if(!puzzleRoom||!accountUser||puzzleClaiming||puzzleDrag)return;event.preventDefault();try{puzzleAudio=puzzleAudio||new(window.AudioContext||window.webkitAudioContext)();puzzleAudio.resume();}catch(error){}puzzleCanvas.setPointerCapture(event.pointerId);puzzleLastPointer={id:event.pointerId,x:event.clientX,y:event.clientY,down:true};const pos=puzzlePoint(event);puzzleCtx.save();puzzleCtx.setTransform(1,0,0,1,0,0);const pieces=[...puzzlePieces.values()].reverse();const hit=pieces.find(p=>!p.placed&&puzzleCtx.isPointInPath(puzzlePaths.get(p.piece_id),pos.x-p.x,pos.y-p.y));puzzleCtx.restore();if(!hit){puzzleLastPointer.pan=true;return;}const room=puzzleRoom.id,g=puzzleGeneration;puzzleClaiming=true;try{const {data,error}=await accountClient.rpc('claim_site_puzzle_piece',{p_room:room,p_piece:hit.piece_id});if(g!==puzzleGeneration)return;if(error)throw error;if(!data?.length){puzzleStatus.textContent='Your friend is holding this piece.';return;}for(const piece of data){puzzlePieces.delete(piece.piece_id);puzzlePieces.set(piece.piece_id,piece);}if(!puzzleLastPointer?.down){await accountClient.rpc('move_site_puzzle_piece',{p_room:room,p_piece:hit.piece_id,p_x:hit.x,p_y:hit.y});refreshPuzzlePieces();return;}const claimed=data.find(piece=>piece.piece_id===hit.piece_id);puzzleDrag={id:hit.piece_id,ids:data.map(piece=>piece.piece_id),room,offsetX:pos.x-claimed.x,offsetY:pos.y-claimed.y};drawPuzzle();}catch(error){puzzleError(error);}finally{puzzleClaiming=false;}});
     puzzleCanvas.addEventListener('pointermove',event=>{if(!puzzleRoom)return;const pos=puzzlePoint(event);if(puzzleLastPointer?.down&&puzzleLastPointer.pan){puzzlePan.x+=event.clientX-puzzleLastPointer.x;puzzlePan.y+=event.clientY-puzzleLastPointer.y;puzzleLastPointer.x=event.clientX;puzzleLastPointer.y=event.clientY;constrainPuzzleView();drawPuzzle();return;}if(puzzleDrag){const p=puzzlePieces.get(puzzleDrag.id);const dx=pos.x-puzzleDrag.offsetX-p.x,dy=pos.y-puzzleDrag.offsetY-p.y;for(const id of puzzleDrag.ids){const piece=puzzlePieces.get(id);piece.x+=dx;piece.y+=dy;}drawPuzzle();}if(puzzleChannel&&Date.now()-puzzleLastBroadcast>35){puzzleLastBroadcast=Date.now();puzzleChannel.send({type:'broadcast',event:'cursor',payload:{user_id:accountUser.id,name:puzzleName(),x:pos.x,y:pos.y}});if(puzzleDrag){const p=puzzlePieces.get(puzzleDrag.id);puzzleChannel.send({type:'broadcast',event:'drag',payload:{user_id:accountUser.id,piece_id:p.piece_id,x:p.x,y:p.y}});}}});
     async function finishPuzzleDrag(){if(puzzleLastPointer)puzzleLastPointer.down=false;const drag=puzzleDrag;if(!drag)return;puzzleDrag=null;const p=puzzlePieces.get(drag.id);if(!p||!accountUser)return;const g=puzzleGeneration;try{const {data,error}=await accountClient.rpc('move_site_puzzle_piece',{p_room:drag.room,p_piece:drag.id,p_x:p.x,p_y:p.y});if(g!==puzzleGeneration)return;if(error)throw error;if(!data?.length){puzzleStatus.textContent='Piece lock expired. Its saved position has been restored.';await refreshPuzzlePieces();return;}const connected=data.length>drag.ids.length;const fitted=data.some(piece=>piece.placed);for(const piece of data){puzzlePieces.set(piece.piece_id,piece);if(piece.placed)puzzleClickedPieces.add(piece.piece_id);}if(connected||fitted)playPuzzleClick();drawPuzzle();updatePuzzleProgress();}catch(error){puzzleError(error);refreshPuzzlePieces();}}
@@ -5332,6 +5346,9 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
  // Pure date resolver retained for annual schedule validation.
  window.cintaSeasonAt=seasonAt;
 })();
+</script>
+<script>
+(()=>{const site=document.getElementById('mainWebsite');let lastFlagClick=0;document.addEventListener('click',event=>{if(site.dataset.season!=='indonesia'||!site.classList.contains('show')||event.target.closest('input,textarea,select,[contenteditable="true"]'))return;if(performance.now()-lastFlagClick<100)return;lastFlagClick=performance.now();const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;for(let i=0;i<(reduced?1:3);i++){const flag=document.createElement('span');flag.className='indonesiaClickFlag';flag.setAttribute('aria-hidden','true');flag.style.setProperty('--flag-x',(event.clientX+(i-1)*14)+'px');flag.style.setProperty('--flag-y',(event.clientY+(i%2)*7)+'px');flag.style.setProperty('--flag-drift',((i-1)*27)+'px');document.body.append(flag);setTimeout(()=>flag.remove(),reduced?500:1300);}});})();
 </script>
 </body>
 </html>

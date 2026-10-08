@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v94">
+<meta name="site-build" content="cinta-kita-v95">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -5069,7 +5069,7 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
 (()=>{
  const site=document.getElementById('mainWebsite'),picker=document.getElementById('wallpaperPanel');
  const definitions={halloween:{name:'Halloween',symbols:['🍂','✦'],decor:'🎃'},christmas:{name:'Christmas',symbols:['❄','·'],decor:'✧'},newyear:{name:'New Year',symbols:['✦','·'],decor:'✦'},indonesia:{name:'Hari Kemerdekaan',symbols:['flag','·'],decor:'flag'},kartini:{name:'Hari Kartini',symbols:['✧','·'],decor:'❀'}};
- function seasonAt(date,zone){const parts=new Intl.DateTimeFormat('en-US',{timeZone:zone,month:'numeric',day:'numeric'}).formatToParts(date);const month=Number(parts.find(p=>p.type==='month').value),day=Number(parts.find(p=>p.type==='day').value);if((month===12&&day>=27)||(month===1&&day<=2))return 'newyear';if(month===12&&day<=26)return 'christmas';if(month===10&&day>=24)return 'halloween';if(month===8&&day>=15&&day<=18)return 'indonesia';if(month===4&&day===21)return 'kartini';return 'none';}
+ function seasonAt(date,zone){const parts=new Intl.DateTimeFormat('en-US',{timeZone:zone,month:'numeric',day:'numeric'}).formatToParts(date);const month=Number(parts.find(p=>p.type==='month').value),day=Number(parts.find(p=>p.type==='day').value);if((month===12&&day>=27)||(month===1&&day<=2))return 'newyear';if(month===12&&day<=26)return 'christmas';if(month===10&&day>=8)return 'halloween';if(month===8&&day>=15&&day<=18)return 'indonesia';if(month===4&&day===21)return 'kartini';return 'none';}
  let mode='auto',zone='Asia/Jakarta';try{mode=localStorage.getItem('cintaSeasonMode')||mode;zone=localStorage.getItem('cintaSeasonZone')||zone;}catch{}
  if(!['auto','none',...Object.keys(definitions)].includes(mode))mode='auto';if(!['Asia/Jakarta','Asia/Makassar','Asia/Jayapura','Europe/Stockholm'].includes(zone))zone='Asia/Jakarta';
  const settings=document.createElement('div');settings.className='seasonSettings';settings.innerHTML='<label for="seasonMode">Seasonal wallpaper</label><select id="seasonMode"><option value="auto">Automatic · every year</option><option value="none">Off</option><option value="halloween">Preview Halloween</option><option value="christmas">Preview Christmas</option><option value="newyear">Preview New Year</option><option value="indonesia">Preview Hari Kemerdekaan</option><option value="kartini">Preview Hari Kartini</option></select><label for="seasonZone">Celebration time zone</label><select id="seasonZone"><option value="Asia/Jakarta">Indonesia · WIB</option><option value="Asia/Makassar">Indonesia · WITA</option><option value="Asia/Jayapura">Indonesia · WIT</option><option value="Europe/Stockholm">Sweden</option></select><small id="seasonStatus" role="status"></small>';

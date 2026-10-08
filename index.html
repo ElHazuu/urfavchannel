@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v97">
+<meta name="site-build" content="cinta-kita-v98">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1483,6 +1483,17 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
 .seasonSettings small{opacity:.8;color:var(--ui-ink)}
 .seasonPaused .seasonParticle{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.seasonParticle{animation:none;display:none}#seasonEffects::before{opacity:.5}}
+</style><style>
+/* v98: continuous original wallpaper across all sections. */
+#mainWebsite[data-wallpaper="original"] {
+ background:radial-gradient(ellipse at 80% 15%,color-mix(in srgb,var(--theme-accent) 20%,transparent),transparent 42%),
+ radial-gradient(ellipse at 14% 72%,color-mix(in srgb,var(--theme-accent) 12%,transparent),transparent 42%),var(--theme-bg);
+}
+#mainWebsite[data-wallpaper="original"] .welcomeSection,
+#mainWebsite[data-wallpaper="original"] .contentSection,
+#mainWebsite[data-wallpaper="original"] .storySection,
+#mainWebsite[data-wallpaper="original"] footer {background:transparent!important}
+#mainWebsite[data-wallpaper="original"] footer{border-top:0}
 </style></head>
 <body>
   <div id="intro">

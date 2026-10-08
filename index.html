@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v100">
+<meta name="site-build" content="cinta-kita-v101">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1545,6 +1545,48 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
 #mainWebsite #puzzleThemeToggle:focus-visible {
  outline:2px solid var(--ui-accent);outline-offset:3px;
 }
+</style><style>
+/* v101 distinct seasonal menus and fireworks, with light-mode contrast. */
+#mainWebsite[data-theme="light"][data-season="halloween"]{--season-accent:#a8511d;--season-glow:#cb713b}
+#mainWebsite[data-theme="light"][data-season="christmas"]{--season-accent:#28745b;--season-glow:#3c986e}
+#mainWebsite[data-theme="light"][data-season="newyear"]{--season-accent:#98652a;--season-glow:#bc8839}
+#mainWebsite[data-theme="light"][data-season="indonesia"]{--season-accent:#ac353f;--season-glow:#cf5760}
+#mainWebsite[data-theme="light"][data-season="kartini"]{--season-accent:#916337;--season-glow:#b08654}
+#mainWebsite[data-wallpaper="berserk"][data-season]:not([data-season="none"]){--season-accent:#d87675;--season-glow:#ac3439}
+#mainWebsite[data-season]:not([data-season="none"]){--season-menu-pattern:radial-gradient(ellipse at 10% 0%,color-mix(in srgb,var(--season-accent) 18%,transparent),transparent 65%)}
+#mainWebsite[data-season="halloween"]{--season-menu-pattern:repeating-linear-gradient(135deg,transparent 0 22px,#c17a3820 23px 24px,transparent 25px 46px)}
+#mainWebsite[data-season="christmas"]{--season-menu-pattern:radial-gradient(circle at 10px 10px,#86bfa035 1px,transparent 2px);--season-pattern-size:28px 28px}
+#mainWebsite[data-season="newyear"]{--season-menu-pattern:radial-gradient(ellipse at 50% 0%,#d6ab4b35,transparent 65%)}
+#mainWebsite[data-season="indonesia"]{--season-menu-pattern:linear-gradient(120deg,#cf57561c 0%,transparent 42%,#fff2 100%)}
+#mainWebsite[data-season="kartini"]{--season-menu-pattern:radial-gradient(ellipse at 50% 0%,transparent 44%,#b5864826 45% 49%,transparent 50%),radial-gradient(ellipse at 0% 50%,transparent 44%,#b5864826 45% 49%,transparent 50%);--season-pattern-size:38px 38px}
+#mainWebsite[data-season]:not([data-season="none"]) .siteMenu,
+#mainWebsite[data-season]:not([data-season="none"]) .activityPanel,
+#mainWebsite[data-season]:not([data-season="none"]) .notificationPanel,
+#mainWebsite[data-season]:not([data-season="none"]) .menuTaskbar{
+ background-color:var(--ui-surface);background-image:var(--season-menu-pattern);background-size:var(--season-pattern-size,100% 100%);border-color:var(--season-accent)!important;box-shadow:0 12px 32px #0005,inset 0 2px 0 var(--season-accent)
+}
+#mainWebsite[data-season="indonesia"] .menuTaskbar{box-shadow:0 12px 32px #0005,inset 0 2px #d66365,inset 0 5px #f8eae5}
+#mainWebsite[data-season]:not([data-season="none"]) .menuLinks a:hover{background:color-mix(in srgb,var(--season-accent) 18%,var(--ui-surface))!important}
+.seasonMenuBanner{display:flex;gap:12px;align-items:center;padding:13px 14px;margin:0 0 15px;border:1px solid var(--ui-line);border-left:4px solid var(--season-accent);border-radius:14px;background:color-mix(in srgb,var(--season-accent) 12%,var(--ui-surface));color:var(--ui-ink)}
+.seasonMenuBanner[hidden]{display:none!important}.seasonMenuBanner .seasonMenuIcon{font-size:27px;color:var(--season-accent);flex:none}.seasonMenuBanner strong{display:block;font-size:14px}.seasonMenuBanner small{display:block;margin-top:4px;font-size:11px;line-height:1.45;opacity:.85}
+#mainWebsite[data-theme="light"] #seasonEffects{opacity:.95}
+#mainWebsite[data-theme="light"] .seasonParticle{filter:drop-shadow(0 1px 1px #0006);font-weight:700}
+#mainWebsite[data-theme="light"] .seasonDecor{opacity:.9;filter:drop-shadow(0 1px 2px #0005)}
+#mainWebsite[data-season="kartini"] .seasonParticle{font-size:16px;animation-name:kartiniRise}
+@keyframes kartiniRise{0%{opacity:0;transform:translate(0,calc(100dvh + 20px))}15%,75%{opacity:.85}100%{opacity:0;transform:translate(var(--drift),0)}}
+.seasonFirework{position:absolute;left:var(--burst-x);top:var(--burst-y);width:1px;height:1px;color:var(--season-accent);--burst-scale:1;pointer-events:none}
+.seasonFirework i{position:absolute;width:3px;height:5px;border-radius:3px;background:currentColor;opacity:0;box-shadow:0 0 7px currentColor;animation:seasonBurst 7s ease-out infinite;animation-delay:var(--burst-delay)}
+@keyframes seasonBurst{0%,12%{opacity:0;transform:rotate(var(--angle)) translateY(0) scale(.2)}13%{opacity:1}34%{opacity:.8;transform:rotate(var(--angle)) translateY(calc(var(--reach)*var(--burst-scale))) scale(1)}48%,100%{opacity:0;transform:rotate(var(--angle)) translateY(calc(var(--reach)*var(--burst-scale)*1.2)) scale(.2)}}
+.seasonFirework::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid currentColor;opacity:0;animation:seasonBurstRing 7s ease-out infinite;animation-delay:var(--burst-delay)}
+@keyframes seasonBurstRing{0%,12%{opacity:0;transform:scale(.1)}13%{opacity:.8}38%{opacity:0;transform:scale(17)}100%{opacity:0}}
+#mainWebsite[data-wallpaper="underwater"] .seasonFirework{--burst-scale:.65;color:#69cfcb}
+#mainWebsite[data-wallpaper="underwater"] .seasonFirework:nth-of-type(even){color:#d7b674}
+#mainWebsite[data-wallpaper="underwater"] .seasonFirework i{width:5px;height:5px;background:transparent;border:1.5px solid currentColor;border-radius:50%;box-shadow:0 0 4px currentColor}
+#mainWebsite[data-theme="light"] .seasonFirework{filter:drop-shadow(0 1px 1px #0005);color:#95611d}
+#mainWebsite[data-theme="light"][data-wallpaper="underwater"] .seasonFirework{color:#155f76}
+#mainWebsite[data-wallpaper="berserk"] .seasonFirework{color:#d4766d}
+.seasonPaused .seasonFirework i,.seasonPaused .seasonFirework::after{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.seasonFirework i,.seasonFirework::after{animation:none!important}.seasonFirework::after{opacity:.25;transform:scale(7)}}
 </style></head>
 <body>
   <div id="intro">
@@ -5130,7 +5172,7 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
 <script>
 (()=>{
  const site=document.getElementById('mainWebsite'),picker=document.getElementById('wallpaperPanel');
- const definitions={halloween:{name:'Halloween',symbols:['🍂','✦'],decor:'🎃'},christmas:{name:'Christmas',symbols:['❄','·'],decor:'✧'},newyear:{name:'New Year',symbols:['✦','·'],decor:'✦'},indonesia:{name:'Hari Kemerdekaan',symbols:['flag','·'],decor:'flag'},kartini:{name:'Hari Kartini',symbols:['✧','·'],decor:'❀'}};
+ const definitions={halloween:{name:'Halloween',symbols:['🍂','✦'],decor:'🎃'},christmas:{name:'Christmas',symbols:['❄','·'],decor:'✧'},newyear:{name:'New Year',symbols:['✦','·'],decor:'✦'},indonesia:{name:'Hari Kemerdekaan',symbols:['flag','·'],decor:'flag'},kartini:{name:'Hari Kartini',symbols:['✧','❀'],decor:'✎'}};
  function seasonAt(date,zone){const parts=new Intl.DateTimeFormat('en-US',{timeZone:zone,month:'numeric',day:'numeric'}).formatToParts(date);const month=Number(parts.find(p=>p.type==='month').value),day=Number(parts.find(p=>p.type==='day').value);if((month===12&&day>=27)||(month===1&&day<=2))return 'newyear';if(month===12&&day<=26)return 'christmas';if(month===10&&day>=8)return 'halloween';if(month===8&&day>=15&&day<=18)return 'indonesia';if(month===4&&day===21)return 'kartini';return 'none';}
  let enabled=true,zone='Asia/Jakarta';try{const saved=localStorage.getItem('cintaSeasonEnabled');enabled=saved===null?localStorage.getItem('cintaSeasonMode')!=='none':saved!=='false';zone=localStorage.getItem('cintaSeasonZone')||zone;}catch{}
  if(!['Asia/Jakarta','Asia/Makassar','Asia/Jayapura','Europe/Stockholm'].includes(zone))zone='Asia/Jakarta';
@@ -5141,8 +5183,13 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
  const appearance=document.createElement('div');appearance.className='ownerThemeChoices';appearance.setAttribute('role','group');appearance.setAttribute('aria-label','Preview appearance');
  for(const theme of ['light','dark']){const button=document.createElement('button');button.type='button';button.dataset.ownerTheme=theme;button.textContent=theme==='light'?'☼ Light mode':'☾ Dark mode';button.onclick=()=>{if(accountUser?.id!==ownerId)return;if(site.dataset.theme!==theme)document.getElementById('themeMode').click();apply();};appearance.append(button);}ownerControls.append(appearance);
  const effects=document.createElement('div');effects.id='seasonEffects';effects.setAttribute('aria-hidden','true');effects.hidden=true;site.append(effects);let last='';
- function apply(){const owner=accountUser?.id===ownerId;if(!owner){preview='auto';previewSelect.value='auto';}ownerControls.hidden=!owner;for(const button of appearance.children)button.setAttribute('aria-pressed',String(button.dataset.ownerTheme===site.dataset.theme));const ongoing=seasonAt(new Date(),zone),selected=owner&&preview!=='auto'?preview:ongoing,season=enabled?selected:'none';settings.hidden=!owner&&ongoing==='none';toggle.textContent=enabled?'On':'Off';toggle.setAttribute('aria-checked',String(enabled));toggle.setAttribute('aria-label',selected==='none'?'Seasonal effects':definitions[selected]?.name+' effects');toggle.title=selected==='none'?'':definitions[selected].name;site.dataset.season=season;const puzzle=site.dataset.page==='puzzles',parent=puzzle?document.getElementById('puzzlePanel'):site;if(effects.parentElement!==parent)parent.append(effects);const wallpaper=site.dataset.wallpaper||'original',key=season+':'+wallpaper;effects.hidden=season==='none'||!site.classList.contains('show');
- if(key===last)return;last=key;effects.replaceChildren();if(season==='none')return;const def=definitions[season],berserk=wallpaper==='berserk';for(let i=0;i<18;i++){const particle=document.createElement('span');particle.className='seasonParticle';const symbol=berserk?(season==='christmas'?'·':'✦'):def.symbols[i%def.symbols.length];if(symbol==='flag'){const flag=document.createElement('i');flag.className='seasonFlag';particle.append(flag);}else particle.textContent=symbol;particle.style.setProperty('--x',((i*47+11)%100)+'%');particle.style.setProperty('--size',(berserk?5:9+i%5*2)+'px');particle.style.setProperty('--duration',(18+i%7*3)+'s');particle.style.setProperty('--delay',(-i*2.7)+'s');particle.style.setProperty('--drift',((i%2?1:-1)*(12+i%4*9))+'px');effects.append(particle);}if(!berserk)for(const x of ['3%','94%']){const decor=document.createElement('span');decor.className='seasonDecor';decor.style.setProperty('--x',x);if(def.decor==='flag'){decor.classList.add('seasonFlag');}else decor.textContent=def.decor;effects.append(decor);}}
+ const menuBanner=document.createElement('div');menuBanner.className='seasonMenuBanner';menuBanner.hidden=true;document.getElementById('siteMenu').prepend(menuBanner);
+ const eventDetails={halloween:['🎃','Halloween','A little mystery, warm autumn colours.'],christmas:['❄','Christmas','Warm lights and a little winter magic.'],newyear:['✦','Happy New Year','A new chapter, together.'],indonesia:['🇮🇩','Dirgahayu Indonesia','Merah putih · 17 Agustus'],kartini:['✎','Selamat Hari Kartini','Habis Gelap Terbitlah Terang · Education, courage and possibility.']};
+ function renderSeasonMenu(season){menuBanner.hidden=season==='none';menuBanner.replaceChildren();if(season==='none')return;const [icon,title,detail]=eventDetails[season],mark=document.createElement('span'),copy=document.createElement('div'),heading=document.createElement('strong'),caption=document.createElement('small');mark.className='seasonMenuIcon';mark.setAttribute('aria-hidden','true');mark.textContent=icon;heading.textContent=title;caption.textContent=detail;copy.append(heading,caption);menuBanner.append(mark,copy);}
+ function addFireworks(wallpaper){for(let burst=0;burst<5;burst++){const node=document.createElement('span');node.className='seasonFirework';node.style.setProperty('--burst-x',[15,36,58,78,91][burst]+'%');node.style.setProperty('--burst-y',(wallpaper==='underwater'?[12,21,10,25,16]:[23,38,16,33,20])[burst]+'%');node.style.setProperty('--burst-delay',(-burst*1.37)+'s');for(let ray=0;ray<20;ray++){const spark=document.createElement('i');spark.style.setProperty('--angle',(ray*18)+'deg');spark.style.setProperty('--reach',(45+ray%4*13)+'px');node.append(spark);}effects.append(node);}}
+
+ function apply(){const owner=accountUser?.id===ownerId;if(!owner){preview='auto';previewSelect.value='auto';}ownerControls.hidden=!owner;for(const button of appearance.children)button.setAttribute('aria-pressed',String(button.dataset.ownerTheme===site.dataset.theme));const ongoing=seasonAt(new Date(),zone),selected=owner&&preview!=='auto'?preview:ongoing,season=enabled?selected:'none';settings.hidden=!owner&&ongoing==='none';toggle.textContent=enabled?'On':'Off';toggle.setAttribute('aria-checked',String(enabled));toggle.setAttribute('aria-label',selected==='none'?'Seasonal effects':definitions[selected]?.name+' effects');toggle.title=selected==='none'?'':definitions[selected].name;site.dataset.season=season;const puzzle=site.dataset.page==='puzzles',parent=puzzle?document.getElementById('puzzlePanel'):site;if(effects.parentElement!==parent)parent.append(effects);const wallpaper=site.dataset.wallpaper||'original',key=season+':'+wallpaper+':'+site.dataset.theme;effects.hidden=season==='none'||!site.classList.contains('show');
+ if(key===last)return;last=key;effects.replaceChildren();renderSeasonMenu(season);if(season==='none')return;if(season==='newyear')addFireworks(wallpaper);const def=definitions[season],berserk=wallpaper==='berserk';for(let i=0;i<(season==='newyear'?7:18);i++){const particle=document.createElement('span');particle.className='seasonParticle';const symbol=berserk?(season==='christmas'?'·':'✦'):def.symbols[i%def.symbols.length];if(symbol==='flag'){const flag=document.createElement('i');flag.className='seasonFlag';particle.append(flag);}else particle.textContent=symbol;particle.style.setProperty('--x',((i*47+11)%100)+'%');particle.style.setProperty('--size',(berserk?5:9+i%5*2)+'px');particle.style.setProperty('--duration',(18+i%7*3)+'s');particle.style.setProperty('--delay',(-i*2.7)+'s');particle.style.setProperty('--drift',((i%2?1:-1)*(12+i%4*9))+'px');effects.append(particle);}if(!berserk)for(const x of ['3%','94%']){const decor=document.createElement('span');decor.className='seasonDecor';decor.style.setProperty('--x',x);if(def.decor==='flag'){decor.classList.add('seasonFlag');}else decor.textContent=def.decor;effects.append(decor);}}
  toggle.onclick=()=>{if(!accountUser)return;enabled=!enabled;try{localStorage.setItem('cintaSeasonEnabled',String(enabled));}catch{}apply();};
  new MutationObserver(apply).observe(site,{attributes:true,attributeFilter:['data-wallpaper','data-theme','data-page','class']});
  document.addEventListener('visibilitychange',()=>{effects.classList.toggle('seasonPaused',document.hidden);if(!document.hidden)apply();});window.addEventListener('focus',apply);window.addEventListener('cinta-account-change',apply);setInterval(()=>{if(!document.hidden)apply();},60000);apply();

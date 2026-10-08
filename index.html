@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="site-build" content="cinta-kita-v96">
+<meta name="site-build" content="cinta-kita-v97">
   <title>Cinta Kita ♡</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -1478,7 +1478,7 @@ body.puzzlePageActive .siteUpdateNotice:not([hidden]){display:flex!important;z-i
 #mainWebsite[data-page="puzzles"]>#puzzlePanel>#seasonEffects{visibility:visible;z-index:0}
 #mainWebsite[data-page="puzzles"] .puzzleHeading,#mainWebsite[data-page="puzzles"] #puzzleLibrary,#mainWebsite[data-page="puzzles"] #puzzleGame{position:relative;z-index:1}
 .seasonSettings{display:grid;gap:6px;margin-top:14px;padding-top:12px;border-top:1px solid var(--ui-line);font:12px/1.5 'DM Sans',Arial,sans-serif}
-.seasonSettings[hidden]{display:none!important}.seasonToggle{justify-self:start;min-width:60px;padding:8px 14px;border:1px solid var(--ui-line);border-radius:999px;background:var(--ui-surface);color:var(--ui-ink);font:inherit;cursor:pointer}.seasonToggle[aria-checked="true"]{background:color-mix(in srgb,var(--ui-accent) 28%,var(--ui-surface))}.seasonSettings label{display:block;color:var(--ui-ink)}
+.seasonSettings>div[hidden]{display:none!important}.seasonSettings[hidden]{display:none!important}.seasonToggle{justify-self:start;min-width:60px;padding:8px 14px;border:1px solid var(--ui-line);border-radius:999px;background:var(--ui-surface);color:var(--ui-ink);font:inherit;cursor:pointer}.seasonToggle[aria-checked="true"]{background:color-mix(in srgb,var(--ui-accent) 28%,var(--ui-surface))}.seasonSettings label{display:block;color:var(--ui-ink)}
 .seasonSettings select{width:100%;padding:8px;border-radius:9px;border:1px solid var(--ui-line);background:var(--ui-surface);color:var(--ui-ink);font:inherit}
 .seasonSettings small{opacity:.8;color:var(--ui-ink)}
 .seasonPaused .seasonParticle{animation-play-state:paused}
@@ -4716,7 +4716,7 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
     updatePuzzlePreview();
 
     function showAccountUser(user) {
-      accountUser = user;
+      accountUser = user; window.dispatchEvent(new Event('cinta-account-change'));
       if (user) { recordDailyVisit(); checkSiteAchievements(); loadVisitBadges(); loadExtraBadges(); }
       else { visitBadgeRecords.clear(); extraBadgeRecords.clear(); pendingShellDiscovery = false; achievementQueue.length = 0; clearTimeout(visitAchievementTimer); achievementShowing = false; document.getElementById("visitAchievement").classList.remove("show"); }
       window.ourWorldIsSignedIn = !!user;
@@ -5074,12 +5074,14 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
  if(!['Asia/Jakarta','Asia/Makassar','Asia/Jayapura','Europe/Stockholm'].includes(zone))zone='Asia/Jakarta';
  const settings=document.createElement('div');settings.className='seasonSettings';settings.hidden=true;
  const toggle=document.createElement('button');toggle.type='button';toggle.className='seasonToggle';toggle.setAttribute('role','switch');settings.append(toggle);picker.append(settings);
+ const ownerId='7a5e0845-24be-4ac0-b881-6aff2a8332f5';let preview='auto';
+ const ownerControls=document.createElement('div');ownerControls.hidden=true;ownerControls.innerHTML='<label for="ownerSeasonPreview">Owner · event preview</label><select id="ownerSeasonPreview"><option value="auto">Current event · automatic</option><option value="none">Normal wallpaper</option><option value="halloween">Halloween</option><option value="christmas">Christmas</option><option value="newyear">New Year</option><option value="indonesia">Hari Kemerdekaan</option><option value="kartini">Hari Kartini</option></select>';settings.append(ownerControls);const previewSelect=ownerControls.querySelector('select');previewSelect.onchange=()=>{if(accountUser?.id!==ownerId){preview='auto';previewSelect.value=preview;return;}preview=previewSelect.value;apply();};
  const effects=document.createElement('div');effects.id='seasonEffects';effects.setAttribute('aria-hidden','true');effects.hidden=true;site.append(effects);let last='';
- function apply(){const ongoing=seasonAt(new Date(),zone),season=enabled?ongoing:'none';settings.hidden=ongoing==='none';toggle.textContent=enabled?'On':'Off';toggle.setAttribute('aria-checked',String(enabled));toggle.setAttribute('aria-label',ongoing==='none'?'Seasonal effects':definitions[ongoing].name+' effects');toggle.title=ongoing==='none'?'':definitions[ongoing].name;site.dataset.season=season;const puzzle=site.dataset.page==='puzzles',parent=puzzle?document.getElementById('puzzlePanel'):site;if(effects.parentElement!==parent)parent.append(effects);const wallpaper=site.dataset.wallpaper||'original',key=season+':'+wallpaper;effects.hidden=season==='none'||!site.classList.contains('show');
+ function apply(){const owner=accountUser?.id===ownerId;if(!owner){preview='auto';previewSelect.value='auto';}ownerControls.hidden=!owner;const ongoing=seasonAt(new Date(),zone),selected=owner&&preview!=='auto'?preview:ongoing,season=enabled?selected:'none';settings.hidden=!owner&&ongoing==='none';toggle.textContent=enabled?'On':'Off';toggle.setAttribute('aria-checked',String(enabled));toggle.setAttribute('aria-label',selected==='none'?'Seasonal effects':definitions[selected]?.name+' effects');toggle.title=selected==='none'?'':definitions[selected].name;site.dataset.season=season;const puzzle=site.dataset.page==='puzzles',parent=puzzle?document.getElementById('puzzlePanel'):site;if(effects.parentElement!==parent)parent.append(effects);const wallpaper=site.dataset.wallpaper||'original',key=season+':'+wallpaper;effects.hidden=season==='none'||!site.classList.contains('show');
  if(key===last)return;last=key;effects.replaceChildren();if(season==='none')return;const def=definitions[season],berserk=wallpaper==='berserk';for(let i=0;i<18;i++){const particle=document.createElement('span');particle.className='seasonParticle';const symbol=berserk?(season==='christmas'?'·':'✦'):def.symbols[i%def.symbols.length];if(symbol==='flag'){const flag=document.createElement('i');flag.className='seasonFlag';particle.append(flag);}else particle.textContent=symbol;particle.style.setProperty('--x',((i*47+11)%100)+'%');particle.style.setProperty('--size',(berserk?5:9+i%5*2)+'px');particle.style.setProperty('--duration',(18+i%7*3)+'s');particle.style.setProperty('--delay',(-i*2.7)+'s');particle.style.setProperty('--drift',((i%2?1:-1)*(12+i%4*9))+'px');effects.append(particle);}if(!berserk)for(const x of ['3%','94%']){const decor=document.createElement('span');decor.className='seasonDecor';decor.style.setProperty('--x',x);if(def.decor==='flag'){decor.classList.add('seasonFlag');}else decor.textContent=def.decor;effects.append(decor);}}
  toggle.onclick=()=>{if(!accountUser)return;enabled=!enabled;try{localStorage.setItem('cintaSeasonEnabled',String(enabled));}catch{}apply();};
  new MutationObserver(apply).observe(site,{attributes:true,attributeFilter:['data-wallpaper','data-theme','data-page','class']});
- document.addEventListener('visibilitychange',()=>{effects.classList.toggle('seasonPaused',document.hidden);if(!document.hidden)apply();});window.addEventListener('focus',apply);setInterval(()=>{if(!document.hidden)apply();},60000);apply();
+ document.addEventListener('visibilitychange',()=>{effects.classList.toggle('seasonPaused',document.hidden);if(!document.hidden)apply();});window.addEventListener('focus',apply);window.addEventListener('cinta-account-change',apply);setInterval(()=>{if(!document.hidden)apply();},60000);apply();
  // Pure date resolver retained for annual schedule validation.
  window.cintaSeasonAt=seasonAt;
 })();

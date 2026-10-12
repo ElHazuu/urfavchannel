@@ -1,1 +1,31 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10151d">
+  <title>Our Minecraft World | Cinta Kita</title>
+  <style>
+    :root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#10151d;color:#f4f4f5}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;flex-direction:column}
+    header{padding:15px clamp(16px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:16px;background:#171f29;border-bottom:1px solid #2c3644}
+    .brand{font-size:1.05rem;font-weight:700}.sub{display:block;font-size:.75rem;font-weight:400;color:#aab4c3;margin-top:3px}
+    a{color:#e3eefb;text-decoration:none}.button{border:1px solid #465569;border-radius:999px;padding:9px 14px;white-space:nowrap;font-size:.85rem;background:#253343}
+    main{flex:1;position:relative;min-height:70vh}iframe{position:absolute;inset:0;border:0;width:100%;height:100%;background:#0d1420}
+    footer{padding:9px 18px;color:#b4becd;background:#171f29;text-align:center;font-size:.78rem}
+    footer a{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">🌍 Our Minecraft World <span class="sub">Cinta Kita • Interactive 3D map</span></div>
+    <a class="button" href="https://uses-slope-educators-duplicate.trycloudflare.com" target="_blank" rel="noopener noreferrer">Open full map ↗</a>
+  </header>
+  <main>
+    <iframe src="https://uses-slope-educators-duplicate.trycloudflare.com" title="Interactive BlueMap Minecraft world" allowfullscreen referrerpolicy="no-referrer"></iframe>
+  </main>
+  <footer>
+    Live map available only while Minecraft, BlueMap and the Cloudflare tunnel are running. If the frame is blank, <a href="https://uses-slope-educators-duplicate.trycloudflare.com" target="_blank" rel="noopener noreferrer">open the map directly</a>.
+  </footer>
+</body>
+</html>

@@ -1762,7 +1762,24 @@ body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.account
 #mainWebsite[data-wallpaper="underwater"][data-theme="light"][data-season="christmas"] .seasonParticle{color:#c4d0d5;filter:drop-shadow(0 1px 2px #294b5e)}
 @media(max-width:620px){.christmasIceShelf{height:140px}}
 
-</style></head>
+</style><style>
+/* v108: consistent gentle hover feedback across every wallpaper and the Berserk scene */
+#mainWebsite :is(button, a.themeButton, a.taskbarAction, a.menuHandle, a.menuLinks a, a.accountMenuButton, a.spotifyLink, a.berserkSteamLink, a.minecraftMapTools a, a.wallpaperChoices button):not(:disabled) {
+  transition: translate .19s ease, filter .19s ease, box-shadow .19s ease, border-color .19s ease, background-color .19s ease;
+}
+@media(hover:hover) {
+  #mainWebsite :is(button, a.themeButton, a.taskbarAction, a.menuHandle, a.menuLinks a, a.accountMenuButton, a.spotifyLink, a.berserkSteamLink, a.minecraftMapTools a, a.wallpaperChoices button):not(:disabled):hover {
+    translate: 0 -2px;
+    filter: brightness(1.13);
+    box-shadow: 0 7px 19px #0005, 0 0 13px color-mix(in srgb, var(--scene-accent, var(--ui-accent, #f3afd0)) 30%, transparent);
+  }
+}
+#mainWebsite :is(button, a.themeButton, a.menuLinks a, a.berserkSteamLink, a.minecraftMapTools a):focus-visible {
+  outline: 2px solid var(--scene-accent, var(--ui-accent, #ffd0e3)); outline-offset: 3px;
+}
+@media(prefers-reduced-motion:reduce){#mainWebsite :is(button,a.themeButton,a.menuLinks a){transition:none!important}}
+</style>
+</head>
 <body>
   <div id="intro">
     <button id="catButton" type="button" aria-label="Enter the website">
@@ -2701,6 +2718,10 @@ body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.account
     if (directBerserkEntry) {
       mainWebsite.dataset.guestBerserk = "true";
       window.resumeOurWorldAfterUpdate();
+    } else if (new URLSearchParams(location.search).get("fromMap") === "1") {
+      // Returning from Minecraft bypasses only the cat intro, not account access.
+      window.resumeOurWorldAfterUpdate();
+      history.replaceState(history.state, "", `${location.pathname}#home`);
     }
     document.addEventListener("click", event => {
       if (screen === "website" && mainWebsite.contains(event.target) && !event.target.closest(".spotifyLink")) {

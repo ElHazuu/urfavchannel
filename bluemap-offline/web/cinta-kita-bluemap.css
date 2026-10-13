@@ -1,0 +1,51 @@
+/* Cinta Kita BlueMap theme — visual skin for BlueMap 5.28.
+   No map renderer changes. Supported BlueMap variable + guarded general controls. */
+:root {
+ --theme-bg: rgba(27,23,34,.91);
+ --theme-fg: #fff4fb;
+ --theme-fg-light: #e9c9de;
+ --theme-accent: #e9accc;
+ --ck-accent: #efadcf;
+ --ck-surface: rgba(27,22,35,.88);
+ --ck-stroke: rgba(250,188,218,.35);
+ --ck-shadow: 0 7px 24px rgba(0,0,0,.48);
+ color-scheme:dark;
+}
+/* BlueMap webapp interface: styling controls, not the map canvas.
+   DOM selector details can vary by BlueMap release. */
+#app :is(button,[role="button"],input,select),
+#app :is(.button,.bm-button),
+body > :is(button,[role="button"]) {
+ transition: transform .18s ease, filter .18s ease, box-shadow .18s ease,
+   border-color .3s ease, background-color .35s ease!important;
+}
+#app :is(button,[role="button"],.button,.bm-button):not(:disabled),
+body > button:not(:disabled) { border-radius:10px!important; }
+@media (hover:hover){
+ #app :is(button,[role="button"],.button,.bm-button):not(:disabled):hover,
+ body > button:not(:disabled):hover {
+   transform:translateY(-2px) scale(1.045);
+   filter:brightness(1.18);
+   box-shadow:var(--ck-shadow),0 0 14px color-mix(in srgb,var(--ck-accent) 35%,transparent)!important;
+   border-color:var(--ck-accent)!important;
+ }
+}
+#app :is(button,[role="button"],.button,.bm-button):focus-visible {
+ outline:2px solid var(--ck-accent)!important; outline-offset:3px;
+}
+/* BlueMap toolbar is generally built from divs, not only buttons; theme visible UI areas. */
+#app :is([class*="control"],[class*="Control"],[class*="button"],[class*="Button"],[class*="toolbar"],[class*="Toolbar"],[class*="sidebar"],[class*="Sidebar"],[class*="menu"],[class*="Menu"]) {
+ --theme-bg:var(--ck-surface);
+}
+#app :is([class*="toolbar"],[class*="Toolbar"],[class*="controls"],[class*="Controls"]) {
+ border-radius:12px!important;
+}
+#app :is([class*="button"],[class*="Button"],[class*="control"],[class*="Control"]):not(canvas):not(:has(canvas)) {
+ transition:transform .18s ease,filter .18s ease,background-color .6s ease!important;
+}
+@media(hover:hover){#app :is([class*="button"],[class*="Button"]):not(:has(canvas)):hover {filter:brightness(1.2);transform:translateY(-1px)}}
+/* Our location cards have a separate namespace so no collision with BlueMap. */
+.ck-mini-badge{font:600 11px/1.3 system-ui;color:var(--ck-accent);background:var(--ck-surface);
+ border:1px solid var(--ck-stroke);border-radius:999px;padding:5px 10px;
+ box-shadow:var(--ck-shadow);backdrop-filter:blur(12px)}
+@media(prefers-reduced-motion:reduce){#app *,#app *:before,#app *:after{transition:none!important;animation:none!important}}

@@ -1762,7 +1762,24 @@ body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.account
 #mainWebsite[data-wallpaper="underwater"][data-theme="light"][data-season="christmas"] .seasonParticle{color:#c4d0d5;filter:drop-shadow(0 1px 2px #294b5e)}
 @media(max-width:620px){.christmasIceShelf{height:140px}}
 
-</style></head>
+</style><style>
+/* v108: consistent gentle hover feedback across every wallpaper and the Berserk scene */
+#mainWebsite :is(button, a.themeButton, a.taskbarAction, a.menuHandle, a.menuLinks a, a.accountMenuButton, a.spotifyLink, a.berserkSteamLink, a.minecraftMapTools a, a.wallpaperChoices button):not(:disabled) {
+  transition: translate .19s ease, filter .19s ease, box-shadow .19s ease, border-color .19s ease, background-color .19s ease;
+}
+@media(hover:hover) {
+  #mainWebsite :is(button, a.themeButton, a.taskbarAction, a.menuHandle, a.menuLinks a, a.accountMenuButton, a.spotifyLink, a.berserkSteamLink, a.minecraftMapTools a, a.wallpaperChoices button):not(:disabled):hover {
+    translate: 0 -2px;
+    filter: brightness(1.13);
+    box-shadow: 0 7px 19px #0005, 0 0 13px color-mix(in srgb, var(--scene-accent, var(--ui-accent, #f3afd0)) 30%, transparent);
+  }
+}
+#mainWebsite :is(button, a.themeButton, a.menuLinks a, a.berserkSteamLink, a.minecraftMapTools a):focus-visible {
+  outline: 2px solid var(--scene-accent, var(--ui-accent, #ffd0e3)); outline-offset: 3px;
+}
+@media(prefers-reduced-motion:reduce){#mainWebsite :is(button,a.themeButton,a.menuLinks a){transition:none!important}}
+</style>
+</head>
 <body>
   <div id="intro">
     <button id="catButton" type="button" aria-label="Enter the website">
@@ -1846,7 +1863,7 @@ body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.account
       </div>
     </div>
     <div class="minecraftMapTools">
-      <a class="themeButton" id="minecraftMapShortcut" href="bluemap-offline/web/" aria-label="Open Minecraft 3D map" title="Minecraft 3D Map">
+      <a class="themeButton" id="minecraftMapShortcut" href="minecraft.html" aria-label="Open Minecraft 3D map" title="Minecraft 3D Map">
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 5.5 9 3l6 2.5 6-2.5v15l-6 2.5-6-2.5-6 2.5z"/>
           <path d="M9 3v15m6-12.5v15"/>
@@ -1872,7 +1889,7 @@ body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.account
 <a id="puzzleToggle" href="#puzzles" aria-expanded="false" aria-controls="puzzlePanel"><small>04</small>Puzzles<span>↗</span></a>
 
 <a id="calendarToggle" href="#calendar" aria-expanded="false" aria-controls="calendarPanel"><small>05</small>Calendar<span>↗</span></a>
-<a href="bluemap-offline/web/"><small>06</small>Minecraft 3D Map<span>↗</span></a>
+<a href="minecraft.html"><small>06</small>Minecraft 3D Map<span>↗</span></a>
 
         </div>
         <button class="accountMenuButton" id="accountButton" type="button" aria-haspopup="dialog">♡ Sign in</button>
@@ -2701,6 +2718,10 @@ body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.account
     if (directBerserkEntry) {
       mainWebsite.dataset.guestBerserk = "true";
       window.resumeOurWorldAfterUpdate();
+    } else if (new URLSearchParams(location.search).get("fromMap") === "1") {
+      // Returning from Minecraft bypasses only the cat intro, not account access.
+      window.resumeOurWorldAfterUpdate();
+      history.replaceState(history.state, "", `${location.pathname}#home`);
     }
     document.addEventListener("click", event => {
       if (screen === "website" && mainWebsite.contains(event.target) && !event.target.closest(".spotifyLink")) {

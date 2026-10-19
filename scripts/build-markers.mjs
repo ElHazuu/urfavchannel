@@ -1,32 +1,37 @@
+// Public marker geometry ONLY. Never export title, notes, photos, videos or user IDs.
 import fs from 'node:fs/promises';
 const url=process.env.SUPABASE_URL;
 const key=process.env.SUPABASE_SERVICE_ROLE_KEY;
-if(!url||!key)throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY (GitHub repository secrets)');
+if(!url || !key) throw new Error('Missing Supabase GitHub Actions secrets');
 const endpoint=new URL('/rest/v1/ck_map_memories',url);
-endpoint.searchParams.set('select','id,map_id,dimension,x,y,z,title,notes,youtube_url,created_at');
+endpoint.searchParams.set('select','id,dimension,x,y,z');
 endpoint.searchParams.set('map_id','eq.our_vanilla_world');
 endpoint.searchParams.set('limit','1000');
 const response=await fetch(endpoint,{headers:{apikey:key,Authorization:`Bearer ${key}`}});
-if(!response.ok)throw new Error(`Supabase returned HTTP ${response.status}: ${await response.text()}`);
+if(!response.ok)throw new Error(`Supabase HTTP ${response.status}`);
 const rows=await response.json();
-if(!Array.isArray(rows))throw new Error('Expected an array of memories');
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const ytId=s=>{try{const u=new URL(s),h=u.hostname.replace(/^www\./,'');let id='';if(h==='youtu.be')id=u.pathname.slice(1).split('/')[0];else if(['youtube.com','m.youtube.com'].includes(h)){id=u.searchParams.get('v')||u.pathname.split('/')[2]||'';}return /^[\w-]{11}$/.test(id)?id:null;}catch{return null}};
-const sets={};
+if(!Array.isArray(rows))throw new Error('Invalid marker response');
+const markers={};
 for(const row of rows){
   if(row.dimension && row.dimension!=='minecraft:overworld')continue;
-  if(![row.x,row.y,row.z].every(n=>Number.isFinite(Number(n))))continue;
-  const id=String(row.id);if(!/^[a-z\d_-]{6,70}$/i.test(id))continue;
-  const title=esc(row.title||'New Memory');const notes=esc(row.notes||'').slice(0,3000);
-  const video=ytId(row.youtube_url);const image=video?`<img loading='lazy' alt='YouTube preview' src='https://i.ytimg.com/vi/${video}/hqdefault.jpg' style='width:220px;max-width:100%;border-radius:8px;display:block;margin:8px 0'>`:'';
-  const link=video?`<a href='https://www.youtube.com/watch?v=${video}' target='_blank' rel='noopener noreferrer' style='color:#ffe0ee'>▶ Watch on YouTube</a>`:'';
-  const date=row.created_at?new Date(row.created_at):null;
-  const time=date&&!Number.isNaN(date.valueOf())?esc(date.toLocaleString('en-GB',{timeZone:'UTC',dateStyle:'medium',timeStyle:'short'}))+' UTC':'';
-  const html=`<div class='ck-world-stamp' data-memory-id='${esc(id)}'><span class='ck-world-pin' aria-label='${title}'>📷</span><div class='ck-world-preview'><b>${title}</b>${image}${notes?`<p>${notes}</p>`:''}${link}${time?`<small>${time}</small>`:''}</div></div>`;
-  sets[`memory_${id.replace(/-/g,'_')}`]={type:'html',position:{x:Number(row.x)+0.5,y:Number(row.y)+1.5,z:Number(row.z)+0.5},label:title,html,anchor:{x:0,y:0},listed:false,minDistance:0,maxDistance:10000000,classes:['ck-memory-map-marker']};
+  const position=[row.x,row.y,row.z].map(Number);
+  if(!position.every(Number.isFinite))continue;
+  const id=String(row.id||'');
+  if(!/^[a-z0-9_-]{6,70}$/i.test(id))continue;
+  markers[`memory_${id.replace(/-/g,'_')}`]={
+    type:'html',
+    position:{x:position[0]+0.5,y:position[1]+1.5,z:position[2]+0.5},
+    label:'Memory',
+    html:`<div class="ck-world-stamp" data-memory-id="${id}"><span class="ck-world-pin" aria-label="Memory marker">📷</span></div>`,
+    anchor:{x:0,y:0},
+    listed:false,
+    minDistance:0,
+    maxDistance:10000000,
+    classes:['ck-memory-map-marker']
+  };
 }
-const out={'cinta_kita_memories':{label:'Cinta Kita Memories',toggleable:true,defaultHidden:false,sorting:0,markers:sets}};
+const output={cinta_kita_memories:{label:'Memories',toggleable:true,defaultHidden:false,sorting:0,markers}};
 const target='bluemap-offline/web/maps/our_vanilla_world/markers.json';
 await fs.mkdir('bluemap-offline/web/maps/our_vanilla_world',{recursive:true});
-await fs.writeFile(target,JSON.stringify(out,null,2)+'\n');
-console.log(`Wrote ${Object.keys(sets).length} world markers to ${target}`);
+await fs.writeFile(target,JSON.stringify(output,null,2)+'\n');
+console.log(`Created ${Object.keys(markers).length} public location-only pins (no private details)`);

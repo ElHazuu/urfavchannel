@@ -31,7 +31,7 @@ for(const row of rows){
   };
 }
 const output={cinta_kita_memories:{label:'Memories',toggleable:true,defaultHidden:false,sorting:0,markers}};
-const target='bluemap-offline/web/maps/our_vanilla_world/markers.json';
+const target='bluemap-offline/web/maps/our_vanilla_world/live/markers.json';
 await fs.mkdir('bluemap-offline/web/maps/our_vanilla_world',{recursive:true});
 await fs.writeFile(target,JSON.stringify(output,null,2)+'\n');
 console.log(`Created ${Object.keys(markers).length} public location-only pins (no private details)`);

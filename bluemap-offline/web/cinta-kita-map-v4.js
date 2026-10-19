@@ -72,11 +72,28 @@
   if(error)throw error;
   await loadCloud();return true;
  }
+ // Hide stale public BlueMap pins as soon as members delete their records.
+ // Static public marker JSON is subsequently refreshed by the GitHub scheduled publisher.
+ const removedPins=new Set();
+ function hideRemovedPin(id){
+  removedPins.add(String(id));
+  for(const el of document.querySelectorAll('.ck-world-stamp[data-memory-id]')){
+   if(removedPins.has(String(el.dataset.memoryId))){
+    const wrapper=el.closest('.ck-memory-map-marker')||el.parentElement;
+    if(wrapper)wrapper.style.setProperty('display','none','important');
+    el.style.setProperty('display','none','important');
+   }
+  }
+ }
  async function writeDelete(id){
   if(!requireCloud())return false;
-  const {error}=await cloud.client.from('ck_map_memories').delete().eq('id',id);
+  const {data,error}=await cloud.client.from('ck_map_memories').delete().eq('id',id).select('id');
   if(error)throw error;
-  await loadCloud();return true;
+  if(!data?.some(row=>String(row.id)===String(id)))throw new Error('Delete was not confirmed by Supabase. Check permission or try again.');
+  cloud.items=cloud.items.filter(item=>String(item.id)!==String(id));
+  hideRemovedPin(id);
+  await loadCloud();
+  return true;
  }
  // The connection-check module fires this event after successful membership verification.
  window.addEventListener('ck-map-member-ready',async e=>{
@@ -316,7 +333,7 @@
   if(item && cloud.member){pin.dataset.memberTitle=item.title||'Memory';pin.setAttribute('title',item.title||'Memory')}
  },true);
  // BlueMap sometimes inserts its HTML marker elements after Supabase has loaded.
- const pinObserver=new MutationObserver(()=>{if(cloud.member)installMemberPinLabels()});
+ const pinObserver=new MutationObserver(()=>{if(cloud.member)installMemberPinLabels();for(const id of removedPins)hideRemovedPin(id)});
  pinObserver.observe(document.body,{childList:true,subtree:true});
  document.addEventListener('click',async e=>{
   const pin=e.target.closest?.('.ck-world-stamp');

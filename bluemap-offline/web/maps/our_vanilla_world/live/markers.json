@@ -4,6 +4,27 @@
     "toggleable": true,
     "defaultHidden": false,
     "sorting": 0,
-    "markers": {}
+    "markers": {
+      "memory_1c83ceab_0311_46d6_88ec_7916a993f2b7": {
+        "type": "html",
+        "position": {
+          "x": 369.5,
+          "y": 63.5,
+          "z": 273.5
+        },
+        "label": "Memory",
+        "html": "<div class=\"ck-world-stamp\" data-memory-id=\"1c83ceab-0311-46d6-88ec-7916a993f2b7\"><span class=\"ck-world-pin\" aria-label=\"Memory marker\">📷</span></div>",
+        "anchor": {
+          "x": 0,
+          "y": 0
+        },
+        "listed": false,
+        "minDistance": 0,
+        "maxDistance": 10000000,
+        "classes": [
+          "ck-memory-map-marker"
+        ]
+      }
+    }
   }
 }

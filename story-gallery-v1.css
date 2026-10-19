@@ -1,0 +1,34 @@
+/* Our Story album: keep the three original interactive cards and Siamese kitten untouched. */
+#ck-story-studio{max-width:1180px;margin:64px auto 0;color:var(--ui-ink,var(--theme-text,#fff));font-family:'DM Sans',sans-serif}
+.ckstory-heading{display:flex;justify-content:space-between;align-items:end;gap:18px;margin:0 0 20px}
+.ckstory-heading small,.ckstory-formhead small{letter-spacing:.19em;font-size:10px;font-weight:800;color:var(--ui-accent,var(--theme-accent,#ebb6d0))}
+.ckstory-heading h3{font:500 clamp(40px,5vw,70px)/1 'Cormorant Garamond',Georgia,serif;margin:8px 0 13px}
+.ckstory-heading p{opacity:.72;font-size:13px;margin:0}
+#ckstory-upload,.ckstory-submit{border:1px solid var(--ui-line,var(--theme-line,#f0c9dc66));border-radius:12px;background:color-mix(in srgb,var(--ui-accent,#eeb5ce) 30%,var(--ui-surface,#271b2d));color:var(--ui-ink,#fff);padding:13px 18px;cursor:pointer;font:700 12px 'DM Sans',sans-serif;white-space:nowrap}
+#ckstory-upload[hidden]{display:none}
+#ckstory-status:not(:empty){font-size:12px;padding:12px 0;opacity:.85}
+.ckstory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.ckstory-card{position:relative;min-height:340px;border:1px solid var(--ui-line,#f3c9da66);border-radius:24px;overflow:hidden;cursor:pointer;background:var(--ui-surface,#221927);box-shadow:0 18px 36px #0003;transition:transform .3s,box-shadow .3s}
+.ckstory-card:hover,.ckstory-card:focus-visible{transform:translateY(-5px);box-shadow:0 26px 45px #0006;outline:0}
+.ckstory-card img{display:block;width:100%;height:340px;object-fit:cover;transition:transform .45s}
+.ckstory-card:hover img,.ckstory-card.show-note img{transform:scale(1.06)}
+.ckstory-note{position:absolute;bottom:0;left:0;right:0;padding:60px 22px 22px;background:linear-gradient(transparent,#170d1de9 60%);color:#fff;opacity:0;transform:translateY(12px);transition:opacity .3s,transform .3s}
+.ckstory-card:hover .ckstory-note,.ckstory-card:focus-visible .ckstory-note,.ckstory-card.show-note .ckstory-note{opacity:1;transform:translateY(0)}
+.ckstory-note strong{font:600 29px 'Cormorant Garamond',Georgia,serif;display:block;margin-bottom:6px}
+.ckstory-note span{font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.ckstory-remove{position:absolute;right:11px;top:11px;background:#211622dd;color:#fff;border:1px solid #fff8;border-radius:9px;padding:7px 12px;cursor:pointer;z-index:5}
+.ckstory-empty{border:1px dashed var(--ui-line,#fff6);padding:35px;border-radius:15px;text-align:center;color:var(--ui-ink,#fff);opacity:.65;font:500 23px 'Cormorant Garamond',Georgia,serif}
+.ckstory-shade{position:fixed;inset:0;z-index:2147482500;display:grid;place-items:center;padding:20px;background:#050309d9;backdrop-filter:blur(10px)}
+.ckstory-form{width:min(500px,100%);max-height:92vh;overflow:auto;border:1px solid #f7cbeb66;border-radius:22px;padding:25px;background:var(--ui-surface,#291d30);color:var(--ui-ink,#fff);box-shadow:0 30px 70px #000a}
+.ckstory-formhead{display:flex;justify-content:space-between;align-items:start;gap:16px}
+.ckstory-formhead h3{font:500 36px 'Cormorant Garamond',Georgia,serif;margin:5px 0 16px}
+.ckstory-close{font-size:26px;background:transparent;border:0;color:inherit;cursor:pointer}
+.ckstory-form label{display:block;font-size:12px;font-weight:700;margin:12px 0}
+.ckstory-form input,.ckstory-form textarea{box-sizing:border-box;display:block;margin-top:8px;width:100%;font:inherit;color:inherit;padding:11px;border-radius:10px;border:1px solid var(--ui-line,#ffffff44);background:var(--ui-field,#120e18)}
+.ckstory-form input[type=file]{font-size:12px}
+.ckstory-preview{width:100%;height:190px;object-fit:contain;border-radius:12px;background:#0002}
+.ckstory-feedback{min-height:1.2em;font-size:12px}
+.ckstory-submit:disabled{opacity:.5}
+@media(max-width:800px){.ckstory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ckstory-card,.ckstory-card img{min-height:270px;height:270px}}
+@media(max-width:520px){.ckstory-heading{display:block}#ckstory-upload{margin-top:18px}.ckstory-grid{grid-template-columns:1fr}.ckstory-card,.ckstory-card img{height:320px}}
+@media(prefers-reduced-motion:reduce){.ckstory-card,.ckstory-card img,.ckstory-note{transition:none}}

@@ -1,0 +1,96 @@
+/* Our Story album: keep the three original interactive cards and Siamese kitten untouched. */
+#ck-story-studio{max-width:1180px;margin:64px auto 0;color:var(--ui-ink,var(--theme-text,#fff));font-family:'DM Sans',sans-serif}
+.ckstory-heading{display:flex;justify-content:space-between;align-items:end;gap:18px;margin:0 0 20px}
+.ckstory-heading small,.ckstory-formhead small{letter-spacing:.19em;font-size:10px;font-weight:800;color:var(--ui-accent,var(--theme-accent,#ebb6d0))}
+.ckstory-heading h3{font:500 clamp(40px,5vw,70px)/1 'Cormorant Garamond',Georgia,serif;margin:8px 0 13px}
+.ckstory-heading p{opacity:.72;font-size:13px;margin:0}
+#ckstory-upload,.ckstory-submit{border:1px solid var(--ui-line,var(--theme-line,#f0c9dc66));border-radius:12px;background:color-mix(in srgb,var(--ui-accent,#eeb5ce) 30%,var(--ui-surface,#271b2d));color:var(--ui-ink,#fff);padding:13px 18px;cursor:pointer;font:700 12px 'DM Sans',sans-serif;white-space:nowrap}
+#ckstory-upload[hidden]{display:none}
+#ckstory-status:not(:empty){font-size:12px;padding:12px 0;opacity:.85}
+.ckstory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.ckstory-card{position:relative;min-height:340px;border:1px solid var(--ui-line,#f3c9da66);border-radius:24px;overflow:hidden;cursor:pointer;background:var(--ui-surface,#221927);box-shadow:0 18px 36px #0003;transition:transform .3s,box-shadow .3s}
+.ckstory-card:hover,.ckstory-card:focus-visible{transform:translateY(-5px);box-shadow:0 26px 45px #0006;outline:0}
+.ckstory-card img{display:block;width:100%;height:340px;object-fit:cover;transition:transform .45s}
+.ckstory-card:hover img,.ckstory-card.show-note img{transform:scale(1.06)}
+.ckstory-note{position:absolute;bottom:0;left:0;right:0;padding:60px 22px 22px;background:linear-gradient(transparent,#170d1de9 60%);color:#fff;opacity:0;transform:translateY(12px);transition:opacity .3s,transform .3s}
+.ckstory-card:hover .ckstory-note,.ckstory-card:focus-visible .ckstory-note,.ckstory-card.show-note .ckstory-note{opacity:1;transform:translateY(0)}
+.ckstory-note strong{font:600 29px 'Cormorant Garamond',Georgia,serif;display:block;margin-bottom:6px}
+.ckstory-note span{font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.ckstory-remove{position:absolute;right:11px;top:11px;background:#211622dd;color:#fff;border:1px solid #fff8;border-radius:9px;padding:7px 12px;cursor:pointer;z-index:5}
+.ckstory-empty{border:1px dashed var(--ui-line,#fff6);padding:35px;border-radius:15px;text-align:center;color:var(--ui-ink,#fff);opacity:.65;font:500 23px 'Cormorant Garamond',Georgia,serif}
+.ckstory-shade{position:fixed;inset:0;z-index:2147482500;display:grid;place-items:center;padding:20px;background:#050309d9;backdrop-filter:blur(10px)}
+.ckstory-form{width:min(500px,100%);max-height:92vh;overflow:auto;border:1px solid #f7cbeb66;border-radius:22px;padding:25px;background:var(--ui-surface,#291d30);color:var(--ui-ink,#fff);box-shadow:0 30px 70px #000a}
+.ckstory-formhead{display:flex;justify-content:space-between;align-items:start;gap:16px}
+.ckstory-formhead h3{font:500 36px 'Cormorant Garamond',Georgia,serif;margin:5px 0 16px}
+.ckstory-close{font-size:26px;background:transparent;border:0;color:inherit;cursor:pointer}
+.ckstory-form label{display:block;font-size:12px;font-weight:700;margin:12px 0}
+.ckstory-form input,.ckstory-form textarea{box-sizing:border-box;display:block;margin-top:8px;width:100%;font:inherit;color:inherit;padding:11px;border-radius:10px;border:1px solid var(--ui-line,#ffffff44);background:var(--ui-field,#120e18)}
+.ckstory-form input[type=file]{font-size:12px}
+.ckstory-preview{width:100%;height:190px;object-fit:contain;border-radius:12px;background:#0002}
+.ckstory-feedback{min-height:1.2em;font-size:12px}
+.ckstory-submit:disabled{opacity:.5}
+@media(max-width:800px){.ckstory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ckstory-card,.ckstory-card img{min-height:270px;height:270px}}
+@media(max-width:520px){.ckstory-heading{display:block}#ckstory-upload{margin-top:18px}.ckstory-grid{grid-template-columns:1fr}.ckstory-card,.ckstory-card img{height:320px}}
+@media(prefers-reduced-motion:reduce){.ckstory-card,.ckstory-card img,.ckstory-note{transition:none}}
+
+
+/* Three worlds: cinematic side-peek album navigation. */
+#ck-story-studio{max-width:1260px}
+.ckstory-album-nav{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:center;gap:12px;margin:30px 0 0}
+.ckstory-album-nav>button{height:51px;border:1px solid var(--ui-line,#ffffff55);border-radius:50%;background:var(--ui-surface,#29212b);color:var(--ui-ink,#fff);font-size:21px;cursor:pointer;transition:transform .2s,opacity .2s}
+.ckstory-album-nav>button:hover:not(:disabled){transform:scale(1.1)}
+.ckstory-album-nav>button:disabled{opacity:.24;cursor:default}
+.ckstory-album-track{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;min-width:0;perspective:1200px}
+.ckstory-album{min-height:225px;position:relative;isolation:isolate;overflow:hidden;border:1px solid var(--ui-line,#fff6);border-radius:19px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 10px;text-align:center;cursor:pointer;color:#fff;box-shadow:0 15px 40px #0004;transform:scale(.93);opacity:.76;transition:transform .5s cubic-bezier(.16,1,.3,1),opacity .4s,box-shadow .4s,border-color .4s}
+.ckstory-album[data-album=minecraft]{background:linear-gradient(145deg,#476b46,#1d342c 65%,#0d251c)}
+.ckstory-album[data-album=real_life]{background:linear-gradient(140deg,#885676,#49334d 60%,#281c37)}
+.ckstory-album[data-album=games]{background:linear-gradient(140deg,#4b5683,#252d54 65%,#161b39)}
+.ckstory-album:before{content:'';position:absolute;inset:-50%;z-index:-1;opacity:.25;background:repeating-linear-gradient(115deg,transparent 0 36px,#fff2 38px,#fff0 45px 90px);transform:rotate(-8deg)}
+.ckstory-album.active{transform:translateY(-7px) scale(1);opacity:1;border:2px solid var(--ui-accent,#f3b6d4);box-shadow:0 24px 52px #0006,0 0 38px color-mix(in srgb,var(--ui-accent,#ebbad4) 22%,transparent)}
+.ckstory-album:hover:not(.active){transform:translateY(-3px) scale(.96);opacity:.95}
+.ckstory-album-art{font-size:38px;margin-bottom:12px;text-shadow:0 5px 18px #0007}
+.ckstory-album small{font:700 10px 'DM Sans',sans-serif;letter-spacing:.18em;opacity:.84}
+.ckstory-album strong{font:500 clamp(30px,3.3vw,49px)/1.05 'Cormorant Garamond',Georgia,serif;margin:7px 0}
+.ckstory-album>span:last-child{font:500 11px 'DM Sans',sans-serif;opacity:.76}
+.ckstory-album-bottom{display:flex;justify-content:space-between;gap:15px;align-items:center;margin:21px 60px 23px;padding-bottom:14px;border-bottom:1px solid var(--ui-line,#fff5);font-size:10px;letter-spacing:.14em;opacity:.75}
+.ckstory-album-bottom span:first-child{font-weight:800}
+#ck-story-studio[data-album=minecraft] .ckstory-card{border-color:#89b67c88}
+#ck-story-studio[data-album=games] .ckstory-card{border-color:#9fa8f588}
+#ck-story-studio .ckstory-grid{animation:ckstory-enter .38s ease-out}
+@keyframes ckstory-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.ckstory-form select{box-sizing:border-box;width:100%;margin-top:8px;padding:11px;border:1px solid var(--ui-line,#ffffff44);border-radius:10px;background:var(--ui-field,#120e18);color:inherit;font:inherit}
+@media(max-width:700px){.ckstory-album-nav{grid-template-columns:32px minmax(0,1fr) 32px;gap:5px}.ckstory-album-nav>button{height:38px;font-size:15px}.ckstory-album-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:9px;scrollbar-width:none}.ckstory-album-track::-webkit-scrollbar{display:none}.ckstory-album{flex:0 0 78%;min-height:205px;scroll-snap-align:center;transform:none!important;opacity:.86}.ckstory-album.active{opacity:1}.ckstory-album strong{font-size:34px}.ckstory-album-bottom{margin:14px 36px 19px}.ckstory-album-bottom span:last-child{display:none}}
+@media(prefers-reduced-motion:reduce){.ckstory-album,#ck-story-studio .ckstory-grid{transition:none;animation:none}}
+
+/* V3: ONE gallery, three actual horizontal slides (existing cards stay interactive). */
+#story .storyHeading{margin-bottom:27px}
+#story .ckstory-viewport{position:relative;max-width:1170px;margin:0 auto;overflow:hidden;border:1px solid var(--ui-line,#ffffff50);border-radius:28px;background:color-mix(in srgb,var(--ui-surface,#251927) 82%,transparent);box-shadow:0 27px 70px #0004;isolation:isolate;outline-offset:5px}
+#story .ckstory-viewport>.storyGallery.ckstory-slides{display:flex!important;gap:0!important;max-width:none!important;width:100%!important;align-items:stretch;transform:translateX(-100%);transition:transform .65s cubic-bezier(.22,1,.36,1);margin:0}
+#story .ckstory-slide{position:relative;flex:0 0 100%;width:100%;min-width:0;box-sizing:border-box;padding:50px clamp(50px,9vw,118px) 25px;min-height:440px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
+#story .ckstory-slide[data-gallery=minecraft]{background:radial-gradient(ellipse at 45% 15%,#689b6245,transparent 65%),linear-gradient(150deg,#1b3c326b,transparent)}
+#story .ckstory-slide[data-gallery=real_life]{background:radial-gradient(ellipse at 45% 15%,#f0acc644,transparent 65%),linear-gradient(150deg,#9c64813b,transparent)}
+#story .ckstory-slide[data-gallery=games]{background:radial-gradient(ellipse at 45% 15%,#8197ff39,transparent 65%),linear-gradient(150deg,#4a5ba83b,transparent)}
+#story .ckstory-slide>.storyCard,#story .ckstory-slide>.storyCardKittenSpot{width:min(440px,100%);flex:none}
+#story .ckstory-slide .storyCard{width:100%;min-height:350px}
+#story .ckstory-slide .storyCard:hover{transform:translateY(-5px)}
+#story .ckstory-slide #ourWorldCard:hover{transform:none}
+#story .ckstory-side{position:absolute;z-index:12;top:210px;transform:translateY(-50%);width:52px;height:90px;border:1px solid var(--ui-line,#ffffff66);background:color-mix(in srgb,var(--ui-surface,#1c1523) 90%,transparent);color:var(--ui-ink,#fff);font-size:28px;border-radius:15px;cursor:pointer;box-shadow:0 9px 24px #0004;transition:background .2s}
+#story .ckstory-side:hover:not(:disabled){background:color-mix(in srgb,var(--ui-accent,#e8aec8) 35%,var(--ui-surface,#231627))}
+#story .ckstory-side:disabled{opacity:.19;cursor:default}
+#story .ckstory-side-left{left:14px}#story .ckstory-side-right{right:14px}
+#story .ckstory-studio{max-width:none;margin:0;padding:8px 32px 26px}
+#story .ckstory-stagebar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:2px 10px 12px}
+#story .ckstory-stagecopy small{letter-spacing:.19em;font-size:10px;font-weight:800;color:var(--ui-accent,#e4b6d6)}
+#story .ckstory-stagecopy h3{font:500 clamp(38px,5vw,65px)/1 'Cormorant Garamond',Georgia,serif;margin:7px 0}
+#story .ckstory-stagecopy p{font-size:13px;opacity:.72;margin:0}
+#story .ckstory-dots{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:10px 0}
+#story .ckstory-dots button{border:1px solid var(--ui-line,#fff5);border-radius:100px;padding:10px 14px;background:transparent;color:var(--ui-ink,#fff);font-size:12px;cursor:pointer}
+#story .ckstory-dots button.active{border-color:var(--ui-accent,#ebbad0);background:color-mix(in srgb,var(--ui-accent,#ebbad0) 28%,var(--ui-surface,#261828))}
+#story .ckstory-slide .ckstory-grid{width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:15px}
+#story .ckstory-slide .ckstory-card{min-height:290px}
+#story .ckstory-slide .ckstory-card img{height:290px}
+#story .ckstory-slide .ckstory-empty{width:100%;box-sizing:border-box}
+#story .ckstory-slide[aria-hidden=true] .sittingKitten{visibility:hidden}
+#story .ckstory-viewport[data-album=minecraft] .sittingKitten{visibility:visible}
+@media(max-width:700px){#story .ckstory-slide{padding:35px 45px 16px;min-height:380px}#story .ckstory-side{top:175px;width:35px;height:68px;font-size:21px;border-radius:9px}#story .ckstory-side-left{left:5px}#story .ckstory-side-right{right:5px}#story .ckstory-studio{padding:10px 15px 22px}#story .ckstory-stagebar{flex-direction:column;align-items:start}#story .ckstory-slide .storyCard,#story .ckstory-slide .storyCard img{min-height:300px;height:300px}#story .ckstory-viewport{border-radius:16px}}
+@media(prefers-reduced-motion:reduce){#story .storyGallery.ckstory-slides{transition:none!important}}

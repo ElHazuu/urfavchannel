@@ -1779,6 +1779,7 @@ body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.account
 }
 @media(prefers-reduced-motion:reduce){#mainWebsite :is(button,a.themeButton,a.menuLinks a){transition:none!important}}
 </style>
+<link rel="stylesheet" href="video-gallery-v1.css" id="ckvg-styles">
 </head>
 <body>
   <div id="intro">
@@ -3545,6 +3546,8 @@ body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.account
       videoStatus.textContent = "";
       videoRows = data || [];
       renderVideos();
+      window.__ckGallerySnapshot = { videos: videoRows.filter(v => v.published), owner: videoOwner };
+      window.dispatchEvent(new CustomEvent('ck:videos', { detail: window.__ckGallerySnapshot }));
     }
     async function syncVideoAccess() {
       const generation = ++videoAccessGeneration;
@@ -3554,6 +3557,8 @@ body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.account
         videoManageToggle.hidden = true;
         videoManager.hidden = true;
         videoRows = [];
+        window.__ckGallerySnapshot = { videos: [], owner: false };
+        window.dispatchEvent(new CustomEvent('ck:videos', { detail: window.__ckGallerySnapshot }));
         renderedPublishedSignature = null;
         renderedManagerSignature = null;
         resetVideoEditor();
@@ -5432,5 +5437,6 @@ const count=Number(document.getElementById('puzzleCount').value),layout=puzzleLa
       } catch (_) { /* Still navigate if audio is unsupported. */ }
     });
   </script>
+<script defer src="video-gallery-v1.js" id="ckvg-script"></script>
 </body>
 </html>

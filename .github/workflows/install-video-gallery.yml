@@ -28,6 +28,7 @@ on:
       - 'story-gallery-v10.css'
       - 'story-gallery-v11.js'
       - 'story-gallery-v11.css'
+      - 'story-gallery-v12.css'
 permissions:
   contents: write
 concurrency:

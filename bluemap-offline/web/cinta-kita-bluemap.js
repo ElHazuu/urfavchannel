@@ -34,8 +34,9 @@
  if(window.__ckMemoryDraftV1)return;
  window.__ckMemoryDraftV1=true;
  const cloud={items:[],client:null,user:null,member:false};
+ const setCloudStatus=(message)=>{const el=document.getElementById('ck-m-status');if(el)el.textContent=message;};
  const requireCloud=()=>{
-  if(!cloud.member || !cloud.client || !cloud.user){status.textContent='Sign in as an approved member before saving.';return false}
+  if(!cloud.member || !cloud.client || !cloud.user){setCloudStatus('Sign in as an approved member before saving.');return false}
   return true;
  };
  const columns='id,map_id,dimension,x,y,z,title,notes,youtube_url,created_at,updated_at,created_by';
@@ -45,7 +46,7 @@
   const {data,error}=await cloud.client.from('ck_map_memories').select(columns).eq('map_id','our_vanilla_world').order('created_at',{ascending:false});
   if(error)throw error;
   cloud.items=(data||[]).map(translate);
-  status.textContent='✓ '+cloud.items.length+' shared memories loaded';
+  setCloudStatus('✓ '+cloud.items.length+' shared memories loaded');
  }
  async function writeNew(pos,title){
   if(!requireCloud())return false;
@@ -69,7 +70,7 @@
  // The connection-check module fires this event after successful membership verification.
  window.addEventListener('ck-map-member-ready',async e=>{
   cloud.client=e.detail.client;cloud.user=e.detail.user;cloud.member=true;
-  try{await loadCloud()}catch(err){status.textContent='Could not load shared memories';console.warn('[Cinta Kita] memories load',err)}
+  try{await loadCloud()}catch(err){setCloudStatus('Could not load shared memories');console.warn('[Cinta Kita] memories load',err)}
  });
  const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
  ready(()=>{

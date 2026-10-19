@@ -2,6 +2,7 @@
 create extension if not exists pgcrypto;
 create table if not exists public.site_story_photos (
  id uuid primary key default gen_random_uuid(),
+ category text not null default 'real_life' check (category in ('minecraft','real_life','games')),
  title text not null check (char_length(trim(title)) between 1 and 100),
  note text not null default '' check (char_length(note)<=700),
  photo_path text not null unique,
@@ -29,3 +30,8 @@ with check (bucket_id='site-story-photos' and (storage.foldername(name))[1]=auth
 drop policy if exists "Story members remove own photo files" on storage.objects;
 create policy "Story members remove own photo files" on storage.objects for delete to authenticated
 using (bucket_id='site-story-photos' and (storage.foldername(name))[1]=auth.uid()::text);
+
+-- Safe upgrade for an existing story table.
+alter table public.site_story_photos add column if not exists category text not null default 'real_life';
+alter table public.site_story_photos drop constraint if exists site_story_photos_category_check;
+alter table public.site_story_photos add constraint site_story_photos_category_check check (category in ('minecraft','real_life','games'));

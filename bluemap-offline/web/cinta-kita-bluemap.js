@@ -139,9 +139,24 @@
    p(card,`Selected block · X ${pos.x} · Y ${pos.y} · Z ${pos.z}`);
    p(card,'Title, notes and videos are optional. Save a blank marker now and edit it later.');
    const name=document.createElement('input');name.placeholder='Optional title';name.maxLength=100;card.append(name);
-   btn(card,'Save empty marker',async()=>{
-    try{const ok=await writeNew(pos,name.value.trim());if(ok){close();status.textContent='Marker saved to Supabase';openList()}}
-    catch(err){status.textContent='Save failed: '+err.message;console.warn('[Cinta Kita] insert',err)}
+   let saving=false;
+   const feedback=p(card,'Ready to save.');
+   const saveButton=btn(card,'Save marker',async()=>{
+    if(saving)return;
+    saving=true;saveButton.disabled=true;saveButton.textContent='Saving…';feedback.textContent='Saving your marker to Supabase…';
+    try{
+     const ok=await writeNew(pos,name.value.trim());
+     if(ok){
+      feedback.textContent='✓ Saved successfully!';
+      status.textContent='✓ Marker saved successfully';
+      saveButton.textContent='✓ Saved';
+      setTimeout(()=>{if(card.isConnected){close();openList()}},750);
+     }else{saving=false;saveButton.disabled=false;saveButton.textContent='Try saving again';feedback.textContent='Please sign in before saving.'}
+    }catch(err){
+     saving=false;saveButton.disabled=false;saveButton.textContent='Try saving again';
+     feedback.textContent='Save failed: '+err.message;status.textContent='Save failed: '+err.message;
+     console.warn('[Cinta Kita] insert',err);
+    }
    });btn(card,'Cancel',close);
   });
  }
@@ -216,9 +231,23 @@
    p(card,`X ${item.x} · Y ${item.y} · Z ${item.z} · Created ${new Date(item.createdAt).toLocaleString()}`);
    function field(label,value,multiline=false){const l=document.createElement('label');l.textContent=label;const el=document.createElement(multiline?'textarea':'input');el.value=value||'';if(multiline)el.rows=4;l.append(el);card.append(l);return el}
    const title=field('Title',item.title),notes=field('Notes',item.notes,true),youtube=field('YouTube link (optional)',item.youtube);
-   btn(card,'Save changes',async()=>{
-    try{if(await writeEdit(id,{title:title.value.trim(),notes:notes.value,youtube:youtube.value.trim()})){close();openList()}}
-    catch(err){status.textContent='Edit failed: '+err.message;console.warn('[Cinta Kita] update',err)}
+   let saving=false;
+   const feedback=p(card,'Ready to save changes.');
+   const saveButton=btn(card,'Save changes',async()=>{
+    if(saving)return;
+    saving=true;saveButton.disabled=true;saveButton.textContent='Saving…';feedback.textContent='Saving your changes…';
+    try{
+     if(await writeEdit(id,{title:title.value.trim(),notes:notes.value,youtube:youtube.value.trim()})){
+      feedback.textContent='✓ Changes saved successfully!';
+      status.textContent='✓ Memory changes saved';
+      saveButton.textContent='✓ Saved';
+      setTimeout(()=>{if(card.isConnected){close();openList()}},750);
+     }else{saving=false;saveButton.disabled=false;saveButton.textContent='Try saving again';feedback.textContent='Please sign in before saving.'}
+    }catch(err){
+     saving=false;saveButton.disabled=false;saveButton.textContent='Try saving again';
+     feedback.textContent='Save failed: '+err.message;status.textContent='Edit failed: '+err.message;
+     console.warn('[Cinta Kita] update',err);
+    }
    });btn(card,'Cancel',close);
   });
  }

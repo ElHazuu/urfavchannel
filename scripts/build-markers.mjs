@@ -12,12 +12,14 @@ if(!response.ok)throw new Error(`Supabase HTTP ${response.status}`);
 const rows=await response.json();
 if(!Array.isArray(rows))throw new Error('Invalid marker response');
 const markers={};
+const skipped={dimension:0,position:0,id:0};
+console.log('Supabase rows returned:',rows.length);
 for(const row of rows){
-  if(row.dimension && row.dimension!=='minecraft:overworld')continue;
+  if(row.dimension && !['minecraft:overworld','overworld'].includes(row.dimension)){skipped.dimension++;continue;}
   const position=[row.x,row.y,row.z].map(Number);
-  if(!position.every(Number.isFinite))continue;
+  if(!position.every(Number.isFinite)){skipped.position++;continue;}
   const id=String(row.id||'');
-  if(!/^[a-z0-9_-]{6,70}$/i.test(id))continue;
+  if(!/^[a-z0-9_-]{6,70}$/i.test(id)){skipped.id++;continue;}
   markers[`memory_${id.replace(/-/g,'_')}`]={
     type:'html',
     position:{x:position[0]+0.5,y:position[1]+1.5,z:position[2]+0.5},
@@ -34,4 +36,5 @@ const output={cinta_kita_memories:{label:'Memories',toggleable:true,defaultHidde
 const target='bluemap-offline/web/maps/our_vanilla_world/live/markers.json';
 await fs.mkdir('bluemap-offline/web/maps/our_vanilla_world',{recursive:true});
 await fs.writeFile(target,JSON.stringify(output,null,2)+'\n');
+console.log('Skipped marker rows by reason:',JSON.stringify(skipped));
 console.log(`Created ${Object.keys(markers).length} public location-only pins (no private details)`);

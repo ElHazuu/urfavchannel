@@ -1,0 +1,26 @@
+from pathlib import Path
+p=Path('index.html')
+s=p.read_text(encoding='utf-8')
+css='<link rel="stylesheet" href="video-gallery-v1.css" id="ckvg-styles">'
+js='<script defer src="video-gallery-v1.js" id="ckvg-script"></script>'
+anchor='      videoRows = data || [];\n      renderVideos();'
+hook="""      videoRows = data || [];
+      renderVideos();
+      window.__ckGallerySnapshot = { videos: videoRows.filter(v => v.published), owner: videoOwner };
+      window.dispatchEvent(new CustomEvent('ck:videos', { detail: window.__ckGallerySnapshot }));"""
+if 'id="ckvg-styles"' not in s:
+    if '</head>' not in s: raise RuntimeError('Missing </head>')
+    s=s.replace('</head>',css+'\n</head>',1)
+if 'id="ckvg-script"' not in s:
+    if '</body>' not in s: raise RuntimeError('Missing </body>')
+    s=s.replace('</body>',js+'\n</body>',1)
+if 'window.__ckGallerySnapshot = { videos:' not in s:
+    if anchor not in s: raise RuntimeError('Video loader layout changed: do not patch')
+    s=s.replace(anchor,hook,1)
+if 'window.dispatchEvent(new CustomEvent(\'ck:videos\', { detail: { videos: [], owner: false } }));' not in s:
+    anchor2='        videoRows = [];\n        renderedPublishedSignature = null;'
+    replacement2='        videoRows = [];\n        window.__ckGallerySnapshot = { videos: [], owner: false };\n        window.dispatchEvent(new CustomEvent(\'ck:videos\', { detail: window.__ckGallerySnapshot }));\n        renderedPublishedSignature = null;'
+    if anchor2 not in s: raise RuntimeError('Logout video cleanup layout changed: do not patch')
+    s=s.replace(anchor2,replacement2,1)
+p.write_text(s,encoding='utf-8')
+print('Gallery injection verified. Header CSS:',s.count('id="ckvg-styles"'),'JS:',s.count('id="ckvg-script"'),'video hook:',s.count('window.__ckGallerySnapshot = { videos: videoRows.filter'))

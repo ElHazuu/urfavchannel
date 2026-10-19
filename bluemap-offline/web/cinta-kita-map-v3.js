@@ -34,7 +34,17 @@
  if(window.__ckMemoryDraftV1)return;
  window.__ckMemoryDraftV1=true;
  const cloud={items:[],client:null,user:null,member:false};
- const setCloudStatus=(message)=>{const el=document.getElementById('ck-m-status');if(el)el.textContent=message;};
+ let feedbackTimer;
+ const setCloudStatus=(message)=>{
+  const el=document.getElementById('ck-m-status');
+  if(!el)return;
+  // Membership is shown by the single persistent badge. This is action feedback only.
+  if(/^✓ \\d+ shared memories loaded$/.test(message))return;
+  el.textContent=message;
+  el.style.display='block';
+  clearTimeout(feedbackTimer);
+  feedbackTimer=setTimeout(()=>{if(el.isConnected)el.style.display='none'},4500);
+ };
  const requireCloud=()=>{
   if(!cloud.member || !cloud.client || !cloud.user){setCloudStatus('Sign in as an approved member before saving.');return false}
   return true;
@@ -104,7 +114,7 @@
  document.head.append(style);
  const controls=document.createElement('div');controls.id='ck-memory-controls';
  const hint=document.createElement('div');hint.id='ck-m-hint';controls.append(hint);
- const status=document.createElement('span');status.id='ck-m-status';controls.append(status);
+ const status=document.createElement('span');status.id='ck-m-status';status.style.display='none';controls.append(status);
  const add=document.createElement('button');add.className='ck-m-button';add.textContent='＋ Add Marker';controls.append(add);
  const list=document.createElement('button');list.className='ck-m-button';list.textContent='♡ My Markers';controls.append(list);
  document.body.append(controls);
@@ -267,26 +277,53 @@
  }
  // Dynmap-like map stamp: click opens the member-only memory card.
  // Public marker data contains only the marker ID and position.
- document.addEventListener('click',e=>{
+ document.addEventListener('click',async e=>{
   const pin=e.target.closest?.('.ck-world-stamp');
   if(!pin)return;
   e.preventDefault();e.stopPropagation();
   const id=pin.dataset.memoryId;
-  const item=cloud.items.find(m=>String(m.id)===id);
-  if(!cloud.member || !item){
+  if(!id)return;
+  // Reuse the verified member client even if the ready event was missed.
+  const client=cloud.client||window.__ckMapSupabaseClient;
+  if(!client){
    modal('Memory marker',(card,close)=>{
-    p(card,'This memory is private. Sign in with an approved Cinta Kita account to view its title, notes and video.');
+    p(card,'Sign in with an approved Cinta Kita account to view this private memory.');
     btn(card,'Close',close);
    });
    return;
   }
-  modal(item.title||'Memory',(card,close)=>{
-   p(card,'X '+item.x+' · Y '+item.y+' · Z '+item.z);
-   const details=document.createElement('div');details.className='ck-m-entry ck-expanded';card.append(details);
-   addPreview(details,item);
-   btn(card,'Edit memory',()=>{close();edit(item.id)});
-   btn(card,'Close',close);
-  });
+  try{
+   const {data:membership,error:memberError}=await client.rpc('ck_is_map_member');
+   if(memberError)throw memberError;
+   if(membership!==true){
+    modal('Memory marker',(card,close)=>{p(card,'This memory is only visible to approved Cinta Kita members.');btn(card,'Close',close)});
+    return;
+   }
+   cloud.client=client;cloud.member=true;
+   let item=cloud.items.find(m=>String(m.id)===id);
+   // Always fetch the clicked record with the user's authenticated session.
+   // The public marker contains no title, notes or video.
+   const {data,error}=await client.from('ck_map_memories').select(columns).eq('id',id).eq('map_id','our_vanilla_world').maybeSingle();
+   if(error)throw error;
+   if(data){item=translate(data);const i=cloud.items.findIndex(m=>String(m.id)===id);if(i>=0)cloud.items[i]=item;else cloud.items.push(item)}
+   if(!item){
+    modal('Memory not found',(card,close)=>{p(card,'This marker has no accessible memory record yet. It may have been deleted.');btn(card,'Close',close)});
+    return;
+   }
+   modal(item.title||'Memory',(card,close)=>{
+    p(card,'X '+item.x+' · Y '+item.y+' · Z '+item.z);
+    const details=document.createElement('div');details.className='ck-m-entry ck-expanded';card.append(details);
+    addPreview(details,item);
+    btn(card,'Edit memory',()=>{close();edit(item.id)});
+    btn(card,'Close',close);
+   });
+  }catch(err){
+   console.warn('[Cinta Kita] marker details',err);
+   modal('Could not open memory',(card,close)=>{
+    p(card,'Your account is connected, but the memory could not be loaded: '+(err.message||'Unknown error'));
+    btn(card,'Close',close);
+   });
+  }
  },true);
  function inspect(){if(!placing||Date.now()-lastClick>2500)return;const p=readPosition();if(p)selected(p)}
  add.addEventListener('click',()=>{
@@ -338,7 +375,7 @@
    if(userError||!user){status.textContent='Memories: session expired';return}
    const {data,error}=await client.rpc('ck_is_map_member');
    if(error){status.textContent='Memories: membership check failed';console.warn('[Cinta Kita] membership check',error);return}
-   if(data===true){status.textContent='✓ Memories: member connected';window.__ckMapSupabaseClient=client;window.dispatchEvent(new CustomEvent('ck-map-member-ready',{detail:{client,user}}));}
+   if(data===true){status.textContent='✓ Memories: member connected';window.__ckMapSupabaseClient=client;window.__ckMapMemberUser=user;window.dispatchEvent(new CustomEvent('ck-map-member-ready',{detail:{client,user}}));}
    else status.textContent='Memories: view only';
   }catch(e){status.textContent='Memories: connection unavailable';console.warn('[Cinta Kita] Supabase',e)}
  });

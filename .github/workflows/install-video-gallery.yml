@@ -14,6 +14,8 @@ on:
       - 'story-gallery-v3.css'
       - 'story-gallery-v4.js'
       - 'story-gallery-v4.css'
+      - 'story-gallery-v5.js'
+      - 'story-gallery-v5.css'
 permissions:
   contents: write
 concurrency:
@@ -36,6 +38,7 @@ jobs:
           node --check story-gallery-v2.js
           node --check story-gallery-v3.js
           node --check story-gallery-v4.js
+          node --check story-gallery-v5.js
       - name: Safely connect gallery to existing Videos section
         run: python scripts/install-video-gallery.py
       - name: Commit only the HTML integration

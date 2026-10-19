@@ -25,8 +25,6 @@
  // Tiny confirmation for browser DevTools: `window.__cintaKitaBlueMap === true`.
  console.info('[Cinta Kita] BlueMap custom UI theme loaded');
 })();
-<<<<<<< HEAD
-=======
 
 
 /* Cinta Kita Memories — STEP 1: Add Memory toolbar button and draft editor.
@@ -101,4 +99,3 @@
   console.info('[Cinta Kita] Memory editor Step 1 loaded');
  });
 })();
->>>>>>> 30fde7bee5d358c02740c239e8ebd0b5fba3f960

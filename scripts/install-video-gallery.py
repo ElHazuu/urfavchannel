@@ -36,5 +36,8 @@ if 'id="ckstory-styles"' not in s:
 if 'id="ckstory-script"' not in s:
     if '</body>' not in s: raise RuntimeError('Story script: no body')
     s=s.replace('</body>','<script defer id="ckstory-script" src="story-gallery-v1.js"></script>\n</body>',1)
+# Upgrade the story album without touching the original interactive cards.
+s=s.replace('href="story-gallery-v1.css"','href="story-gallery-v2.css"')
+s=s.replace('src="story-gallery-v1.js"','src="story-gallery-v2.js"')
 p.write_text(s,encoding='utf-8')
 print('Gallery injection verified. Header CSS:',s.count('id="ckvg-styles"'),'JS:',s.count('id="ckvg-script"'),'video hook:',s.count('window.__ckGallerySnapshot = { videos: videoRows.filter'))

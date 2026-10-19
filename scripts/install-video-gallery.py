@@ -17,7 +17,7 @@ if 'id="ckvg-script"' not in s:
 if 'window.__ckGallerySnapshot = { videos:' not in s:
     if anchor not in s: raise RuntimeError('Video loader layout changed: do not patch')
     s=s.replace(anchor,hook,1)
-if 'window.dispatchEvent(new CustomEvent(\'ck:videos\', { detail: { videos: [], owner: false } }));' not in s:
+if 'window.__ckGallerySnapshot = { videos: [], owner: false' not in s:
     anchor2='        videoRows = [];\n        renderedPublishedSignature = null;'
     replacement2='        videoRows = [];\n        window.__ckGallerySnapshot = { videos: [], owner: false };\n        window.dispatchEvent(new CustomEvent(\'ck:videos\', { detail: window.__ckGallerySnapshot }));\n        renderedPublishedSignature = null;'
     if anchor2 not in s: raise RuntimeError('Logout video cleanup layout changed: do not patch')

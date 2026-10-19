@@ -27,15 +27,50 @@
 })();
 
 
-/* Cinta Kita offline-world Memory Editor — browser-local working stage.
- * Markers save in THIS browser only until Supabase and BlueMap marker data
- * are connected. This script does not claim to render world-anchored 3D pins.
- */
+/* Cinta Kita offline map memories — Supabase shared storage phase.
+ * The 3D world pin rendering still requires BlueMap viewer integration. */
 (() => {
  'use strict';
  if(window.__ckMemoryDraftV1)return;
  window.__ckMemoryDraftV1=true;
- const STORAGE='ck-world-memory-drafts-v1';
+ const cloud={items:[],client:null,user:null,member:false};
+ const requireCloud=()=>{
+  if(!cloud.member || !cloud.client || !cloud.user){status.textContent='Sign in as an approved member before saving.';return false}
+  return true;
+ };
+ const columns='id,map_id,dimension,x,y,z,title,notes,youtube_url,created_at,updated_at,created_by';
+ function translate(row){return {id:row.id,x:row.x,y:row.y,z:row.z,dimension:row.dimension,title:row.title||'New Memory',notes:row.notes||'',youtube:row.youtube_url||'',createdAt:row.created_at}}
+ async function loadCloud(){
+  if(!requireCloud())return;
+  const {data,error}=await cloud.client.from('ck_map_memories').select(columns).eq('map_id','our_vanilla_world').order('created_at',{ascending:false});
+  if(error)throw error;
+  cloud.items=(data||[]).map(translate);
+  status.textContent='✓ '+cloud.items.length+' shared memories loaded';
+ }
+ async function writeNew(pos,title){
+  if(!requireCloud())return false;
+  const data={map_id:'our_vanilla_world',dimension:'minecraft:overworld',x:pos.x,y:pos.y,z:pos.z,title:title||'',notes:'',youtube_url:null,created_by:cloud.user.id};
+  const {error}=await cloud.client.from('ck_map_memories').insert(data);
+  if(error)throw error;
+  await loadCloud();return true;
+ }
+ async function writeEdit(id,values){
+  if(!requireCloud())return false;
+  const {error}=await cloud.client.from('ck_map_memories').update({title:values.title,notes:values.notes,youtube_url:values.youtube||null}).eq('id',id);
+  if(error)throw error;
+  await loadCloud();return true;
+ }
+ async function writeDelete(id){
+  if(!requireCloud())return false;
+  const {error}=await cloud.client.from('ck_map_memories').delete().eq('id',id);
+  if(error)throw error;
+  await loadCloud();return true;
+ }
+ // The connection-check module fires this event after successful membership verification.
+ window.addEventListener('ck-map-member-ready',async e=>{
+  cloud.client=e.detail.client;cloud.user=e.detail.user;cloud.member=true;
+  try{await loadCloud()}catch(err){status.textContent='Could not load shared memories';console.warn('[Cinta Kita] memories load',err)}
+ });
  const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
  ready(()=>{
  const style=document.createElement('style');
@@ -72,8 +107,7 @@
  const add=document.createElement('button');add.className='ck-m-button';add.textContent='＋ Add Marker';controls.append(add);
  const list=document.createElement('button');list.className='ck-m-button';list.textContent='♡ My Markers';controls.append(list);
  document.body.append(controls);
- const parse=()=>{try{const v=JSON.parse(localStorage.getItem(STORAGE)||'[]');return Array.isArray(v)?v:[]}catch{return []}};
- const store=m=>localStorage.setItem(STORAGE,JSON.stringify(m));
+ const parse=()=>cloud.items;
  let placing=false,observer=null,timeout=null,lastClick=0;
  const pattern=/\bx\s*[:=]\s*(-?\d+)\s*[,;\s]+\by\s*[:=]\s*(-?\d+)\s*[,;\s]+\bz\s*[:=]\s*(-?\d+)\b/i;
  function readPosition(){
@@ -105,9 +139,9 @@
    p(card,`Selected block · X ${pos.x} · Y ${pos.y} · Z ${pos.z}`);
    p(card,'Title, notes and videos are optional. Save a blank marker now and edit it later.');
    const name=document.createElement('input');name.placeholder='Optional title';name.maxLength=100;card.append(name);
-   btn(card,'Save empty marker',()=>{
-    const existing=parse();existing.push({id:(crypto.randomUUID?.()||String(Date.now())),x:pos.x,y:pos.y,z:pos.z,dimension:'minecraft:overworld',title:name.value.trim()||'New Memory',notes:'',youtube:'',createdAt:new Date().toISOString()});store(existing);
-    status.textContent='Saved in this browser';close();openList();
+   btn(card,'Save empty marker',async()=>{
+    try{const ok=await writeNew(pos,name.value.trim());if(ok){close();status.textContent='Marker saved to Supabase';openList()}}
+    catch(err){status.textContent='Save failed: '+err.message;console.warn('[Cinta Kita] insert',err)}
    });btn(card,'Cancel',close);
   });
  }
@@ -159,7 +193,7 @@
  }
  function openList(){
   modal('My memory drafts', (card,close)=>{
-   p(card,'Hover over a saved memory to see its title, notes and YouTube thumbnail. Click Play to watch. These drafts are stored only in this browser; 3D map pins and shared saving are not yet enabled.');
+   p(card,'Shared memories stored in Supabase. 3D terrain pins are not yet connected to BlueMap.');
    const all=parse();if(!all.length)p(card,'No markers yet. Click Add Marker and select a block.');
    all.forEach(item=>{
     const section=document.createElement('div');section.className='ck-m-entry';card.append(section);
@@ -168,7 +202,11 @@
     addPreview(section,item);
     btn(section,'➤ Go to Marker',()=>goToMarker(item));
     btn(section,'Edit',()=>{close();edit(item.id)});
-    btn(section,'Delete',()=>{if(!confirm('Delete this memory draft?'))return;store(parse().filter(x=>x.id!==item.id));close();openList()});
+    btn(section,'Delete',async()=>{
+     if(!confirm('Delete this shared memory?'))return;
+     try{if(await writeDelete(item.id)){close();openList()}}
+     catch(err){status.textContent='Delete failed: '+err.message;console.warn('[Cinta Kita] delete',err)}
+    });
    });
    btn(card,'Close',close);
   });
@@ -178,7 +216,10 @@
    p(card,`X ${item.x} · Y ${item.y} · Z ${item.z} · Created ${new Date(item.createdAt).toLocaleString()}`);
    function field(label,value,multiline=false){const l=document.createElement('label');l.textContent=label;const el=document.createElement(multiline?'textarea':'input');el.value=value||'';if(multiline)el.rows=4;l.append(el);card.append(l);return el}
    const title=field('Title',item.title),notes=field('Notes',item.notes,true),youtube=field('YouTube link (optional)',item.youtube);
-   btn(card,'Save changes',()=>{let all=parse();all=all.map(x=>x.id===id?{...x,title:title.value.trim()||'New Memory',notes:notes.value,youtube:youtube.value.trim()}:x);store(all);close();openList()});btn(card,'Cancel',close);
+   btn(card,'Save changes',async()=>{
+    try{if(await writeEdit(id,{title:title.value.trim(),notes:notes.value,youtube:youtube.value.trim()})){close();openList()}}
+    catch(err){status.textContent='Edit failed: '+err.message;console.warn('[Cinta Kita] update',err)}
+   });btn(card,'Cancel',close);
   });
  }
  function inspect(){if(!placing||Date.now()-lastClick>2500)return;const p=readPosition();if(p)selected(p)}
@@ -193,7 +234,7 @@
   timeout=setTimeout(()=>{if(placing){const p=readPosition();if(p)selected(p);else hint.textContent='Could not read this block. Try clicking another block.'}},650);
  },true);
  list.addEventListener('click',openList);
- console.info('[Cinta Kita] offline memory drafts with YouTube hover previews ready');
+ console.info('[Cinta Kita] shared memory editing module loaded');
  });
 })();
 
@@ -231,7 +272,7 @@
    if(userError||!user){status.textContent='Memories: session expired';return}
    const {data,error}=await client.rpc('ck_is_map_member');
    if(error){status.textContent='Memories: membership check failed';console.warn('[Cinta Kita] membership check',error);return}
-   if(data===true){status.textContent='✓ Memories: member connected';window.__ckMapSupabaseClient=client;}
+   if(data===true){status.textContent='✓ Memories: member connected';window.__ckMapSupabaseClient=client;window.dispatchEvent(new CustomEvent('ck-map-member-ready',{detail:{client,user}}));}
    else status.textContent='Memories: view only';
   }catch(e){status.textContent='Memories: connection unavailable';console.warn('[Cinta Kita] Supabase',e)}
  });

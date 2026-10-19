@@ -1,0 +1,8 @@
+/* BlueMap HTML-marker content is located in world coordinates. */
+.ck-world-stamp{position:relative;transform:translate(-50%,-100%);font:13px/1.4 system-ui,sans-serif;isolation:isolate}
+.ck-world-pin{display:grid;place-items:center;width:35px;height:35px;background:var(--ck-surface,#302337ee);border:2px solid var(--ck-accent,#f7bddb);border-radius:50%;box-shadow:0 4px 15px #0009;color:white;font-size:19px;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.ck-world-stamp:hover .ck-world-pin,.ck-world-stamp:focus-within .ck-world-pin{transform:scale(1.22);box-shadow:0 0 18px var(--ck-accent,#f7bddb)}
+.ck-world-preview{display:none;position:absolute;left:45px;bottom:12px;width:240px;max-width:70vw;padding:12px;background:var(--ck-surface,#302337f5);color:#fff;border:1px solid var(--ck-accent,#f7bddb);border-radius:13px;box-shadow:0 12px 30px #000c;overflow-wrap:anywhere}
+.ck-world-stamp:hover .ck-world-preview,.ck-world-stamp:focus-within .ck-world-preview,.ck-world-stamp.ck-open .ck-world-preview{display:block}
+.ck-world-preview p{max-height:90px;overflow:auto;white-space:pre-wrap}.ck-world-preview small{display:block;color:#d7c3d2;margin-top:8px}.ck-world-preview img{max-height:125px;object-fit:cover}
+@media(hover:none){.ck-world-stamp.ck-open .ck-world-preview{display:block}}

@@ -1,0 +1,31 @@
+name: Publish Cinta Kita memory stamps
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: cinta-kita-memory-stamps
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Build BlueMap markers from Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/build-markers.mjs
+      - name: Commit only marker data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add bluemap-offline/web/maps/our_vanilla_world/markers.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Publish Cinta Kita memory stamps'
+            git push
+          fi

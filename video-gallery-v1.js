@@ -22,12 +22,12 @@ const byId=id=>state.videos.find(x=>String(x.id)===String(id));
 const hasPlaylist=(list,id)=>list.ids.some(x=>String(x)===String(id));
 const cover=v=>v?.youtube_id?'https://i.ytimg.com/vi/'+cleanId(v.youtube_id)+'/hqdefault.jpg':'';
 const relative=v=>{if(!v?.created_at)return 'Video';const d=new Date(v.created_at);return Number.isNaN(+d)?'Video':d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})};
-const app=el('div','ckvg-app');app.id='ckvg-app';app.innerHTML='<div class="ckvg-top"><div class="ckvg-brand"><small>OUR PRIVATE CINEMA</small><h3>Little moments, forever.</h3><p>A place for all of our stories, favorite clips and memories.</p></div><div class="ckvg-count" id="ckvg-count"></div></div><div class="ckvg-toolbar"><div class="ckvg-searchwrap"><span aria-hidden="true">⌕</span><input id="ckvg-search" type="search" placeholder="Search our videos…" aria-label="Search videos"></div><select id="ckvg-sort" aria-label="Sort videos"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Title A–Z</option></select><button type="button" id="ckvg-create">＋ New playlist</button></div><div class="ckvg-shell"><aside class="ckvg-rail" aria-label="Video collections"><div class="ckvg-rail-title">YOUR LIBRARY</div><div id="ckvg-nav"></div><p class="ckvg-localnote">Playlists are saved in this browser until shared storage is enabled.</p></aside><div class="ckvg-main"><div id="ckvg-featured"></div><div class="ckvg-sectionhead"><div><span id="ckvg-kicker">THE COLLECTION</span><h4 id="ckvg-heading">All videos</h4></div><span id="ckvg-resultcount"></span></div><div class="ckvg-grid" id="ckvg-grid"></div></div></div>';
+const app=el('div','ckvg-app');app.id='ckvg-app';app.innerHTML='<div class="ckvg-top"><div class="ckvg-brand"><small>OUR PRIVATE CINEMA</small><h3>Little moments, forever.</h3><p>A place for all of our stories, favorite clips and memories.</p></div><div class="ckvg-count" id="ckvg-count"></div></div><div class="ckvg-toolbar"><div class="ckvg-searchwrap"><span aria-hidden="true">⌕</span><input id="ckvg-search" type="search" placeholder="Search our videos…" aria-label="Search videos"></div><select id="ckvg-sort" aria-label="Sort videos"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Title A–Z</option></select><button type="button" id="ckvg-create">＋ New playlist</button></div><div class="ckvg-shell"><aside class="ckvg-rail" aria-label="Video collections"><div class="ckvg-rail-title">YOUR LIBRARY</div><div id="ckvg-nav"></div><p class="ckvg-localnote" aria-live="polite"></p></aside><div class="ckvg-main"><div id="ckvg-featured"></div><div class="ckvg-sectionhead"><div><span id="ckvg-kicker">THE COLLECTION</span><h4 id="ckvg-heading">All videos</h4></div><span id="ckvg-resultcount"></span></div><div class="ckvg-grid" id="ckvg-grid"></div></div></div>';
 native.after(app);
 const nav=app.querySelector('#ckvg-nav'),grid=app.querySelector('#ckvg-grid'),feature=app.querySelector('#ckvg-featured');
 const search=app.querySelector('#ckvg-search'),sort=app.querySelector('#ckvg-sort'),header=app.querySelector('#ckvg-heading'),count=app.querySelector('#ckvg-resultcount'),kicker=app.querySelector('#ckvg-kicker');
 const badge=app.querySelector('#ckvg-count'),create=app.querySelector('#ckvg-create');
-const statusText=el('p','ckvg-syncstatus','◌ Playlists saved in this browser');app.querySelector('.ckvg-localnote').replaceWith(statusText);
+const statusText=el('p','ckvg-syncstatus','');app.querySelector('.ckvg-localnote').replaceWith(statusText);
 const overlay=el('div','ckvg-overlay');overlay.hidden=true;document.body.append(overlay);
 let toastTimer;const toastNode=el('div','ckvg-toast');toastNode.hidden=true;document.body.append(toastNode);
 function toast(msg){toastNode.textContent=msg;toastNode.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastNode.hidden=true,3400)}
@@ -68,7 +68,7 @@ function openPlayer(id,queue){const v=byId(id);if(!v)return toast('This video is
  function manageList(l){const choice=prompt('Playlist: '+l.name+'\n1 — Rename\n2 — Delete playlist\n3 — Move a video up/down (open playlist first)','1');if(choice==='1'){const name=ask('Rename playlist',l.name);if(name){l.name=name;persist();render()}}else if(choice==='2'){if(confirm('Delete playlist “'+l.name+'”? Videos will remain in your library.')){state.lists=state.lists.filter(x=>x.id!==l.id);if(state.playlist===l.id)state.playlist=null;persist();render()}}else if(choice==='3'){if(!l.ids.length)return toast('Playlist is empty');const lines=l.ids.map((id,i)=>(i+1)+'. '+(byId(id)?.title||'Missing video')).join('\n');const number=Number(prompt('Choose a video number:\n'+lines));if(!Number.isInteger(number)||number<1||number>l.ids.length)return;const dir=prompt('Move “'+(byId(l.ids[number-1])?.title||'video')+'” up or down?','up');const index=number-1,next=index+(dir==='down'?1:dir==='up'?-1:0);if(next>=0&&next<l.ids.length&&index!==next){[l.ids[index],l.ids[next]]=[l.ids[next],l.ids[index]];persist();render()}}}
 let connectSeq=0;
 async function connectShared(client,user){
- if(!client||!user){connectSeq++;state.client=null;state.user=null;state.shared=false;state.lists=safeLists();statusText.textContent='◌ Playlists saved in this browser';render();return}
+ if(!client||!user){connectSeq++;state.client=null;state.user=null;state.shared=false;state.lists=safeLists();statusText.textContent='';render();return}
  if(state.syncing)return;
  if(state.shared&&state.user?.id===user.id&&Date.now()-state.lastFetch<25000)return;
  const seq=++connectSeq;state.syncing=true;statusText.textContent='↻ Connecting shared playlists…';
@@ -84,7 +84,7 @@ async function connectShared(client,user){
  }catch(e){
   if(seq!==connectSeq)return;
   state.shared=false;state.client=null;state.user=null;state.lists=safeLists();
-  statusText.textContent='◌ Local playlists only · Enable Supabase shared-playlist table';
+  statusText.textContent='⚠ Shared playlist connection unavailable';
   render();
  }finally{state.syncing=false}
 }

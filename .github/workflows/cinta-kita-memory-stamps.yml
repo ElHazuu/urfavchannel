@@ -1,12 +1,15 @@
-name: Cinta Kita private memories - public publishing disabled
-# Private memories stay in Supabase behind member authentication.
-# This workflow intentionally never exports memory records to GitHub Pages.
+name: Cinta Kita private-memory safety check
+# Location-only public pins are allowed. This workflow never exports Supabase data.
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/cinta-kita-memory-stamps.yml'
 permissions:
   contents: read
 jobs:
-  privacy-check:
+  safety-check:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Public memory publishing disabled. No Supabase access or export."
+      - name: Verify public exporter is paused
+        run: echo "Private memory details remain in Supabase. Scheduled public publishing is disabled."

@@ -27,75 +27,92 @@
 })();
 
 
-/* Cinta Kita Memories — STEP 1: Add Memory toolbar button and draft editor.
-   This step intentionally does not claim to create a terrain-anchored marker.
-   That requires connecting to BlueMap's coordinate-picking API in Step 2.
-*/
+/* Cinta Kita Memories — Step 2: test terrain position capture only.
+   No network writes or markers are created in this test. */
 (() => {
  'use strict';
- if (window.__ckMemoryStep1) return;
- window.__ckMemoryStep1 = true;
- const ready = fn => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded',fn,{once:true}) : fn();
+ if (window.__ckMemoryPositionTest) return;
+ window.__ckMemoryPositionTest = true;
+ const ready = fn => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', fn, {once:true}) : fn();
  ready(() => {
-  const css = document.createElement('style');
-  css.textContent = `
-   #ck-add-memory{position:fixed;right:16px;bottom:74px;z-index:2147481000;display:flex;align-items:center;gap:8px;padding:11px 15px;border:1px solid var(--ck-stroke,#eeb8d077);border-radius:13px;background:var(--ck-surface,#291d2de8);color:var(--ck-accent,#ffd1e5);font:600 13px system-ui,sans-serif;box-shadow:0 9px 24px #0007;cursor:pointer;transition:transform .18s,box-shadow .18s}
-   #ck-add-memory:hover,#ck-add-memory:focus-visible{transform:scale(1.06);box-shadow:0 12px 28px #0009,0 0 15px var(--ck-accent,#ffc4e088)}
-   #ck-add-memory svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  const style = document.createElement('style');
+  style.textContent = `
+   #ck-add-memory,#ck-placement-hint{position:fixed;right:16px;z-index:2147481000;color:var(--ck-accent,#ffd1e5);font:600 13px system-ui,sans-serif;border:1px solid var(--ck-stroke,#eeb8d077);border-radius:13px;background:var(--ck-surface,#291d2de8);box-shadow:0 9px 24px #0007}
+   #ck-add-memory{bottom:74px;display:flex;gap:8px;align-items:center;padding:11px 15px;cursor:pointer;transition:transform .18s,box-shadow .18s}
+   #ck-add-memory:hover{transform:scale(1.06);box-shadow:0 12px 28px #0009,0 0 15px var(--ck-accent,#ffc4e088)}
+   #ck-placement-hint{bottom:129px;max-width:min(330px,calc(100vw - 32px));padding:12px 14px;display:none;line-height:1.5}
+   #ck-add-memory.ck-placing{outline:2px solid var(--ck-accent,#ffd1e5)}
    #ck-memory-shade{position:fixed;inset:0;z-index:2147482000;background:#08070bb5;display:flex;align-items:center;justify-content:center;padding:15px}
    #ck-memory-dialog{width:min(420px,100%);max-height:90vh;overflow:auto;border:1px solid var(--ck-stroke,#eeb8d077);border-radius:20px;background:var(--ck-surface,#261a2bef);color:#fff5fa;padding:23px;box-shadow:0 22px 70px #000b;font:14px system-ui,sans-serif}
    #ck-memory-dialog h2{margin:0 0 8px;color:var(--ck-accent,#ffc4da);font-size:22px}
    #ck-memory-dialog p{line-height:1.5;color:#e3d5dc}
-   #ck-memory-dialog label{display:block;margin-top:13px;font-weight:600;font-size:12px}
-   #ck-memory-dialog input,#ck-memory-dialog textarea{margin-top:5px;width:100%;border-radius:9px;border:1px solid #c69fb17c;background:#100e17b8;color:white;padding:10px;font:inherit}
-   #ck-memory-dialog .ck-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:18px}
    #ck-memory-dialog button{border:1px solid #c69fb17c;border-radius:9px;padding:9px 13px;background:#4c344b;color:white;cursor:pointer}
-   #ck-memory-preview{margin-top:12px;max-width:100%;max-height:155px;object-fit:contain;border-radius:9px}
+   #ck-memory-dialog .ck-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:18px}
   `;
-  document.head.append(css);
-  const button = document.createElement('button');
-  button.id='ck-add-memory';button.type='button';button.title='Create a Minecraft memory (draft editor)';
-  button.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/><path d="M4 7h4l2-2h4l2 2h4v13H4z"/></svg><span>Add Memory</span>';
-  document.body.append(button);
-  button.addEventListener('click', () => {
-   if(document.getElementById('ck-memory-shade'))return;
-   const shade=document.createElement('div');shade.id='ck-memory-shade';
-   const dialog=document.createElement('section');dialog.id='ck-memory-dialog';dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','Create memory draft');
-   dialog.innerHTML=`<h2>New Minecraft Memory ♡</h2><p>Test your memory editor here. Placement on the actual 3D map and online saving will be added after we verify the toolbar works.</p><label>Title<input id="ck-title" maxlength="100" placeholder="Our first house" /></label><label>Notes<textarea id="ck-notes" rows="3" maxlength="4000" placeholder="Write your memory…"></textarea></label><label>Screenshot<input id="ck-photo" type="file" accept="image/*" /></label><img id="ck-memory-preview" alt="Selected image preview" hidden/><label>YouTube link<input id="ck-video" type="url" placeholder="https://www.youtube.com/watch?v=…" /></label><p id="ck-draft-status" aria-live="polite"></p><div class="ck-actions"><button id="ck-close" type="button">Close</button><button id="ck-test" type="button">Preview details</button></div>`;
-   shade.append(dialog);document.body.append(shade);
-   // Keep keyboard and pointer gestures inside the editor, not BlueMap.
-   // The capture handler runs on window before BlueMap's document/canvas hotkeys.
-   const blockMapKeys = e => {
-    if (!shade.isConnected) return;
-    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
-    // Leave browser editing shortcuts and normal typing intact.
-    e.stopImmediatePropagation();
-   };
-   for(const type of ['keydown','keyup','keypress'])window.addEventListener(type,blockMapKeys,true);
-   for(const type of ['pointerdown','pointerup','mousedown','mouseup','click','dblclick','wheel','touchstart','touchmove']) {
-    shade.addEventListener(type,e=>e.stopPropagation());
+  document.head.append(style);
+  const button=document.createElement('button');button.id='ck-add-memory';button.type='button';
+  button.textContent='＋ Add Memory';button.title='Test choosing a block location';document.body.append(button);
+  const hint=document.createElement('div');hint.id='ck-placement-hint';hint.setAttribute('role','status');document.body.append(hint);
+  let active=false, observer=null, timer=null, clickTime=0, lastPosition=null;
+  const coordsPattern=/\bx\s*[:=]\s*(-?\d+)\s*[,;\s]+\by\s*[:=]\s*(-?\d+)\s*[,;\s]+\bz\s*[:=]\s*(-?\d+)\b/i;
+  const ignore=el=>!!el.closest('#ck-placement-hint,#ck-add-memory,#ck-memory-shade');
+  function findPosition(){
+   // BlueMap's clicked-block popup is a small DOM element. Only scan
+   // short leaf/near-leaf elements to avoid matching unrelated page content.
+   const nodes=document.querySelectorAll('div,span,p');
+   for(const el of nodes){
+    if(ignore(el)||el.children.length>5)continue;
+    const t=(el.textContent||'').trim();
+    if(t.length<11||t.length>140)continue;
+    if(!/\bblock\s*:/i.test(t))continue;
+    const m=t.match(coordsPattern);
+    if(m)return {x:Number(m[1]),y:Number(m[2]),z:Number(m[3])};
    }
-   const close=()=>{
-    for(const type of ['keydown','keyup','keypress'])window.removeEventListener(type,blockMapKeys,true);
-    const img=dialog.querySelector('#ck-memory-preview');
-    if(img?.dataset.url)URL.revokeObjectURL(img.dataset.url);
-    shade.remove();
-    button.focus();
-   };
-   dialog.querySelector('#ck-close').addEventListener('click',close);
-   shade.addEventListener('click',e=>{if(e.target===shade)close()});
-   dialog.querySelector('#ck-photo').addEventListener('change',e=>{
-    const file=e.target.files[0], img=dialog.querySelector('#ck-memory-preview');
-    if(img.dataset.url)URL.revokeObjectURL(img.dataset.url);
-    if(file){img.dataset.url=URL.createObjectURL(file);img.src=img.dataset.url;img.hidden=false;}
-    else{img.hidden=true;img.removeAttribute('src')}
-   });
-   dialog.querySelector('#ck-test').addEventListener('click',()=>{
-    const title=dialog.querySelector('#ck-title').value.trim();
-    dialog.querySelector('#ck-draft-status').textContent=title ? 'Preview ready: '+title+'. This is a test only; no memory has been saved yet.' : 'Enter a title to preview your draft.';
-   });
-   dialog.querySelector('#ck-title').focus();
+   return null;
+  }
+  function stop(){
+   active=false;button.classList.remove('ck-placing');button.textContent='＋ Add Memory';
+   hint.style.display='none';
+   if(observer){observer.disconnect();observer=null}
+   if(timer){clearTimeout(timer);timer=null}
+  }
+  function showResult(pos){
+   stop();lastPosition=pos;
+   const shade=document.createElement('div');shade.id='ck-memory-shade';
+   const dialog=document.createElement('section');dialog.id='ck-memory-dialog';dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');
+   const dimension=decodeURIComponent((location.hash.slice(1).split(':')[0]||'Unknown dimension'));
+   const h=document.createElement('h2');h.textContent='Memory position found ♡';dialog.append(h);
+   const body=document.createElement('p');body.textContent=`X: ${pos.x} · Y: ${pos.y} · Z: ${pos.z} · ${dimension}`;dialog.append(body);
+   const msg=document.createElement('p');msg.textContent='This confirms we can read BlueMap’s clicked block. Nothing has been saved or placed yet; next we will connect real world-anchored markers and member permissions.';dialog.append(msg);
+   const actions=document.createElement('div');actions.className='ck-actions';
+   const closeBtn=document.createElement('button');closeBtn.type='button';closeBtn.textContent='Close';actions.append(closeBtn);dialog.append(actions);
+   shade.append(dialog);document.body.append(shade);
+   function close(){window.removeEventListener('keydown',keyBlock,true);shade.remove();button.focus()}
+   function keyBlock(e){if(e.key==='Escape'){e.preventDefault();close();return}e.stopImmediatePropagation()}
+   window.addEventListener('keydown',keyBlock,true);
+   shade.addEventListener('click',e=>{e.stopPropagation();if(e.target===shade)close()});
+   closeBtn.addEventListener('click',close);
+  }
+  function inspect(){if(!active)return;const p=findPosition();if(p)showResult(p)}
+  button.addEventListener('click',()=>{
+   if(active){stop();return}
+   active=true;lastPosition=null;button.textContent='✕ Cancel placement';button.classList.add('ck-placing');
+   hint.textContent='Now click a solid block on the 3D map. We’ll read the clicked-block position. No memory will be saved yet.';hint.style.display='block';
+   observer=new MutationObserver(inspect);
+   observer.observe(document.body,{subtree:true,childList:true,characterData:true});
+   // Observe for the temporary clicked-block tooltip; do not mistake an old one
+   // for a new click. The click handler also checks after the viewer updates.
   });
-  console.info('[Cinta Kita] Memory editor Step 1 loaded');
+  document.addEventListener('click', e=>{
+   if(!active || e.target.closest('#ck-add-memory,#ck-placement-hint,#ck-memory-shade'))return;
+   clickTime=Date.now();
+   if(timer)clearTimeout(timer);
+   timer=setTimeout(()=>{
+    if(!active)return;
+    inspect();
+    if(active){hint.textContent='Could not read that block yet. Try another block. If this persists, we’ll inspect the BlueMap popup structure.'}
+   },600);
+  },true);
+  console.info('[Cinta Kita] Add Memory position test loaded (no saving)');
  });
 })();

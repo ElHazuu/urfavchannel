@@ -63,11 +63,27 @@
    const dialog=document.createElement('section');dialog.id='ck-memory-dialog';dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','Create memory draft');
    dialog.innerHTML='<h2>New Minecraft Memory ♡</h2><p>Test your memory editor here. Placement on the actual 3D map and online saving will be added after we verify the toolbar works.</p><label>Title<input id="ck-title" maxlength="100" placeholder="Our first house" /></label><label>Notes<textarea id="ck-notes" rows="3" maxlength="4000" placeholder="Write your memory…"></textarea></label><label>Screenshot<input id="ck-photo" type="file" accept="image/*" /></label><img id="ck-memory-preview" alt="Selected image preview" hidden/><label>YouTube link<input id="ck-video" type="url" placeholder="https://www.youtube.com/watch?v=…" /></label><p id="ck-draft-status" aria-live="polite"></p><div class="ck-actions"><button id="ck-close" type="button">Close</button><button id="ck-test" type="button">Preview details</button></div>';
    shade.append(dialog);document.body.append(shade);
-   const close=()=>shade.remove();
+   // Keep keyboard and pointer gestures inside the editor, not BlueMap.
+   // The capture handler runs on window before BlueMap's document/canvas hotkeys.
+   const blockMapKeys = e => {
+    if (!shade.isConnected) return;
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+    // Leave browser editing shortcuts and normal typing intact.
+    e.stopImmediatePropagation();
+   };
+   for(const type of ['keydown','keyup','keypress'])window.addEventListener(type,blockMapKeys,true);
+   for(const type of ['pointerdown','pointerup','mousedown','mouseup','click','dblclick','wheel','touchstart','touchmove']) {
+    shade.addEventListener(type,e=>e.stopPropagation());
+   }
+   const close=()=>{
+    for(const type of ['keydown','keyup','keypress'])window.removeEventListener(type,blockMapKeys,true);
+    const img=dialog.querySelector('#ck-memory-preview');
+    if(img?.dataset.url)URL.revokeObjectURL(img.dataset.url);
+    shade.remove();
+    button.focus();
+   };
    dialog.querySelector('#ck-close').addEventListener('click',close);
    shade.addEventListener('click',e=>{if(e.target===shade)close()});
-   const escape=e=>{if(e.key==='Escape'){close();document.removeEventListener('keydown',escape)}};
-   document.addEventListener('keydown',escape);
    dialog.querySelector('#ck-photo').addEventListener('change',e=>{
     const file=e.target.files[0], img=dialog.querySelector('#ck-memory-preview');
     if(img.dataset.url)URL.revokeObjectURL(img.dataset.url);

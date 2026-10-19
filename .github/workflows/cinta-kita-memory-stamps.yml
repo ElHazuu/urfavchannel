@@ -1,6 +1,8 @@
 name: Publish public camera pins (no private details)
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
   push:
     paths:
       - '.github/workflows/cinta-kita-memory-stamps.yml'

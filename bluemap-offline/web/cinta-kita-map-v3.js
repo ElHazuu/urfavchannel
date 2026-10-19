@@ -265,6 +265,29 @@
    });btn(card,'Cancel',close);
   });
  }
+ // Dynmap-like map stamp: click opens the member-only memory card.
+ // Public marker data contains only the marker ID and position.
+ document.addEventListener('click',e=>{
+  const pin=e.target.closest?.('.ck-world-stamp');
+  if(!pin)return;
+  e.preventDefault();e.stopPropagation();
+  const id=pin.dataset.memoryId;
+  const item=cloud.items.find(m=>String(m.id)===id);
+  if(!cloud.member || !item){
+   modal('Memory marker',(card,close)=>{
+    p(card,'This memory is private. Sign in with an approved Cinta Kita account to view its title, notes and video.');
+    btn(card,'Close',close);
+   });
+   return;
+  }
+  modal(item.title||'Memory',(card,close)=>{
+   p(card,'X '+item.x+' · Y '+item.y+' · Z '+item.z);
+   const details=document.createElement('div');details.className='ck-m-entry ck-expanded';card.append(details);
+   addPreview(details,item);
+   btn(card,'Edit memory',()=>{close();edit(item.id)});
+   btn(card,'Close',close);
+  });
+ },true);
  function inspect(){if(!placing||Date.now()-lastClick>2500)return;const p=readPosition();if(p)selected(p)}
  add.addEventListener('click',()=>{
   if(placing){stop();return}placing=true;lastClick=0;add.textContent='✕ Cancel';

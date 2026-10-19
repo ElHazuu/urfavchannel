@@ -54,6 +54,16 @@
  #ck-m-card .ck-m-entry{padding:9px 0;border-bottom:1px solid #ffffff33}
  #ck-m-card small{color:#d4c4d0}
  #ck-m-status{font-size:12px;color:#efcfdd;max-width:270px;text-align:right}
+ .ck-m-entry{position:relative;transition:background .2s,padding .2s;border-radius:11px}
+ .ck-m-entry:hover,.ck-m-entry:focus-within{background:#ffffff12;padding-left:8px;padding-right:8px}
+ .ck-m-entry .ck-hovercard{max-height:0;opacity:0;overflow:hidden;transition:max-height .24s ease,opacity .2s ease;margin-top:4px}
+ .ck-m-entry:hover .ck-hovercard,.ck-m-entry:focus-within .ck-hovercard,.ck-m-entry.ck-expanded .ck-hovercard{max-height:320px;opacity:1}
+ .ck-hovercard{font-size:12px;color:#e9deeb}
+ .ck-hovercard .ck-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;display:block;margin:7px 0;cursor:pointer}
+ .ck-hovercard iframe{width:100%;aspect-ratio:16/9;display:block;border:0;border-radius:10px;margin:7px 0}
+ .ck-hovercard .ck-note{white-space:pre-wrap;overflow-wrap:anywhere}
+ @media(hover:none){.ck-m-entry .ck-hovercard{max-height:320px;opacity:1}}
+ 
  `;
  document.head.append(style);
  const controls=document.createElement('div');controls.id='ck-memory-controls';
@@ -116,14 +126,46 @@
   location.hash=next.join(':');
   location.reload();
  }
+ // Validated YouTube IDs only. An iframe is created only after user clicks Play.
+ function ytId(url){
+  try{
+   const u=new URL(url);const host=u.hostname.toLowerCase().replace(/^www\./,'');
+   let id='';
+   if(host==='youtu.be')id=u.pathname.split('/')[1]||'';
+   else if(host==='youtube.com'||host==='m.youtube.com'||host==='youtube-nocookie.com'){
+    if(u.pathname==='/watch')id=u.searchParams.get('v')||'';
+    else if(/^\/(shorts|embed|live)\//.test(u.pathname))id=u.pathname.split('/')[2]||'';
+   }
+   return /^[a-zA-Z0-9_-]{11}$/.test(id)?id:null;
+  }catch{return null}
+ }
+ function addPreview(section,item){
+  const preview=document.createElement('div');preview.className='ck-hovercard';
+  const date=document.createElement('div');date.textContent='Created '+new Date(item.createdAt).toLocaleString();preview.append(date);
+  if(item.notes){const note=document.createElement('p');note.className='ck-note';note.textContent=item.notes.length>220?item.notes.slice(0,220)+'…':item.notes;preview.append(note)}
+  const video=ytId(item.youtube||'');
+  if(video){
+   const thumb=document.createElement('img');thumb.className='ck-thumb';thumb.src='https://i.ytimg.com/vi/'+video+'/hqdefault.jpg';thumb.alt='YouTube preview for '+(item.title||'memory');thumb.loading='lazy';
+   const play=btn(preview,'▶ Play YouTube clip',()=>{
+    if(!thumb.isConnected)return;
+    const frame=document.createElement('iframe');frame.title='YouTube video: '+(item.title||'memory');frame.allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share';frame.allowFullscreen=true;
+    frame.referrerPolicy='strict-origin-when-cross-origin';frame.src='https://www.youtube-nocookie.com/embed/'+video+'?autoplay=1';
+    thumb.replaceWith(frame);play.remove();
+   });
+   preview.insertBefore(thumb,play);
+  }else{const msg=document.createElement('small');msg.textContent='No YouTube clip yet · Edit to add one';preview.append(msg)}
+  const hint=document.createElement('small');hint.textContent='Hover to preview · Click Play for video';preview.append(hint);
+  section.append(preview);
+ }
  function openList(){
   modal('My memory drafts', (card,close)=>{
-   p(card,'Choose Go to Marker to jump to its saved position. Drafts remain in this browser only; visible 3D pins and shared storage are not implemented yet.');
+   p(card,'Hover over a saved memory to see its title, notes and YouTube thumbnail. Click Play to watch. These drafts are stored only in this browser; 3D map pins and shared saving are not yet enabled.');
    const all=parse();if(!all.length)p(card,'No markers yet. Click Add Marker and select a block.');
    all.forEach(item=>{
     const section=document.createElement('div');section.className='ck-m-entry';card.append(section);
     const name=document.createElement('strong');name.textContent=item.title;section.append(name);
-    p(section,`X ${item.x}, Y ${item.y}, Z ${item.z} · ${new Date(item.createdAt).toLocaleString()}`);
+    p(section,`X ${item.x}, Y ${item.y}, Z ${item.z}`);
+    addPreview(section,item);
     btn(section,'➤ Go to Marker',()=>goToMarker(item));
     btn(section,'Edit',()=>{close();edit(item.id)});
     btn(section,'Delete',()=>{if(!confirm('Delete this memory draft?'))return;store(parse().filter(x=>x.id!==item.id));close();openList()});
@@ -151,6 +193,6 @@
   timeout=setTimeout(()=>{if(placing){const p=readPosition();if(p)selected(p);else hint.textContent='Could not read this block. Try clicking another block.'}},650);
  },true);
  list.addEventListener('click',openList);
- console.info('[Cinta Kita] offline memory drafts with marker navigation ready');
+ console.info('[Cinta Kita] offline memory drafts with YouTube hover previews ready');
  });
 })();

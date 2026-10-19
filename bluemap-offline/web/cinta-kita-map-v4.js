@@ -56,6 +56,7 @@
   const {data,error}=await cloud.client.from('ck_map_memories').select(columns).eq('map_id','our_vanilla_world').order('created_at',{ascending:false});
   if(error)throw error;
   cloud.items=(data||[]).map(translate);
+  reconcilePins();
   installMemberPinLabels();
   // Count is reflected in My Markers; don't overlap the member badge.
  }
@@ -75,6 +76,13 @@
  // Hide stale public BlueMap pins as soon as members delete their records.
  // Static public marker JSON is subsequently refreshed by the GitHub scheduled publisher.
  const removedPins=new Set();
+ function reconcilePins(){
+  if(!cloud.member)return;
+  const live=new Set(cloud.items.map(item=>String(item.id)));
+  for(const el of document.querySelectorAll('.ck-world-stamp[data-memory-id]')){
+   if(!live.has(String(el.dataset.memoryId)))hideRemovedPin(el.dataset.memoryId);
+  }
+ }
  function hideRemovedPin(id){
   removedPins.add(String(id));
   for(const el of document.querySelectorAll('.ck-world-stamp[data-memory-id]')){
@@ -333,7 +341,7 @@
   if(item && cloud.member){pin.dataset.memberTitle=item.title||'Memory';pin.setAttribute('title',item.title||'Memory')}
  },true);
  // BlueMap sometimes inserts its HTML marker elements after Supabase has loaded.
- const pinObserver=new MutationObserver(()=>{if(cloud.member)installMemberPinLabels();for(const id of removedPins)hideRemovedPin(id)});
+ const pinObserver=new MutationObserver(()=>{if(cloud.member){installMemberPinLabels();reconcilePins()}for(const id of removedPins)hideRemovedPin(id)});
  pinObserver.observe(document.body,{childList:true,subtree:true});
  document.addEventListener('click',async e=>{
   const pin=e.target.closest?.('.ck-world-stamp');

@@ -1,12 +1,7 @@
-/* Cinta Kita world-positioned BlueMap HTML memory stamps.
-   This styles native marker HTML; it does not position markers in screen space. */
-.ck-world-stamp { position:relative; display:flex; justify-content:center; align-items:center; width:38px; height:42px; cursor:pointer; font-family:system-ui,sans-serif; pointer-events:auto; }
-.ck-world-pin { display:grid; place-items:center; width:35px; height:35px; border:2px solid rgba(255,255,255,.85); border-radius:13px 13px 13px 4px; background:var(--ck-accent,#e86d9b); box-shadow:0 4px 14px #0008; font-size:20px; transition:transform .18s ease,box-shadow .18s ease; }
-.ck-world-stamp:hover .ck-world-pin,.ck-world-stamp:focus-within .ck-world-pin { transform:scale(1.18) translateY(-3px); box-shadow:0 8px 24px #000b; }
-.ck-world-preview { display:none; position:absolute; z-index:100; bottom:calc(100% + 10px); left:50%; transform:translateX(-50%); width:max-content; max-width:min(270px,75vw); padding:12px; border:1px solid rgba(255,255,255,.3); border-radius:14px; background:rgba(32,24,42,.96); color:#fff; box-shadow:0 12px 35px #0009; white-space:normal; font:13px/1.5 system-ui,sans-serif; text-align:left; }
-.ck-world-stamp:hover .ck-world-preview,.ck-world-stamp:focus-within .ck-world-preview { display:block; }
-.ck-world-preview b { display:block; margin-bottom:4px; font-size:14px; }
-.ck-world-preview p { max-height:120px; overflow:auto; margin:7px 0; }
-.ck-world-preview small { display:block; margin-top:8px; opacity:.8; }
-.ck-world-preview img { max-height:125px; object-fit:cover; }
-.ck-world-preview a { color:#ffd4e5; }
+/* Compact Dynmap-inspired pixel map icon with private member-only popup */
+.ck-world-stamp {position:relative;display:grid;place-items:center;width:32px;height:40px;cursor:pointer;pointer-events:auto;outline:none}
+.ck-world-pin{display:grid;place-items:center;width:26px;height:27px;background:#f3acd0;border:2px solid #63394f;border-radius:5px 5px 5px 2px;color:#40263b;font-size:16px;line-height:1;box-shadow:2px 3px 0 #2e2030b8,inset 1px 1px 0 #ffe6f4;image-rendering:pixelated;transition:transform .14s ease}
+.ck-world-pin::after{content:'';position:absolute;top:28px;left:10px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid #63394f}
+.ck-world-stamp:hover .ck-world-pin,.ck-world-stamp:focus-visible .ck-world-pin{transform:translateY(-4px) scale(1.1);background:#ffd5e8}
+.ck-world-stamp::before{content:'Memory';position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);opacity:0;pointer-events:none;white-space:nowrap;padding:4px 9px;background:#241823f0;border:1px solid #e4aacb;color:#fff2f8;border-radius:5px;font:600 12px system-ui,sans-serif;box-shadow:0 4px 16px #0009}
+.ck-world-stamp:hover::before,.ck-world-stamp:focus-visible::before{opacity:1}

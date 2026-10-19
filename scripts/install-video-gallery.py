@@ -39,5 +39,7 @@ if 'id="ckstory-script"' not in s:
 # Upgrade the story album without touching the original interactive cards.
 s=s.replace('href="story-gallery-v1.css"','href="story-gallery-v2.css"')
 s=s.replace('src="story-gallery-v1.js"','src="story-gallery-v2.js"')
+s=s.replace('href="story-gallery-v2.css"','href="story-gallery-v3.css"')
+s=s.replace('src="story-gallery-v2.js"','src="story-gallery-v3.js"')
 p.write_text(s,encoding='utf-8')
 print('Gallery injection verified. Header CSS:',s.count('id="ckvg-styles"'),'JS:',s.count('id="ckvg-script"'),'video hook:',s.count('window.__ckGallerySnapshot = { videos: videoRows.filter'))

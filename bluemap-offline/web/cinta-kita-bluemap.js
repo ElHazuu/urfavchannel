@@ -217,10 +217,21 @@
     addPreview(section,item);
     btn(section,'➤ Go to Marker',()=>goToMarker(item));
     btn(section,'Edit',()=>{close();edit(item.id)});
-    btn(section,'Delete',async()=>{
+    const removeButton=btn(section,'Delete',async()=>{
      if(!confirm('Delete this shared memory?'))return;
-     try{if(await writeDelete(item.id)){close();openList()}}
-     catch(err){status.textContent='Delete failed: '+err.message;console.warn('[Cinta Kita] delete',err)}
+     removeButton.disabled=true;removeButton.textContent='Deleting…';
+     try{
+      if(await writeDelete(item.id)){
+       section.remove();
+       status.textContent='✓ Marker deleted';
+       const remaining=card.querySelectorAll('.ck-m-entry').length;
+       if(!remaining)p(card,'No markers left. Click Add Marker to create one.');
+      }else{removeButton.disabled=false;removeButton.textContent='Delete';}
+     }catch(err){
+      removeButton.disabled=false;removeButton.textContent='Delete';
+      status.textContent='Delete failed: '+err.message;
+      console.warn('[Cinta Kita] delete',err);
+     }
     });
    });
    btn(card,'Close',close);

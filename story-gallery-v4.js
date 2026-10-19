@@ -22,14 +22,14 @@ const controls=cards.map((card,i)=>{const category=categories[i];const holder=ca
  previous.type=next.type='button';previous.className='ckstory-photo-arrow ckstory-photo-prev';next.className='ckstory-photo-arrow ckstory-photo-next';previous.textContent='❮';next.textContent='❯';
  previous.setAttribute('aria-label','Previous '+category+' picture');next.setAttribute('aria-label','Next '+category+' picture');
  holder.append(previous,next);
- const current={holder,card,overlay,previous,next,category,index:0,items:[]};
+ const current={holder,card,overlay,previous,next,category,index:-1,items:[]};
  previous.onclick=e=>{e.preventDefault();e.stopPropagation();change(current,-1)};
  next.onclick=e=>{e.preventDefault();e.stopPropagation();change(current,1)};
  let x=0,y=0;holder.addEventListener('touchstart',e=>{x=e.touches[0]?.clientX||0;y=e.touches[0]?.clientY||0},{passive:true});holder.addEventListener('touchend',e=>{const dx=(e.changedTouches[0]?.clientX||0)-x,dy=(e.changedTouches[0]?.clientY||0)-y;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.4){change(current,dx<0?1:-1)}},{passive:true});
  holder.addEventListener('keydown',e=>{if(e.target.matches('input,textarea'))return;if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();change(current,e.key==='ArrowLeft'?-1:1)}});
  return current;
 });
-function change(c,step){if(!c.items.length)return;c.index=(c.index+step+c.items.length)%c.items.length;paint(c)}
+function change(c,step){if(!c.items.length)return;c.index=(c.index+step+c.items.length+1)%(c.items.length+1);if(c.index===c.items.length)c.index=-1;paint(c)}
 function paint(c){const item=c.items[c.index],uploaded=!!item;const kitten=c.holder.querySelector('#sittingKitten');c.previous.hidden=c.next.hidden=c.items.length===0;
  c.overlay.hidden=!uploaded;
  if(kitten&&uploaded)kitten.style.visibility='hidden';else if(kitten)kitten.style.removeProperty('visibility');
@@ -39,7 +39,7 @@ function paint(c){const item=c.items[c.index],uploaded=!!item;const kitten=c.hol
  const del=c.overlay.querySelector('.ckstory-delete');del.hidden=!user||item.created_by!==user.id;
  del.onclick=async e=>{e.stopPropagation();if(!confirm('Delete “'+item.title+'”?'))return;del.disabled=true;const {error}=await client.from('site_story_photos').delete().eq('id',item.id);if(error){notify(error.message);del.disabled=false;return}await client.storage.from('site-story-photos').remove([item.photo_path]);await load()};
 }
-function renderAlbum(){controls.forEach(c=>{const currentId=c.items[c.index]?.id;c.items=rows.filter(r=>(r.category||'real_life')===c.category&&r.signed);c.index=Math.max(0,c.items.findIndex(r=>r.id===currentId));paint(c)})}
+function renderAlbum(){controls.forEach(c=>{const currentId=c.items[c.index]?.id;c.items=rows.filter(r=>(r.category||'real_life')===c.category&&r.signed);c.index=currentId?c.items.findIndex(r=>r.id===currentId):-1;paint(c)})}
 async function sdk(){if(window.supabase?.createClient)return window.supabase;return await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';s.onload=()=>window.supabase?.createClient?resolve(window.supabase):reject(Error('Supabase unavailable'));s.onerror=()=>reject(Error('Could not load Supabase'));document.head.append(s)})}
 async function load(){if(!client||!user)return;const seq=++version;const {data,error}=await client.from('site_story_photos').select('id,title,note,photo_path,created_by,created_at,category').order('created_at',{ascending:false});if(seq!==version)return;if(error){notify('Unable to load photos. Check the Story Photos SQL setup.');return}rows=data||[];for(const row of rows){const {data:link,error:err}=await client.storage.from('site-story-photos').createSignedUrl(row.photo_path,3600);if(seq!==version)return;row.signed=!err?link?.signedUrl:null}renderAlbum();notify('')}
 async function connect(){try{const lib=await sdk();client=lib.createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});const {data:{user:current}}=await client.auth.getUser();user=current;btn.hidden=!user;if(!user){notify('Sign in to add and view shared pictures.');return}await load();client.auth.onAuthStateChange((_e,session)=>{if(session?.user?.id===user?.id)return;user=session?.user||null;btn.hidden=!user;if(user)queueMicrotask(()=>load());else{version++;rows=[];renderAlbum();notify('Sign in to view shared pictures.')}})}catch(err){notify('Photo connection unavailable: '+err.message)}}

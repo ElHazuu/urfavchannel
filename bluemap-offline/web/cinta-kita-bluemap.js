@@ -101,14 +101,30 @@
    });btn(card,'Cancel',close);
   });
  }
+ // Navigate to a saved location using BlueMap's URL anchor.
+ function goToMarker(item){
+  const coords=[item.x,item.y,item.z].map(Number);
+  if(!coords.every(Number.isFinite)){status.textContent='Invalid marker coordinates.';return}
+  const current=decodeURIComponent(location.hash.slice(1));
+  const parts=current.split(':');
+  const valid=parts.length>=10 && parts.slice(1,4).every(x=>Number.isFinite(Number(x)));
+  const mapId=valid?parts[0]:'our_vanilla_world';
+  const next=valid?parts.slice():[mapId,'0','64','0','180','0','0','0','0','perspective'];
+  next[1]=String(coords[0]);next[2]=String(coords[1]);next[3]=String(coords[2]);
+  if(valid)next[4]=String(Math.min(450,Math.max(100,Number(next[4])||180)));
+  // BlueMap supports this URL-anchor format for map and camera positions.
+  location.hash=next.join(':');
+  location.reload();
+ }
  function openList(){
   modal('My memory drafts', (card,close)=>{
-   p(card,'These drafts are saved in this browser only. They are NOT yet shared with your girlfriend or rendered as 3D pins.');
+   p(card,'Choose Go to Marker to jump to its saved position. Drafts remain in this browser only; visible 3D pins and shared storage are not implemented yet.');
    const all=parse();if(!all.length)p(card,'No markers yet. Click Add Marker and select a block.');
    all.forEach(item=>{
     const section=document.createElement('div');section.className='ck-m-entry';card.append(section);
     const name=document.createElement('strong');name.textContent=item.title;section.append(name);
     p(section,`X ${item.x}, Y ${item.y}, Z ${item.z} · ${new Date(item.createdAt).toLocaleString()}`);
+    btn(section,'➤ Go to Marker',()=>goToMarker(item));
     btn(section,'Edit',()=>{close();edit(item.id)});
     btn(section,'Delete',()=>{if(!confirm('Delete this memory draft?'))return;store(parse().filter(x=>x.id!==item.id));close();openList()});
    });
@@ -135,6 +151,6 @@
   timeout=setTimeout(()=>{if(placing){const p=readPosition();if(p)selected(p);else hint.textContent='Could not read this block. Try clicking another block.'}},650);
  },true);
  list.addEventListener('click',openList);
- console.info('[Cinta Kita] offline memory drafts editor ready');
+ console.info('[Cinta Kita] offline memory drafts with marker navigation ready');
  });
 })();

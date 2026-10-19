@@ -5,3 +5,11 @@
 .ck-world-stamp:hover .ck-world-pin,.ck-world-stamp:focus-visible .ck-world-pin{transform:translateY(-4px) scale(1.1);background:#ffd5e8}
 .ck-world-stamp::before{content:'Memory';position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);opacity:0;pointer-events:none;white-space:nowrap;padding:4px 9px;background:#241823f0;border:1px solid #e4aacb;color:#fff2f8;border-radius:5px;font:600 12px system-ui,sans-serif;box-shadow:0 4px 16px #0009}
 .ck-world-stamp:hover::before,.ck-world-stamp:focus-visible::before{opacity:1}
+
+/* Theme-matched marker surface; the viewer's ambient accent follows the map palette. */
+.ck-world-stamp .ck-world-pin{background:var(--ck-accent,#93b57a)!important;border-color:color-mix(in srgb,var(--ck-accent,#93b57a) 35%,#19261e)!important;box-shadow:inset 1px 1px #fff8,2px 3px #07160ca8!important}
+.ck-world-stamp .ck-world-pin svg path,.ck-world-stamp .ck-world-pin svg circle:last-child{fill:#263126!important}
+.ck-world-stamp .ck-world-pin svg circle:nth-child(2){fill:var(--ck-accent,#93b57a)!important}
+.ck-world-stamp::before{content:attr(data-member-title)!important}
+.ck-world-stamp:not([data-member-title])::before{content:'Memory'!important}
+.ck-world-stamp:hover .ck-world-pin{background:color-mix(in srgb,var(--ck-accent,#93b57a) 80%,white)!important}

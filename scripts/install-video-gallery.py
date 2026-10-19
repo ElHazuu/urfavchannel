@@ -60,5 +60,7 @@ s=s.replace('src="story-gallery-v10.js"','src="story-gallery-v11.js"')
 s=s.replace('href="story-gallery-v11.css"','href="story-gallery-v12.css"')
 
 s=s.replace('href="story-gallery-v13.css"','href="story-gallery-v12.css"')
+s=s.replace('href="story-gallery-v12.css"','href="story-gallery-v14.css"')
+s=s.replace('src="story-gallery-v11.js"','src="story-gallery-v14.js"')
 p.write_text(s,encoding='utf-8')
 print('Gallery injection verified. Header CSS:',s.count('id="ckvg-styles"'),'JS:',s.count('id="ckvg-script"'),'video hook:',s.count('window.__ckGallerySnapshot = { videos: videoRows.filter'))

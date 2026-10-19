@@ -56,6 +56,7 @@
   const {data,error}=await cloud.client.from('ck_map_memories').select(columns).eq('map_id','our_vanilla_world').order('created_at',{ascending:false});
   if(error)throw error;
   cloud.items=(data||[]).map(translate);
+  installMemberPinLabels();
   // Count is reflected in My Markers; don't overlap the member badge.
  }
  async function writeNew(pos,title){
@@ -109,6 +110,37 @@
  .ck-hovercard iframe{width:100%;aspect-ratio:16/9;display:block;border:0;border-radius:10px;margin:7px 0}
  .ck-hovercard .ck-note{white-space:pre-wrap;overflow-wrap:anywhere}
  @media(hover:none){.ck-m-entry .ck-hovercard{max-height:320px;opacity:1}}
+
+ /* Minecraft inventory / Dynmap-style memory panels */
+ @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap');
+ #ck-m-modal{background:#050a07bc!important;backdrop-filter:blur(2px)}
+ #ck-m-card{--ck-ui-accent:var(--ck-accent,#91b381);--ck-ui-border:color-mix(in srgb,var(--ck-ui-accent) 65%,#101b13);
+ background:linear-gradient(135deg,#344136f7,#1b271ffc)!important;color:#edf3e8!important;
+ border:4px solid #141b15!important;outline:2px solid var(--ck-ui-border)!important;border-radius:3px!important;
+ box-shadow:inset 3px 3px #84918777,inset -3px -3px #0d170fb3,0 8px 0 #111810,0 20px 50px #000b!important;
+ font-family:'Pixelify Sans','Trebuchet MS',sans-serif!important;max-width:560px!important;padding:20px!important}
+ #ck-m-card h2{color:var(--ck-ui-accent)!important;font:700 25px/1.1 'Pixelify Sans',sans-serif!important;
+ margin-bottom:14px!important;border-bottom:2px solid #70857085;padding-bottom:12px!important;text-shadow:2px 2px #101a11}
+ #ck-m-card p,#ck-m-card label,#ck-m-card small,#ck-m-card strong{font-family:'Pixelify Sans','Trebuchet MS',sans-serif!important}
+ #ck-m-card p{font-size:15px!important;line-height:1.35!important;color:#e5eee1!important}
+ #ck-m-card strong{font-size:19px!important;color:#e8f1e4}
+ #ck-m-card label{font-size:15px!important;color:#dbe9d2}
+ #ck-m-card input,#ck-m-card textarea{font:16px 'Pixelify Sans',sans-serif!important;background:#111c16!important;
+ color:#f1f7e9!important;border:3px solid #263b2d!important;border-radius:2px!important;padding:10px!important;
+ box-shadow:inset 2px 2px 0 #07130b,inset -2px -2px 0 #6b786755!important}
+ #ck-m-card input:focus,#ck-m-card textarea:focus{outline:2px solid var(--ck-ui-accent)!important}
+ #ck-m-card button{font:600 16px 'Pixelify Sans',sans-serif!important;color:#f3f6ed!important;
+ border:2px solid #152118!important;border-radius:2px!important;padding:8px 12px!important;
+ background:linear-gradient(180deg,color-mix(in srgb,var(--ck-ui-accent) 62%,#3c523c),color-mix(in srgb,var(--ck-ui-accent) 35%,#1e3226))!important;
+ box-shadow:inset 2px 2px #efffdd77,inset -2px -2px #1426198c,0 3px 0 #0b150f!important;
+ text-shadow:1px 2px #0d2116!important;cursor:pointer!important}
+ #ck-m-card button:hover{filter:brightness(1.22)!important;transform:translateY(-2px)!important}
+ #ck-m-card button:active{transform:translateY(2px)!important}
+ #ck-m-card .ck-m-entry{border-bottom:2px dashed #80947d80!important;border-radius:0!important;padding:12px 0!important}
+ #ck-m-card .ck-m-entry:hover{background:#97ba8724!important}
+ #ck-m-card .ck-hovercard{font-size:15px!important;color:#d7ead3!important}
+ #ck-m-card .ck-thumb,#ck-m-card iframe{border-radius:2px!important;border:2px solid #82967c!important}
+ 
  
  `;
  document.head.append(style);
@@ -277,6 +309,15 @@
  }
  // Dynmap-like map stamp: click opens the member-only memory card.
  // Public marker data contains only the marker ID and position.
+ document.addEventListener('pointerover',e=>{
+  const pin=e.target.closest?.('.ck-world-stamp[data-memory-id]');
+  if(!pin)return;
+  const item=cloud.items.find(x=>String(x.id)===pin.dataset.memoryId);
+  if(item && cloud.member){pin.dataset.memberTitle=item.title||'Memory';pin.setAttribute('title',item.title||'Memory')}
+ },true);
+ // BlueMap sometimes inserts its HTML marker elements after Supabase has loaded.
+ const pinObserver=new MutationObserver(()=>{if(cloud.member)installMemberPinLabels()});
+ pinObserver.observe(document.body,{childList:true,subtree:true});
  document.addEventListener('click',async e=>{
   const pin=e.target.closest?.('.ck-world-stamp');
   if(!pin)return;
@@ -307,7 +348,7 @@
    if(error)throw error;
    if(data){item=translate(data);const i=cloud.items.findIndex(m=>String(m.id)===id);if(i>=0)cloud.items[i]=item;else cloud.items.push(item)}
    if(!item){
-    modal('Memory not found',(card,close)=>{p(card,'This marker has no accessible memory record yet. It may have been deleted.');btn(card,'Close',close)});
+    modal('Memory not found',(card,close)=>{p(card,'This pin may be from an older map export, or its saved memory was deleted. Try My Markers to see your current memories.');btn(card,'Close',close)});
     return;
    }
    modal(item.title||'Memory',(card,close)=>{
@@ -325,6 +366,19 @@
    });
   }
  },true);
+
+// Only approved members receive a private hover title; public pins stay anonymous.
+function installMemberPinLabels(){
+ const items=cloud.items;
+ document.querySelectorAll('.ck-world-stamp[data-memory-id]').forEach(el=>{
+  const item=items.find(x=>String(x.id)===el.dataset.memoryId);
+  if(!item)return;
+  el.setAttribute('title',item.title||'Memory');
+  el.setAttribute('aria-label',item.title||'Memory');
+  el.dataset.memberTitle=item.title||'Memory';
+ });
+}
+
  function inspect(){if(!placing||Date.now()-lastClick>2500)return;const p=readPosition();if(p)selected(p)}
  add.addEventListener('click',()=>{
   if(placing){stop();return}placing=true;lastClick=0;add.textContent='✕ Cancel';

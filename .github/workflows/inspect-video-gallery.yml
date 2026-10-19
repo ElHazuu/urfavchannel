@@ -16,10 +16,10 @@ jobs:
           import re
           from pathlib import Path
           rows=Path("index.html").read_text(encoding="utf-8").splitlines()
-          matches=[i for i,l in enumerate(rows) if re.search(r'videoManager|videoForm|videoGrid|site_videos|loadVideos|renderVideo|videoRows|videoOwner|videoCards',l,re.I)]
+          matches=[i for i,l in enumerate(rows) if re.search(r'our story|storySection|storyGrid|storyPhoto|storyCard|siamese|sittingKitten|storyHeading|A place for our story',l,re.I)]
           print("TOTAL_LINES",len(rows),"TOTAL_MATCHES",len(matches))
           seen=set()
-          for i in matches[:110]:
+          for i in matches[:100]:
             for j in range(max(0,i-2),min(len(rows),i+5)):
               if j not in seen:
                 print(f"L{j+1}: {rows[j][:700]}")

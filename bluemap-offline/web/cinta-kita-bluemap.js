@@ -25,8 +25,6 @@
  // Tiny confirmation for browser DevTools: `window.__cintaKitaBlueMap === true`.
  console.info('[Cinta Kita] BlueMap custom UI theme loaded');
 })();
-<<<<<<< HEAD
-=======
 
 
 /* Cinta Kita offline map memories — Supabase shared storage phase.
@@ -279,4 +277,3 @@
   }catch(e){status.textContent='Memories: connection unavailable';console.warn('[Cinta Kita] Supabase',e)}
  });
 })();
->>>>>>> 382e9d97c5c5fe0a8e0f7ce76df4b981c689e8a8

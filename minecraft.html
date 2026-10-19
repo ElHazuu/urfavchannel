@@ -27,6 +27,19 @@
 .sync-indicator svg{width:14px;height:14px;fill:none;stroke:var(--pink);stroke-width:2;flex:none}
 .sync-indicator span{overflow:hidden;text-overflow:ellipsis}
 @media(max-width:700px){.sync-indicator{max-width:125px;font-size:9px;padding:6px}.sync-indicator svg{display:none}}
+
+/* Minecraft / Dynmap-inspired stone UI: deliberately pixel-edged, not rounded glass. */
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap');
+.toolbar,.toolbar button,.toolbar a,.sync-indicator,#show{font-family:'Pixelify Sans','Trebuchet MS',sans-serif!important;letter-spacing:.02em}
+.toolbar{top:10px;padding:7px 9px;gap:8px;border:3px solid #10191a!important;border-radius:2px!important;background:linear-gradient(#50615c,#293630)!important;box-shadow:inset 2px 2px 0 #85978b,inset -2px -2px 0 #192a26,0 4px 0 #0a1513,0 8px 20px #0009!important;backdrop-filter:none}
+.brand{padding-right:10px;border-right:2px solid #14241d}.brand b{font-size:15px!important;font-weight:700;line-height:1.05;text-shadow:2px 2px #0c1915}.brand small{color:#c7e5a3;font-size:10px!important;font-weight:700;letter-spacing:.12em}.brand .cube{filter:drop-shadow(2px 2px #12241e)}
+.toolbar .pixel,#show{border:2px solid #19251e!important;border-radius:2px!important;background:linear-gradient(#73816a,#4e5f50)!important;color:#f3f4e9!important;min-height:35px;padding:6px 10px;font-size:13px!important;font-weight:700;box-shadow:inset 2px 2px 0 #a4af96,inset -2px -2px 0 #334535,0 3px 0 #141f17!important;text-shadow:1px 2px #243729;transition:filter .12s,transform .12s!important}
+.toolbar .pixel:hover,#show:hover{background:linear-gradient(#9dac83,#657e57)!important;filter:brightness(1.08);transform:translateY(-2px);box-shadow:inset 2px 2px 0 #c6d8af,inset -2px -2px 0 #36503c,0 5px 0 #141f17!important}
+.toolbar .pixel:active,#show:active{transform:translateY(2px);box-shadow:inset 1px 1px 0 #334535!important}
+.sync-indicator{max-width:230px;font-size:12px!important;background:#243a31!important;border:2px solid #17251c!important;border-radius:2px!important;padding:7px 9px;color:#e4f3dd;box-shadow:inset 1px 1px 0 #748d76,inset -1px -1px 0 #0d1e15}
+.sync-indicator svg{stroke:#b3d7a4}.toolbar .group{gap:5px}
+@media(max-width:700px){.toolbar{gap:4px;padding:5px}.toolbar .pixel{min-height:32px;padding:5px 8px}.brand b{font-size:12px!important}.sync-indicator{font-size:10px!important}}
+
 </style>
 </head>
 <body>
@@ -70,6 +83,21 @@ function syncMemoryControls(){
   if(!sheet){
    sheet=doc.createElement('style');sheet.id='ck-parent-control-layout';
    sheet.textContent=`
+    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap');
+    #ck-memory-controls,#ck-memory-controls button,#ck-supabase-status{font-family:'Pixelify Sans','Trebuchet MS',sans-serif!important;font-weight:600!important;letter-spacing:.025em!important}
+    #ck-memory-controls{gap:8px!important;bottom:65px!important}
+    #ck-memory-controls .ck-m-button{
+      min-width:158px!important;min-height:37px!important;padding:7px 12px!important;text-align:left!important;
+      border:2px solid #192a20!important;border-radius:2px!important;color:#f0f5e6!important;
+      background:linear-gradient(#6c8063,#435945)!important;font-size:15px!important;
+      box-shadow:inset 2px 2px 0 #adc19b,inset -2px -2px 0 #243c2e,0 4px 0 #112219,0 6px 12px #0008!important;
+      text-shadow:1px 2px #213528!important;transform:none!important;transition:filter .15s,translate .15s!important
+    }
+    #ck-memory-controls .ck-m-button:hover{background:linear-gradient(#a2b78c,#698359)!important;translate:0 -2px!important;filter:brightness(1.04)}
+    #ck-memory-controls .ck-m-button:active{translate:0 2px!important;box-shadow:inset 2px 2px 0 #243c2e!important}
+    #ck-supabase-status{border:2px solid #1b3828!important;border-radius:2px!important;color:#d1edbc!important;background:linear-gradient(#374e3e,#21362e)!important;box-shadow:inset 1px 1px 0 #748d6b,0 4px 0 #102219!important;font-size:13px!important;padding:8px 10px!important}
+    #ck-m-status{font-family:'Pixelify Sans','Trebuchet MS',sans-serif!important;font-size:13px!important;color:#f5eabb!important}
+
     #ck-memory-controls{left:16px!important;right:auto!important;align-items:flex-start!important;text-align:left!important}
     #ck-m-status{text-align:left!important}
     #ck-supabase-status{left:16px!important;right:auto!important;bottom:175px!important}

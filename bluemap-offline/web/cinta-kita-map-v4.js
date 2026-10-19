@@ -39,7 +39,7 @@
   const el=document.getElementById('ck-m-status');
   if(!el)return;
   // Membership is shown by the single persistent badge. This is action feedback only.
-  if(/^✓ \\d+ shared memories loaded$/.test(message))return;
+  if(message.includes('shared memories loaded'))return;
   el.textContent=message;
   el.style.display='block';
   clearTimeout(feedbackTimer);
@@ -56,7 +56,7 @@
   const {data,error}=await cloud.client.from('ck_map_memories').select(columns).eq('map_id','our_vanilla_world').order('created_at',{ascending:false});
   if(error)throw error;
   cloud.items=(data||[]).map(translate);
-  setCloudStatus('✓ '+cloud.items.length+' shared memories loaded');
+  // Count is reflected in My Markers; don't overlap the member badge.
  }
  async function writeNew(pos,title){
   if(!requireCloud())return false;

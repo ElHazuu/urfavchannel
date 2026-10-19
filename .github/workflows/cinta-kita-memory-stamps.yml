@@ -1,15 +1,33 @@
-name: Cinta Kita private-memory safety check
-# Location-only public pins are allowed. This workflow never exports Supabase data.
+name: Publish public camera pins (no private details)
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/cinta-kita-memory-stamps.yml'
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: cinta-kita-public-pins
+  cancel-in-progress: false
 jobs:
-  safety-check:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify public exporter is paused
-        run: echo "Private memory details remain in Supabase. Scheduled public publishing is disabled."
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate public location-only pins from Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/build-markers.mjs
+      - name: Commit only public pins
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add bluemap-offline/web/maps/our_vanilla_world/live/markers.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update public memory locations only'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

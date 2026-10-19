@@ -3546,7 +3546,7 @@ body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.account
       videoStatus.textContent = "";
       videoRows = data || [];
       renderVideos();
-      window.__ckGallerySnapshot = { videos: videoRows.filter(v => v.published), owner: videoOwner };
+      window.__ckGallerySnapshot = { videos: videoRows.filter(v => v.published), owner: videoOwner, client: accountClient, user: accountUser };
       window.dispatchEvent(new CustomEvent('ck:videos', { detail: window.__ckGallerySnapshot }));
     }
     async function syncVideoAccess() {
@@ -3557,7 +3557,7 @@ body:has(#mainWebsite[data-season="indonesia"][data-theme="light"]) :is(.account
         videoManageToggle.hidden = true;
         videoManager.hidden = true;
         videoRows = [];
-        window.__ckGallerySnapshot = { videos: [], owner: false };
+        window.__ckGallerySnapshot = { videos: [], owner: false, client: null, user: null };
         window.dispatchEvent(new CustomEvent('ck:videos', { detail: window.__ckGallerySnapshot }));
         renderedPublishedSignature = null;
         renderedManagerSignature = null;

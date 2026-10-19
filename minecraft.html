@@ -59,14 +59,41 @@ async function loadLastUpdate(){
 }
 loadLastUpdate();
 const bar=document.querySelector('.toolbar'),hide=document.getElementById('hide'),show=document.getElementById('show');
+const mapFrame=document.querySelector('.map iframe');
+let mapControlsVisible=true;
+// Control the same-origin BlueMap iframe directly: independent of cached/auto-synced BlueMap JS.
+function syncMemoryControls(){
+ try{
+  const doc=mapFrame.contentDocument;
+  if(!doc?.head)return;
+  let sheet=doc.getElementById('ck-parent-control-layout');
+  if(!sheet){
+   sheet=doc.createElement('style');sheet.id='ck-parent-control-layout';
+   sheet.textContent=`
+    #ck-memory-controls{left:16px!important;right:auto!important;align-items:flex-start!important;text-align:left!important}
+    #ck-m-status{text-align:left!important}
+    #ck-supabase-status{left:16px!important;right:auto!important;bottom:175px!important}
+    html.ck-parent-hide-memory-ui #ck-memory-controls,
+    html.ck-parent-hide-memory-ui #ck-supabase-status{display:none!important}
+   `;
+   doc.head.append(sheet);
+  }
+  doc.documentElement.classList.toggle('ck-parent-hide-memory-ui',!mapControlsVisible);
+ }catch(err){console.warn('[Cinta Kita] Cannot sync iframe controls',err)}
+}
 function setMapControlsVisible(visible){
+ mapControlsVisible=visible;
  bar.style.display=visible?'flex':'none';
  show.style.display=visible?'none':'inline-flex';
- const frame=document.querySelector('.map iframe');
- if(frame?.contentWindow)frame.contentWindow.postMessage({type:'ck-map-ui-visibility',visible},location.origin);
+ syncMemoryControls();
+ // Keep compatibility with the current BlueMap script.
+ if(mapFrame.contentWindow)mapFrame.contentWindow.postMessage({type:'ck-map-ui-visibility',visible},location.origin);
 }
 hide.addEventListener('click',()=>setMapControlsVisible(false));
 show.addEventListener('click',()=>setMapControlsVisible(true));
+mapFrame.addEventListener('load',()=>{syncMemoryControls();setTimeout(syncMemoryControls,1000)});
+setInterval(syncMemoryControls,2500);
+syncMemoryControls();
 document.getElementById('full').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.getElementById('map').requestFullscreen()}catch(e){console.warn('Fullscreen failed',e)}});
 
 // Automatic ambient UI coloration. This is a visual color estimate, not true biome metadata.

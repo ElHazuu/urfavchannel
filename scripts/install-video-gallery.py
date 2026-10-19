@@ -22,5 +22,13 @@ if 'window.dispatchEvent(new CustomEvent(\'ck:videos\', { detail: { videos: [], 
     replacement2='        videoRows = [];\n        window.__ckGallerySnapshot = { videos: [], owner: false };\n        window.dispatchEvent(new CustomEvent(\'ck:videos\', { detail: window.__ckGallerySnapshot }));\n        renderedPublishedSignature = null;'
     if anchor2 not in s: raise RuntimeError('Logout video cleanup layout changed: do not patch')
     s=s.replace(anchor2,replacement2,1)
+old='window.__ckGallerySnapshot = { videos: videoRows.filter(v => v.published), owner: videoOwner };'
+new='window.__ckGallerySnapshot = { videos: videoRows.filter(v => v.published), owner: videoOwner, client: accountClient, user: accountUser };'
+if old in s: s=s.replace(old,new,1)
+elif new not in s: raise RuntimeError('Gallery data hook missing')
+old_logout='window.__ckGallerySnapshot = { videos: [], owner: false };'
+new_logout='window.__ckGallerySnapshot = { videos: [], owner: false, client: null, user: null };'
+if old_logout in s: s=s.replace(old_logout,new_logout,1)
+elif new_logout not in s: raise RuntimeError('Logout hook missing')
 p.write_text(s,encoding='utf-8')
 print('Gallery injection verified. Header CSS:',s.count('id="ckvg-styles"'),'JS:',s.count('id="ckvg-script"'),'video hook:',s.count('window.__ckGallerySnapshot = { videos: videoRows.filter'))

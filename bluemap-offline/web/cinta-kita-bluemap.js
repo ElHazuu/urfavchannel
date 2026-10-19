@@ -27,92 +27,114 @@
 })();
 
 
-/* Cinta Kita Memories — Step 2: test terrain position capture only.
-   No network writes or markers are created in this test. */
+/* Cinta Kita offline-world Memory Editor — browser-local working stage.
+ * Markers save in THIS browser only until Supabase and BlueMap marker data
+ * are connected. This script does not claim to render world-anchored 3D pins.
+ */
 (() => {
  'use strict';
- if (window.__ckMemoryPositionTest) return;
- window.__ckMemoryPositionTest = true;
- const ready = fn => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', fn, {once:true}) : fn();
- ready(() => {
-  const style = document.createElement('style');
-  style.textContent = `
-   #ck-add-memory,#ck-placement-hint{position:fixed;right:16px;z-index:2147481000;color:var(--ck-accent,#ffd1e5);font:600 13px system-ui,sans-serif;border:1px solid var(--ck-stroke,#eeb8d077);border-radius:13px;background:var(--ck-surface,#291d2de8);box-shadow:0 9px 24px #0007}
-   #ck-add-memory{bottom:74px;display:flex;gap:8px;align-items:center;padding:11px 15px;cursor:pointer;transition:transform .18s,box-shadow .18s}
-   #ck-add-memory:hover{transform:scale(1.06);box-shadow:0 12px 28px #0009,0 0 15px var(--ck-accent,#ffc4e088)}
-   #ck-placement-hint{bottom:129px;max-width:min(330px,calc(100vw - 32px));padding:12px 14px;display:none;line-height:1.5}
-   #ck-add-memory.ck-placing{outline:2px solid var(--ck-accent,#ffd1e5)}
-   #ck-memory-shade{position:fixed;inset:0;z-index:2147482000;background:#08070bb5;display:flex;align-items:center;justify-content:center;padding:15px}
-   #ck-memory-dialog{width:min(420px,100%);max-height:90vh;overflow:auto;border:1px solid var(--ck-stroke,#eeb8d077);border-radius:20px;background:var(--ck-surface,#261a2bef);color:#fff5fa;padding:23px;box-shadow:0 22px 70px #000b;font:14px system-ui,sans-serif}
-   #ck-memory-dialog h2{margin:0 0 8px;color:var(--ck-accent,#ffc4da);font-size:22px}
-   #ck-memory-dialog p{line-height:1.5;color:#e3d5dc}
-   #ck-memory-dialog button{border:1px solid #c69fb17c;border-radius:9px;padding:9px 13px;background:#4c344b;color:white;cursor:pointer}
-   #ck-memory-dialog .ck-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:18px}
-  `;
-  document.head.append(style);
-  const button=document.createElement('button');button.id='ck-add-memory';button.type='button';
-  button.textContent='＋ Add Memory';button.title='Test choosing a block location';document.body.append(button);
-  const hint=document.createElement('div');hint.id='ck-placement-hint';hint.setAttribute('role','status');document.body.append(hint);
-  let active=false, observer=null, timer=null, clickTime=0, lastPosition=null;
-  const coordsPattern=/\bx\s*[:=]\s*(-?\d+)\s*[,;\s]+\by\s*[:=]\s*(-?\d+)\s*[,;\s]+\bz\s*[:=]\s*(-?\d+)\b/i;
-  const ignore=el=>!!el.closest('#ck-placement-hint,#ck-add-memory,#ck-memory-shade');
-  function findPosition(){
-   // BlueMap's clicked-block popup is a small DOM element. Only scan
-   // short leaf/near-leaf elements to avoid matching unrelated page content.
-   const nodes=document.querySelectorAll('div,span,p');
-   for(const el of nodes){
-    if(ignore(el)||el.children.length>5)continue;
-    const t=(el.textContent||'').trim();
-    if(t.length<11||t.length>140)continue;
-    if(!/\bblock\s*:/i.test(t))continue;
-    const m=t.match(coordsPattern);
-    if(m)return {x:Number(m[1]),y:Number(m[2]),z:Number(m[3])};
-   }
-   return null;
+ if(window.__ckMemoryDraftV1)return;
+ window.__ckMemoryDraftV1=true;
+ const STORAGE='ck-world-memory-drafts-v1';
+ const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
+ ready(()=>{
+ const style=document.createElement('style');
+ style.textContent=`
+ #ck-memory-controls{position:fixed;bottom:68px;right:16px;z-index:2147481000;display:flex;align-items:end;flex-direction:column;gap:8px;font-family:system-ui,sans-serif}
+ .ck-m-button{padding:11px 15px;background:var(--ck-surface,#302337ed);color:var(--ck-accent,#fbd3e3);border:1px solid var(--ck-stroke,#d4a2be);border-radius:12px;cursor:pointer;box-shadow:0 6px 20px #0008;transition:transform .15s}
+ .ck-m-button:hover{transform:scale(1.06)}
+ #ck-m-hint{max-width:310px;padding:12px;background:#231b2cee;color:white;border-radius:12px;font-size:12px;line-height:1.4;display:none}
+ #ck-m-modal{position:fixed;inset:0;z-index:2147482000;background:#09050acc;display:flex;justify-content:center;align-items:center;padding:16px;font-family:system-ui,sans-serif}
+ #ck-m-card{background:var(--ck-surface,#251b2bef);color:white;border:1px solid var(--ck-stroke,#ecc4d5);border-radius:16px;max-width:480px;width:100%;max-height:90vh;overflow:auto;padding:20px}
+ #ck-m-card h2{margin:0 0 12px;color:var(--ck-accent,#fbd3e3)}
+ #ck-m-card p{font-size:12px;line-height:1.5;color:#e9deeb}
+ #ck-m-card label{display:block;font-size:12px;margin:12px 0}
+ #ck-m-card input,#ck-m-card textarea{width:100%;font:inherit;margin-top:5px;padding:10px;box-sizing:border-box;color:white;background:#17121bc9;border:1px solid #806b7e;border-radius:9px}
+ #ck-m-card button{padding:9px 12px;margin:4px 4px 0 0;border-radius:9px;background:#5d405a;color:white;border:1px solid #af85a3;cursor:pointer}
+ #ck-m-card .ck-m-entry{padding:9px 0;border-bottom:1px solid #ffffff33}
+ #ck-m-card small{color:#d4c4d0}
+ #ck-m-status{font-size:12px;color:#efcfdd;max-width:270px;text-align:right}
+ `;
+ document.head.append(style);
+ const controls=document.createElement('div');controls.id='ck-memory-controls';
+ const hint=document.createElement('div');hint.id='ck-m-hint';controls.append(hint);
+ const status=document.createElement('span');status.id='ck-m-status';controls.append(status);
+ const add=document.createElement('button');add.className='ck-m-button';add.textContent='＋ Add Marker';controls.append(add);
+ const list=document.createElement('button');list.className='ck-m-button';list.textContent='♡ My Markers';controls.append(list);
+ document.body.append(controls);
+ const parse=()=>{try{const v=JSON.parse(localStorage.getItem(STORAGE)||'[]');return Array.isArray(v)?v:[]}catch{return []}};
+ const store=m=>localStorage.setItem(STORAGE,JSON.stringify(m));
+ let placing=false,observer=null,timeout=null,lastClick=0;
+ const pattern=/\bx\s*[:=]\s*(-?\d+)\s*[,;\s]+\by\s*[:=]\s*(-?\d+)\s*[,;\s]+\bz\s*[:=]\s*(-?\d+)\b/i;
+ function readPosition(){
+  for(const e of document.querySelectorAll('div,span,p')){
+   if(e.closest('#ck-memory-controls,#ck-m-modal')||e.children.length>5)continue;
+   const t=(e.textContent||'').trim();
+   if(t.length>180||!/\bblock\s*:/i.test(t))continue;
+   const m=t.match(pattern);
+   if(m)return {x:+m[1],y:+m[2],z:+m[3]};
   }
-  function stop(){
-   active=false;button.classList.remove('ck-placing');button.textContent='＋ Add Memory';
-   hint.style.display='none';
-   if(observer){observer.disconnect();observer=null}
-   if(timer){clearTimeout(timer);timer=null}
-  }
-  function showResult(pos){
-   stop();lastPosition=pos;
-   const shade=document.createElement('div');shade.id='ck-memory-shade';
-   const dialog=document.createElement('section');dialog.id='ck-memory-dialog';dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');
-   const dimension=decodeURIComponent((location.hash.slice(1).split(':')[0]||'Unknown dimension'));
-   const h=document.createElement('h2');h.textContent='Memory position found ♡';dialog.append(h);
-   const body=document.createElement('p');body.textContent=`X: ${pos.x} · Y: ${pos.y} · Z: ${pos.z} · ${dimension}`;dialog.append(body);
-   const msg=document.createElement('p');msg.textContent='This confirms we can read BlueMap’s clicked block. Nothing has been saved or placed yet; next we will connect real world-anchored markers and member permissions.';dialog.append(msg);
-   const actions=document.createElement('div');actions.className='ck-actions';
-   const closeBtn=document.createElement('button');closeBtn.type='button';closeBtn.textContent='Close';actions.append(closeBtn);dialog.append(actions);
-   shade.append(dialog);document.body.append(shade);
-   function close(){window.removeEventListener('keydown',keyBlock,true);shade.remove();button.focus()}
-   function keyBlock(e){if(e.key==='Escape'){e.preventDefault();close();return}e.stopImmediatePropagation()}
-   window.addEventListener('keydown',keyBlock,true);
-   shade.addEventListener('click',e=>{e.stopPropagation();if(e.target===shade)close()});
-   closeBtn.addEventListener('click',close);
-  }
-  function inspect(){if(!active)return;const p=findPosition();if(p)showResult(p)}
-  button.addEventListener('click',()=>{
-   if(active){stop();return}
-   active=true;lastPosition=null;button.textContent='✕ Cancel placement';button.classList.add('ck-placing');
-   hint.textContent='Now click a solid block on the 3D map. We’ll read the clicked-block position. No memory will be saved yet.';hint.style.display='block';
-   observer=new MutationObserver(inspect);
-   observer.observe(document.body,{subtree:true,childList:true,characterData:true});
-   // Observe for the temporary clicked-block tooltip; do not mistake an old one
-   // for a new click. The click handler also checks after the viewer updates.
+  return null;
+ }
+ function stop(){placing=false;add.textContent='＋ Add Marker';hint.style.display='none';if(observer){observer.disconnect();observer=null}if(timeout){clearTimeout(timeout);timeout=null}}
+ function modal(title,build){
+  const shade=document.createElement('div');shade.id='ck-m-modal';
+  const card=document.createElement('section');card.id='ck-m-card';card.setAttribute('role','dialog');card.setAttribute('aria-modal','true');
+  const h=document.createElement('h2');h.textContent=title;card.append(h);shade.append(card);document.body.append(shade);
+  function close(){window.removeEventListener('keydown',keys,true);shade.remove()}
+  function keys(e){if(e.key==='Escape'){e.preventDefault();close();return}e.stopImmediatePropagation()}
+  window.addEventListener('keydown',keys,true);
+  for(const event of ['pointerdown','mousedown','mouseup','click','dblclick','wheel','touchstart'])shade.addEventListener(event,e=>e.stopPropagation());
+  shade.addEventListener('click',e=>{if(e.target===shade)close()});
+  build(card,close);
+ }
+ const p=(parent,text)=>{const x=document.createElement('p');x.textContent=text;parent.append(x);return x};
+ const btn=(parent,text,action)=>{const x=document.createElement('button');x.type='button';x.textContent=text;x.addEventListener('click',action);parent.append(x);return x};
+ function selected(pos){stop();
+  modal('New map marker', (card,close)=>{
+   p(card,`Selected block · X ${pos.x} · Y ${pos.y} · Z ${pos.z}`);
+   p(card,'Title, notes and videos are optional. Save a blank marker now and edit it later.');
+   const name=document.createElement('input');name.placeholder='Optional title';name.maxLength=100;card.append(name);
+   btn(card,'Save empty marker',()=>{
+    const existing=parse();existing.push({id:(crypto.randomUUID?.()||String(Date.now())),x:pos.x,y:pos.y,z:pos.z,dimension:'minecraft:overworld',title:name.value.trim()||'New Memory',notes:'',youtube:'',createdAt:new Date().toISOString()});store(existing);
+    status.textContent='Saved in this browser';close();openList();
+   });btn(card,'Cancel',close);
   });
-  document.addEventListener('click', e=>{
-   if(!active || e.target.closest('#ck-add-memory,#ck-placement-hint,#ck-memory-shade'))return;
-   clickTime=Date.now();
-   if(timer)clearTimeout(timer);
-   timer=setTimeout(()=>{
-    if(!active)return;
-    inspect();
-    if(active){hint.textContent='Could not read that block yet. Try another block. If this persists, we’ll inspect the BlueMap popup structure.'}
-   },600);
-  },true);
-  console.info('[Cinta Kita] Add Memory position test loaded (no saving)');
+ }
+ function openList(){
+  modal('My memory drafts', (card,close)=>{
+   p(card,'These drafts are saved in this browser only. They are NOT yet shared with your girlfriend or rendered as 3D pins.');
+   const all=parse();if(!all.length)p(card,'No markers yet. Click Add Marker and select a block.');
+   all.forEach(item=>{
+    const section=document.createElement('div');section.className='ck-m-entry';card.append(section);
+    const name=document.createElement('strong');name.textContent=item.title;section.append(name);
+    p(section,`X ${item.x}, Y ${item.y}, Z ${item.z} · ${new Date(item.createdAt).toLocaleString()}`);
+    btn(section,'Edit',()=>{close();edit(item.id)});
+    btn(section,'Delete',()=>{if(!confirm('Delete this memory draft?'))return;store(parse().filter(x=>x.id!==item.id));close();openList()});
+   });
+   btn(card,'Close',close);
+  });
+ }
+ function edit(id){const item=parse().find(x=>x.id===id);if(!item)return;
+  modal('Edit memory', (card,close)=>{
+   p(card,`X ${item.x} · Y ${item.y} · Z ${item.z} · Created ${new Date(item.createdAt).toLocaleString()}`);
+   function field(label,value,multiline=false){const l=document.createElement('label');l.textContent=label;const el=document.createElement(multiline?'textarea':'input');el.value=value||'';if(multiline)el.rows=4;l.append(el);card.append(l);return el}
+   const title=field('Title',item.title),notes=field('Notes',item.notes,true),youtube=field('YouTube link (optional)',item.youtube);
+   btn(card,'Save changes',()=>{let all=parse();all=all.map(x=>x.id===id?{...x,title:title.value.trim()||'New Memory',notes:notes.value,youtube:youtube.value.trim()}:x);store(all);close();openList()});btn(card,'Cancel',close);
+  });
+ }
+ function inspect(){if(!placing||Date.now()-lastClick>2500)return;const p=readPosition();if(p)selected(p)}
+ add.addEventListener('click',()=>{
+  if(placing){stop();return}placing=true;lastClick=0;add.textContent='✕ Cancel';
+  hint.textContent='Click any solid block in the 3D world to choose a marker position.';hint.style.display='block';
+  observer=new MutationObserver(inspect);observer.observe(document.body,{subtree:true,childList:true,characterData:true});
+ });
+ document.addEventListener('click',e=>{
+  if(!placing||e.target.closest('#ck-memory-controls,#ck-m-modal'))return;
+  lastClick=Date.now();if(timeout)clearTimeout(timeout);
+  timeout=setTimeout(()=>{if(placing){const p=readPosition();if(p)selected(p);else hint.textContent='Could not read this block. Try clicking another block.'}},650);
+ },true);
+ list.addEventListener('click',openList);
+ console.info('[Cinta Kita] offline memory drafts editor ready');
  });
 })();

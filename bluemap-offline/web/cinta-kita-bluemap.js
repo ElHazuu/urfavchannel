@@ -75,7 +75,7 @@
  ready(()=>{
  const style=document.createElement('style');
  style.textContent=`
- #ck-memory-controls{position:fixed;bottom:68px;right:16px;z-index:2147481000;display:flex;align-items:end;flex-direction:column;gap:8px;font-family:system-ui,sans-serif}
+ #ck-memory-controls{position:fixed;bottom:68px;left:16px;right:auto;z-index:2147481000;display:flex;align-items:start;flex-direction:column;gap:8px;font-family:system-ui,sans-serif}
  .ck-m-button{padding:11px 15px;background:var(--ck-surface,#302337ed);color:var(--ck-accent,#fbd3e3);border:1px solid var(--ck-stroke,#d4a2be);border-radius:12px;cursor:pointer;box-shadow:0 6px 20px #0008;transition:transform .15s}
  .ck-m-button:hover{transform:scale(1.06)}
  #ck-m-hint{max-width:310px;padding:12px;background:#231b2cee;color:white;border-radius:12px;font-size:12px;line-height:1.4;display:none}
@@ -88,7 +88,7 @@
  #ck-m-card button{padding:9px 12px;margin:4px 4px 0 0;border-radius:9px;background:#5d405a;color:white;border:1px solid #af85a3;cursor:pointer}
  #ck-m-card .ck-m-entry{padding:9px 0;border-bottom:1px solid #ffffff33}
  #ck-m-card small{color:#d4c4d0}
- #ck-m-status{font-size:12px;color:#efcfdd;max-width:270px;text-align:right}
+ #ck-m-status{font-size:12px;color:#efcfdd;max-width:270px;text-align:left}
  .ck-m-entry{position:relative;transition:background .2s,padding .2s;border-radius:11px}
  .ck-m-entry:hover,.ck-m-entry:focus-within{background:#ffffff12;padding-left:8px;padding-right:8px}
  .ck-m-entry .ck-hovercard{max-height:0;opacity:0;overflow:hidden;transition:max-height .24s ease,opacity .2s ease;margin-top:4px}
@@ -107,6 +107,8 @@
  const add=document.createElement('button');add.className='ck-m-button';add.textContent='＋ Add Marker';controls.append(add);
  const list=document.createElement('button');list.className='ck-m-button';list.textContent='♡ My Markers';controls.append(list);
  document.body.append(controls);
+ // Parent toolbar sends visibility changes; default is visible.
+ window.addEventListener('message',e=>{if(e.origin===location.origin && e.source===window.parent && e.data?.type==='ck-map-ui-visibility'){controls.style.display=e.data.visible?'flex':'none';const memberBadge=document.getElementById('ck-supabase-status');if(memberBadge)memberBadge.style.display=e.data.visible?'block':'none';}});
  const parse=()=>cloud.items;
  let placing=false,observer=null,timeout=null,lastClick=0;
  const pattern=/\bx\s*[:=]\s*(-?\d+)\s*[,;\s]+\by\s*[:=]\s*(-?\d+)\s*[,;\s]+\bz\s*[:=]\s*(-?\d+)\b/i;

@@ -69,7 +69,7 @@ function installMemberPinLabels(){
   const {data,error}=await cloud.client.from('ck_map_memories').select(columns).eq('map_id','our_vanilla_world').order('created_at',{ascending:false});
   if(error)throw error;
   cloud.items=(data||[]).map(translate);
-  try{reconcilePins();installMemberPinLabels()}catch(err){console.warn('[Cinta Kita] pin refresh warning',err)}
+  try{installMemberPinLabels()}catch(err){console.warn('[Cinta Kita] pin label refresh',err)}
   // Count is reflected in My Markers; don't overlap the member badge.
  }
  async function writeNew(pos,title){
@@ -356,7 +356,7 @@ function installMemberPinLabels(){
  },true);
  // BlueMap sometimes inserts its HTML marker elements after Supabase has loaded.
  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cloud.member){loadCloud().catch(err=>console.warn('[Cinta Kita] refresh',err))}});
- const pinObserver=new MutationObserver(()=>{if(cloud.member){installMemberPinLabels();reconcilePins()}for(const id of removedPins)hideRemovedPin(id)});
+ const pinObserver=new MutationObserver(()=>{if(cloud.member)installMemberPinLabels();for(const id of removedPins)hideRemovedPin(id)});
  pinObserver.observe(document.body,{childList:true,subtree:true});
  document.addEventListener('click',async e=>{
   const pin=e.target.closest?.('.ck-world-stamp');

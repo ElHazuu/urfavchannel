@@ -196,3 +196,43 @@
  console.info('[Cinta Kita] offline memory drafts with YouTube hover previews ready');
  });
 })();
+
+
+/* Cinta Kita Maps — secure connection verification (no writes yet).
+ * Reuses the Supabase project and login already used on the main site.
+ */
+(() => {
+ 'use strict';
+ if(window.__ckMembershipCheck)return;
+ window.__ckMembershipCheck=true;
+ const ready=f=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',f,{once:true}):f();
+ ready(async()=>{
+  const status=document.createElement('div');
+  status.id='ck-cloud-status';
+  Object.assign(status.style,{position:'fixed',right:'16px',bottom:'177px',zIndex:'2147481000',padding:'7px 11px',font:'12px system-ui,sans-serif',borderRadius:'10px',color:'#fff',background:'var(--ck-surface,#332436eb)',border:'1px solid var(--ck-stroke,#bd9eb9)',boxShadow:'0 6px 18px #0006'});
+  status.textContent='Memories: checking membership…';
+  document.body.append(status);
+  const url='https://djhhwdjgokzofkaemrpf.supabase.co';
+  const key='sb_publishable_74Fr4c8T4OIKBgXED-sgsg_iUPBviG0';
+  function sdk(){return new Promise((resolve,reject)=>{
+   if(window.supabase?.createClient)return resolve(window.supabase);
+   const el=document.createElement('script');
+   el.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+   el.onload=()=>window.supabase?.createClient?resolve(window.supabase):reject(new Error('Supabase SDK unavailable'));
+   el.onerror=()=>reject(new Error('Supabase SDK failed to load'));
+   document.head.append(el);
+  })}
+  try{
+   const lib=await sdk();
+   const client=lib.createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+   const {data:{session},error:sessionError}=await client.auth.getSession();
+   if(sessionError||!session){status.textContent='Memories: sign in on Cinta Kita';return}
+   const {data:{user},error:userError}=await client.auth.getUser();
+   if(userError||!user){status.textContent='Memories: session expired';return}
+   const {data,error}=await client.rpc('ck_is_map_member');
+   if(error){status.textContent='Memories: membership check failed';console.warn('[Cinta Kita] membership check',error);return}
+   if(data===true){status.textContent='✓ Memories: member connected';window.__ckMapSupabaseClient=client;}
+   else status.textContent='Memories: view only';
+  }catch(e){status.textContent='Memories: connection unavailable';console.warn('[Cinta Kita] Supabase',e)}
+ });
+})();

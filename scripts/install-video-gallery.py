@@ -30,5 +30,11 @@ old_logout='window.__ckGallerySnapshot = { videos: [], owner: false };'
 new_logout='window.__ckGallerySnapshot = { videos: [], owner: false, client: null, user: null };'
 if old_logout in s: s=s.replace(old_logout,new_logout,1)
 elif new_logout not in s: raise RuntimeError('Logout hook missing')
+if 'id="ckstory-styles"' not in s:
+    if '</head>' not in s: raise RuntimeError('Story styles: no head')
+    s=s.replace('</head>','<link rel="stylesheet" id="ckstory-styles" href="story-gallery-v1.css">\n</head>',1)
+if 'id="ckstory-script"' not in s:
+    if '</body>' not in s: raise RuntimeError('Story script: no body')
+    s=s.replace('</body>','<script defer id="ckstory-script" src="story-gallery-v1.js"></script>\n</body>',1)
 p.write_text(s,encoding='utf-8')
 print('Gallery injection verified. Header CSS:',s.count('id="ckvg-styles"'),'JS:',s.count('id="ckvg-script"'),'video hook:',s.count('window.__ckGallerySnapshot = { videos: videoRows.filter'))

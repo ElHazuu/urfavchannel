@@ -193,3 +193,10 @@
 .ckstory-picker-item:hover{border-color:var(--ck-pick-accent);transform:translateY(-2px)}
 .ckstory-picker-item img{width:100%;height:125px;object-fit:contain;display:block;border-radius:9px;background:color-mix(in srgb,var(--ck-pick-bg) 94%,black 6%)}
 .ckstory-picker-item strong{font-size:13px;overflow-wrap:anywhere}.ckstory-picker-item small{font-size:11px;opacity:.7}
+
+.ckstory-picker-entry{display:flex;flex-direction:column;min-width:0;gap:7px}
+.ckstory-picker-entry .ckstory-picker-item{flex:1}
+.ckstory-picker-entry .ckstory-picker-remove{align-self:flex-end;background:transparent;border:1px solid var(--ck-pick-line);border-radius:8px;padding:5px 12px;color:var(--ck-pick-ink);cursor:pointer;font:600 11px 'DM Sans',sans-serif}
+.ckstory-picker-entry .ckstory-picker-remove:hover{border-color:var(--ck-pick-accent);background:color-mix(in srgb,var(--ck-pick-accent) 14%,var(--ck-pick-bg))}
+.ckstory-picker-shade[data-wallpaper=underwater]{--ck-pick-bg:#102d3b;--ck-pick-ink:#f2ffff;--ck-pick-accent:#72d9ed;--ck-pick-line:#72d9ed77}
+.ckstory-picker-shade[data-wallpaper=berserk]{--ck-pick-bg:#130c0c;--ck-pick-ink:#f8eeee;--ck-pick-accent:#b43137;--ck-pick-line:#b4313777}

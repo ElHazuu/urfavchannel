@@ -1,0 +1,37 @@
+name: Install Cinta Kita video gallery
+on:
+  push:
+    paths:
+      - '.github/workflows/install-video-gallery.yml'
+      - 'scripts/install-video-gallery.py'
+      - 'video-gallery-v1.js'
+      - 'video-gallery-v1.css'
+permissions:
+  contents: write
+concurrency:
+  group: install-cinta-kita-gallery
+  cancel-in-progress: false
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check gallery JavaScript syntax
+        run: node --check video-gallery-v1.js
+      - name: Safely connect gallery to existing Videos section
+        run: python scripts/install-video-gallery.py
+      - name: Commit only the HTML integration
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m 'Connect redesigned video gallery to existing Supabase videos'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

@@ -1,1 +1,9 @@
-{}
+{
+  "cinta_kita_memories": {
+    "label": "Memories",
+    "toggleable": true,
+    "defaultHidden": false,
+    "sorting": 0,
+    "markers": {}
+  }
+}

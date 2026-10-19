@@ -51,6 +51,19 @@
  };
  const columns='id,map_id,dimension,x,y,z,title,notes,youtube_url,created_at,updated_at,created_by';
  function translate(row){return {id:row.id,x:row.x,y:row.y,z:row.z,dimension:row.dimension,title:row.title||'New Memory',notes:row.notes||'',youtube:row.youtube_url||'',createdAt:row.created_at}}
+ // Only approved members receive a private hover title; public pins stay anonymous.
+function installMemberPinLabels(){
+ const items=cloud.items;
+ document.querySelectorAll('.ck-world-stamp[data-memory-id]').forEach(el=>{
+  const item=items.find(x=>String(x.id)===el.dataset.memoryId);
+  if(!item)return;
+  el.setAttribute('title',item.title||'Memory');
+  el.setAttribute('aria-label',item.title||'Memory');
+  el.dataset.memberTitle=item.title||'Memory';
+ });
+}
+
+
  async function loadCloud(){
   if(!requireCloud())return;
   const {data,error}=await cloud.client.from('ck_map_memories').select(columns).eq('map_id','our_vanilla_world').order('created_at',{ascending:false});
@@ -391,18 +404,6 @@
    });
   }
  },true);
-
-// Only approved members receive a private hover title; public pins stay anonymous.
-function installMemberPinLabels(){
- const items=cloud.items;
- document.querySelectorAll('.ck-world-stamp[data-memory-id]').forEach(el=>{
-  const item=items.find(x=>String(x.id)===el.dataset.memoryId);
-  if(!item)return;
-  el.setAttribute('title',item.title||'Memory');
-  el.setAttribute('aria-label',item.title||'Memory');
-  el.dataset.memberTitle=item.title||'Memory';
- });
-}
 
  function inspect(){if(!placing||Date.now()-lastClick>2500)return;const p=readPosition();if(p)selected(p)}
  add.addEventListener('click',()=>{

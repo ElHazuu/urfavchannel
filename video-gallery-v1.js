@@ -2,13 +2,22 @@
 (()=>{'use strict';
 const section=document.getElementById('videos'),native=document.getElementById('videoGrid'),manage=document.getElementById('videoManageToggle');
 if(!section||!native||document.getElementById('ckvg-app'))return;
-const key='ck:gallery:playlists:v1',state={videos:[],owner:false,query:'',sort:'newest',filter:'all',playlist:null,playing:null,queue:[],queueIndex:0,lists:[]};
+const key='ck:gallery:playlists:v1',state={videos:[],owner:false,query:'',sort:'newest',filter:'all',playlist:null,playing:null,queue:[],queueIndex:0,lists:[],client:null,user:null,shared:false,sharedIds:new Set(),syncing:false,lastFetch:0};
 const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n};
 const button=(label,cls,fn)=>{const b=el('button',cls,label);b.type='button';b.onclick=fn;return b};
 const cleanId=id=>String(id||'').replace(/[^A-Za-z0-9_-]/g,'');
 const safeLists=()=>{try{const x=JSON.parse(localStorage.getItem(key));return Array.isArray(x)?x.filter(a=>a&&typeof a.name==='string'&&Array.isArray(a.ids)).slice(0,100):[]}catch{return []}};
 state.lists=safeLists();
-const persist=()=>{try{localStorage.setItem(key,JSON.stringify(state.lists))}catch{toast('Browser storage unavailable; playlist changes may not persist')}};
+const persist=async()=>{if(!state.shared){try{localStorage.setItem(key,JSON.stringify(state.lists))}catch{toast('Browser storage unavailable')}}else{
+ try{
+  const rows=state.lists.map((l,i)=>({id:l.id,name:l.name,video_ids:l.ids.map(String),sort_order:i,created_by:l.created_by||state.user.id}));
+  if(rows.length){const {error}=await state.client.from('site_video_playlists').upsert(rows,{onConflict:'id'});if(error)throw error}
+  const currentIds=new Set(rows.map(x=>x.id));
+  const removed=[...state.sharedIds].filter(id=>!currentIds.has(id));
+  if(removed.length){const {error}=await state.client.from('site_video_playlists').delete().in('id',removed);if(error)throw error}
+  state.sharedIds=currentIds;statusText.textContent='☁ Shared playlists synced';
+ }catch(e){statusText.textContent='⚠ Playlist sync failed: '+e.message;toast('Shared playlist sync failed')}
+ }};
 const byId=id=>state.videos.find(x=>String(x.id)===String(id));
 const hasPlaylist=(list,id)=>list.ids.some(x=>String(x)===String(id));
 const cover=v=>v?.youtube_id?'https://i.ytimg.com/vi/'+cleanId(v.youtube_id)+'/hqdefault.jpg':'';
@@ -18,6 +27,7 @@ native.after(app);
 const nav=app.querySelector('#ckvg-nav'),grid=app.querySelector('#ckvg-grid'),feature=app.querySelector('#ckvg-featured');
 const search=app.querySelector('#ckvg-search'),sort=app.querySelector('#ckvg-sort'),header=app.querySelector('#ckvg-heading'),count=app.querySelector('#ckvg-resultcount'),kicker=app.querySelector('#ckvg-kicker');
 const badge=app.querySelector('#ckvg-count'),create=app.querySelector('#ckvg-create');
+const statusText=el('p','ckvg-syncstatus','◌ Playlists saved in this browser');app.querySelector('.ckvg-localnote').replaceWith(statusText);
 const overlay=el('div','ckvg-overlay');overlay.hidden=true;document.body.append(overlay);
 let toastTimer;const toastNode=el('div','ckvg-toast');toastNode.hidden=true;document.body.append(toastNode);
 function toast(msg){toastNode.textContent=msg;toastNode.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastNode.hidden=true,3400)}
@@ -54,10 +64,33 @@ function openPlayer(id,queue){const v=byId(id);if(!v)return toast('This video is
  create.hidden=!state.owner;
  }
  function ask(message,value=''){const r=prompt(message,value);return r===null?null:r.trim().slice(0,70)}
- function createList(videoId){const name=ask('New playlist name');if(!name)return;const l={id:crypto.randomUUID?crypto.randomUUID():'p'+Date.now(),name,ids:videoId?[videoId]:[]};state.lists.push(l);persist();state.playlist=l.id;state.filter='all';render();toast('Playlist created ♡')}
+ function createList(videoId){const name=ask('New playlist name');if(!name)return;const l={id:crypto.randomUUID?crypto.randomUUID():'p'+Date.now(),name,ids:videoId?[videoId]:[],created_by:state.user?.id};state.lists.push(l);persist();state.playlist=l.id;state.filter='all';render();toast('Playlist created ♡')}
  function manageList(l){const choice=prompt('Playlist: '+l.name+'\n1 — Rename\n2 — Delete playlist\n3 — Move a video up/down (open playlist first)','1');if(choice==='1'){const name=ask('Rename playlist',l.name);if(name){l.name=name;persist();render()}}else if(choice==='2'){if(confirm('Delete playlist “'+l.name+'”? Videos will remain in your library.')){state.lists=state.lists.filter(x=>x.id!==l.id);if(state.playlist===l.id)state.playlist=null;persist();render()}}else if(choice==='3'){if(!l.ids.length)return toast('Playlist is empty');const lines=l.ids.map((id,i)=>(i+1)+'. '+(byId(id)?.title||'Missing video')).join('\n');const number=Number(prompt('Choose a video number:\n'+lines));if(!Number.isInteger(number)||number<1||number>l.ids.length)return;const dir=prompt('Move “'+(byId(l.ids[number-1])?.title||'video')+'” up or down?','up');const index=number-1,next=index+(dir==='down'?1:dir==='up'?-1:0);if(next>=0&&next<l.ids.length&&index!==next){[l.ids[index],l.ids[next]]=[l.ids[next],l.ids[index]];persist();render()}}}
+let connectSeq=0;
+async function connectShared(client,user){
+ if(!client||!user){connectSeq++;state.client=null;state.user=null;state.shared=false;state.lists=safeLists();statusText.textContent='◌ Playlists saved in this browser';render();return}
+ if(state.syncing)return;
+ if(state.shared&&state.user?.id===user.id&&Date.now()-state.lastFetch<25000)return;
+ const seq=++connectSeq;state.syncing=true;statusText.textContent='↻ Connecting shared playlists…';
+ try{
+  const {data,error}=await client.from('site_video_playlists').select('id,name,video_ids,sort_order,created_by').order('sort_order').order('created_at');
+  if(error)throw error;
+  if(seq!==connectSeq)return;
+  state.client=client;state.user=user;state.shared=true;state.lastFetch=Date.now();
+  state.lists=(data||[]).map(x=>({id:x.id,name:x.name,ids:x.video_ids||[],created_by:x.created_by}));
+  state.sharedIds=new Set(state.lists.map(x=>x.id));
+  statusText.textContent='☁ Shared playlists · synced for both accounts';
+  render();
+ }catch(e){
+  if(seq!==connectSeq)return;
+  state.shared=false;state.client=null;state.user=null;state.lists=safeLists();
+  statusText.textContent='◌ Local playlists only · Enable Supabase shared-playlist table';
+  render();
+ }finally{state.syncing=false}
+}
+
  search.oninput=()=>{state.query=search.value;render()};sort.onchange=()=>{state.sort=sort.value;render()};create.onclick=()=>createList();
- window.addEventListener('ck:videos',e=>{if(!e.detail)return;state.videos=Array.isArray(e.detail.videos)?e.detail.videos.filter(v=>v?.published&&v?.youtube_id):[];state.owner=!!e.detail.owner;render()});
- if(window.__ckGallerySnapshot){const x=window.__ckGallerySnapshot;state.videos=x.videos||[];state.owner=!!x.owner}
+ window.addEventListener('ck:videos',e=>{if(!e.detail)return;state.videos=Array.isArray(e.detail.videos)?e.detail.videos.filter(v=>v?.published&&v?.youtube_id):[];state.owner=!!e.detail.owner;render();connectShared(e.detail.client,e.detail.user)});
+ if(window.__ckGallerySnapshot){const x=window.__ckGallerySnapshot;state.videos=x.videos||[];state.owner=!!x.owner;connectShared(x.client,x.user)}
  native.classList.add('ckvg-original-hidden');render();
 })();

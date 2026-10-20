@@ -102,3 +102,22 @@ body > :is(button,[role="button"]){
 @media(prefers-reduced-motion:reduce){
  #app :is(button,[role="button"],.button,.bm-button){transition:none!important}
 }
+
+/* V3 — exact class names confirmed against BlueMap 5.28's bundled stylesheet */
+#app .position-input{display:flex!important;gap:0!important;border:2px solid #12251a!important;border-radius:2px!important;background:linear-gradient(#37523d,#253a2d)!important;box-shadow:inset 1px 1px #8fac7c,inset -1px -1px #122419,0 3px 0 #0b1a11!important;overflow:hidden!important}
+#app .position-input>.number-input{flex:1 1 0!important;min-width:0;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+#app .position-input>*:not(:first-child){border-left:1px solid #91b18066!important}
+#app .number-input{background:linear-gradient(#38563f,#263b30)!important;border:0!important;border-radius:2px!important;color:#f0f5e7!important;font-family:'Pixelify Sans',monospace!important;text-shadow:1px 1px #15281d!important}
+#app .number-input .label{color:#badba6!important;font-family:'Pixelify Sans',monospace!important;font-weight:700!important}
+#app .number-input input{color:#f6ffe9!important;background:transparent!important;font-family:'Pixelify Sans',monospace!important;font-weight:600!important}
+#app .svg-button{background:linear-gradient(180deg,#74936a,#426949 55%,#294731)!important;border:2px solid #15291b!important;border-radius:2px!important;color:#effce0!important;box-shadow:inset 1px 1px #bfd8a8,inset -1px -1px #233a29,0 3px 0 #112116!important;overflow:hidden!important}
+#app .svg-button:hover{background:linear-gradient(#9fbd8d,#577e59)!important;filter:brightness(1.04)!important}
+#app .svg-button:active{background:linear-gradient(#294731,#426949)!important;translate:0 2px}
+#app .svg-button>svg{fill:#eff8df!important;stroke:none!important;filter:none!important;max-width:85%;max-height:85%;overflow:hidden!important}
+#app .svg-button>svg :is(path,circle,rect,polygon,polyline,line){fill:inherit;stroke:inherit}
+#app .compass svg .north{fill:#f2f5e6!important}
+#app .compass svg .south{fill:#86b28b!important}
+#app .day-night-switch svg{fill:#f0f1c7!important}
+#app .day-night-switch svg circle{fill:#b8ca94!important}
+#app .controls-switch{gap:3px!important}
+#app .menu-button,#app .map-button,#app .simple-button{font-family:'Pixelify Sans',monospace!important}

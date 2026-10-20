@@ -37,6 +37,7 @@ on:
       - 'story-gallery-v16.js'
       - 'story-gallery-v16.css'
       - 'story-gallery-v17.css'
+      - 'story-gallery-v18.css'
 permissions:
   contents: write
 concurrency:

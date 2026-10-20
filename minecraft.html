@@ -112,7 +112,7 @@ function syncMemoryControls(){
    const pixel=doc.createElement('link');
    pixel.id='ck-bluemap-native-pixel-skin';
    pixel.rel='stylesheet';
-   pixel.href=new URL('bluemap-ui-pixel.css',location.href).href;
+   pixel.href=new URL('bluemap-ui-pixel.css?v=20261020-3',location.href).href;
    doc.head.append(pixel);
   }
   doc.documentElement.classList.toggle('ck-parent-hide-memory-ui',!mapControlsVisible);

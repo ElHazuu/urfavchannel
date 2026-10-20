@@ -106,6 +106,15 @@ function syncMemoryControls(){
    `;
    doc.head.append(sheet);
   }
+  // Load our pixel-themed skin for the NATIVE BlueMap toolbar/zoom/menu controls.
+  // Parent owns this sheet, so a regenerated BlueMap web folder won't erase it.
+  if(!doc.getElementById('ck-bluemap-native-pixel-skin')){
+   const pixel=doc.createElement('link');
+   pixel.id='ck-bluemap-native-pixel-skin';
+   pixel.rel='stylesheet';
+   pixel.href=new URL('bluemap-ui-pixel.css',location.href).href;
+   doc.head.append(pixel);
+  }
   doc.documentElement.classList.toggle('ck-parent-hide-memory-ui',!mapControlsVisible);
  }catch(err){console.warn('[Cinta Kita] Cannot sync iframe controls',err)}
 }

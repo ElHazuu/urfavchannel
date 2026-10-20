@@ -62,3 +62,43 @@ body > :is(button,[role="button"]){
 @media(prefers-reduced-motion:reduce){
  #app :is(button,[role="button"],.button,.bm-button){transition:none!important}
 }
+
+/* Cinta Kita | tidy coordinates and camera toolbar, Minecraft block chrome */
+#app :is([class*="coord"],[class*="Coord"],[class*="position"],[class*="Position"]):not(canvas):not(:has(canvas)){
+ font-family:'Pixelify Sans',monospace!important;
+ color:#e4f1d8!important;
+ text-shadow:1px 1px 0 #14251a!important;
+}
+#app :is([class*="coordinates"],[class*="Coordinates"],[class*="coordinate-bar"],[class*="CoordinateBar"]){
+ background:linear-gradient(#344b39,#263c2e)!important;
+ border:2px solid #12271b!important;
+ border-radius:2px!important;
+ box-shadow:inset 1px 1px #718a67,inset -1px -1px #17291d!important;
+}
+#app :is([class*="coordinates"],[class*="Coordinates"]) :is(span,div){
+ color:#e3f0dc!important;
+ font-family:'Pixelify Sans',monospace!important;
+}
+#app :is(button,[role="button"],.button,.bm-button):not(:disabled){
+ border-radius:2px!important;
+ background-clip:padding-box!important;
+}
+/* Remove foreign-colored decorative tails and pseudo protrusions on map control buttons. */
+#app :is(button,[role="button"],.button,.bm-button):not(:has(canvas))::before,
+#app :is(button,[role="button"],.button,.bm-button):not(:has(canvas))::after{
+ border-color:transparent!important;
+ box-shadow:none!important;
+}
+/* Native SVG camera and other icons retain their shapes, with matching green pigment. */
+#app :is(button,[role="button"],.button,.bm-button) svg{
+ color:#172d1b!important;
+ fill:none;
+ filter:none!important;
+ overflow:visible;
+}
+#app :is(button,[role="button"],.button,.bm-button) svg :is(path,line,polyline,polygon,circle,rect){
+ stroke:currentColor!important;
+}
+@media(prefers-reduced-motion:reduce){
+ #app :is(button,[role="button"],.button,.bm-button){transition:none!important}
+}

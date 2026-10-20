@@ -1,0 +1,64 @@
+/* Cinta Kita BlueMap pixel controls — decorative CSS only, leaves all BlueMap actions untouched. */
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap');
+:root{
+ --ck-px-top:#758b69;
+ --ck-px-mid:#50674d;
+ --ck-px-bottom:#304537;
+ --ck-px-edge:#14271d;
+ --ck-px-highlight:#bdd5a7;
+ --ck-px-ink:#f1f9e7;
+ --ck-px-shadow:#0a1b14;
+ --theme-accent:#c4dfa5;
+ --theme-fg:#f1f9e7;
+ --theme-fg-light:#d4e4c5;
+ --theme-bg:#203a2be8;
+}
+/* BlueMap overlay widgets, not the WebGL map or the marker rendering layers. */
+#app :is(button,[role="button"],.button,.bm-button),
+#app :is([class*="Button"],[class*="button"]):not(:has(canvas)),
+body > :is(button,[role="button"]){
+ font-family:'Pixelify Sans',monospace!important;
+ font-weight:600!important;
+ color:var(--ck-px-ink)!important;
+ border:2px solid var(--ck-px-edge)!important;
+ border-radius:2px!important;
+ background:linear-gradient(180deg,var(--ck-px-top),var(--ck-px-mid) 44%,var(--ck-px-bottom))!important;
+ box-shadow:inset 2px 2px 0 var(--ck-px-highlight),inset -2px -2px 0 #203b2a,0 3px 0 var(--ck-px-shadow),0 6px 12px #0007!important;
+ text-shadow:1px 2px 0 #162d21!important;
+ transition:filter .13s ease,translate .13s ease!important;
+}
+#app :is(button,[role="button"],.button,.bm-button):is(:hover,:focus-visible),
+#app :is([class*="Button"],[class*="button"]):not(:has(canvas)):hover{
+ filter:brightness(1.16)!important;
+ translate:0 -1px;
+}
+#app :is(button,[role="button"],.button,.bm-button):active{translate:0 2px!important;box-shadow:inset 2px 2px 0 #263c2b,inset -2px -2px 0 #8ca77a!important}
+#app :is(button,[role="button"],.button,.bm-button):focus-visible{outline:2px solid var(--ck-px-highlight)!important;outline-offset:3px}
+/* Pixelate the chrome around toolbar controls without affecting the 3D renderer. */
+#app :is([class*="toolbar"],[class*="Toolbar"],[class*="controls"],[class*="Controls"],[class*="sidebar"],[class*="Sidebar"],[class*="menu"],[class*="Menu"]):not(:has(canvas)){
+ border-radius:2px!important;
+}
+#app :is([class*="toolbar"],[class*="Toolbar"],[class*="controls"],[class*="Controls"]):not(:has(canvas)){
+ --theme-bg:#203a2bed;
+ --theme-fg:#eef8e2;
+ --theme-accent:#b9dc98;
+}
+/* The screenshots show the pink-tinted vector icons: convert the glyphs to pale pixel green. */
+#app :is(button,[role="button"],[class*="button"],[class*="Button"]) svg,
+#app :is(button,[role="button"],[class*="button"],[class*="Button"]) svg :is(path,line,polyline,polygon,circle,rect){
+ color:#e2f4cf!important;
+ stroke:currentColor;
+}
+#app :is(button,[role="button"],[class*="button"],[class*="Button"]) svg{filter:drop-shadow(1px 2px 0 #173020)}
+/* Coordinate labels and popups should feel consistent, while keeping numbers legible. */
+#app :is([class*="coordinate"],[class*="Coordinate"],[class*="hud"],[class*="HUD"]){
+ font-family:'Pixelify Sans',monospace!important;
+ color:var(--ck-px-ink)!important;
+ text-shadow:1px 1px #152a1a!important;
+}
+@media(max-width:620px){
+ #app :is(button,[role="button"],.button,.bm-button){min-width:32px;min-height:32px}
+}
+@media(prefers-reduced-motion:reduce){
+ #app :is(button,[role="button"],.button,.bm-button){transition:none!important}
+}

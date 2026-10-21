@@ -1,0 +1,43 @@
+/* Cinta Kita Updates Studio — visual layer over the existing Supabase notification UI */
+#notificationPanel.ckup-ready{
+ --ckup-surface:var(--ui-surface,var(--theme-surface,#24232b));
+ --ckup-ink:var(--ui-ink,var(--theme-text,#fff));
+ --ckup-accent:var(--ui-accent,var(--theme-accent,#d8b0ca));
+ --ckup-line:var(--ui-line,var(--theme-line,#ffffff30));
+ color:var(--ckup-ink)!important;
+ background:var(--ckup-surface)!important;
+ border:1px solid var(--ckup-line)!important;
+ border-radius:20px!important;
+ box-shadow:0 26px 75px #0005!important;
+ overflow-x:hidden;
+ min-width:min(390px,calc(100vw - 24px));
+ max-width:min(490px,calc(100vw - 24px));
+}
+#notificationPanel.ckup-ready .notificationPanelHead{display:flex;justify-content:space-between;align-items:start;gap:12px;padding:22px 20px 10px;border:0!important;background:transparent!important}
+#notificationPanel.ckup-ready .notificationPanelHead h2{font:500 clamp(30px,3vw,41px)/1.05 'Cormorant Garamond',Georgia,serif;margin:0!important;color:var(--ckup-ink)!important}
+#notificationPanel.ckup-ready #notificationClose{color:var(--ckup-ink)!important;background:color-mix(in srgb,var(--ckup-surface) 87%,var(--ckup-accent) 13%)!important;border:1px solid var(--ckup-line)!important;border-radius:11px!important;min-width:37px;min-height:37px;cursor:pointer}
+#notificationPanel.ckup-ready .ckup-subtitle{font:500 12px/1.6 'DM Sans',system-ui,sans-serif;padding:0 20px;color:var(--ckup-ink);opacity:.72}
+#notificationPanel.ckup-ready .ckup-toolbar{padding:17px 18px 15px;display:flex;flex-direction:column;gap:11px}
+#notificationPanel.ckup-ready .ckup-toolbar-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#notificationPanel.ckup-ready .ckup-count{font:700 11px 'DM Sans',system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ckup-accent)}
+#notificationPanel.ckup-ready .ckup-search{min-height:43px;width:100%;box-sizing:border-box;border:1px solid var(--ckup-line);border-radius:12px;background:color-mix(in srgb,var(--ckup-surface) 90%,var(--ckup-accent) 10%);padding:10px 13px;color:var(--ckup-ink);outline:0;font:500 13px 'DM Sans',system-ui,sans-serif}
+#notificationPanel.ckup-ready .ckup-search::placeholder{color:var(--ckup-ink);opacity:.53}
+#notificationPanel.ckup-ready .ckup-search:focus{border-color:var(--ckup-accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--ckup-accent) 20%,transparent)}
+#notificationPanel.ckup-ready .ckup-filters{display:flex;gap:7px;flex-wrap:wrap}
+#notificationPanel.ckup-ready .ckup-filter{font:650 11px 'DM Sans',system-ui,sans-serif;border:1px solid var(--ckup-line);background:transparent;color:var(--ckup-ink);border-radius:100px;padding:8px 12px;cursor:pointer}
+#notificationPanel.ckup-ready .ckup-filter[aria-pressed=true]{color:var(--ckup-ink);border-color:var(--ckup-accent);background:color-mix(in srgb,var(--ckup-surface) 73%,var(--ckup-accent) 27%)}
+#notificationPanel.ckup-ready #notificationList{display:flex;flex-direction:column;gap:11px;margin:0!important;padding:9px 20px 23px!important;max-height:min(48vh,430px);overflow-y:auto}
+#notificationPanel.ckup-ready .notificationEntry{position:relative;padding:16px 17px 15px!important;margin:0!important;border:1px solid var(--ckup-line)!important;border-radius:15px!important;background:color-mix(in srgb,var(--ckup-surface) 94%,var(--ckup-accent) 6%)!important;color:var(--ckup-ink)!important;box-shadow:none!important;animation:ckup-reveal .23s ease both}
+#notificationPanel.ckup-ready .notificationEntry.ckup-latest{border-color:color-mix(in srgb,var(--ckup-accent) 65%,var(--ckup-line))!important}
+#notificationPanel.ckup-ready .notificationEntry::before{content:'';position:absolute;left:0;top:18px;bottom:18px;width:3px;border-radius:0 4px 4px 0;background:var(--ckup-accent);opacity:.5}
+#notificationPanel.ckup-ready .notificationEntry strong{display:block;font:750 15px/1.35 'DM Sans',system-ui,sans-serif;color:var(--ckup-ink)!important;overflow-wrap:anywhere}
+#notificationPanel.ckup-ready .notificationEntry :is(p,small,time){line-height:1.65;color:var(--ckup-ink)!important;opacity:.78;overflow-wrap:anywhere}
+#notificationPanel.ckup-ready .notificationEntry button{border:1px solid var(--ckup-line)!important;border-radius:9px!important;padding:7px 10px!important;background:color-mix(in srgb,var(--ckup-surface) 77%,var(--ckup-accent) 23%)!important;color:var(--ckup-ink)!important;cursor:pointer}
+#notificationPanel.ckup-ready .notificationEntry button:hover{filter:brightness(1.09)}
+#notificationPanel.ckup-ready .notificationForm{border-top:1px solid var(--ckup-line);padding:18px 20px!important;background:transparent!important}
+#notificationPanel.ckup-ready .notificationForm :is(input,textarea){border:1px solid var(--ckup-line)!important;border-radius:11px!important;background:color-mix(in srgb,var(--ckup-surface) 88%,var(--ckup-accent) 12%)!important;color:var(--ckup-ink)!important}
+#notificationPanel.ckup-ready .notificationForm button{background:color-mix(in srgb,var(--ckup-surface) 70%,var(--ckup-accent) 30%)!important;color:var(--ckup-ink)!important;border:1px solid var(--ckup-line)!important;border-radius:10px!important}
+#notificationPanel.ckup-ready .ckup-empty{padding:28px 12px;text-align:center;border:1px dashed var(--ckup-line);border-radius:13px;font-size:13px;color:var(--ckup-ink);opacity:.75}
+@keyframes ckup-reveal{from{opacity:.4;translate:0 6px}to{opacity:1;translate:0 0}}
+@media(max-width:600px){#notificationPanel.ckup-ready{width:calc(100vw - 16px)!important;max-width:calc(100vw - 16px)!important;min-width:0!important}#notificationPanel.ckup-ready .notificationPanelHead{padding:17px 15px 8px}#notificationPanel.ckup-ready .ckup-toolbar{padding:14px}#notificationPanel.ckup-ready #notificationList{padding:9px 14px 18px!important}}
+@media(prefers-reduced-motion:reduce){#notificationPanel.ckup-ready .notificationEntry{animation:none!important}}

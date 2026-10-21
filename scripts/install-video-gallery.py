@@ -68,12 +68,9 @@ s=s.replace('href="story-gallery-v15.css"','href="story-gallery-v16.css"')
 s=s.replace('src="story-gallery-v15.js"','src="story-gallery-v16.js"')
 s=s.replace('href="story-gallery-v16.css"','href="story-gallery-v17.css"')
 s=s.replace('href="story-gallery-v17.css"','href="story-gallery-v18.css"')
-# Optional Halloween overlay: idempotent, reversible, and active only in October.
-if 'id="ck-halloween-style"' not in s:
-    if '</head>' not in s: raise RuntimeError('Halloween: missing head')
-    s=s.replace('</head>','<link id="ck-halloween-style" rel="stylesheet" href="cinta-kita-halloween-2026.css">\n</head>',1)
-if 'id="ck-halloween-script"' not in s:
-    if '</body>' not in s: raise RuntimeError('Halloween: missing body')
-    s=s.replace('</body>','<script defer id="ck-halloween-script" src="cinta-kita-halloween-2026.js"></script>\n</body>',1)
+# Remove previously installed Halloween links as well as preventing reinstallation.
+import re
+s=re.sub(r'<link id="ck-halloween-style"[^>]*>\\s*','',s)
+s=re.sub(r'<script defer id="ck-halloween-script"[^>]*></script>\\s*','',s)
 p.write_text(s,encoding='utf-8')
 print('Gallery injection verified. Header CSS:',s.count('id="ckvg-styles"'),'JS:',s.count('id="ckvg-script"'),'video hook:',s.count('window.__ckGallerySnapshot = { videos: videoRows.filter'))

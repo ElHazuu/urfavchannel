@@ -6,11 +6,11 @@
     if (!main) return;
     const style = document.createElement("style");
     style.textContent = `
-      #ckUnderwaterLive { position:fixed; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top;
+      #ckUnderwaterLive { position:absolute; top:0; left:0; right:0; width:100%; height:100vh; height:100svh; object-fit:cover; object-position:center top;
         pointer-events:none; z-index:0; display:none; filter:brightness(.82) saturate(.96); }
       #mainWebsite[data-wallpaper="underwater"][data-theme="light"] #ckUnderwaterLive { display:block; }
-      /* Keep the top water visible on every scroll position without moving the video. */
-      #mainWebsite[data-wallpaper="underwater"][data-theme="light"] #ckUnderwaterLive { top:0; bottom:auto; height:100dvh; }
+      /* The surface is at the document top: it scrolls away as you descend. */
+      #mainWebsite[data-wallpaper="underwater"][data-theme="light"] { position:relative; }
       #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeSection {
         background:linear-gradient(90deg,rgba(4,41,65,.48),rgba(6,46,66,.08)) !important;
       }

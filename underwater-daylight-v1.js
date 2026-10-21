@@ -6,9 +6,11 @@
     if (!main) return;
     const style = document.createElement("style");
     style.textContent = `
-      #ckUnderwaterLive { position:fixed; inset:0; width:100%; height:100%; object-fit:cover; object-position:center;
+      #ckUnderwaterLive { position:fixed; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top;
         pointer-events:none; z-index:0; display:none; filter:brightness(.82) saturate(.96); }
       #mainWebsite[data-wallpaper="underwater"][data-theme="light"] #ckUnderwaterLive { display:block; }
+      /* Keep the top water visible on every scroll position without moving the video. */
+      #mainWebsite[data-wallpaper="underwater"][data-theme="light"] #ckUnderwaterLive { top:0; bottom:auto; height:100dvh; }
       #mainWebsite[data-wallpaper="underwater"][data-theme="light"] .welcomeSection {
         background:linear-gradient(90deg,rgba(4,41,65,.48),rgba(6,46,66,.08)) !important;
       }
@@ -28,7 +30,7 @@
     video.setAttribute("aria-hidden", "true");
     video.setAttribute("playsinline", "");
     main.prepend(video);
-    const START = 0, END = 4;
+    const START = 0, END = 6.5; // Longer loop, still before the strongest brightening.
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
     function sync() {
       const active = main.dataset.wallpaper === "underwater" &&

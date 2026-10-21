@@ -68,13 +68,12 @@ s=s.replace('href="story-gallery-v15.css"','href="story-gallery-v16.css"')
 s=s.replace('src="story-gallery-v15.js"','src="story-gallery-v16.js"')
 s=s.replace('href="story-gallery-v16.css"','href="story-gallery-v17.css"')
 s=s.replace('href="story-gallery-v17.css"','href="story-gallery-v18.css"')
-# Remove the exact injected event assets; also catch variants with attribute reordering.
-import re
-s=re.sub(r'<link\\b(?=[^>]*\\bid=["\\']ck-halloween-style["\\'])[^>]*>\\s*','',s,flags=re.I)
-s=re.sub(r'<script\\b(?=[^>]*\\bid=["\\']ck-halloween-script["\\'])[^>]*>\\s*</script>\\s*','',s,flags=re.I)
-s=s.replace('<link id="ck-halloween-style" rel="stylesheet" href="cinta-kita-halloween-2026.css">','')
-s=s.replace('<script defer id="ck-halloween-script" src="cinta-kita-halloween-2026.js"></script>','')
+# The Halloween event was retired: remove any existing injected tags.
+s='\n'.join(line for line in s.split('\n') if
+    'ck-halloween-style' not in line and
+    'ck-halloween-script' not in line and
+    'cinta-kita-halloween-2026.' not in line)
 if 'ck-halloween-style' in s or 'ck-halloween-script' in s:
-    raise RuntimeError('Halloween tags still present in index.html')
+    raise RuntimeError('Halloween references still present')
 p.write_text(s,encoding='utf-8')
 print('Gallery injection verified. Header CSS:',s.count('id="ckvg-styles"'),'JS:',s.count('id="ckvg-script"'),'video hook:',s.count('window.__ckGallerySnapshot = { videos: videoRows.filter'))

@@ -75,5 +75,10 @@ s='\n'.join(line for line in s.split('\n') if
     'cinta-kita-halloween-2026.' not in line)
 if 'ck-halloween-style' in s or 'ck-halloween-script' in s:
     raise RuntimeError('Halloween references still present')
+# Updates Studio: install once without changing existing notifications logic.
+if 'id="ck-updates-style"' not in s:
+    s=s.replace('</head>','<link id="ck-updates-style" rel="stylesheet" href="cinta-kita-updates-studio.css">\n</head>',1)
+if 'id="ck-updates-script"' not in s:
+    s=s.replace('</body>','<script defer id="ck-updates-script" src="cinta-kita-updates-studio.js"></script>\n</body>',1)
 p.write_text(s,encoding='utf-8')
 print('Gallery injection verified. Header CSS:',s.count('id="ckvg-styles"'),'JS:',s.count('id="ckvg-script"'),'video hook:',s.count('window.__ckGallerySnapshot = { videos: videoRows.filter'))

@@ -6,8 +6,6 @@ on:
       - 'scripts/install-video-gallery.py'
       - 'video-gallery-v1.js'
       - 'video-gallery-v1.css'
-      - 'cinta-kita-halloween-2026.css'
-      - 'cinta-kita-halloween-2026.js'
       - 'story-gallery-v1.js'
       - 'story-gallery-v1.css'
       - 'story-gallery-v2.js'
@@ -58,7 +56,6 @@ jobs:
       - name: Check gallery JavaScript syntax
         run: |
           node --check video-gallery-v1.js
-          node --check cinta-kita-halloween-2026.js
           node --check story-gallery-v1.js
           node --check story-gallery-v2.js
           node --check story-gallery-v3.js
